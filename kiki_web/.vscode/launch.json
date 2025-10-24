@@ -1,0 +1,67 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter Web (开发环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--dart-define-from-file=config/dev.env"
+            ],
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Flutter Web (生产环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--dart-define-from-file=config/prod.env"
+            ],
+            "flutterMode": "release"
+        },
+        {
+            "name": "Flutter Web (测试环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--dart-define-from-file=config/test.env"
+            ],
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Flutter Web Profile",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--dart-define-from-file=config/dev.env"
+            ],
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Flutter Web (Chrome)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome"
+            ],
+            "flutterMode": "debug"
+        }
+    ]
+}

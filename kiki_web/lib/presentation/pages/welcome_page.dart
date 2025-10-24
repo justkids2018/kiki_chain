@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../config/app_color.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/glassmorphism_slogan.dart';
 
-/// 欢迎页面
+/// Welcome Page
 ///
-/// 应用启动页面，提供登录、注册入口
-/// 如果用户已登录，自动跳转到首页
+/// App startup page, provides login and register entry
+/// If user is already logged in, automatically redirect to home page
 ///
-/// 创建时间: 2025年8月9日
-/// 最后修改: 2025年8月9日
-/// Apple 风格欢迎页
+/// Created: August 9, 2025
+/// Last Modified: August 9, 2025
+/// Apple style welcome page
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final sloganStyle = TextStyle(
       fontSize: 18,
       color: Colors.black.withOpacity(0.75),
@@ -47,7 +49,7 @@ class WelcomePage extends StatelessWidget {
               children: [
                 // LOGO
                 const SizedBox(height: 12),
-                // 标题
+                // Title
                 GlassmorphismSlogan(
                   slogan: 'Kiki World',
                   style: sloganStyle.copyWith(
@@ -55,19 +57,19 @@ class WelcomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const SizedBox(height: 32),
-                // 玻璃拟态 Slogan
+                // Glass morphism Slogan
                 // GlassmorphismSlogan(
                   // slogan: 'More than just a machine.',
                   // style: sloganStyle.copyWith(
                       // fontSize: 20, fontWeight: FontWeight.bold),
                 // ),
                 const SizedBox(height: 40),
-                // 按钮组
+                // Button group
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomButton(
-                      text: '注册',
+                      text: localizations.register,
                       height: 44,
                       width: 120,
                       borderRadius: 20,
@@ -79,7 +81,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 24),
                     CustomButton(
-                      text: '登录',
+                      text: localizations.login,
                       height: 44,
                       width: 120,
                       borderRadius: 20,

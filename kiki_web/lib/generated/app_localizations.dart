@@ -180,7 +180,7 @@ abstract class AppLocalizations {
   /// **'Theme'**
   String get theme;
 
-  /// Dark mode setting label
+  /// Dark mode setting
   ///
   /// In en, this message translates to:
   /// **'Dark Mode'**
@@ -269,6 +269,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type a message...'**
   String get typeMessage;
+
+  /// Phone number field label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// Welcome back title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back'**
+  String get welcomeBack;
+
+  /// Login subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Please login to your account'**
+  String get pleaseLoginToAccount;
+
+  /// Not logged in status
+  ///
+  /// In en, this message translates to:
+  /// **'Not logged in'**
+  String get notLoggedIn;
+
+  /// Click to login text
+  ///
+  /// In en, this message translates to:
+  /// **'Click to login'**
+  String get clickToLogin;
+
+  /// Learning statistics menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Statistics'**
+  String get learningStats;
+
+  /// Learning statistics description
+  ///
+  /// In en, this message translates to:
+  /// **'View learning progress and achievements'**
+  String get viewProgressAndAchievements;
+
+  /// Feature tip dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Tip'**
+  String get featureTip;
+
+  /// Learning stats development message
+  ///
+  /// In en, this message translates to:
+  /// **'Learning statistics feature is under development'**
+  String get learningStatsInDevelopment;
+
+  /// Favorites menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorites;
+
+  /// Favorites description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage favorite words'**
+  String get manageFavoriteWords;
+
+  /// Favorites development message
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites feature is under development'**
+  String get favoritesInDevelopment;
+
+  /// Learning history menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Learning History'**
+  String get learningHistory;
+
+  /// Learning history description
+  ///
+  /// In en, this message translates to:
+  /// **'View learning records'**
+  String get viewLearningRecords;
+
+  /// Learning history development message
+  ///
+  /// In en, this message translates to:
+  /// **'Learning history feature is under development'**
+  String get learningHistoryInDevelopment;
+
+  /// Settings description
+  ///
+  /// In en, this message translates to:
+  /// **'Personal preferences'**
+  String get personalPreferences;
+
+  /// Help and feedback menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Feedback'**
+  String get helpAndFeedback;
+
+  /// Help and feedback description
+  ///
+  /// In en, this message translates to:
+  /// **'Get help or provide feedback'**
+  String get getHelpOrProvideFeedback;
+
+  /// Help development message
+  ///
+  /// In en, this message translates to:
+  /// **'Help feature is under development'**
+  String get helpInDevelopment;
+
+  /// About menu item
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// About description
+  ///
+  /// In en, this message translates to:
+  /// **'Version information'**
+  String get versionInfo;
+
+  /// Log out menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
+
+  /// Log out description
+  ///
+  /// In en, this message translates to:
+  /// **'Safely exit the app'**
+  String get safelyExitApp;
+
+  /// Close button text
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// App subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Grounded Theory'**
+  String get groundedTheory;
+
+  /// Version text
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get version100;
+
+  /// App description
+  ///
+  /// In en, this message translates to:
+  /// **'A simple and easy-to-use vocabulary learning app that helps you master new vocabulary easily.'**
+  String get appDescription;
+
+  /// Exit confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Exit'**
+  String get confirmExit;
+
+  /// Logout confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get confirmLogoutMessage;
+
+  /// Exit button text
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exit;
+
+  /// Push notifications setting
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// Quick switch text
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Switch'**
+  String get quickSwitch;
+
+  /// Feature demo text
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Demo'**
+  String get featureDemo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

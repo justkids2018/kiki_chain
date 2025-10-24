@@ -177,7 +177,7 @@ class LoginPage extends StatelessWidget {
             
             // 登录按钮
             _buildGlassButton(
-              text: '登录',
+              text: localizations.login,
               onPressed: controller.login,
             ),
           ],
@@ -306,32 +306,37 @@ class LoginPage extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '还没有账户？',
-            style: TextStyle(
-              fontSize: 15,
-              color: Color(0xFF6B7280), // 次要文字色
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          
-          SizedBox(width: 8),
-          
-          GestureDetector(
-            onTap: () => Get.toNamed('/register'),
-            child: Text(
-              '立即注册',
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xFF00C37D), // Liquid Green主色调
-                fontWeight: FontWeight.w600,
+      child: Builder(
+        builder: (context) {
+          final localizations = AppLocalizations.of(context)!;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                localizations.noAccountYet,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Color(0xFF6B7280), // 次要文字色
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
-          ),
-        ],
+              
+              SizedBox(width: 8),
+              
+              GestureDetector(
+                onTap: () => Get.toNamed('/register'),
+                child: Text(
+                  localizations.register,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFF00C37D), // Liquid Green主色调
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

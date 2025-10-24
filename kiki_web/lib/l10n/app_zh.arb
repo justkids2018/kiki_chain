@@ -8,6 +8,8 @@
   "email": "邮箱",
   "password": "密码",
   "confirmPassword": "确认密码",
+  "noAccountYet": "还没有账户？",
+  "loading": "加载中...",
   "username": "用户名",
   "home": "首页",
   "profile": "个人资料",

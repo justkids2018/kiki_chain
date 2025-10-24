@@ -32,6 +32,14 @@
   "@confirmPassword": {
     "description": "Confirm password field label"
   },
+  "noAccountYet": "Don't have an account yet?",
+  "@noAccountYet": {
+    "description": "Text asking if user doesn't have account"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading indicator text"
+  },
   "username": "Username",
   "@username": {
     "description": "Username field label"

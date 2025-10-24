@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 
 class HomePage extends StatefulWidget {

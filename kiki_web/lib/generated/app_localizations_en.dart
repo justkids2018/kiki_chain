@@ -33,6 +33,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmPassword => 'Confirm Password';
 
   @override
+  String get noAccountYet => 'Don\'t have an account yet?';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
   String get username => 'Username';
 
   @override
@@ -70,9 +76,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get success => 'Success';
-
-  @override
-  String get loading => 'Loading...';
 
   @override
   String get noData => 'No data available';

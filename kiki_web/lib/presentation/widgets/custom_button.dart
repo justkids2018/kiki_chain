@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 
 import 'app_loading_indicator.dart';
 
@@ -119,7 +120,7 @@ class CustomButton extends StatelessWidget {
                 : null,
           ),
           child: Center(
-            child: _buildButtonContentWeb(isDisabled),
+            child: _buildButtonContentWeb(context, isDisabled),
           ),
         ),
       ),
@@ -143,62 +144,68 @@ class CustomButton extends StatelessWidget {
   }
   
   Widget _buildFilledButton(bool isDisabled, double buttonBorderRadius) {
-    return ElevatedButton(
-      onPressed: isDisabled ? null : _handlePress,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isDisabled 
-            ? Colors.grey[300] 
-            : backgroundColor ?? const Color(0xFF4CAF50),
-        foregroundColor: isDisabled 
-            ? Colors.grey[600] 
-            : textColor ?? Colors.white,
-        elevation: isDisabled ? 0 : 2,
-        shadowColor: Colors.black26,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(buttonBorderRadius),
+    return Builder(
+      builder: (context) => ElevatedButton(
+        onPressed: isDisabled ? null : _handlePress,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isDisabled 
+              ? Colors.grey[300] 
+              : backgroundColor ?? const Color(0xFF4CAF50),
+          foregroundColor: isDisabled 
+              ? Colors.grey[600] 
+              : textColor ?? Colors.white,
+          elevation: isDisabled ? 0 : 2,
+          shadowColor: Colors.black26,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(buttonBorderRadius),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: _buildButtonContentWeb(context, isDisabled),
       ),
-      child: _buildButtonContentWeb(isDisabled),
     );
   }
   
   Widget _buildOutlinedButton(bool isDisabled, double buttonBorderRadius) {
-    return OutlinedButton(
-      onPressed: isDisabled ? null : _handlePress,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: isDisabled 
-            ? Colors.grey[600] 
-            : textColor ?? const Color(0xFF4CAF50),
-        side: BorderSide(
-          color: isDisabled 
-              ? Colors.grey[300]! 
-              : borderColor ?? const Color(0xFF4CAF50),
-          width: borderWidth ?? 1.w,
+    return Builder(
+      builder: (context) => OutlinedButton(
+        onPressed: isDisabled ? null : _handlePress,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: isDisabled 
+              ? Colors.grey[600] 
+              : textColor ?? const Color(0xFF4CAF50),
+          side: BorderSide(
+            color: isDisabled 
+                ? Colors.grey[300]! 
+                : borderColor ?? const Color(0xFF4CAF50),
+            width: borderWidth ?? 1.w,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(buttonBorderRadius),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(buttonBorderRadius),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: _buildButtonContentWeb(context, isDisabled),
       ),
-      child: _buildButtonContentWeb(isDisabled),
     );
   }
   
   Widget _buildTextButton(bool isDisabled) {
-    return TextButton(
-      onPressed: isDisabled ? null : _handlePress,
-      style: TextButton.styleFrom(
-        foregroundColor: isDisabled 
-            ? Colors.grey[600] 
-            : textColor ?? const Color(0xFF4CAF50),
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+    return Builder(
+      builder: (context) => TextButton(
+        onPressed: isDisabled ? null : _handlePress,
+        style: TextButton.styleFrom(
+          foregroundColor: isDisabled 
+              ? Colors.grey[600] 
+              : textColor ?? const Color(0xFF4CAF50),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+        ),
+        child: _buildButtonContentWeb(context, isDisabled),
       ),
-      child: _buildButtonContentWeb(isDisabled),
     );
   }
   
-  Widget _buildButtonContentWeb(bool isDisabled) {
+  Widget _buildButtonContentWeb(BuildContext context, bool isDisabled) {
     final Color effectiveTextColor = textColor ?? (backgroundColor != null
         ? (backgroundColor!.computeLuminance() > 0.5 ? Colors.black : Colors.white)
         : Colors.white);
@@ -213,7 +220,7 @@ class CustomButton extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            '加载中...',
+            AppLocalizations.of(context)!.loading,
             style: TextStyle(
               fontSize: fontSize ?? 18,
               fontWeight: fontWeight ?? FontWeight.w600,

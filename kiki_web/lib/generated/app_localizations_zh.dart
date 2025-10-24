@@ -33,6 +33,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get confirmPassword => '确认密码';
 
   @override
+  String get noAccountYet => '还没有账户？';
+
+  @override
+  String get loading => '加载中...';
+
+  @override
   String get username => '用户名';
 
   @override
@@ -70,9 +76,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get success => '成功';
-
-  @override
-  String get loading => '加载中...';
 
   @override
   String get noData => '暂无数据';
@@ -224,6 +227,12 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get confirmPassword => '確認密碼';
 
   @override
+  String get noAccountYet => '還沒有帳戶？';
+
+  @override
+  String get loading => '載入中...';
+
+  @override
   String get username => '用戶名';
 
   @override
@@ -261,9 +270,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get success => '成功';
-
-  @override
-  String get loading => '載入中...';
 
   @override
   String get noData => '暫無資料';

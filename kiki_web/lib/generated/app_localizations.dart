@@ -144,6 +144,18 @@ abstract class AppLocalizations {
   /// **'Confirm Password'**
   String get confirmPassword;
 
+  /// Text asking if user doesn't have account
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account yet?'**
+  String get noAccountYet;
+
+  /// Loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
   /// Username field label
   ///
   /// In en, this message translates to:
@@ -221,12 +233,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Success'**
   String get success;
-
-  /// Loading message
-  ///
-  /// In en, this message translates to:
-  /// **'Loading...'**
-  String get loading;
 
   /// No data message
   ///

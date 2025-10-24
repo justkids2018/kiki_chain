@@ -39,6 +39,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loading => '加载中...';
 
   @override
+  String get confirm => '确认';
+
+  @override
   String get username => '用户名';
 
   @override
@@ -231,6 +234,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get loading => '載入中...';
+
+  @override
+  String get confirm => '確認';
 
   @override
   String get username => '用戶名';

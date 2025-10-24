@@ -156,6 +156,12 @@ abstract class AppLocalizations {
   /// **'Loading...'**
   String get loading;
 
+  /// Confirm button text
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
   /// Username field label
   ///
   /// In en, this message translates to:

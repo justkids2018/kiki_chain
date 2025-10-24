@@ -40,6 +40,10 @@
   "@loading": {
     "description": "Loading indicator text"
   },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  },
   "username": "Username",
   "@username": {
     "description": "Username field label"

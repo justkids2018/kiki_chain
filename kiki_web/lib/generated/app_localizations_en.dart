@@ -39,6 +39,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading...';
 
   @override
+  String get confirm => 'Confirm';
+
+  @override
   String get username => 'Username';
 
   @override

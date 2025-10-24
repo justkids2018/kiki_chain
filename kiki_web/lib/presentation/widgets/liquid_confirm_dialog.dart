@@ -6,12 +6,13 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 
 class LiquidConfirmDialog extends StatelessWidget {
   final String title;
   final String content;
-  final String confirmText;
-  final String cancelText;
+  final String? confirmText;
+  final String? cancelText;
   final bool isDestructive;
   final VoidCallback? onConfirm;
   final VoidCallback? onCancel;
@@ -20,8 +21,8 @@ class LiquidConfirmDialog extends StatelessWidget {
     Key? key,
     required this.title,
     required this.content,
-    this.confirmText = '确认',
-    this.cancelText = '取消',
+    this.confirmText,
+    this.cancelText,
     this.isDestructive = false,
     this.onConfirm,
     this.onCancel,
@@ -29,6 +30,8 @@ class LiquidConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 300),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -102,7 +105,7 @@ class LiquidConfirmDialog extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 _buildLiquidDialogButton(
-                                  text: cancelText,
+                                  text: cancelText ?? localizations.cancel,
                                   onTap: () {
                                     Navigator.of(context).pop(false);
                                     onCancel?.call();
@@ -111,7 +114,7 @@ class LiquidConfirmDialog extends StatelessWidget {
                                 ),
                                 SizedBox(width: 12),
                                 _buildLiquidDialogButton(
-                                  text: confirmText,
+                                  text: confirmText ?? localizations.confirm,
                                   onTap: () {
                                     Navigator.of(context).pop(true);
                                     onConfirm?.call();
@@ -206,8 +209,8 @@ class LiquidConfirmDialog extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String content,
-    String confirmText = '确认',
-    String cancelText = '取消',
+    String? confirmText,
+    String? cancelText,
     bool isDestructive = false,
     VoidCallback? onConfirm,
     VoidCallback? onCancel,

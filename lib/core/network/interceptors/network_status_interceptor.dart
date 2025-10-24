@@ -12,8 +12,8 @@ class NetworkStatusInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     try {
-      final connectivityResult = await _connectivity.checkConnectivity();
-      final isConnected = _isConnected(connectivityResult);
+      final connectivityResults = await _connectivity.checkConnectivity();
+      final isConnected = _isConnected(connectivityResults);
       
       if (!isConnected) {
         AppLogger.warning('📶 无网络连接');
@@ -41,23 +41,25 @@ class NetworkStatusInterceptor extends Interceptor {
   }
   
   /// 判断连接结果是否表示已连接
-  bool _isConnected(ConnectivityResult result) {
-    switch (result) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.ethernet:
-        return true;
-      case ConnectivityResult.none:
-      case ConnectivityResult.bluetooth:
-      case ConnectivityResult.vpn:
-      case ConnectivityResult.other:
-        return false;
+  bool _isConnected(List<ConnectivityResult> results) {
+    // 如果列表中有任何一个连接类型表示已连接，就返回 true
+    for (final result in results) {
+      switch (result) {
+        case ConnectivityResult.wifi:
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.ethernet:
+          return true;
+        case ConnectivityResult.none:
+        default:
+          continue;
+      }
     }
+    return false;
   }
   
   /// 检查当前是否有网络连接
   Future<bool> isCurrentlyConnected() async {
-    final result = await _connectivity.checkConnectivity();
-    return _isConnected(result);
+    final results = await _connectivity.checkConnectivity();
+    return _isConnected(results);
   }
 }

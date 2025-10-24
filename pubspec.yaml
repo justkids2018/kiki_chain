@@ -39,7 +39,7 @@ dependencies:
   
   # Network & API
   dio: ^5.3.0
-  connectivity_plus: ^3.0.6
+  connectivity_plus: ^7.0.0
   
   # Configuration
   # 使用内置的环境变量解析，无需额外依赖

@@ -49,7 +49,7 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 // 标题
                 GlassmorphismSlogan(
-                  slogan: '扎根理论垂直智能体',
+                  slogan: 'Kiki World',
                   style: sloganStyle.copyWith(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),

@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.just.qqmy" "\0"
+            VALUE "CompanyName", "com.just.kiki.chain" "\0"
             VALUE "FileDescription", "kikichain" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "kikichain" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.just.qqmy. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 com.just.kiki.chain. All rights reserved." "\0"
             VALUE "OriginalFilename", "kikichain.exe" "\0"
             VALUE "ProductName", "kikichain" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

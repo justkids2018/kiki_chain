@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qiqimanyou/presentation/controllers/auth_controller.dart';
+import 'package:kikichain/presentation/controllers/auth_controller.dart';
 
 void main() {
   group('邀请码验证测试', () {

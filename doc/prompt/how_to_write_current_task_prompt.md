@@ -2,7 +2,7 @@
 
 ## 针对自定义模式的 Prompt 编写指南
 
-当你已经配置好 `qiqimanyou.chatmode.md` 自定义模式后，你的 prompt 可以变得非常简洁，因为 AI 已经了解了项目背景。
+当你已经配置好 `kikichain.chatmode.md` 自定义模式后，你的 prompt 可以变得非常简洁，因为 AI 已经了解了项目背景。
 
 ---
 

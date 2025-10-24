@@ -1,7 +1,7 @@
 # 腾讯云 Docker 部署指南 (Linux AMD64)
 
 ## 📋 部署概述
-本文档指导如何在腾讯云 Linux AMD64 服务器上部署 qiqimanyou Flutter Web 应用
+本文档指导如何在腾讯云 Linux AMD64 服务器上部署 kikichain Flutter Web 应用
 
 ## 🏗️ 系统要求
 - 腾讯云服务器：Linux AMD64 架构
@@ -13,7 +13,7 @@
 ## 📦 文件清单
 ```
 frontend/
-├── qiqimanyou-flutter-web-amd64.tar.gz  # Docker 镜像文件 (24MB)
+├── kikichain-flutter-web-amd64.tar.gz  # Docker 镜像文件 (24MB)
 ├── docker-compose.yml                   # 容器编排文件
 ├── nginx.conf                          # Nginx 配置文件
 └── 腾讯云部署指南_AMD64.md              # 本文档
@@ -24,7 +24,7 @@ frontend/
 ### 步骤 1: 上传文件到腾讯云服务器
 ```bash
 # 使用 scp 上传文件到服务器
-scp frontend/qiqimanyou-flutter-web-amd64.tar.gz  ubuntu@82.156.34.186:~/qisd_eda_college/frontend
+scp frontend/kikichain-flutter-web-amd64.tar.gz  ubuntu@82.156.34.186:~/qisd_eda_college/frontend
 
 scp frontend/docker-compose.yml  ubuntu@82.156.34.186:~/qisd_eda_college/
 
@@ -45,7 +45,7 @@ cd qisd_eda_college
 
 # 3. 验证文件
 ls -la
-# 应该看到：qiqimanyou-flutter-web-amd64.tar.gz, docker-compose.yml, nginx.conf
+# 应该看到：kikichain-flutter-web-amd64.tar.gz, docker-compose.yml, nginx.conf
 
 # 4. 安装 Docker（如果还没安装）
 curl -fsSL https://get.docker.com | bash
@@ -60,14 +60,14 @@ chmod +x /usr/local/bin/docker-compose
 ### 步骤 3: 导入 Docker 镜像
 ```bash
 # 导入镜像
-docker load < qiqimanyou-flutter-web-amd64.tar.gz
+docker load < kikichain-flutter-web-amd64.tar.gz
 
 # 验证镜像
-docker images | grep qiqimanyou-flutter-web
-# 应该看到：qiqimanyou-flutter-web latest linux/amd64
+docker images | grep kikichain-flutter-web
+# 应该看到：kikichain-flutter-web latest linux/amd64
 
 # 验证架构
-docker inspect qiqimanyou-flutter-web:latest | grep -A 2 "Architecture"
+docker inspect kikichain-flutter-web:latest | grep -A 2 "Architecture"
 # 应该显示：Architecture: amd64, Os: linux
 ```
 
@@ -80,7 +80,7 @@ docker compose down
 
 # 检查容器状态
 docker-compose ps
-# 应该显示：qiqimanyou-frontend running
+# 应该显示：kikichain-frontend running
 
 # 查看日志
 docker-compose logs -f frontend
@@ -89,9 +89,9 @@ docker-compose logs -f frontend
 sudo docker images
 
 docker compose down
-docker rm qiqimanyou-frontend
-docker rmi qiqimanyou-flutter-web:latest
-docker load < qiqimanyou-flutter-web-amd64.tar.gz
+docker rm kikichain-frontend
+docker rmi kikichain-flutter-web:latest
+docker load < kikichain-flutter-web-amd64.tar.gz
 docker compose up -d
 
 ```
@@ -122,13 +122,13 @@ curl -I http://keepthinking.me
 
 ### 停止应用
 ```bash
-cd /opt/qiqimanyou
+cd /opt/kikichain
 docker-compose down
 ```
 
 ### 重启应用
 ```bash
-cd /opt/qiqimanyou
+cd /opt/kikichain
 docker-compose restart
 ```
 
@@ -136,8 +136,8 @@ docker-compose restart
 ```bash
 # 1. 上传新镜像
 # 2. 导入新镜像
-docker load < qiqimanyou-flutter-web-amd64.tar.gz
-gunzip qiqimanyou-flutter-web-amd64.tar.gz
+docker load < kikichain-flutter-web-amd64.tar.gz
+gunzip kikichain-flutter-web-amd64.tar.gz
 
 # 3. 重新启动
 docker compose down
@@ -203,10 +203,10 @@ docker system prune -a
 curl -I http://keepthinking.me
 
 # 健康检查
-docker inspect qiqimanyou-frontend | grep Health
+docker inspect kikichain-frontend | grep Health
 
 # 资源使用情况
-docker stats qiqimanyou-frontend --no-stream
+docker stats kikichain-frontend --no-stream
 ```
 
 ### 性能指标
@@ -255,5 +255,5 @@ ufw enable
 ---
 
 ## 🎉 部署完成
-恭喜！你已经成功在腾讯云上部署了 qiqimanyou Flutter Web 应用！
+恭喜！你已经成功在腾讯云上部署了 kikichain Flutter Web 应用！
 访问 http://keepthinking.me 开始使用吧！

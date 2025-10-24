@@ -1,4 +1,4 @@
-package com.just.qqmy.qiqimanyou
+package com.just.qqmy.kikichain
 
 import io.flutter.embedding.android.FlutterActivity
 

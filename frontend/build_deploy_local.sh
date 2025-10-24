@@ -20,8 +20,8 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # 配置变量
-PROJECT_NAME="qiqimanyou"
-IMAGE_NAME="qiqimanyou-flutter-web"
+PROJECT_NAME="kikichain"
+IMAGE_NAME="kikichain-flutter-web"
 DATE_TAG=$(date +%Y%m%d)
 IMAGE_TAG="latest"  # 固定使用 latest 标签
 FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
@@ -473,7 +473,7 @@ echo "========================================"
 
 # 检查必要文件
 echo -e "${BLUE}📋 检查部署文件...${NC}"
-required_files=("qiqimanyou-flutter-web-amd64.tar.gz" "docker-compose.yml" "nginx.conf")
+required_files=("kikichain-flutter-web-amd64.tar.gz" "docker-compose.yml" "nginx.conf")
 for file in "${required_files[@]}"; do
     if [[ ! -f "$file" ]]; then
         echo -e "${RED}❌ 缺少文件: $file${NC}"
@@ -559,7 +559,7 @@ cat > ${REPORT_FILE} << EOF
 ## 📋 部署文件清单
 \`\`\`
 ${FRONTEND_DIR}/
-├── qiqimanyou-flutter-web-amd64.tar.gz     # Docker 镜像文件
+├── kikichain-flutter-web-amd64.tar.gz     # Docker 镜像文件
 ├── docker-compose.yml                       # 容器编排配置
 ├── nginx.conf                              # Nginx 配置
 ├── quick_deploy_server.sh                  # 快速部署脚本
@@ -622,14 +622,14 @@ echo -e "  ├── ${FRONTEND_DIR}/腾讯云部署指南_AMD64.md"
 echo -e "  └── ${REPORT_FILE}"
 echo
 echo -e "${GREEN}🚀 下一步操作：${NC}"
-echo "1. 上传以下文件到腾讯云服务器 /opt/qiqimanyou/ 目录："
+echo "1. 上传以下文件到腾讯云服务器 /opt/kikichain/ 目录："
 echo "   - ${EXPORT_FILE}"
 echo "   - ${FRONTEND_DIR}/docker-compose.yml"
 echo "   - ${FRONTEND_DIR}/nginx.conf"
 echo "   - ${QUICK_DEPLOY_SCRIPT}"
 echo
 echo "2. 在服务器上执行部署："
-echo "   cd /opt/qiqimanyou"
+echo "   cd /opt/kikichain"
 echo "   chmod +x quick_deploy_server.sh"
 echo "   ./quick_deploy_server.sh"
 echo
@@ -693,13 +693,13 @@ echo "⏹️  停止当前运行的容器..."
 docker compose down || true
 
 echo "🧹 清理旧镜像..."
-OLD_IMAGES=$(docker images qiqimanyou-flutter-web --format "{{.ID}} {{.Tag}}" | grep -v "latest" | awk '{print $1}')
+OLD_IMAGES=$(docker images kikichain-flutter-web --format "{{.ID}} {{.Tag}}" | grep -v "latest" | awk '{print $1}')
 if [[ -n "$OLD_IMAGES" ]]; then
     echo "$OLD_IMAGES" | xargs docker rmi -f 2>/dev/null || true
 fi
 
 echo "📦 加载最新镜像..."
-LATEST_IMAGE=$(ls -t qiqimanyou-flutter-web-amd64-*.tar.gz 2>/dev/null | head -1)
+LATEST_IMAGE=$(ls -t kikichain-flutter-web-amd64-*.tar.gz 2>/dev/null | head -1)
 if [[ -n "$LATEST_IMAGE" ]]; then
     echo "正在加载: $LATEST_IMAGE"
     docker load < "$LATEST_IMAGE"
@@ -715,7 +715,7 @@ else
 fi
 
 echo "🔍 验证镜像..."
-docker images qiqimanyou-flutter-web:latest
+docker images kikichain-flutter-web:latest
 
 echo "🚀 启动服务..."
 docker compose up -d

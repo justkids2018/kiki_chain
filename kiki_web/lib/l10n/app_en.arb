@@ -1,0 +1,119 @@
+{
+  "@@locale": "en",
+  "appName": "KikiChain",
+  "@appName": {
+    "description": "The application name"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "Register button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "Username field label"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home page title"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile page title"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode setting label"
+  },
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light mode setting label"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button text"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error message title"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success message title"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading message"
+  },
+  "noData": "No data available",
+  "@noData": {
+    "description": "No data message"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder text"
+  },
+  "send": "Send",
+  "@send": {
+    "description": "Send button text"
+  },
+  "chat": "Chat",
+  "@chat": {
+    "description": "Chat page title"
+  },
+  "message": "Message",
+  "@message": {
+    "description": "Message field label"
+  },
+  "typeMessage": "Type a message...",
+  "@typeMessage": {
+    "description": "Message input placeholder"
+  }
+}

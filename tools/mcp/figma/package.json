@@ -1,0 +1,20 @@
+{
+  "name": "figma",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "lint": "node --check ./server/index.js",
+    "start": "node ./server/index.js",
+    "dev": "node --watch ./server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.19.1",
+    "dotenv": "^17.2.3",
+    "figma-api": "^2.1.0-beta"
+  }
+}

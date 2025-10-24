@@ -130,7 +130,7 @@ class PlatformConfigManager {
     if (kIsWeb) {
       return '/web_storage';
     } else if (Platform.isAndroid) {
-      return '/data/data/com.qiqimanyou.app/files';
+      return '/data/data/com.kikichain.app/files';
     } else if (Platform.isIOS) {
       return '/Documents';
     } else if (Platform.isWindows) {
@@ -138,7 +138,7 @@ class PlatformConfigManager {
     } else if (Platform.isMacOS) {
       return '${Platform.environment['HOME']}/Documents/QiqiManyou';
     } else {
-      return '/tmp/qiqimanyou';
+      return '/tmp/kikichain';
     }
   }
   
@@ -147,7 +147,7 @@ class PlatformConfigManager {
     if (kIsWeb) {
       return '/web_cache';
     } else if (Platform.isAndroid) {
-      return '/data/data/com.qiqimanyou.app/cache';
+      return '/data/data/com.kikichain.app/cache';
     } else if (Platform.isIOS) {
       return '/Library/Caches';
     } else if (Platform.isWindows) {
@@ -155,7 +155,7 @@ class PlatformConfigManager {
     } else if (Platform.isMacOS) {
       return '${Platform.environment['HOME']}/Library/Caches/QiqiManyou';
     } else {
-      return '/tmp/qiqimanyou/cache';
+      return '/tmp/kikichain/cache';
     }
   }
   

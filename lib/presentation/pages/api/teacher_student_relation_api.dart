@@ -1,4 +1,4 @@
-import 'package:qiqimanyou/core/network/request_manager.dart';
+import 'package:kikichain/core/network/request_manager.dart';
 
 /// TeacherStudentRelationApi encapsulates CRUD operations for teacher-student bindings.
 class TeacherStudentRelationApi {

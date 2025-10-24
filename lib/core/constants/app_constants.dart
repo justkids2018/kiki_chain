@@ -36,7 +36,7 @@ class AppConstants {
   static const int maxRetryCount = 3;
 
   // 平台相关
-  static const String platformChannelName = 'qiqimanyou/platform';
+  static const String platformChannelName = 'kikichain/platform';
 
   static const String defaultReplaceKey = 'Qmm';
 

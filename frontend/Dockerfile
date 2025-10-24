@@ -7,10 +7,10 @@
 FROM --platform=linux/amd64 nginx:alpine
 
 # 维护者信息和镜像元数据
-LABEL maintainer="qiqimanyou-team"
+LABEL maintainer="kikichain-team"
 LABEL description="奇奇漫游记 Flutter Web 应用 - 生产环境镜像"
 LABEL version="1.0.1"
-LABEL project="qiqimanyou"
+LABEL project="kikichain"
 LABEL architecture="linux/amd64"
 
 # 设置时区为中国标准时间

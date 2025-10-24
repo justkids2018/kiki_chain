@@ -2,8 +2,8 @@
 services:
   # ===================== 前端 (Flutter Web + Nginx) =====================
   frontend:
-    image: qiqimanyou-flutter-web:latest
-    container_name: qiqimanyou-frontend
+    image: kikichain-flutter-web:latest
+    container_name: kikichain-frontend
     restart: unless-stopped
     platform: linux/amd64
     ports:
@@ -18,12 +18,12 @@ services:
     depends_on:
       - backend
     networks:
-      - qiqimanyou-network
+      - kikichain-network
 
   # ===================== 后端 (Rust API) =====================
   backend:
-    image: qiqimanyou-server:latest
-    container_name: qiqimanyou-backend
+    image: kikichain-server:latest
+    container_name: kikichain-backend
     restart: unless-stopped
     environment:
       - ENVIRONMENT=production
@@ -35,7 +35,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - qiqimanyou-network
+      - kikichain-network
 
   # ===================== 数据库 (Postgres) =====================
   postgres:
@@ -51,11 +51,11 @@ services:
     expose:
       - "5432"
     networks:
-      - qiqimanyou-network
+      - kikichain-network
 
 # ===================== 网络 =====================
 networks:
-  qiqimanyou-network:
+  kikichain-network:
     driver: bridge
 
 # ===================== 数据卷 =====================

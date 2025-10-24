@@ -1,6 +1,6 @@
-import 'package:qiqimanyou/core/constants/api_endpoints.dart';
-import 'package:qiqimanyou/core/network/request_manager.dart';
-import 'package:qiqimanyou/domain/entities/user_entity.dart';
+import 'package:kikichain/core/constants/api_endpoints.dart';
+import 'package:kikichain/core/network/request_manager.dart';
+import 'package:kikichain/domain/entities/user_entity.dart';
 
 class UserRepository {
   final RequestManager _http = RequestManager.instance;

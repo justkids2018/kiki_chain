@@ -16,7 +16,7 @@ echo "========================================"
 
 # 检查必要文件
 echo -e "\033[0;34m📋 检查部署文件...\033[0m"
-required_files=("qiqimanyou-flutter-web-amd64.tar.gz" "docker-compose.yml" "nginx.conf")
+required_files=("kikichain-flutter-web-amd64.tar.gz" "docker-compose.yml" "nginx.conf")
 for file in "frontend/Dockerfile frontend/nginx.conf pubspec.yaml lib/main.dart"; do
     if [[ ! -f "build/web/flutter.js" ]]; then
         echo -e "\033[0;31m❌ 缺少文件: build/web/flutter.js\033[0m"
@@ -40,11 +40,11 @@ docker compose down 2>/dev/null || true
 
 # 导入镜像
 echo -e "\033[0;34m📦 导入 Docker 镜像...\033[0m"
-docker load < qiqimanyou-flutter-web-amd64-20251020_002622.tar.gz
+docker load < kikichain-flutter-web-amd64-20251020_002622.tar.gz
 
 # 验证镜像
 echo -e "\033[0;34m� 验证镜像...\033[0m"
-docker inspect qiqimanyou-flutter-web:latest | grep -A 2 "Architecture"
+docker inspect kikichain-flutter-web:latest | grep -A 2 "Architecture"
 
 # 启动服务（需在docker-compose.yml中指定对应tag）
 echo -e "\033[0;34m🚀 启动服务...\033[0m"

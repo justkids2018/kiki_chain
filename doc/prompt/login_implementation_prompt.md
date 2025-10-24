@@ -1,7 +1,7 @@
 # 登录页面实现开发 Prompt
 
 ## 使用模式
-**自定义模式**：qiqimanyou.chatmode.md
+**自定义模式**：kikichain.chatmode.md
 
 ## 任务描述
 快速实现登录页面的基础结构和表单组件
@@ -40,4 +40,4 @@
 3. **文档建议**：按照命名规范的文档更新建议
 
 ---
-**使用说明**：将此 prompt 发送给配置了 qiqimanyou.chatmode.md 的 AI，测试自定义模式的效果。
+**使用说明**：将此 prompt 发送给配置了 kikichain.chatmode.md 的 AI，测试自定义模式的效果。

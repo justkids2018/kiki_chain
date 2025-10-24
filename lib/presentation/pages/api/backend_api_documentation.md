@@ -867,8 +867,8 @@ curl -X POST \
 
 ### 环境地址
 - **开发环境**: `http://localhost:8080`
-- **测试环境**: `https://test-api.qiqimanyou.com`
-- **生产环境**: `https://api.qiqimanyou.com`
+- **测试环境**: `https://test-api.kikichain.com`
+- **生产环境**: `https://api.kikichain.com`
 
 ### 请求头要求
 ```

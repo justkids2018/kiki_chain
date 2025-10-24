@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qiqimanyou/core/constants/app_constants.dart';
+import 'package:kikichain/core/constants/app_constants.dart';
 import 'config/app_routes.dart';
 import 'core/app_initializer.dart';
 import 'presentation/controllers/auth_controller.dart';

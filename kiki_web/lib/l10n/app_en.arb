@@ -115,5 +115,141 @@
   "typeMessage": "Type a message...",
   "@typeMessage": {
     "description": "Message input placeholder"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "welcomeBack": "Welcome Back",
+  "@welcomeBack": {
+    "description": "Welcome back title"
+  },
+  "pleaseLoginToAccount": "Please login to your account",
+  "@pleaseLoginToAccount": {
+    "description": "Login subtitle"
+  },
+  "notLoggedIn": "Not logged in",
+  "@notLoggedIn": {
+    "description": "Not logged in status"
+  },
+  "clickToLogin": "Click to login",
+  "@clickToLogin": {
+    "description": "Click to login text"
+  },
+  "learningStats": "Learning Statistics",
+  "@learningStats": {
+    "description": "Learning statistics menu item"
+  },
+  "viewProgressAndAchievements": "View learning progress and achievements",
+  "@viewProgressAndAchievements": {
+    "description": "Learning statistics description"
+  },
+  "featureTip": "Feature Tip",
+  "@featureTip": {
+    "description": "Feature tip dialog title"
+  },
+  "learningStatsInDevelopment": "Learning statistics feature is under development",
+  "@learningStatsInDevelopment": {
+    "description": "Learning stats development message"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites menu item"
+  },
+  "manageFavoriteWords": "Manage favorite words",
+  "@manageFavoriteWords": {
+    "description": "Favorites description"
+  },
+  "favoritesInDevelopment": "Favorites feature is under development",
+  "@favoritesInDevelopment": {
+    "description": "Favorites development message"
+  },
+  "learningHistory": "Learning History",
+  "@learningHistory": {
+    "description": "Learning history menu item"
+  },
+  "viewLearningRecords": "View learning records",
+  "@viewLearningRecords": {
+    "description": "Learning history description"
+  },
+  "learningHistoryInDevelopment": "Learning history feature is under development",
+  "@learningHistoryInDevelopment": {
+    "description": "Learning history development message"
+  },
+  "personalPreferences": "Personal preferences",
+  "@personalPreferences": {
+    "description": "Settings description"
+  },
+  "helpAndFeedback": "Help & Feedback",
+  "@helpAndFeedback": {
+    "description": "Help and feedback menu item"
+  },
+  "getHelpOrProvideFeedback": "Get help or provide feedback",
+  "@getHelpOrProvideFeedback": {
+    "description": "Help and feedback description"
+  },
+  "helpInDevelopment": "Help feature is under development",
+  "@helpInDevelopment": {
+    "description": "Help development message"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About menu item"
+  },
+  "versionInfo": "Version information",
+  "@versionInfo": {
+    "description": "About description"
+  },
+  "logOut": "Log Out",
+  "@logOut": {
+    "description": "Log out menu item"
+  },
+  "safelyExitApp": "Safely exit the app",
+  "@safelyExitApp": {
+    "description": "Log out description"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  "groundedTheory": "Grounded Theory",
+  "@groundedTheory": {
+    "description": "App subtitle"
+  },
+  "version100": "Version 1.0.0",
+  "@version100": {
+    "description": "Version text"
+  },
+  "appDescription": "A simple and easy-to-use vocabulary learning app that helps you master new vocabulary easily.",
+  "@appDescription": {
+    "description": "App description"
+  },
+  "confirmExit": "Confirm Exit",
+  "@confirmExit": {
+    "description": "Exit confirmation title"
+  },
+  "confirmLogoutMessage": "Are you sure you want to log out?",
+  "@confirmLogoutMessage": {
+    "description": "Logout confirmation message"
+  },
+  "exit": "Exit",
+  "@exit": {
+    "description": "Exit button text"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode setting"
+  },
+  "pushNotifications": "Push Notifications",
+  "@pushNotifications": {
+    "description": "Push notifications setting"
+  },
+  "quickSwitch": "Quick Switch",
+  "@quickSwitch": {
+    "description": "Quick switch text"
+  },
+  "featureDemo": "Feature Demo",
+  "@featureDemo": {
+    "description": "Feature demo text"
   }
 }

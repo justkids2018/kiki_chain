@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../controllers/auth_controller.dart';
 
 /// 登录页面 - Liquid Glass Edition (Refined)
@@ -15,6 +16,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Color(0xFFF8FAFC), // Light Base 浅色模式背景，纯色不使用毛玻璃
@@ -30,12 +32,12 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 60),
                 
                 // 头部
-                _buildHeader(),
+                _buildHeader(localizations),
                 
                 SizedBox(height: 50),
                 
                 // 登录卡片
-                _buildLoginCard(authController),
+                _buildLoginCard(authController, localizations),
                 
                 SizedBox(height: 30),
                 
@@ -53,7 +55,7 @@ class LoginPage extends StatelessWidget {
   }
 
   /// 构建页面头部 - Refined设计
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations localizations) {
     return Column(
       children: [
         // Logo - 简洁设计，突出Liquid Green主色调
@@ -87,7 +89,7 @@ class LoginPage extends StatelessWidget {
         
         // 标题 - SF Pro字体规范
         Text(
-          '欢迎回来',
+          localizations.welcomeBack,
           style: TextStyle(
             fontSize: 28, // 标题 Semibold
             fontWeight: FontWeight.w600,
@@ -101,7 +103,7 @@ class LoginPage extends StatelessWidget {
         
         // 副标题 - SF Pro Text
         Text(
-          '请登录您的账户',
+          localizations.pleaseLoginToAccount,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400, // Regular
@@ -114,7 +116,7 @@ class LoginPage extends StatelessWidget {
   }
 
   /// 构建登录卡片 - 简洁纯色设计
-  Widget _buildLoginCard(AuthController controller) {
+  Widget _buildLoginCard(AuthController controller, AppLocalizations localizations) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(32),
@@ -141,7 +143,7 @@ class LoginPage extends StatelessWidget {
             // 用户名输入框
             _buildGlassTextField(
               controller: controller.loginIdentifierController,
-              labelText: '手机号',
+              labelText: localizations.phoneNumber,
               prefixIcon: Icons.person_outline_rounded,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -153,7 +155,7 @@ class LoginPage extends StatelessWidget {
             // 密码输入框
             Obx(() => _buildGlassTextField(
               controller: controller.loginPasswordController,
-              labelText: '密码',
+              labelText: localizations.password,
               prefixIcon: Icons.lock_outline_rounded,
               obscureText: !controller.loginPasswordVisible,
               suffixIcon: IconButton(

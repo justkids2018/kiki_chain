@@ -6,6 +6,8 @@ import '../../core/services/app_services.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/network/request_manager.dart';
 import '../../core/exceptions/app_exceptions.dart';
+import '../../domain/repositories/i_auth_repository.dart';
+import '../../core/di/service_locator.dart';
 
 /// 认证控制器
 /// 
@@ -15,8 +17,11 @@ import '../../core/exceptions/app_exceptions.dart';
 /// 创建时间: 2025年8月9日
 /// 最后修改: 2025年8月9日
 class AuthController extends GetxController {
-  // 便捷访问器
-  get _authRepository => AppServices.instance.authRepository;
+  final IAuthRepository _authRepository;
+
+  AuthController({IAuthRepository? authRepository})
+      : _authRepository =
+            authRepository ?? ServiceLocator.instance.authRepository;
   
   // 响应式状态
   final _currentUser = Rxn<User>();
@@ -134,7 +139,12 @@ class AuthController extends GetxController {
       final password = loginPasswordController.text;
       
       final user = await _authRepository.login(identifier, password);
-      
+      if (user == null) {
+        EasyLoading.showError('登录失败，请重试');
+        AppLogger.error('Login failed: repository returned null user');
+        return false;
+      }
+
       _currentUser.value = user;
       _isLoggedIn.value = true;
       
@@ -260,6 +270,10 @@ class AuthController extends GetxController {
       final roleId = _selectedRoleId.value!;
       
       final user = await _authRepository.register(username, roleId, password, phone);
+      if (user == null) {
+        EasyLoading.showError('注册返回数据为空，请稍后重试');
+        return false;
+      }
       
       // 更新用户角色
       final updatedUser = user.copyWith(roleId: roleId);

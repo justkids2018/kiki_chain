@@ -3,7 +3,8 @@ import '../config/env_config.dart';
 import '../network/api_config.dart';
 import '../../data/services/local_storage_service.dart';
 import '../../data/services/user_service.dart';
-import '../../data/repositories/auth_repository.dart';
+import '../di/service_locator.dart';
+import '../../domain/repositories/i_auth_repository.dart';
 
 /// 应用服务 - 统一管理所有业务服务
 /// 
@@ -17,7 +18,7 @@ class AppServices {
   // 服务实例
   LocalStorageService? _localStorage;
   UserService? _userService;
-  AuthRepository? _authRepository;
+  IAuthRepository? _authRepository;
   
   bool _initialized = false;
   
@@ -87,10 +88,22 @@ class AppServices {
   }
   
   /// 认证仓库
-  AuthRepository get authRepository {
-    _authRepository ??= AuthRepository();
+  IAuthRepository get authRepository {
+    _authRepository ??= ServiceLocator.instance.authRepository;
     return _authRepository!;
   }
+
+  /// 允许覆盖认证仓库实例（例如测试场景）
+  void setAuthRepository(IAuthRepository repository) {
+    _authRepository = repository;
+    ServiceLocator.instance.setAuthRepository(repository);
+  }
+
+  void resetAuthRepository() {
+    _authRepository = null;
+    ServiceLocator.instance.resetAuthRepository();
+  }
+
   /// 检查初始化状态
   bool get isInitialized => _initialized;
   
@@ -99,6 +112,7 @@ class AppServices {
     _localStorage = null;
     _userService = null;
     _authRepository = null;
+    ServiceLocator.instance.resetAuthRepository();
     _initialized = false;
   }
 }

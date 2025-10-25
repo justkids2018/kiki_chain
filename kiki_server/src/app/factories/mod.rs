@@ -1,0 +1,17 @@
+// 控制器工厂模块
+// 提供专门的工厂类来创建各种控制器及其依赖
+
+pub mod assignment_controller_factory;
+pub mod dify_api_key_controller_factory;
+pub mod student_assignment_controller_factory;
+pub mod student_controller_factory;
+pub mod teacher_assignment_controller_factory;
+pub mod teacher_student_controller_factory;
+
+// 导出工厂类
+pub use assignment_controller_factory::AssignmentControllerFactory;
+pub use dify_api_key_controller_factory::DifyApiKeyControllerFactory;
+pub use student_assignment_controller_factory::StudentAssignmentControllerFactory;
+pub use student_controller_factory::StudentControllerFactory;
+pub use teacher_assignment_controller_factory::TeacherAssignmentControllerFactory;
+pub use teacher_student_controller_factory::TeacherStudentControllerFactory;

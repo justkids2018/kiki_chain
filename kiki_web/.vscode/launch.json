@@ -62,6 +62,53 @@
                 "chrome"
             ],
             "flutterMode": "debug"
+        },
+        {
+            "name": "Flutter macOS (开发环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "macos",
+                "--dart-define-from-file=config/dev.env"
+            ],
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Flutter macOS (生产环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "macos",
+                "--dart-define-from-file=config/prod.env"
+            ],
+            "flutterMode": "release"
+        },
+        {
+            "name": "Flutter macOS (测试环境)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "macos",
+                "--dart-define-from-file=config/test.env"
+            ],
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Flutter macOS Debug",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "macos"
+            ],
+            "flutterMode": "debug"
         }
     ]
 }

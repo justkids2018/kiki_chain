@@ -1,0 +1,12 @@
+/Users/qisd/qiqimanyou_server/target/debug/deps/libsqlx-3b6c421a1877546d.rmeta: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/mod.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/mod.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/ty_match.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/spec_error.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.md /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/test.md /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/install_drivers_note.md
+
+/Users/qisd/qiqimanyou_server/target/debug/deps/sqlx-3b6c421a1877546d.d: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/mod.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/mod.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/ty_match.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/spec_error.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.md /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/test.md /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/install_drivers_note.md
+
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.rs:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/mod.rs:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/mod.rs:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/ty_match.rs:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/spec_error.rs:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/lib.md:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/macros/test.md:
+/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sqlx-0.8.6/src/any/install_drivers_note.md:

@@ -1,10 +1,15 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/user.dart';
-import '../../core/services/app_services.dart';
+import '../../domain/repositories/i_auth_repository.dart';
+import '../../core/di/service_locator.dart';
 
 /// 简化的首页控制器
 class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+  HomeController({IAuthRepository? authRepository})
+      : _authRepository =
+            authRepository ?? ServiceLocator.instance.authRepository;
+
   // 底部导航相关
   late TabController tabController;
   final RxInt currentIndex = 0.obs;
@@ -13,7 +18,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   final Rxn<User> currentUser = Rxn<User>();
   
   // 服务访问
-  get _authRepository => AppServices.instance.authRepository;
+  final IAuthRepository _authRepository;
   
   @override
   void onInit() {

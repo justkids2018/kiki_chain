@@ -280,7 +280,7 @@ pub async fn jwt_auth_middleware(
     let path = request.uri().path();
 
     // 白名单路径，这些路径不需要JWT认证
-    let whitelist_paths = vec!["/api/auth/login", "/api/auth/register", "/health"];
+    let whitelist_paths = vec!["/api/auth/login", "/health"];
 
     // 检查是否在白名单中
     if whitelist_paths

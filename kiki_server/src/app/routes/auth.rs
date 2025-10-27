@@ -22,12 +22,15 @@ use qiqimanyou_server::shared::api_response::ApiResponse;
 ///
 /// ## 路由清单
 /// - POST /api/auth/login       - 用户登录
+/// - POST /api/auth/register    - 用户注册
 pub fn create_auth_routes(app_state: AppState) -> Router {
     info!("🔐 [认证模块] 初始化认证路由");
-    info!("  └── 登录路由: POST {}", ApiPaths::LOGIN);
+    info!("  ├── 登录路由: POST {}", ApiPaths::LOGIN);
+    info!("  └── 注册路由: POST {}", ApiPaths::REGISTER);
 
     Router::new()
         .route(ApiPaths::LOGIN, post(login))
+        .route(ApiPaths::REGISTER, post(register))
         .with_state(app_state)
 }
 
@@ -76,6 +79,30 @@ async fn login(
         }
         Err(e) => {
             warn!("🚫 [用户登录] 登录失败: {:?}", e);
+            let api_error = ApiResponse::from_domain_error(&e);
+            let status = api_error.http_status();
+            Err((status, Json(api_error)))
+        }
+    }
+}
+
+/// 用户注册
+#[instrument(skip(state, request))]
+async fn register(
+    State(state): State<AppState>,
+    JsonExtract(request): JsonExtract<Value>,
+) -> Result<Json<ApiResponse<Value>>, (StatusCode, Json<ApiResponse<Value>>)> {
+    info!("🆕 [用户注册] 开始注册流程");
+    match state.auth_controller.register(request).await {
+        Ok(response_value) => {
+            info!("✅ [用户注册] 注册成功");
+            Ok(Json(ApiResponse::success(
+                response_value,
+                "注册成功".to_string(),
+            )))
+        }
+        Err(e) => {
+            warn!("🚫 [用户注册] 注册失败: {:?}", e);
             let api_error = ApiResponse::from_domain_error(&e);
             let status = api_error.http_status();
             Err((status, Json(api_error)))

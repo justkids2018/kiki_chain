@@ -107,8 +107,19 @@ impl AppConfig {
     /// 验证配置
     fn validate(&self) -> Result<()> {
         // 检查必需环境变量
-        env::var("JWT_SECRET")
-            .map_err(|_| Error::Internal("JWT_SECRET environment variable required".to_string()))?;
+        if env::var("JWT_SECRET").is_err() {
+            if self.is_development() {
+                // 为开发环境注入默认密钥，避免首次启动失败
+                env::set_var("JWT_SECRET", "dev-only-jwt-secret-change-me");
+                eprintln!(
+                    "[config] JWT_SECRET 未设置，已为开发环境注入默认密钥（请在生产环境设置强随机值）"
+                );
+            } else {
+                return Err(Error::Internal(
+                    "JWT_SECRET environment variable required".to_string(),
+                ));
+            }
+        }
 
         env::var("DATABASE_URL").map_err(|_| {
             Error::Internal("DATABASE_URL environment variable required".to_string())

@@ -1,0 +1,51 @@
+    Blocking waiting for file lock on build directory
+  19.010731084s  INFO prepare_target{force=false package_id=qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server) target="qiqimanyou_server"}: cargo::core::compiler::fingerprint: fingerprint error for qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("qiqimanyou_server", ["lib"], "/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/src/lib.rs", Edition2021) }
+  19.010893792s  INFO prepare_target{force=false package_id=qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server) target="qiqimanyou_server"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/debug/.fingerprint/qiqimanyou_server-c2514ca7b77a4117/test-lib-qiqimanyou_server`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   7: cargo::ops::cargo_compile::compile_ws
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+  19.022984084s  INFO prepare_target{force=false package_id=qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server) target="qiqimanyou_server"}: cargo::core::compiler::fingerprint: fingerprint error for qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server)/Check { test: true }/TargetInner { name: "qiqimanyou_server", doc: true, ..: with_path("/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/src/main.rs", Edition2021) }
+  19.022992875s  INFO prepare_target{force=false package_id=qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server) target="qiqimanyou_server"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/debug/.fingerprint/qiqimanyou_server-c0dae196907a91bf/test-bin-qiqimanyou_server`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: std::backtrace::Backtrace::create
+   1: cargo_util::paths::read_bytes
+   2: cargo_util::paths::read
+   3: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   4: cargo::core::compiler::fingerprint::prepare_target
+   5: cargo::core::compiler::compile
+   6: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   7: cargo::ops::cargo_compile::compile_ws
+   8: cargo::ops::cargo_compile::compile_with_exec
+   9: cargo::ops::cargo_compile::compile
+  10: cargo::commands::check::exec
+  11: <cargo::cli::Exec>::exec
+  12: cargo::main
+  13: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  14: std::rt::lang_start::<()>::{closure#0}
+  15: std::rt::lang_start_internal
+  16: _main
+    Checking qiqimanyou_server v0.1.0 (/Users/qisd/Documents/development/chain/kiki_chain/kiki_server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.68s

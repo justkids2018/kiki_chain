@@ -9,7 +9,6 @@ use qiqimanyou_server::domain::repositories::UserRepository;
 use qiqimanyou_server::infrastructure::logging::Logger;
 use qiqimanyou_server::infrastructure::persistence::PostgresUserRepository;
 use qiqimanyou_server::presentation::http::AuthController;
-use qiqimanyou_server::utils::jwt::JwtUtils;
 
 /// 应用状态容器
 /// 包含所有依赖注入的服务和仓储
@@ -26,13 +25,6 @@ pub struct DependencyContainer {
 impl DependencyContainer {
     pub fn new(pool: PgPool) -> Self {
         Logger::startup_info("🏗️  初始化DDD依赖注入容器...");
-
-        // 初始化JWT配置
-        if let Err(e) = JwtUtils::quick_init() {
-            Logger::error(format!("JWT配置初始化失败: {}", e));
-        } else {
-            Logger::startup_info("🔐 JWT工具库初始化成功");
-        }
 
         // 基础设施层 - 仓储实现
         let user_repository: Arc<dyn UserRepository> =

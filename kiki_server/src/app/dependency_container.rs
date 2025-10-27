@@ -4,7 +4,7 @@
 use sqlx::PgPool;
 use std::sync::Arc;
 
-use qiqimanyou_server::application::use_cases::LoginUserUseCase;
+use qiqimanyou_server::application::use_cases::{LoginUserUseCase, RegisterUserUseCase};
 use qiqimanyou_server::domain::repositories::UserRepository;
 use qiqimanyou_server::infrastructure::logging::Logger;
 use qiqimanyou_server::infrastructure::persistence::PostgresUserRepository;
@@ -40,9 +40,11 @@ impl DependencyContainer {
 
         // 应用层 - 用例
         let login_use_case = Arc::new(LoginUserUseCase::new(user_repository.clone()));
+        let register_use_case = Arc::new(RegisterUserUseCase::new(user_repository.clone()));
 
         // 表现层 - 控制器 (需要先创建相关的用例)
-        let auth_controller = Arc::new(AuthController::new(login_use_case.clone()));
+        let auth_controller =
+            Arc::new(AuthController::new(login_use_case.clone(), register_use_case.clone()));
 
         Logger::startup_info("✅ DDD依赖注入容器初始化完成");
 

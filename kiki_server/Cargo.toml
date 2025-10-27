@@ -28,7 +28,7 @@ tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.17", features = ["env-filter", "chrono", "json"] }
 
 # data
-sqlx = { version = "0.8.1", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate", "bigdecimal"] }
+sqlx = { version = "0.8.1", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
 
 # async
 async-trait = "0.1.81"
@@ -58,7 +58,6 @@ regex = "1.10.0"
 strum_macros = "0.26.4"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng", "serde"] }
 bytes = "1.10.1"
-bigdecimal = "0.4.8"
 
 # 强制使用兼容版本避免edition2024问题
 [dependencies.base64ct]

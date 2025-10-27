@@ -10,4 +10,5 @@ impl ApiPaths {
 
     // 认证相关路径
     pub const LOGIN: &'static str = "/api/auth/login";
+    pub const REGISTER: &'static str = "/api/auth/register";
 }

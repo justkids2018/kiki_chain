@@ -5,7 +5,7 @@ use axum::{middleware, routing::get, Router};
 use tracing::info;
 
 use super::auth;
-use crate::app::AppState;
+use crate::app::{api_paths::ApiPaths, AppState};
 use qiqimanyou_server::config::get_config;
 use qiqimanyou_server::presentation::http::middleware::{
     create_cors_layer, error_handling_middleware, jwt_auth_middleware,
@@ -32,7 +32,7 @@ pub fn create_routes(app_state: AppState) -> Router {
     let config = get_config().expect("无法获取配置");
 
     // 健康检查路由
-    let health_routes = Router::new().route("/health", get(health_check));
+    let health_routes = Router::new().route(ApiPaths::HEALTH, get(health_check));
 
     info!("  ├── ✅ 健康检查路由已注册");
 

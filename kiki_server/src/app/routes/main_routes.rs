@@ -4,9 +4,7 @@
 use axum::{middleware, routing::get, Router};
 use tracing::info;
 
-use super::{
-    assignment, auth, dify_key, student_assignment, teacher_assignment, teacher_student, user,
-};
+use super::auth;
 use crate::app::AppState;
 use qiqimanyou_server::config::get_config;
 use qiqimanyou_server::presentation::http::middleware::{
@@ -38,24 +36,10 @@ pub fn create_routes(app_state: AppState) -> Router {
 
     info!("  ├── ✅ 健康检查路由已注册");
 
-    // 业务模块路由
+    // 认证路由
     let auth_routes = auth::create_auth_routes(app_state.clone());
-    let assignment_routes = assignment::create_assignment_routes(app_state.clone());
-    let student_assignment_routes =
-        student_assignment::create_student_assignment_routes(app_state.clone());
-    let teacher_assignment_routes =
-        teacher_assignment::create_teacher_assignment_routes(app_state.clone());
-    let teacher_student_routes = teacher_student::create_teacher_student_routes(app_state.clone());
-    let user_routes = user::create_user_routes(app_state.clone());
-    let dify_key_routes = dify_key::create_dify_key_routes(app_state.clone());
 
     info!("  ├── 🔐 认证模块路由已注册");
-    info!("  ├── 📝 作业模块路由已注册");
-    info!("  ├── 📚 学生作业模块路由已注册");
-    info!("  ├── 👩‍🏫 老师作业视图路由已注册");
-    info!("  ├── 🧑‍🏫 师生关系模块路由已注册");
-    info!("  ├── 👤 用户模块路由已注册");
-    info!("  └── 🔑 Dify 密钥模块路由已注册");
 
     // 创建 CORS 中间件
     let cors_layer = create_cors_layer(config.cors_origins().to_vec());
@@ -65,12 +49,6 @@ pub fn create_routes(app_state: AppState) -> Router {
     let app_router = Router::new()
         .merge(health_routes)
         .merge(auth_routes)
-        .merge(assignment_routes)
-        .merge(student_assignment_routes)
-        .merge(teacher_assignment_routes)
-        .merge(teacher_student_routes)
-        .merge(user_routes)
-        .merge(dify_key_routes)
         // 添加中间件层，注意顺序很重要
         .layer(middleware::from_fn(jwt_auth_middleware)) // JWT认证中间件
         .layer(middleware::from_fn(error_handling_middleware)) // 错误处理中间件
@@ -82,7 +60,7 @@ pub fn create_routes(app_state: AppState) -> Router {
     info!("  └── 📝 请求响应日志中间件已配置");
 
     info!("🎯 [主路由] 应用路由初始化完成");
-    info!("  └── 所有模块路由已成功整合");
+    info!("  └── 基础认证路由已成功整合");
 
     app_router
 }

@@ -12,17 +12,8 @@ pub mod api_paths;
 // 新的模块化路由架构
 pub mod routes;
 
-// 控制器工厂模块
-pub mod factories;
-
 // 导出路由创建函数
 pub use routes::create_routes;
-
-// 导出工厂类
-pub use factories::{
-    AssignmentControllerFactory, DifyApiKeyControllerFactory, StudentAssignmentControllerFactory,
-    StudentControllerFactory, TeacherAssignmentControllerFactory, TeacherStudentControllerFactory,
-};
 
 mod dependency_container;
 pub use dependency_container::{AppState, DependencyContainer};

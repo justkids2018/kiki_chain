@@ -90,8 +90,8 @@ impl ErrorCode {
 /// 响应工具函数
 impl ApiResponse<Value> {
     /// 从领域错误创建失败响应
-    pub fn from_domain_error(error: &crate::domain::errors::DomainError) -> Self {
-        use crate::domain::errors::DomainError;
+    pub fn from_domain_error(error: &crate::core::errors::DomainError) -> Self {
+        use crate::core::errors::DomainError;
 
         match error {
             DomainError::Validation(msg) => {

@@ -2,56 +2,22 @@
 
 ## 1. 系统架构概览
 
-基于Domain-Driven Design（DDD）的Clean Architecture实现，采用Rust + Axum框架构建。
+当前代码已重构为 “Core → Adapters → Framework” 三层结构，辅以工具模块和兼容层，以满足 Clean Architecture 的依赖倒置原则。
 
-### 架构层次图
+### 目录与依赖关系
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    🌐 Presentation Layer                        │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │  HTTP Middleware │  │   Controllers   │  │     Routes      │ │
-│  │  ├─ CORS         │  │  ├─ AuthCtrl    │  │  ├─ /auth/*     │ │
-│  │  ├─ JWT Auth     │  │  ├─ AssignCtrl  │  │  ├─ /assignment│ │
-│  │  ├─ Logging      │  │  └─ StudentCtrl │  │  └─ /student   │ │
-│  │  └─ Error Handle │  └─────────────────┘  └─────────────────┘ │
-│  └─────────────────┘                                            │
-├─────────────────────────────────────────────────────────────────┤
-│                    💼 Application Layer                         │
-│  ┌─────────────────────────────────────────────────────────────┐ │
-│  │                    Use Cases                                │ │
-│  │  ┌─────────────────┐  ┌─────────────────┐                  │ │
-│  │  │  Authentication │  │    Assignment   │                  │ │
-│  │  │  ├─ LoginUser   │  │  ├─ CreateAssgn │                  │ │
-│  │  │  └─ RegisterUser│  │  └─ ListAssgn   │                  │ │
-│  │  └─────────────────┘  └─────────────────┘                  │ │
-│  └─────────────────────────────────────────────────────────────┘ │
-├─────────────────────────────────────────────────────────────────┤
-│                      🏛️ Domain Layer                           │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │    Entities     │  │   Repositories  │  │  Value Objects  │ │
-│  │  ├─ User        │  │  ├─ UserRepo    │  │  ├─ UserId      │ │
-│  │  ├─ Assignment  │  │  ├─ AssignRepo  │  │  ├─ Email       │ │
-│  │  └─ Student     │  │  └─ StudentRepo │  │  └─ Phone       │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-├─────────────────────────────────────────────────────────────────┤
-│                   🔧 Infrastructure Layer                       │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │   Persistence   │  │     Logging     │  │    External     │ │
-│  │  ├─ PostgresRepo│  │  ├─ Logger      │  │  ├─ Config      │ │
-│  │  ├─ Database    │  │  └─ Structured  │  │  └─ Env         │ │
-│  │  └─ Migrations  │  │      JSON       │  └─────────────────┘ │
-│  └─────────────────┘  └─────────────────┘                      │
-├─────────────────────────────────────────────────────────────────┤
-│                      🛠️ Utils Layer                            │
-│  ┌─────────────────┐  ┌─────────────────┐                      │
-│  │   JWT Utils     │  │   Tool Utils    │                      │
-│  │  ├─ Generate    │  │  ├─ HashPassword │                      │
-│  │  ├─ Verify      │  │  └─ VerifyPwd   │                      │
-│  │  └─ Extract     │  └─────────────────┘                      │
-│  └─────────────────┘                                            │
-└─────────────────────────────────────────────────────────────────┘
+src/
+├── core/            # 业务内核（实体、值对象、错误、端口、用例）
+├── adapters/        # 技术适配器（HTTP 控制器/路由、中间件、持久化等）
+├── framework/       # 启动与装配（bootstrap：日志、配置、依赖注入、路由）
+├── utils/           # 通用工具（JWT、HTTP 工具等）
+├── infrastructure/  # 兼容导出层：保留 logging 并 re-export adapters::persistence
+├── application/     # 兼容导出层：重导出 core::use_cases::*
+└── presentation/    # 兼容导出层：重导出 adapters::http::auth::AuthController 等
 ```
+
+依赖方向：`framework → adapters → core`，`utils` 可被各层引用；兼容层仅用于维持旧引用，计划在后续版本移除。
 
 ## 2. 登录功能完整调用链路图
 
@@ -153,38 +119,28 @@ Repository → UseCase → Controller → AppState
 
 ```
 src/
-├── presentation/http/
-│   ├── auth_controller.rs          [控制器层]
-│   │   ├─ LoginUserUseCase         → application/use_cases/auth/
-│   │   └─ Logger                   → infrastructure/logging/
-│   └── middleware.rs               [中间件层]
-│       ├─ JWT白名单验证
-│       ├─ CORS配置
-│       └─ 请求响应日志
-├── application/use_cases/auth/
-│   ├── login_user.rs               [用例层]
-│   │   ├─ UserRepository           → domain/repositories/
-│   │   ├─ JwtUtils                 → utils/jwt/
-│   │   ├─ ToolUtils                → utils/tool/
-│   │   └─ Logger                   → infrastructure/logging/
+├── adapters/http/auth/
+│   ├── controller.rs      # AuthController，依赖 core 用例
+│   └── routes.rs          # Axum handler，注入 AppState
+├── adapters/http/middleware.rs
+│   ├── 请求响应日志
+│   ├── 错误处理
+│   └── JWT 白名单认证
+├── adapters/persistence/postgres/user_repository.rs
+│   └── 实现 core::ports::UserRepository（基于 sqlx::PgPool）
+├── core/use_cases/auth/
+│   ├── login_user.rs       # LoginUserUseCase / Command / Response
 │   └── register_user.rs
-├── domain/
-│   ├── entities.rs                 [实体层]
-│   │   └─ User, Assignment, Student
-│   ├── repositories.rs             [仓储接口]
-│   │   └─ UserRepository trait
-│   └── errors.rs                   [错误定义]
-├── infrastructure/persistence/
-│   └── postgres_user_repository.rs [仓储实现]
-│       ├─ UserRepository trait     → domain/repositories/
-│       └─ sqlx::PgPool
+├── core/entities/mod.rs    # User 等实体
+├── core/ports/mod.rs       # UserRepository trait
+├── core/errors.rs          # DomainError / Result 别名
+├── framework/bootstrap/
+│   ├── container.rs        # DependencyContainer + AppState
+│   ├── routes/             # 路由组合、健康检查
+│   └── api_paths.rs        # 路由常量
 └── utils/
-    ├── jwt.rs                      [JWT工具库]
-    │   ├─ jsonwebtoken
-    │   ├─ chrono
-    │   └─ serde
-    └── tool.rs                     [通用工具库]
-        └─ bcrypt
+    ├── jwt.rs              # JWT 工具（依赖 jsonwebtoken）
+    └── tool.rs             # 通用工具（bcrypt 封装）
 ```
 
 ## 4. 登录功能关键方法详解
@@ -193,7 +149,7 @@ src/
 
 #### AuthController::login()
 ```rust
-// 文件位置: src/presentation/http/auth_controller.rs
+// 文件位置: src/adapters/http/auth/controller.rs
 pub async fn login(&self, Json(request): Json<Value>) -> Result<Value> {
     // 1. 反序列化请求体
     // 2. 调用用例执行登录逻辑
@@ -205,7 +161,7 @@ pub async fn login(&self, Json(request): Json<Value>) -> Result<Value> {
 
 #### LoginUserUseCase::execute()
 ```rust
-// 文件位置: src/application/use_cases/auth/login_user.rs
+// 文件位置: src/core/use_cases/auth/login_user.rs
 pub async fn execute(&self, command: LoginUserCommand) -> Result<LoginUserResponse> {
     // 登录业务流程编排：
     // 1. validate_command() - 输入验证

@@ -1,5 +1,7 @@
 # dify_api_key_实现指南_20250310
 
+> **状态**：已归档（历史实现说明，仅供参考）
+
 ## 1. 结论摘要
 - 新增 Dify API Key 模块，覆盖密钥的创建、查询（含按类型过滤）、更新、删除全流程。
 - 依照 DDD 四层架构扩展 Domain / Application / Infrastructure / Presentation，并通过依赖注入与路由接入主应用。

@@ -1,7 +1,7 @@
 // 通用工具类
 // 提供密码哈希、验证等常用功能
 
-use crate::domain::errors::{DomainError, Result};
+use crate::core::errors::{DomainError, Result};
 use bcrypt::{hash, verify, DEFAULT_COST};
 
 /// 通用工具类

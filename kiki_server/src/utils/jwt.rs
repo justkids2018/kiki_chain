@@ -7,8 +7,8 @@ use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation}
 use serde::{Deserialize, Serialize};
 use std::sync::OnceLock;
 
-use crate::domain::entities::User;
-use crate::domain::errors::{DomainError, Result};
+use crate::core::entities::User;
+use crate::core::errors::{DomainError, Result};
 
 /// JWT配置结构
 #[derive(Debug, Clone)]
@@ -169,6 +169,9 @@ impl JwtUtils {
 /// JWT工具便捷函数
 impl JwtUtils {
     /// 快速初始化（使用默认配置）
+    ///
+    /// 从环境变量 `JWT_SECRET` 读取密钥；若缺失则落回开发默认值，
+    /// 仅推荐在本地环境调用。
     pub fn quick_init() -> Result<()> {
         let config = Self::create_default_config();
         Self::init(config)

@@ -1,5 +1,5 @@
 // 错误处理和通用类型
-use crate::infrastructure::Logger;
+use crate::framework::logging::Logger;
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},

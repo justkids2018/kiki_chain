@@ -2,7 +2,7 @@
 // 提供HTTP请求相关的通用工具方法
 // 创建时间: 2025-09-15
 
-use crate::domain::errors::{DomainError, Result};
+use crate::core::errors::{DomainError, Result};
 use crate::utils::JwtUtils;
 use axum::http::HeaderMap;
 
@@ -23,7 +23,11 @@ impl HttpUtils {
     /// - Err(DomainError): 认证失败或token无效
     ///
     /// ## 示例
-    /// ```rust
+    /// ```rust,ignore
+    /// use axum::http::HeaderMap;
+    /// use qiqimanyou_server::utils::http::HttpUtils;
+    ///
+    /// let headers = HeaderMap::new();
     /// let user_id = HttpUtils::extract_user_id_from_headers(&headers)?;
     /// ```
     pub fn extract_user_id_from_headers(headers: &HeaderMap) -> Result<String> {

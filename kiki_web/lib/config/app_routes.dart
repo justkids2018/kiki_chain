@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
+import 'package:kikichain/presentation/pages/interactive_image_home/interactive_image_home_page.dart';
 import '../presentation/pages/home_page.dart';
-import '../presentation/pages/welcome_page.dart';
 import '../presentation/pages/login_page.dart';
 import '../presentation/pages/register_page.dart';
+import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/controllers/home_controller.dart';
 import '../core/constants/app_constants.dart';
 
@@ -10,11 +11,10 @@ import '../core/constants/app_constants.dart';
 class AppRoutes {
   /// 路由列表
   static final routes = [
-    // 欢迎页面
+    // 欢迎页面（默认首页）
     GetPage(
       name: '/',
-      // page: () => const FigmaPreviewPage(),
-      page: () => const WelcomePage(),
+      page: () => const InteractiveImageHomePage(),
     ),
     // 主页面
     GetPage(
@@ -33,6 +33,16 @@ class AppRoutes {
     GetPage(
       name: AppConstants.routeRegister,
       page: () => const RegisterPage(),
+    ),
+    // 互动图片页面
+    GetPage(
+      name: AppConstants.routeInteractiveImage,
+      page: () => const InteractiveImagePage(),
+    ),
+    // 互动图片首页
+    GetPage(
+      name: AppConstants.routeInteractiveImageHome,
+      page: () => const InteractiveImageHomePage(),
     ),
   ];
 

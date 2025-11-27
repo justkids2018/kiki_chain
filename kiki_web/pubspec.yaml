@@ -82,6 +82,7 @@ dependencies:
   logger: ^1.3.0
   # ai
   # dify_flutter: ^1.0.3
+  flutter_tts: ^3.8.3
 
 dependency_overrides: 
   http: ^1.1.0
@@ -110,9 +111,12 @@ flutter:
   # Enable generation of localization files
   generate: true
 
+
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/data/
     - config/
 
   # An image asset can refer to one or more resolution-specific "variants", see

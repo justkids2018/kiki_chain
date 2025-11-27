@@ -18,7 +18,7 @@ void main() async {
   Get.put(LanguageController());
   // 运行应用
   runApp(
-     const MyApp(),
+    const MyApp(),
   );
 }
 
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             return GetMaterialApp(
               title: AppConstants.appName,
               debugShowCheckedModeBanner: false,
-              
+
               // 国际化配置
               locale: languageController.currentLocale,
               supportedLocales: languageController.supportedLocales,
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              
+
               theme: ThemeData(
                 primarySwatch: Colors.green,
                 primaryColor: const Color(0xFF4CAF50),
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               // 设置路由
-              initialRoute: '/welcome',
+              initialRoute: AppConstants.routeInteractiveImageHome,
               getPages: AppRoutes.routes,
               // EasyLoading配置
               builder: EasyLoading.init(),

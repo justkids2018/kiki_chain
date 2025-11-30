@@ -83,7 +83,7 @@ class InteractiveImageHomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: isSelected ? Colors.blue : Colors.grey[300]!,
+                    color: isSelected ? const Color.fromARGB(255, 16, 17, 18) : Colors.grey[300]!,
                     width: isSelected ? 2 : 1,
                   ),
                   borderRadius: BorderRadius.circular(24),

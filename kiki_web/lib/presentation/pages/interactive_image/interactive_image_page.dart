@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
+import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
 
 class InteractiveImagePage extends StatefulWidget {
@@ -97,7 +98,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
                                 // Right: Text Content
                                 Expanded(
-                                  flex:3,
+                                  flex: 3,
                                   child: _buildTextContent(controller),
                                 ),
                               ],
@@ -195,10 +196,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildCharacterGrid(region.text),
-
+            _buildCharacterGrid(controller, region.text),
             const SizedBox(height: 48),
-
             if (region.textEnglish.isNotEmpty)
               Text(
                 region.textEnglish,
@@ -215,15 +214,46 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     });
   }
 
-  Widget _buildCharacterGrid(String text) {
+  Widget _buildCharacterGrid(
+    InteractiveImageController controller,
+    String text,
+  ) {
     final characters = text
         .split('')
         .where((char) => char.trim().isNotEmpty)
         .toList(growable: false);
 
+    controller.initializeCharacterProgress(text);
+    final visibleCount = controller.visibleCharCount.value;
+    final activeIndex = controller.currentCharIndex.value;
+    final int total = characters.length;
+    final int unlocked = visibleCount.clamp(0, total);
+
+    final cells = List<CharacterCell>.generate(total, (index) {
+      CharacterCellStatus status;
+
+      if (index >= unlocked) {
+        status = CharacterCellStatus.pending;
+      } else if (activeIndex < 0) {
+        status = CharacterCellStatus.completed;
+      } else if (index < activeIndex) {
+        status = CharacterCellStatus.completed;
+      } else if (index == activeIndex) {
+        status = CharacterCellStatus.active;
+      } else {
+        status = CharacterCellStatus.pending;
+      }
+
+      return CharacterCell(
+        character: characters[index],
+        status: status,
+      );
+    });
+
     return CharacterStrokeGrid(
-      characters: characters,
+      cells: cells,
       cellSize: 100,
+      onCharacterComplete: controller.onCharacterAnimationComplete,
     );
   }
 

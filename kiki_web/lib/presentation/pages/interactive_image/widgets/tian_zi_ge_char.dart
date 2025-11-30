@@ -69,11 +69,16 @@ class _TianZiGeCharState extends State<TianZiGeChar>
   Future<void> _loadStrokeData() async {
     if (_isDisposed) return;
 
-    _strokeController?.dispose();
-    _strokeController = null;
+    if (_strokeController != null) {
+      _strokeController!
+        ..removeListener(_handleAnimationState)
+        ..dispose();
+      _strokeController = null;
+    }
     setState(() {});
 
-    final json = await StrokeOrderService().getStrokeOrderData(widget.character);
+    final json =
+        await StrokeOrderService().getStrokeOrderData(widget.character);
     if (_isDisposed) return;
 
     if (json == null) {
@@ -82,7 +87,7 @@ class _TianZiGeCharState extends State<TianZiGeChar>
     }
 
     try {
-      _strokeController = StrokeOrderAnimationController(
+      final controller = StrokeOrderAnimationController(
         StrokeOrder(json),
         this,
         strokeAnimationSpeed: widget.animationSpeed,
@@ -91,8 +96,16 @@ class _TianZiGeCharState extends State<TianZiGeChar>
       )
         ..setShowOutline(false)
         ..setShowMedian(false);
+
+      controller.addListener(_handleAnimationState);
+      _strokeController = controller;
+
+      if (!widget.animate) {
+        controller.showFullCharacter();
+      }
     } catch (error) {
-      debugPrint('Failed to create stroke controller for ${widget.character}: $error');
+      debugPrint(
+          'Failed to create stroke controller for ${widget.character}: $error');
       _strokeController = null;
     }
 
@@ -118,10 +131,27 @@ class _TianZiGeCharState extends State<TianZiGeChar>
     widget.onAnimationComplete?.call();
   }
 
+  void _handleAnimationState() {
+    final controller = _strokeController;
+    if (controller == null || _hasNotifiedCompletion) {
+      return;
+    }
+
+    final bool finished = !controller.isAnimating &&
+        controller.currentStroke >= controller.strokeOrder.nStrokes;
+    if (finished) {
+      _notifyCompletion();
+    }
+  }
+
   @override
   void dispose() {
     _isDisposed = true;
-    _strokeController?.dispose();
+    if (_strokeController != null) {
+      _strokeController!
+        ..removeListener(_handleAnimationState)
+        ..dispose();
+    }
     super.dispose();
   }
 
@@ -186,8 +216,10 @@ class _TianZiGePainter extends CustomPainter {
       }
     }
 
-    drawDashedLine(Offset(0, size.height / 2), Offset(size.width, size.height / 2));
-    drawDashedLine(Offset(size.width / 2, 0), Offset(size.width / 2, size.height));
+    drawDashedLine(
+        Offset(0, size.height / 2), Offset(size.width, size.height / 2));
+    drawDashedLine(
+        Offset(size.width / 2, 0), Offset(size.width / 2, size.height));
   }
 
   @override

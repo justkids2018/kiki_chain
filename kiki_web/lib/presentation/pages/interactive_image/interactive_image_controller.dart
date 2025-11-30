@@ -19,6 +19,10 @@ class InteractiveImageController extends GetxController {
   // UI State
   final isAutoPlay = false.obs;
   final activeRegion = Rxn<InteractiveRegion>();
+  final currentCharIndex = (-1).obs; // -1 indicates no active animation
+  final visibleCharCount = 0.obs;
+  final totalCharCount = 0.obs;
+  String? _lastInitializedText;
 
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
@@ -170,6 +174,7 @@ class InteractiveImageController extends GetxController {
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
     activeRegion.value = region;
+    _restartCharacterAnimation(region.text);
     await _ttsService.speakRegion(region);
   }
 
@@ -195,5 +200,55 @@ Interactive Image Diagnostics:
   void onClose() {
     _ttsService.dispose();
     super.onClose();
+  }
+
+  void initializeCharacterProgress(String text) {
+    if (_lastInitializedText == text && totalCharCount.value == _countCharacters(text)) {
+      return;
+    }
+    _setupCharacterProgress(text);
+  }
+
+  void onCharacterAnimationComplete(int index) {
+    if (index != currentCharIndex.value) {
+      return;
+    }
+
+    final total = totalCharCount.value;
+    if (index >= total - 1) {
+      currentCharIndex.value = -1;
+      return;
+    }
+
+    visibleCharCount.value = (index + 2).clamp(0, total);
+    currentCharIndex.value = index + 1;
+  }
+
+  void _restartCharacterAnimation(String text) {
+    _setupCharacterProgress(text, force: true);
+  }
+
+  void _setupCharacterProgress(String text, {bool force = false}) {
+    final total = _countCharacters(text);
+    if (!force && _lastInitializedText == text && totalCharCount.value == total) {
+      return;
+    }
+
+    _lastInitializedText = text;
+    totalCharCount.value = total;
+    if (total <= 0) {
+      visibleCharCount.value = 0;
+      currentCharIndex.value = -1;
+    } else {
+      visibleCharCount.value = 1;
+      currentCharIndex.value = 0;
+    }
+  }
+
+  int _countCharacters(String text) {
+    return text
+        .split('')
+        .where((char) => char.trim().isNotEmpty)
+        .length;
   }
 }

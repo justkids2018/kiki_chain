@@ -179,15 +179,17 @@ class _TianZiGeCharState extends State<TianZiGeChar>
                     height: widget.size * 0.85,
                     child: StrokeOrderAnimator(_strokeController!),
                   )
-                : Text(
-                    widget.character,
-                    style: TextStyle(
-                      fontSize: widget.size * 0.7,
-                      fontFamily: 'KaiTi',
-                      fontWeight: FontWeight.w500,
-                      color: widget.strokeColor,
-                    ),
-                  ),
+                : widget.animate
+                    ? const SizedBox.shrink()
+                    : Text(
+                        widget.character,
+                        style: TextStyle(
+                          fontSize: widget.size * 0.7,
+                          fontFamily: 'KaiTi',
+                          fontWeight: FontWeight.w500,
+                          color: widget.strokeColor,
+                        ),
+                      ),
           ),
         ],
       ),

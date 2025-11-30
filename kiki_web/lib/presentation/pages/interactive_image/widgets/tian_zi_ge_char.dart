@@ -63,6 +63,8 @@ class _TianZiGeCharState extends State<TianZiGeChar>
 
     if (oldWidget.animate != widget.animate && widget.animate) {
       _startAnimation();
+    } else if (oldWidget.animate && !widget.animate) {
+      _strokeController?.showFullCharacter();
     }
   }
 

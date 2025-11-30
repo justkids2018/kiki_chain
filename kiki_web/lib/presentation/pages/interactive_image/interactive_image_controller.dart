@@ -15,7 +15,11 @@ class InteractiveImageController extends GetxController {
   final isLoaded = false.obs;
   final errorMessage = RxnString();
   final loadingProgress = 0.0.obs;
-  
+
+  // UI State
+  final isAutoPlay = false.obs;
+  final activeRegion = Rxn<InteractiveRegion>();
+
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
   late String _imagePath;
@@ -24,10 +28,9 @@ class InteractiveImageController extends GetxController {
     IInteractiveImageRepository? repository,
     TextToSpeechService? ttsService,
   }) {
-    _repository =
-        repository ?? InteractiveImageRepositoryImpl();
+    _repository = repository ?? InteractiveImageRepositoryImpl();
     _ttsService = ttsService ?? TextToSpeechService();
-    
+
     // 从导航参数获取文件路径和图片路径
     _getParametersFromRoute();
   }
@@ -36,9 +39,10 @@ class InteractiveImageController extends GetxController {
   void _getParametersFromRoute() {
     // 获取传递的参数
     final arguments = Get.arguments;
-    
+
     if (arguments != null && arguments is Map) {
-      _jsonFilePath = arguments['jsonFile'] ?? 'assets/data/kiki_zhiwuyuan.json';
+      _jsonFilePath =
+          arguments['jsonFile'] ?? 'assets/data/kiki_zhiwuyuan.json';
       // 根据 JSON 文件名推断图片路径
       _imagePath = _getImagePathFromJsonFile(_jsonFilePath);
     } else {
@@ -46,7 +50,7 @@ class InteractiveImageController extends GetxController {
       _jsonFilePath = 'assets/data/kiki_zhiwuyuan.json';
       _imagePath = 'assets/images/kiki_zhiwuyuan.jpg';
     }
-    
+
     AppLogger.debug('JSON File = $_jsonFilePath');
     AppLogger.debug('Image Path = $_imagePath');
   }
@@ -57,13 +61,17 @@ class InteractiveImageController extends GetxController {
     if (jsonFile.startsWith('http://') || jsonFile.startsWith('https://')) {
       // 从 URL 推断对应的图片 URL
       if (jsonFile.contains('dongwuyuan')) {
-        return jsonFile.replaceAll(RegExp(r'\.json$'), '.jpg').replaceAll('/kiki_dongwuyuan.json', '/kiki_dongwuyuan.jpg');
+        return jsonFile
+            .replaceAll(RegExp(r'\.json$'), '.jpg')
+            .replaceAll('/kiki_dongwuyuan.json', '/kiki_dongwuyuan.jpg');
       } else if (jsonFile.contains('zhiwuyuan')) {
-        return jsonFile.replaceAll(RegExp(r'\.json$'), '.jpg').replaceAll('/kiki_zhiwuyuan.json', '/kiki_zhiwuyuan.jpg');
+        return jsonFile
+            .replaceAll(RegExp(r'\.json$'), '.jpg')
+            .replaceAll('/kiki_zhiwuyuan.json', '/kiki_zhiwuyuan.jpg');
       }
       return jsonFile.replaceAll(RegExp(r'\.json$'), '.jpg');
     }
-    
+
     // 本地资源路径
     if (jsonFile.contains('dongwuyuan')) {
       return 'assets/images/kiki_dongwuyuan.jpg';
@@ -90,7 +98,7 @@ class InteractiveImageController extends GetxController {
       AppLogger.debug('Initialization started');
       errorMessage.value = null;
       loadingProgress.value = 0.1;
-      
+
       // Initialize TTS - continue even if it fails
       try {
         AppLogger.debug('Initializing TTS');
@@ -101,14 +109,14 @@ class InteractiveImageController extends GetxController {
         // Continue without TTS
       }
       loadingProgress.value = 0.3;
-      
+
       // Load regions and image dimensions in parallel
       AppLogger.debug('Starting data loading');
       await Future.wait([
         _loadRegions(),
         _loadImageDimensions(),
       ]);
-      
+
       AppLogger.debug('Data loading completed');
       loadingProgress.value = 1.0;
       await Future.delayed(const Duration(milliseconds: 300));
@@ -123,7 +131,8 @@ class InteractiveImageController extends GetxController {
   Future<void> _loadRegions() async {
     try {
       AppLogger.debug('Loading regions from: $_jsonFilePath');
-      final loadedRegions = await _repository.loadRegions(jsonPath: _jsonFilePath);
+      final loadedRegions =
+          await _repository.loadRegions(jsonPath: _jsonFilePath);
       if (loadedRegions.isNotEmpty) {
         regions.assignAll(loadedRegions);
         AppLogger.info('Loaded ${loadedRegions.length} regions');
@@ -140,12 +149,11 @@ class InteractiveImageController extends GetxController {
   Future<void> _loadImageDimensions() async {
     try {
       AppLogger.debug('Loading image from: $_imagePath');
-      
-      final dimensions =
-          await _repository.loadImageDimensions(_imagePath);
+
+      final dimensions = await _repository.loadImageDimensions(_imagePath);
       final width = dimensions['width'] ?? 1920.0;
       final height = dimensions['height'] ?? 1080.0;
-      
+
       AppLogger.info('Image dimensions: $width x $height');
       imageWidth.value = width;
       imageHeight.value = height;
@@ -161,6 +169,7 @@ class InteractiveImageController extends GetxController {
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
+    activeRegion.value = region;
     await _ttsService.speakRegion(region);
   }
 

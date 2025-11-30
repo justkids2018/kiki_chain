@@ -83,6 +83,7 @@ dependencies:
   # ai
   # dify_flutter: ^1.0.3
   flutter_tts: ^3.8.3
+  stroke_order_animator: ^3.3.1
 
 dependency_overrides: 
   http: ^1.1.0

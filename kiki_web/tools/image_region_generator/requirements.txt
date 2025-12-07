@@ -1,8 +1,10 @@
 # 必需的依赖（兼容所有 macOS 版本）
-opencv-python>=4.5.0
 pillow>=9.0.0
 numpy>=1.21.0
+opencv-python>=4.5.0
 pytesseract>=0.3.10
+pypinyin==0.50.0
+googletrans==4.0.0-rc1
 
 # 可选的依赖（如果系统支持，自动使用）
 # 需要 macOS 26 或更新，取消注释以下行来安装 PaddleOCR

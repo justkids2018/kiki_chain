@@ -29,6 +29,16 @@ from PIL import Image, ImageDraw, ImageTk
 import cv2
 import numpy as np
 
+try:
+    from pypinyin import lazy_pinyin
+except ImportError:
+    lazy_pinyin = None
+
+try:
+    from googletrans import Translator
+except ImportError:
+    Translator = None
+
 # 确保可以导入同目录下的模块
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -67,6 +77,68 @@ class ImageRecord:
         return self.path.stem
 
 
+class TextEnricher:
+    """为识别结果补充拼音与英文译文，必要时自动降级"""
+
+    def __init__(self) -> None:
+        self._translation_cache: Dict[str, str] = {}
+        self._pinyin_cache: Dict[str, str] = {}
+        self._translator: Any = None
+        self._translator_available = False
+
+        if Translator is not None:
+            try:
+                self._translator = Translator()
+                self._translator_available = True
+            except Exception:
+                self._translator = None
+                self._translator_available = False
+
+    def enrich(self, text: str, text_type: str) -> Tuple[str, str]:
+        if not text:
+            return "", ""
+
+        pinyin = self._build_pinyin(text) if text_type == "chinese" else ""
+
+        if text_type == "chinese":
+            english = self._translate(text)
+            if not english:
+                english = text
+        else:
+            english = text
+
+        return pinyin, english
+
+    def _build_pinyin(self, text: str) -> str:
+        if text in self._pinyin_cache:
+            return self._pinyin_cache[text]
+        if lazy_pinyin is None:
+            return ""
+        try:
+            parts = [segment.strip() for segment in lazy_pinyin(text, errors="ignore") if segment.strip()]
+            result = " ".join(parts)
+        except Exception:
+            result = ""
+        self._pinyin_cache[text] = result
+        return result
+
+    def _translate(self, text: str) -> str:
+        cached = self._translation_cache.get(text)
+        if cached is not None:
+            return cached
+        if not self._translator_available or self._translator is None:
+            return ""
+        try:
+            translation = self._translator.translate(text, dest="en")
+            english = translation.text.strip()
+        except Exception:
+            english = ""
+            self._translator_available = False
+        if english:
+            self._translation_cache[text] = english
+        return english
+
+
 class ImageRegionGenerator:
     """图片区域生成器 - 支持批量处理"""
 
@@ -79,6 +151,7 @@ class ImageRegionGenerator:
 
         # 初始化 OCR 工厂
         self.ocr_factory = OCRFactory()
+        self.text_enricher = TextEnricher()
 
         # 数据存储
         self.images: List[ImageRecord] = []
@@ -368,8 +441,7 @@ class ImageRegionGenerator:
 
     def _convert_to_regions(self, raw_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """将原始识别结果转换为规范格式"""
-        regions: List[Dict[str, Any]] = []
-        index = 1
+        detections: List[Dict[str, Any]] = []
 
         for result in raw_results:
             text = result.get("text", "").strip()
@@ -379,23 +451,198 @@ class ImageRegionGenerator:
             if not text:
                 continue
 
+            detection = self._prepare_detection(text, confidence, box)
+            if detection is not None:
+                detections.append(detection)
+
+        chinese_detections = [d for d in detections if d["category"] == "chinese"]
+        latin_detections = [d for d in detections if d["category"] != "chinese"]
+        for det in latin_detections:
+            det["used"] = False
+
+        regions: List[Dict[str, Any]] = []
+        for idx, chinese in enumerate(
+            sorted(chinese_detections, key=lambda d: (d["bbox"][1], d["bbox"][0])), start=1
+        ):
+            pinyin_candidate = self._match_nearby_text(chinese, latin_detections, ["pinyin"])
+            if pinyin_candidate is None:
+                pinyin_candidate = self._match_nearby_text(chinese, latin_detections, ["latin", "english"])
+
+            english_candidate = self._match_nearby_text(chinese, latin_detections, ["english"], mark_used=True)
+            if english_candidate is None:
+                english_candidate = self._match_nearby_text(
+                    chinese, latin_detections, ["latin", "pinyin"], mark_used=True
+                )
+
+            fallback_pinyin, fallback_english = self.text_enricher.enrich(chinese["text"], "chinese")
+            text_pinyin = pinyin_candidate["text"] if pinyin_candidate is not None else fallback_pinyin
+            text_english = english_candidate["text"] if english_candidate is not None else fallback_english
+
             region = {
-                "type": "chinese" if self._is_chinese(text) else "english",
-                "id": f"text_{index:02d}",
-                "index": index,
-                "text": text,
-                "text_pinyin": "",
-                "text_english": "",
-                "confidence": float(confidence),
-                "coordinate": [{"x": int(p[0]), "y": int(p[1])} for p in box],
+                "type": "chinese",
+                "id": f"text_{idx:02d}",
+                "index": idx,
+                "text": chinese["text"],
+                "text_pinyin": text_pinyin,
+                "text_english": text_english,
+                "coordinate": [{"x": int(p[0]), "y": int(p[1])} for p in chinese["box"]],
             }
             regions.append(region)
-            index += 1
 
         return regions
 
     def _is_chinese(self, text: str) -> bool:
         return any(0x4E00 <= ord(char) <= 0x9FFF for char in text)
+
+    def _prepare_detection(
+        self, text: str, confidence: float, box: List[List[float]]
+    ) -> Optional[Dict[str, Any]]:
+        category = self._categorize_text(text)
+        if category == "other":
+            return None
+        bbox = self._compute_bbox(box)
+        center = ((bbox[0] + bbox[2]) / 2.0, (bbox[1] + bbox[3]) / 2.0)
+        size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
+        if size[0] <= 0 or size[1] <= 0:
+            return None
+        return {
+            "text": text,
+            "confidence": confidence,
+            "box": box,
+            "bbox": bbox,
+            "center": center,
+            "size": size,
+            "category": category,
+            "used": False,
+        }
+
+    def _categorize_text(self, text: str) -> str:
+        if self._is_chinese(text):
+            return "chinese"
+
+        normalized = text.strip()
+        if not normalized:
+            return "other"
+
+        if self._is_latin_text(normalized):
+            if self._looks_like_pinyin(normalized):
+                return "pinyin"
+            if self._looks_like_english(normalized):
+                return "english"
+            return "latin"
+
+        return "other"
+
+    def _is_latin_text(self, text: str) -> bool:
+        allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZüÜāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜńňǹʼ' -·–—,.")
+        return all(ch in allowed for ch in text)
+
+    def _looks_like_pinyin(self, text: str) -> bool:
+        accent_chars = set("āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜńňǹüÜ·")
+        letters = [c for c in text if c.isalpha()]
+        if not letters:
+            return False
+        if any(ch in accent_chars for ch in text):
+            return True
+        if text.lower() == text:
+            return True
+        uppercase_count = sum(1 for ch in text if ch.isupper())
+        if uppercase_count <= 1 and " " in text:
+            return True
+        return False
+
+    def _looks_like_english(self, text: str) -> bool:
+        letters = [c for c in text if c.isalpha()]
+        if not letters:
+            return False
+        uppercase_count = sum(1 for ch in text if ch.isupper())
+        if uppercase_count >= 1:
+            return True
+        return text.lower() != text
+
+    def _compute_bbox(self, box: List[List[float]]) -> Tuple[float, float, float, float]:
+        xs = [point[0] for point in box]
+        ys = [point[1] for point in box]
+        return min(xs), min(ys), max(xs), max(ys)
+
+    def _match_nearby_text(
+        self,
+        chinese: Dict[str, Any],
+        candidates: List[Dict[str, Any]],
+        preferred_categories: List[str],
+        mark_used: bool = True,
+    ) -> Optional[Dict[str, Any]]:
+        best_candidate: Optional[Dict[str, Any]] = None
+        best_score = float("inf")
+
+        for candidate in candidates:
+            if candidate["used"]:
+                continue
+            if candidate["category"] not in preferred_categories:
+                continue
+            if not self._is_candidate_near(chinese, candidate):
+                continue
+
+            score = self._candidate_score(chinese, candidate)
+            if score < best_score:
+                best_candidate = candidate
+                best_score = score
+
+        if best_candidate is None and "latin" not in preferred_categories:
+            # 如果严格匹配失败，适当放宽类别要求
+            relaxed_categories = preferred_categories + ["latin"]
+            for candidate in candidates:
+                if candidate["used"]:
+                    continue
+                if candidate["category"] not in relaxed_categories:
+                    continue
+                if not self._is_candidate_near(chinese, candidate):
+                    continue
+                score = self._candidate_score(chinese, candidate)
+                if score < best_score:
+                    best_candidate = candidate
+                    best_score = score
+
+        if best_candidate is not None and mark_used:
+            best_candidate["used"] = True
+        return best_candidate
+
+    def _candidate_score(self, chinese: Dict[str, Any], candidate: Dict[str, Any]) -> float:
+        src_center_x, src_center_y = chinese["center"]
+        cand_center_x, cand_center_y = candidate["center"]
+        horizontal = abs(src_center_x - cand_center_x)
+        vertical = abs(src_center_y - cand_center_y)
+        return vertical + horizontal * 0.5
+
+    def _is_candidate_near(self, chinese: Dict[str, Any], candidate: Dict[str, Any]) -> bool:
+        (src_min_x, src_min_y, src_max_x, src_max_y) = chinese["bbox"]
+        (cand_min_x, cand_min_y, cand_max_x, cand_max_y) = candidate["bbox"]
+
+        src_width = src_max_x - src_min_x
+        src_height = src_max_y - src_min_y
+
+        cand_width = cand_max_x - cand_min_x
+        cand_height = cand_max_y - cand_min_y
+
+        src_center_x, src_center_y = chinese["center"]
+        cand_center_x, cand_center_y = candidate["center"]
+
+        horizontal_diff = abs(src_center_x - cand_center_x)
+        vertical_diff = cand_center_y - src_center_y
+
+        max_horizontal = max(src_width, cand_width) * 1.2
+        max_vertical = max(src_height, cand_height) * 4.0
+
+        if horizontal_diff > max_horizontal:
+            return False
+
+        if vertical_diff < -src_height * 0.6:
+            return False
+
+        if vertical_diff > max_vertical:
+            return False
+
+        return True
 
     # ---------------------------------------------------------------------
     # 预览 / 校验 / 导入 / 导出

@@ -51,6 +51,8 @@ deps = {
     'cv2': 'OpenCV',
     'numpy': 'NumPy',
     'pytesseract': 'Pytesseract',
+    'pypinyin': 'pypinyin',
+    'googletrans': 'googletrans',
     'tkinter': 'Tkinter'
 }
 

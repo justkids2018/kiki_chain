@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../core/logging/app_logger.dart';
+import '../../../data/models/image_item.dart';
 import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
@@ -27,6 +28,10 @@ class InteractiveImageController extends GetxController {
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
   late String _imagePath;
+  
+  // 当前图片项和所有图片列表
+  ImageItem? _currentImageItem;
+  List<ImageItem> _imagesList = [];
 
   InteractiveImageController({
     IInteractiveImageRepository? repository,
@@ -39,16 +44,28 @@ class InteractiveImageController extends GetxController {
     _getParametersFromRoute();
   }
 
-  /// 从路由参数获取 JSON 文件和图片路径
+  /// 从路由参数获取 JSON 文件、图片路径、ImageItem 和图片列表
   void _getParametersFromRoute() {
     // 获取传递的参数
     final arguments = Get.arguments;
 
     if (arguments != null && arguments is Map) {
-      _jsonFilePath =
-          arguments['jsonFile'] ?? 'assets/data/kiki_zhiwuyuan.json';
-      // 根据 JSON 文件名推断图片路径
-      _imagePath = _getImagePathFromJsonFile(_jsonFilePath);
+      // 接收 ImageItem（更优先）
+      if (arguments['imageItem'] != null && arguments['imageItem'] is ImageItem) {
+        _currentImageItem = arguments['imageItem'] as ImageItem;
+        _jsonFilePath = _currentImageItem!.jsonFile;
+        _imagePath = _currentImageItem!.imagePath;
+      } else {
+        // 降级：使用 jsonFile
+        _jsonFilePath =
+            arguments['jsonFile'] ?? 'assets/data/kiki_zhiwuyuan.json';
+        _imagePath = _getImagePathFromJsonFile(_jsonFilePath);
+      }
+      
+      // 接收图片列表
+      if (arguments['images'] != null && arguments['images'] is List) {
+        _imagesList = arguments['images'] as List<ImageItem>;
+      }
     } else {
       // 默认值
       _jsonFilePath = 'assets/data/kiki_zhiwuyuan.json';
@@ -57,6 +74,8 @@ class InteractiveImageController extends GetxController {
 
     AppLogger.debug('JSON File = $_jsonFilePath');
     AppLogger.debug('Image Path = $_imagePath');
+    AppLogger.debug('Current ImageItem = ${_currentImageItem?.title}');
+    AppLogger.debug('Images count = ${_imagesList.length}');
   }
 
   /// 根据 JSON 文件名推断图片路径
@@ -90,6 +109,12 @@ class InteractiveImageController extends GetxController {
 
   /// Getter：获取当前 JSON 文件路径
   String get jsonPath => _jsonFilePath;
+
+  /// Getter：获取当前 ImageItem
+  ImageItem? get currentImageItem => _currentImageItem;
+
+  /// Getter：获取图片列表
+  List<ImageItem> get imagesList => _imagesList;
 
   @override
   void onInit() {

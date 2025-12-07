@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
@@ -27,6 +26,16 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           return const Center(child: CircularProgressIndicator());
         }
 
+        final imageWidth = controller.imageWidth.value;
+        final imageHeight = controller.imageHeight.value;
+        final aspectRatio = imageWidth > 0 && imageHeight > 0 
+            ? imageWidth / imageHeight 
+            : 1.0;
+
+        // Responsive design: default to tablet, only switch to phone if smaller
+        final size = MediaQuery.of(context).size;
+        final isPhone = size.width < 600; // Only phone layout if width < 600
+
         return Stack(
           children: [
             // 1. Blurred Background
@@ -40,87 +49,369 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               ),
             ),
 
-            // 2. Main Content
+            // 2. Main Content - Responsive layout
             SafeArea(
-              child: Column(
-                children: [
-                  // Top Navigation Bar
-                  _buildTopBar(context),
-
-                  // Center Content Area
-                  Expanded(
-                    child: Row(
-                      children: [
-                        // Main Card
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(48, 16, 16, 32),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(32),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                // Left: Interactive Image
-                                Expanded(
-                                  flex: 6,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24),
-                                      color: Colors.grey[50],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: InteractiveViewer(
-                                        minScale: 0.5,
-                                        maxScale: 4.0,
-                                        child: InteractiveImageView(
-                                          imagePath: controller.imagePath,
-                                          originalWidth:
-                                              controller.imageWidth.value,
-                                          originalHeight:
-                                              controller.imageHeight.value,
-                                          regions: controller.regions,
-                                          onRegionTap: controller.speakRegion,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                // Right: Text Content
-                                Expanded(
-                                  flex: 3,
-                                  child: _buildTextContent(controller),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // Right Sidebar Controls
-                        SizedBox(
-                          width: 100,
-                          child: _buildRightControls(controller),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              child: isPhone
+                  ? _buildPhoneLayout(context, controller, aspectRatio)
+                  : _buildTabletLayout(context, controller, aspectRatio),
             ),
           ],
         );
       }),
     );
+  }
+
+  /// Tablet layout (iPad): Left image, right character panel side by side
+  Widget _buildTabletLayout(
+    BuildContext context,
+    InteractiveImageController controller,
+    double aspectRatio,
+  ) {
+    return Column(
+      children: [
+        // Top Navigation Bar
+        _buildTopBar(context),
+
+        // Main Content Area
+        Expanded(
+          child: Row(
+            children: [
+              // Left: Large Interactive Image
+              Expanded(
+                flex: 3,
+                child: _buildLargeImageContainer(
+                  controller: controller,
+                  aspectRatio: aspectRatio,
+                ),
+              ),
+
+              // Right: Character Panel (compact)
+              Expanded(
+                flex: 2,
+                child: _buildCompactCharacterPanel(controller),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Phone layout: Full screen image with floating character panel overlay
+  Widget _buildPhoneLayout(
+    BuildContext context,
+    InteractiveImageController controller,
+    double aspectRatio,
+  ) {
+    return Stack(
+      children: [
+        Column(
+          children: [
+            // Top Navigation Bar
+            _buildTopBar(context),
+
+            // Full screen image
+            Expanded(
+              child: _buildLargeImageContainer(
+                controller: controller,
+                aspectRatio: aspectRatio,
+              ),
+            ),
+          ],
+        ),
+
+        // Floating character panel overlay (bottom-right corner)
+        Positioned(
+          bottom: 24,
+          right: 24,
+          child: _buildFloatingCharacterPanel(controller),
+        ),
+      ],
+    );
+  }
+
+  /// Build large image container optimized for touch interaction
+  Widget _buildLargeImageContainer({
+    required InteractiveImageController controller,
+    required double aspectRatio,
+  }) {
+    return Container(
+      margin: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey[50],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: InteractiveViewer(
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: InteractiveImageView(
+                  imagePath: controller.imagePath,
+                  originalWidth: controller.imageWidth.value,
+                  originalHeight: controller.imageHeight.value,
+                  regions: controller.regions,
+                  onRegionTap: controller.speakRegion,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Build right panel with character display and controls (Compact for Tablet)
+  Widget _buildCompactCharacterPanel(InteractiveImageController controller) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 24, 24, 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Character grid (scrollable)
+          Expanded(
+            child: Obx(() {
+              final region = controller.activeRegion.value;
+              if (region == null) {
+                return Center(
+                  child: Icon(
+                    Icons.touch_app_outlined,
+                    size: 40,
+                    color: Colors.grey[300],
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    // Character grid
+                    _buildCharacterGrid(controller, region.text),
+                    const SizedBox(height: 20),
+                    // English translation
+                    if (region.textEnglish.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          region.textEnglish,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF666666),
+                            height: 1.4,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }),
+          ),
+
+          // Bottom: Play button (circle)
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.grey[200]!,
+                  width: 1,
+                ),
+              ),
+            ),
+            child: Obx(() {
+              final region = controller.activeRegion.value;
+              return GestureDetector(
+                onTap: region != null
+                    ? () => controller.speakRegion(region)
+                    : null,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: region != null
+                        ? const Color(0xFFFF6B6B)
+                        : Colors.grey[300],
+                    shape: BoxShape.circle,
+                    boxShadow: region != null
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFFFF6B6B).withOpacity(0.4),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: const Icon(
+                    Icons.volume_up_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Floating character panel for phone (bottom-right overlay, collapsible)
+  Widget _buildFloatingCharacterPanel(InteractiveImageController controller) {
+    return Obx(() {
+      final region = controller.activeRegion.value;
+
+      if (region == null) {
+        // Minimal state: only show play button
+        return GestureDetector(
+          onTap: () {}, // No action when no region selected
+          child: Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.grey[400],
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.volume_up_rounded,
+              color: Colors.white.withOpacity(0.6),
+              size: 32,
+            ),
+          ),
+        );
+      }
+
+      // Expanded state: show character and play button
+      return Container(
+        width: 280,
+        constraints: const BoxConstraints(maxHeight: 400),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Character grid
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Character grid
+                    _buildCharacterGrid(controller, region.text),
+                    const SizedBox(height: 16),
+                    // English translation
+                    if (region.textEnglish.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          region.textEnglish,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF666666),
+                            height: 1.3,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Play button (circle at bottom)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: GestureDetector(
+                onTap: () => controller.speakRegion(region),
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF6B6B),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFF6B6B).withOpacity(0.4),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.volume_up_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildBackgroundImage(String path) {
@@ -176,43 +467,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  Widget _buildTextContent(InteractiveImageController controller) {
-    return Obx(() {
-      final InteractiveRegion? region = controller.activeRegion.value;
-      if (region == null) {
-        return Center(
-          child: Text(
-            '点击图片上区域可查看笔画',
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.grey[400],
-            ),
-          ),
-        );
-      }
 
-      return Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildCharacterGrid(controller, region.text),
-            const SizedBox(height: 48),
-            if (region.textEnglish.isNotEmpty)
-              Text(
-                region.textEnglish,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF666666),
-                  height: 1.4,
-                ),
-              ),
-          ],
-        ),
-      );
-    });
-  }
 
   Widget _buildCharacterGrid(
     InteractiveImageController controller,
@@ -257,110 +512,4 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  Widget _buildRightControls(InteractiveImageController controller) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Auto Play Toggle
-        _buildControlButton(
-          icon: Icons.play_circle_outline,
-          label: 'Auto',
-          isActive: controller.isAutoPlay.value,
-          onTap: () => controller.isAutoPlay.toggle(),
-        ),
-        const SizedBox(height: 24),
-
-        // Speaker Button
-        _buildCircleButton(
-          icon: Icons.volume_up_rounded,
-          color: const Color(0xFFFF6B6B),
-          onTap: () {
-            final region = controller.activeRegion.value;
-            if (region != null) {
-              controller.speakRegion(region);
-            }
-          },
-        ),
-        const SizedBox(height: 24),
-
-        // Mic Button
-        _buildCircleButton(
-          icon: Icons.mic_rounded,
-          color: const Color(0xFFFF6B6B),
-          onTap: () {
-            // TODO: Implement recording
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildControlButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isActive
-                  ? const Color(0xFFFF6B6B)
-                  : Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCircleButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 32,
-        ),
-      ),
-    );
-  }
 }

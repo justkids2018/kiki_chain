@@ -66,16 +66,19 @@ class InteractiveImageView extends StatelessWidget {
           child: SizedBox(
             width: displayWidth,
             height: displayHeight,
-            child: Stack(
-              children: [
-                // Layer 1: Image with error handling (supports local and network)
-                Positioned.fill(
-                  child: _buildImage(imagePath, context),
-                ),
-                // Layer 2: Interactive Regions
-                ...regions
-                    .map((region) => _buildRegion(region, scaleX, scaleY)),
-              ],
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  // Layer 1: Image with error handling (supports local and network)
+                  Positioned.fill(
+                    child: _buildImage(imagePath, context),
+                  ),
+                  // Layer 2: Interactive Regions
+                  ...regions
+                      .map((region) => _buildRegion(region, scaleX, scaleY)),
+                ],
+              ),
             ),
           ),
         );

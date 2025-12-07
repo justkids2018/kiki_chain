@@ -34,12 +34,14 @@ cd tools/image_region_generator
 2. **识别文本** → 可对当前图片或全部批量识别
 3. **校验/预览** → 校验区域格式并在画布上预览位置
 4. **导出 JSON** → 支持单文件导出或批量导出
-5. **导入 JSON** → 对现有标注进行可视化验证
+5. **导入 JSON** → 对现有标注进行可视化验证   
 
 ## 📊 输出格式
 
-生成的 JSON 包含每个文字区域的：
+生成的 JSON 包含每个文字区域的字段：
 - `text`: 识别的文字
+- `text_pinyin`: 自动生成的拼音（仅中文文本）
+- `text_english`: 自动翻译的英文（需网络）
 - `coordinate`: 四个角的坐标 `[x, y]`
 - `type`: 文字类型（中文/英文）
 - `index`: 编号
@@ -52,8 +54,8 @@ cd tools/image_region_generator
     "id": "text_01",
     "index": 1,
     "text": "文字",
-    "text_pinyin": "",
-    "text_english": "",
+    "text_pinyin": "wen zi",
+    "text_english": "text",
     "coordinate": [
       {"x": 100, "y": 200},
       {"x": 300, "y": 200},
@@ -106,8 +108,10 @@ brew install tesseract
 **Q: 可以批量处理吗？**
 - 支持，选择目录或多张图片后可一键识别与导出
 
-**Q: 导出的 JSON 中为什么 pinyin 和 english 是空的？**
-- 需要手动补充，或使用专门的库来生成
+**Q: 导出的 JSON 中为什么 pinyin 或 english 还是空的？**
+- 请确保运行前已安装依赖：`pip install -r requirements.txt`
+- 拼音生成依赖 `pypinyin`
+- 英文翻译依赖 `googletrans`，需要联网，若网络不通会回退为原文
 
 ## 🚀 下一步
 

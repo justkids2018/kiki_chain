@@ -505,10 +505,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       );
     });
 
-    return CharacterStrokeGrid(
-      cells: cells,
-      cellSize: 100,
-      onCharacterComplete: controller.onCharacterAnimationComplete,
+    return Center(
+      child: CharacterStrokeGrid(
+        cells: cells,
+        cellSize: 100,
+        onCharacterComplete: controller.onCharacterAnimationComplete,
+      ),
     );
   }
 

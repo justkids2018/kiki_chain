@@ -2,8 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
+import 'widgets/bubble_animation_layer.dart';
 
-class InteractiveImageView extends StatelessWidget {
+class InteractiveImageView extends StatefulWidget {
   final String imagePath;
   final double originalWidth;
   final double originalHeight;
@@ -20,10 +21,16 @@ class InteractiveImageView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<InteractiveImageView> createState() => _InteractiveImageViewState();
+}
+
+class _InteractiveImageViewState extends State<InteractiveImageView> {
+  @override
   Widget build(BuildContext context) {
-    AppLogger.debug('InteractiveImageView dimensions - $originalWidth x $originalHeight');
-    
-    if (originalWidth <= 0 || originalHeight <= 0) {
+    AppLogger.debug(
+        'InteractiveImageView dimensions - ${widget.originalWidth} x ${widget.originalHeight}');
+
+    if (widget.originalWidth <= 0 || widget.originalHeight <= 0) {
       return Container(
         color: Colors.grey[200],
         child: Center(
@@ -33,7 +40,7 @@ class InteractiveImageView extends StatelessWidget {
               const Icon(Icons.image, size: 64),
               const SizedBox(height: 16),
               Text(
-                'Invalid image dimensions: ${originalWidth}x${originalHeight}',
+                'Invalid image dimensions: ${widget.originalWidth}x${widget.originalHeight}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -41,13 +48,14 @@ class InteractiveImageView extends StatelessWidget {
         ),
       );
     }
-    
-    final aspectRatio = originalWidth / originalHeight;
+
+    final aspectRatio = widget.originalWidth / widget.originalHeight;
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        AppLogger.verbose('LayoutBuilder constraints - ${constraints.maxWidth} x ${constraints.maxHeight}');
-        
+        AppLogger.verbose(
+            'LayoutBuilder constraints - ${constraints.maxWidth} x ${constraints.maxHeight}');
+
         // Calculate the display size to contain the image within constraints
         double displayWidth = constraints.maxWidth;
         double displayHeight = constraints.maxWidth / aspectRatio;
@@ -59,8 +67,8 @@ class InteractiveImageView extends StatelessWidget {
 
         AppLogger.verbose('Calculated display size - $displayWidth x $displayHeight');
 
-        final scaleX = displayWidth / originalWidth;
-        final scaleY = displayHeight / originalHeight;
+        final scaleX = displayWidth / widget.originalWidth;
+        final scaleY = displayHeight / widget.originalHeight;
 
         return Center(
           child: SizedBox(
@@ -72,11 +80,19 @@ class InteractiveImageView extends StatelessWidget {
                 children: [
                   // Layer 1: Image with error handling (supports local and network)
                   Positioned.fill(
-                    child: _buildImage(imagePath, context),
+                    child: _buildImage(widget.imagePath, context),
                   ),
-                  // Layer 2: Interactive Regions
-                  ...regions
-                      .map((region) => _buildRegion(region, scaleX, scaleY)),
+                  // Layer 2: Interactive Regions + Bubble touch overlay
+                  Positioned.fill(
+                    child: BubbleAnimationLayer(
+                      child: Stack(
+                        children: [
+                          ...widget.regions
+                              .map((region) => _buildRegion(region, scaleX, scaleY)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -153,7 +169,10 @@ class InteractiveImageView extends StatelessWidget {
       width: width,
       height: height,
       child: GestureDetector(
-        onTap: () => onRegionTap(region),
+        onTap: () {
+          // 只触发回调，气泡由上层的全局 GestureDetector 处理
+          widget.onRegionTap(region);
+        },
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.red, width: 1),

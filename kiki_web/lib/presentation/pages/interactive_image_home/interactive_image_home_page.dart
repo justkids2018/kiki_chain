@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:get/get.dart';
+import 'package:kikichain/data/models/image_item.dart';
 import 'interactive_image_home_controller.dart';
+
+// ==================== Constants ====================
+const double _cardElevation = 20;
+const double _cardBorderRadius = 16;
+const double _categoryButtonBorderRadius = 24;
+const double _gridSpacing = 12;
+const double _gridHorizontalPadding = 16;
+const double _gridVerticalPadding = 16;
 
 // ==================== Page ====================
 // 页面层专注 UI 呈现，所有数据和逻辑在 Controller 中管理

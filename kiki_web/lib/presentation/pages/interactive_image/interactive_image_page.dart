@@ -5,6 +5,7 @@ import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
+import 'widgets/english_stroke_display.dart';
 
 class InteractiveImagePage extends StatefulWidget {
   const InteractiveImagePage({Key? key}) : super(key: key);
@@ -215,24 +216,13 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                     // Character grid
                     _buildCharacterGrid(controller, region.text),
                     const SizedBox(height: 20),
-                    // English translation
+                    // English translation with animation
                     if (region.textEnglish.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          region.textEnglish,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF666666),
-                            height: 1.4,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                      EnglishStrokeDisplay(
+                        text: region.textEnglish,
+                        fontSize: 24,
+                        fontColor: Colors.black,
+                        animationSpeed: 1.0,
                       ),
                   ],
                 ),
@@ -349,24 +339,13 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                     // Character grid
                     _buildCharacterGrid(controller, region.text),
                     const SizedBox(height: 16),
-                    // English translation
+                    // English translation with animation
                     if (region.textEnglish.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          region.textEnglish,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF666666),
-                            height: 1.3,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                      EnglishStrokeDisplay(
+                        text: region.textEnglish,
+                        fontSize: 18,
+                        fontColor: Colors.blue[700] ?? Colors.blue,
+                        animationSpeed: 1.0,
                       ),
                   ],
                 ),

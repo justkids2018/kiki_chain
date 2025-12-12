@@ -22,8 +22,35 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // 应用恢复到前台时，如果在详情页，则返回首页
+    if (state == AppLifecycleState.resumed) {
+      if (Get.currentRoute == AppConstants.routeInteractiveImage) {
+        Get.offNamed(AppConstants.routeInteractiveImageHome);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

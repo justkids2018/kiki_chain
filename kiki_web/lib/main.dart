@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,6 +12,14 @@ import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/language_controller.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 强制横屏方向
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
   // 初始化应用程序
   await AppInitializer.initialize();
   // 全局注册控制器
@@ -55,9 +64,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
+      // 使用基准设计尺寸作为参考，但会根据实际设备自适应
+      // 1024x768 是 iPad 横屏标准尺寸，作为设计基准
+      designSize: const Size(1024, 768),
       minTextAdapt: true,
-      splitScreenMode: true,
+      splitScreenMode: true, // 支持分屏模式，自动适配不同尺寸
+      ensureScreenSize: true, // 确保在不同设备上自适应
       builder: (context, child) {
         return GetBuilder<LanguageController>(
           builder: (languageController) {

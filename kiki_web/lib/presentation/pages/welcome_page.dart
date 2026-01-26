@@ -51,7 +51,7 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 // Title
                 GlassmorphismSlogan(
-                  slogan: 'Kiki World',
+                  slogan: 'Hi Kiki',
                   style: sloganStyle.copyWith(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),

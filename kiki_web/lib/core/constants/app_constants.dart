@@ -1,7 +1,7 @@
 /// 应用程序常量定义
 class AppConstants {
   // 应用信息
-  static const String appName = 'Kiki World';
+  static const String appName = 'Hi Kiki';
   static const String appVersion = '1.0.0';
 
   // 网络配置

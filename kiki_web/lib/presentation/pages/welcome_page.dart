@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../config/app_color.dart';
+import '../../core/constants/app_constants.dart';
+import '../controllers/auth_controller.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/glassmorphism_slogan.dart';
 
@@ -11,10 +13,37 @@ import '../widgets/glassmorphism_slogan.dart';
 /// If user is already logged in, automatically redirect to home page
 ///
 /// Created: August 9, 2025
-/// Last Modified: August 9, 2025
-/// Apple style welcome page
-class WelcomePage extends StatelessWidget {
+/// Last Modified: January 27, 2026
+/// Apple style welcome page with login status check
+class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  /// 检查登录状态
+  Future<void> _checkLoginStatus() async {
+    // 等待 AuthController 初始化完成
+    final authController = Get.find<AuthController>();
+
+    // 等待初始化完成
+    while (!authController.isInitialized) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
+    // 如果已登录或游客模式，自动跳转到首页
+    if (authController.isLoggedIn || authController.isGuestMode) {
+      Get.offAllNamed(AppConstants.routeHome);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

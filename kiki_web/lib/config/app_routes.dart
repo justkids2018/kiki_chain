@@ -3,6 +3,8 @@ import 'package:kikichain/presentation/pages/interactive_image_home/interactive_
 import '../presentation/pages/home_page.dart';
 import '../presentation/pages/login_page.dart';
 import '../presentation/pages/register_page.dart';
+import '../presentation/pages/welcome_page.dart';
+import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/controllers/home_controller.dart';
 import '../core/constants/app_constants.dart';
@@ -11,10 +13,15 @@ import '../core/constants/app_constants.dart';
 class AppRoutes {
   /// 路由列表
   static final routes = [
-    // 欢迎页面（默认首页）
+    // 欢迎页面（应用入口，自动检查登录状态）
     GetPage(
       name: '/',
-      page: () => const InteractiveImageHomePage(),
+      page: () => const WelcomePage(),
+    ),
+    // 启动页面（已废弃，保留用于兼容）
+    GetPage(
+      name: '/splash',
+      page: () => const SplashPage(),
     ),
     // 主页面
     GetPage(

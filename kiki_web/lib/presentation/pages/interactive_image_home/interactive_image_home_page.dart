@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
+import '../scene_list_page.dart';
 
 /// 互动图片首页 - 显示场景分类
 class InteractiveImageHomePage extends StatelessWidget {
@@ -150,12 +151,11 @@ class InteractiveImageHomePage extends StatelessWidget {
           return CategoryCard(
             category: category,
             onTap: () {
-              // TODO: 导航到场景列表页
-              Get.snackbar(
-                '提示',
-                '点击了 ${category.name}',
-                snackPosition: SnackPosition.BOTTOM,
-                duration: const Duration(seconds: 1),
+              // 导航到场景列表页
+              Get.to(
+                () => SceneListPage(category: category),
+                transition: Transition.rightToLeft,
+                duration: const Duration(milliseconds: 300),
               );
             },
           );

@@ -3,6 +3,7 @@ use serde::Serialize;
 use uuid::Uuid;
 
 use crate::core::errors::{DomainError, Result};
+use crate::core::value_objects::UserRole;
 
 /// 用户实体
 /// 只保留基础登录所需的字段和行为
@@ -150,5 +151,20 @@ impl User {
     }
     pub fn role_id(&self) -> i32 {
         self.role_id
+    }
+
+    /// 获取用户角色枚举
+    pub fn role(&self) -> Result<UserRole> {
+        UserRole::from_i32(self.role_id)
+    }
+
+    /// 检查是否为管理员
+    pub fn is_admin(&self) -> bool {
+        self.role_id == UserRole::Admin.to_i32()
+    }
+
+    /// 检查是否为普通用户
+    pub fn is_user(&self) -> bool {
+        self.role_id == UserRole::User.to_i32()
     }
 }

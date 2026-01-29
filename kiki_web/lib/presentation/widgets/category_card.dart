@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/scene_category.dart';
+import '../../generated/app_localizations.dart';
 
 /// 场景分类卡片组件
 ///
@@ -24,7 +25,7 @@ class CategoryCard extends StatelessWidget {
         height: 450,
         margin: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
@@ -34,7 +35,7 @@ class CategoryCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           child: Stack(
             children: [
               // 背景图片
@@ -98,72 +99,77 @@ class CategoryCard extends StatelessWidget {
 
   /// 构建内容区域
   Widget _buildContent() {
-    return Positioned(
-      left: 20,
-      right: 20,
-      bottom: 20,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 图标
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: Text(
-                category.icon,
-                style: const TextStyle(fontSize: 32),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // 分类名称
-          Text(
-            category.name,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // 描述
-          Text(
-            category.description,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withValues(alpha: 0.9),
-              height: 1.4,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 12),
-
-          // 场景数量和物品数量
-          Row(
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+        return Positioned(
+          left: 20,
+          right: 20,
+          bottom: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildInfoChip(
-                icon: Icons.grid_view_rounded,
-                text: '${category.sceneCount}个场景',
+              // 图标
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF00C37D).withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Text(
+                    category.icon,
+                    style: const TextStyle(fontSize: 32),
+                  ),
+                ),
               ),
-              const SizedBox(width: 8),
-              _buildInfoChip(
-                icon: Icons.category_rounded,
-                text: '${category.totalItemCount}个物品',
+              const SizedBox(height: 16),
+
+              // 分类名称
+              Text(
+                category.name,
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // 描述
+              Text(
+                category.description,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white.withValues(alpha: 0.9),
+                  height: 1.4,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 12),
+
+              // 场景数量和物品数量
+              Row(
+                children: [
+                  _buildInfoChip(
+                    icon: Icons.grid_view_rounded,
+                    text: localizations.scenesCount(category.sceneCount),
+                  ),
+                  const SizedBox(width: 8),
+                  _buildInfoChip(
+                    icon: Icons.category_rounded,
+                    text: localizations.itemsCount(category.totalItemCount),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -172,8 +178,12 @@ class CategoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
+        color: const Color(0xFF00C37D).withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -202,20 +212,25 @@ class CategoryCard extends StatelessWidget {
     return Positioned(
       top: 16,
       right: 16,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: const Text(
-          'NEW',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+      child: Builder(
+        builder: (context) {
+          final localizations = AppLocalizations.of(context)!;
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF00C37D),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              localizations.newBadge,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

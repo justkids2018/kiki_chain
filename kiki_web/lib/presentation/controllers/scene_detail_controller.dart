@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../domain/entities/scene.dart';
 import '../../domain/entities/scene_item.dart';
 import '../../domain/repositories/i_scene_repository.dart';
@@ -23,6 +24,9 @@ class SceneDetailController extends GetxController {
   final RxList<SceneItem> items = <SceneItem>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+
+  // Helper to get localizations
+  AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;
 
   @override
   void onInit() {
@@ -75,8 +79,8 @@ class SceneDetailController extends GetxController {
 
     // 如果没有点击到任何热点，显示提示
     Get.snackbar(
-      '提示',
-      '请点击场景中的物品',
+      _l10n.hint,
+      _l10n.clickItemHint,
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 1),
       backgroundColor: Colors.black.withValues(alpha: 0.7),
@@ -186,7 +190,7 @@ class SceneDetailController extends GetxController {
               ElevatedButton.icon(
                 onPressed: () => _playAudio(item),
                 icon: const Icon(Icons.volume_up),
-                label: const Text('播放发音'),
+                label: Text(_l10n.playPronunciation),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
@@ -202,7 +206,7 @@ class SceneDetailController extends GetxController {
               // 关闭按钮
               TextButton(
                 onPressed: () => Get.back(),
-                child: const Text('关闭'),
+                child: Text(_l10n.close),
               ),
             ],
           ),
@@ -217,8 +221,8 @@ class SceneDetailController extends GetxController {
 
     // TODO: 实现音频播放功能
     Get.snackbar(
-      '提示',
-      '播放音频: ${item.nameCn}',
+      _l10n.hint,
+      _l10n.playingAudio(item.nameCn),
       snackPosition: SnackPosition.BOTTOM,
       duration: const Duration(seconds: 1),
       backgroundColor: Colors.black.withValues(alpha: 0.7),

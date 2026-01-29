@@ -238,6 +238,126 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nickname => '昵称';
+
+  @override
+  String get newBadge => '新';
+
+  @override
+  String itemsCount(int count) {
+    return '$count个物品';
+  }
+
+  @override
+  String scenesCount(int count) {
+    return '$count个场景';
+  }
+
+  @override
+  String get defaultUser => '用户';
+
+  @override
+  String get hint => '提示';
+
+  @override
+  String get loggingIn => '登录中...';
+
+  @override
+  String get loginFailed => '登录失败，请重试';
+
+  @override
+  String get loginSuccess => '登录成功';
+
+  @override
+  String get registering => '注册中...';
+
+  @override
+  String get registerSuccess => '注册成功';
+
+  @override
+  String get registerFailed => '注册失败，请重试';
+
+  @override
+  String get registerDataEmpty => '注册返回数据为空，请稍后重试';
+
+  @override
+  String get pleaseTryAgainLater => '，请稍后重试';
+
+  @override
+  String get loggingOut => '退出中...';
+
+  @override
+  String get loggedOut => '已退出登录';
+
+  @override
+  String get logoutFailed => '退出登录失败';
+
+  @override
+  String get guestModeFailed => '进入游客模式失败';
+
+  @override
+  String get pleaseEnterPhone => '请输入手机号';
+
+  @override
+  String get pleaseEnterValidPhone => '请输入有效的手机号';
+
+  @override
+  String get pleaseEnterPassword => '请输入密码';
+
+  @override
+  String get passwordLengthError => '密码长度应在6-20位之间';
+
+  @override
+  String get passwordFormatError => '密码需包含字母和数字';
+
+  @override
+  String get pleaseEnterPasswordAgain => '请再次输入密码';
+
+  @override
+  String get passwordMismatch => '两次输入的密码不一致';
+
+  @override
+  String get nicknameLengthError => '昵称长度应在2-20个字符之间';
+
+  @override
+  String get chooseSceneToStart => '选择一个场景开始学习吧！';
+
+  @override
+  String get loadFailed => '加载失败';
+
+  @override
+  String get noCategories => '暂无分类';
+
+  @override
+  String get noScenes => '暂无场景';
+
+  @override
+  String get playPronunciation => '播放发音';
+
+  @override
+  String get clickItemHint => '请点击场景中的物品';
+
+  @override
+  String playingAudio(String name) {
+    return '播放音频: $name';
+  }
+
+  @override
+  String get learningRecordsInDev => '学习记录功能开发中';
+
+  @override
+  String get favoritesInDev => '收藏功能开发中';
+
+  @override
+  String get settingsInDev => '设置功能开发中';
+
+  @override
+  String get vocabularyInDev => '生词功能正在开发中';
+
+  @override
+  String get simplifiedChinese => '简体中文';
+
+  @override
+  String get traditionalChinese => '繁體中文';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -474,4 +594,124 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get nickname => '暱稱';
+
+  @override
+  String get newBadge => '新';
+
+  @override
+  String itemsCount(int count) {
+    return '$count個物品';
+  }
+
+  @override
+  String scenesCount(int count) {
+    return '$count個場景';
+  }
+
+  @override
+  String get defaultUser => '用戶';
+
+  @override
+  String get hint => '提示';
+
+  @override
+  String get loggingIn => '登入中...';
+
+  @override
+  String get loginFailed => '登入失敗，請重試';
+
+  @override
+  String get loginSuccess => '登入成功';
+
+  @override
+  String get registering => '註冊中...';
+
+  @override
+  String get registerSuccess => '註冊成功';
+
+  @override
+  String get registerFailed => '註冊失敗，請重試';
+
+  @override
+  String get registerDataEmpty => '註冊返回數據為空，請稍後重試';
+
+  @override
+  String get pleaseTryAgainLater => '，請稍後重試';
+
+  @override
+  String get loggingOut => '退出中...';
+
+  @override
+  String get loggedOut => '已退出登入';
+
+  @override
+  String get logoutFailed => '退出登入失敗';
+
+  @override
+  String get guestModeFailed => '進入訪客模式失敗';
+
+  @override
+  String get pleaseEnterPhone => '請輸入手機號';
+
+  @override
+  String get pleaseEnterValidPhone => '請輸入有效的手機號';
+
+  @override
+  String get pleaseEnterPassword => '請輸入密碼';
+
+  @override
+  String get passwordLengthError => '密碼長度應在6-20位之間';
+
+  @override
+  String get passwordFormatError => '密碼需包含字母和數字';
+
+  @override
+  String get pleaseEnterPasswordAgain => '請再次輸入密碼';
+
+  @override
+  String get passwordMismatch => '兩次輸入的密碼不一致';
+
+  @override
+  String get nicknameLengthError => '暱稱長度應在2-20個字符之間';
+
+  @override
+  String get chooseSceneToStart => '選擇一個場景開始學習吧！';
+
+  @override
+  String get loadFailed => '加載失敗';
+
+  @override
+  String get noCategories => '暫無分類';
+
+  @override
+  String get noScenes => '暫無場景';
+
+  @override
+  String get playPronunciation => '播放發音';
+
+  @override
+  String get clickItemHint => '請點擊場景中的物品';
+
+  @override
+  String playingAudio(String name) {
+    return '播放音頻: $name';
+  }
+
+  @override
+  String get learningRecordsInDev => '學習記錄功能開發中';
+
+  @override
+  String get favoritesInDev => '收藏功能開發中';
+
+  @override
+  String get settingsInDev => '設置功能開發中';
+
+  @override
+  String get vocabularyInDev => '生詞功能正在開發中';
+
+  @override
+  String get simplifiedChinese => '简体中文';
+
+  @override
+  String get traditionalChinese => '繁體中文';
 }

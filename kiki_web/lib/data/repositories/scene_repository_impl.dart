@@ -1,4 +1,5 @@
 import '../../domain/entities/scene_category.dart';
+import '../../domain/entities/scene.dart';
 import '../../domain/repositories/i_scene_repository.dart';
 import '../services/api/scene_api_service.dart';
 import '../../core/logging/app_logger.dart';
@@ -46,7 +47,7 @@ class SceneRepositoryImpl implements ISceneRepository {
   }
 
   @override
-  Future<List<dynamic>> getScenesByCategory(String categoryId) async {
+  Future<List<Scene>> getScenesByCategory(String categoryId) async {
     try {
       AppLogger.info('📦 Fetching scenes for category: $categoryId');
 
@@ -61,9 +62,16 @@ class SceneRepositoryImpl implements ISceneRepository {
       final data = response['data'] as Map<String, dynamic>;
       final scenesJson = data['scenes'] as List<dynamic>;
 
-      AppLogger.info('✅ Fetched ${scenesJson.length} scenes');
+      final scenes = scenesJson
+          .map((json) => Scene.fromJson(json as Map<String, dynamic>))
+          .toList();
 
-      return scenesJson;
+      // Sort by order
+      scenes.sort((a, b) => a.order.compareTo(b.order));
+
+      AppLogger.info('✅ Fetched ${scenes.length} scenes');
+
+      return scenes;
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to fetch scenes', e, stackTrace);
       rethrow;
@@ -98,7 +106,7 @@ class SceneRepositoryImpl implements ISceneRepository {
   }
 
   @override
-  Future<List<dynamic>> searchScenes({
+  Future<List<Scene>> searchScenes({
     required String keyword,
     int page = 1,
     int pageSize = 20,
@@ -121,9 +129,13 @@ class SceneRepositoryImpl implements ISceneRepository {
       final data = response['data'] as Map<String, dynamic>;
       final scenesJson = data['scenes'] as List<dynamic>;
 
-      AppLogger.info('✅ Found ${scenesJson.length} scenes');
+      final scenes = scenesJson
+          .map((json) => Scene.fromJson(json as Map<String, dynamic>))
+          .toList();
 
-      return scenesJson;
+      AppLogger.info('✅ Found ${scenes.length} scenes');
+
+      return scenes;
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to search scenes', e, stackTrace);
       rethrow;

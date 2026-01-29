@@ -1,4 +1,5 @@
 import '../../domain/entities/scene.dart';
+import 'mock_scene_items.dart';
 
 /// Mock数据 - 场景列表
 ///
@@ -285,11 +286,15 @@ class MockScenes {
       };
     }
 
+    // 获取场景物品
+    final items = MockSceneItems.getItemsBySceneId(sceneId);
+
     return {
       "code": 200,
       "message": "成功",
       "data": {
         "scene": scene.toJson(),
+        "items": items.map((item) => item.toJson()).toList(),
       }
     };
   }

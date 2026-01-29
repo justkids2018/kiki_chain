@@ -1,4 +1,5 @@
 import '../entities/scene_category.dart';
+import '../entities/scene.dart';
 
 /// Scene Repository Interface
 ///
@@ -14,7 +15,7 @@ abstract class ISceneRepository {
   ///
   /// Returns a list of scenes belonging to the specified category
   /// Throws an exception if the request fails
-  Future<List<dynamic>> getScenesByCategory(String categoryId);
+  Future<List<Scene>> getScenesByCategory(String categoryId);
 
   /// Get scene detail by scene ID
   ///
@@ -26,7 +27,7 @@ abstract class ISceneRepository {
   ///
   /// Returns a list of scenes matching the search keyword
   /// Supports pagination with page and pageSize parameters
-  Future<List<dynamic>> searchScenes({
+  Future<List<Scene>> searchScenes({
     required String keyword,
     int page = 1,
     int pageSize = 20,

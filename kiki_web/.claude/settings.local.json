@@ -10,7 +10,10 @@
       "Bash(flutter emulators:*)",
       "Bash(flutter run:*)",
       "Bash(flutter pub get:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

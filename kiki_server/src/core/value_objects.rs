@@ -107,3 +107,47 @@ impl fmt::Display for Email {
         write!(f, "{}", self.0)
     }
 }
+
+/// 用户角色枚举
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[repr(i32)]
+pub enum UserRole {
+    /// 普通用户（移动端）
+    User = 1,
+    /// 管理员（管理端）
+    Admin = 2,
+}
+
+impl UserRole {
+    /// 从 i32 转换为 UserRole
+    pub fn from_i32(value: i32) -> Result<Self> {
+        match value {
+            1 => Ok(UserRole::User),
+            2 => Ok(UserRole::Admin),
+            _ => Err(DomainError::Validation(format!("无效的角色ID: {}", value))),
+        }
+    }
+
+    /// 转换为 i32
+    pub fn to_i32(&self) -> i32 {
+        *self as i32
+    }
+
+    /// 是否为管理员
+    pub fn is_admin(&self) -> bool {
+        matches!(self, UserRole::Admin)
+    }
+
+    /// 是否为普通用户
+    pub fn is_user(&self) -> bool {
+        matches!(self, UserRole::User)
+    }
+
+    /// 获取角色名称
+    pub fn name(&self) -> &'static str {
+        match self {
+            UserRole::User => "普通用户",
+            UserRole::Admin => "管理员",
+        }
+    }
+}

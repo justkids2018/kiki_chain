@@ -238,4 +238,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nickname => 'Nickname';
+
+  @override
+  String get newBadge => 'NEW';
+
+  @override
+  String itemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String scenesCount(int count) {
+    return '$count scenes';
+  }
+
+  @override
+  String get defaultUser => 'User';
+
+  @override
+  String get hint => 'Hint';
+
+  @override
+  String get loggingIn => 'Logging in...';
+
+  @override
+  String get loginFailed => 'Login failed, please try again';
+
+  @override
+  String get loginSuccess => 'Login successful';
+
+  @override
+  String get registering => 'Registering...';
+
+  @override
+  String get registerSuccess => 'Registration successful';
+
+  @override
+  String get registerFailed => 'Registration failed, please try again';
+
+  @override
+  String get registerDataEmpty => 'Registration data is empty, please try again later';
+
+  @override
+  String get pleaseTryAgainLater => ', please try again later';
+
+  @override
+  String get loggingOut => 'Logging out...';
+
+  @override
+  String get loggedOut => 'Logged out successfully';
+
+  @override
+  String get logoutFailed => 'Logout failed';
+
+  @override
+  String get guestModeFailed => 'Failed to enter guest mode';
+
+  @override
+  String get pleaseEnterPhone => 'Please enter phone number';
+
+  @override
+  String get pleaseEnterValidPhone => 'Please enter a valid phone number';
+
+  @override
+  String get pleaseEnterPassword => 'Please enter password';
+
+  @override
+  String get passwordLengthError => 'Password length should be between 6-20 characters';
+
+  @override
+  String get passwordFormatError => 'Password must contain letters and numbers';
+
+  @override
+  String get pleaseEnterPasswordAgain => 'Please enter password again';
+
+  @override
+  String get passwordMismatch => 'Passwords do not match';
+
+  @override
+  String get nicknameLengthError => 'Nickname length should be between 2-20 characters';
+
+  @override
+  String get chooseSceneToStart => 'Choose a scene to start learning!';
+
+  @override
+  String get loadFailed => 'Load failed';
+
+  @override
+  String get noCategories => 'No categories';
+
+  @override
+  String get noScenes => 'No scenes';
+
+  @override
+  String get playPronunciation => 'Play pronunciation';
+
+  @override
+  String get clickItemHint => 'Please click on items in the scene';
+
+  @override
+  String playingAudio(String name) {
+    return 'Playing audio: $name';
+  }
+
+  @override
+  String get learningRecordsInDev => 'Learning records feature is under development';
+
+  @override
+  String get favoritesInDev => 'Favorites feature is under development';
+
+  @override
+  String get settingsInDev => 'Settings feature is under development';
+
+  @override
+  String get vocabularyInDev => 'Vocabulary feature is under development';
+
+  @override
+  String get simplifiedChinese => 'Simplified Chinese';
+
+  @override
+  String get traditionalChinese => 'Traditional Chinese';
 }

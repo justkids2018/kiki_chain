@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
 import '../scene_list_page.dart';
@@ -49,12 +50,18 @@ class InteractiveImageHomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            '选择一个场景开始学习吧！',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+          Builder(
+            builder: (context) {
+              final localizations = AppLocalizations.of(context)!;
+              return Text(
+                localizations.chooseSceneToStart,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: const Color(0xFF00C37D),
+                  fontWeight: FontWeight.w500,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -73,38 +80,41 @@ class InteractiveImageHomePage extends StatelessWidget {
 
       // 错误状态
       if (controller.errorMessage.value.isNotEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.grey[400],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '加载失败',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                controller.errorMessage.value,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () => controller.refreshCategories(),
-                icon: const Icon(Icons.refresh),
-                label: const Text('重试'),
+        return Builder(
+          builder: (context) {
+            final localizations = AppLocalizations.of(context)!;
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    localizations.loadFailed,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    controller.errorMessage.value,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () => controller.refreshCategories(),
+                    icon: const Icon(Icons.refresh),
+                    label: Text(localizations.retry),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
@@ -115,29 +125,36 @@ class InteractiveImageHomePage extends StatelessWidget {
             ],
           ),
         );
+          },
+        );
       }
 
       // 空状态
       if (controller.categories.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.category_outlined,
-                size: 64,
-                color: Colors.grey[400],
+        return Builder(
+          builder: (context) {
+            final localizations = AppLocalizations.of(context)!;
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.category_outlined,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    localizations.noCategories,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                '暂无分类',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       }
 

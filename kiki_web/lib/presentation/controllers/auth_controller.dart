@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../domain/entities/user.dart';
 import '../../core/services/app_services.dart';
 import '../../core/logging/app_logger.dart';
@@ -55,6 +56,9 @@ class AuthController extends GetxController {
   bool get loginPasswordVisible => _loginPasswordVisible.value;
   bool get registerPasswordVisible => _registerPasswordVisible.value;
   bool get registerConfirmPasswordVisible => _registerConfirmPasswordVisible.value;
+
+  // Helper to get localizations
+  AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;
   
   @override
   void onInit() {
@@ -127,52 +131,52 @@ class AuthController extends GetxController {
     }
     
     try {
-      EasyLoading.show(status: '登录中...');
+      EasyLoading.show(status: _l10n.loggingIn);
 
       final identifier = loginIdentifierController.text.trim();
       final password = loginPasswordController.text;
 
       final user = await _authRepository.login(identifier, password);
       if (user == null) {
-        EasyLoading.showError('登录失败，请重试');
+        EasyLoading.showError(_l10n.loginFailed);
         AppLogger.error('Login failed: repository returned null user');
         return false;
       }
 
       _currentUser.value = user;
       _isLoggedIn.value = true;
-      
-      EasyLoading.showSuccess('登录成功');
+
+      EasyLoading.showSuccess(_l10n.loginSuccess);
       AppLogger.info('Login successful for user: ${user.nickname}');
-      
+
       // 清空表单
       _clearLoginForm();
-      
+
       // 导航到首页
       Get.offAllNamed('/home');
       return true;
-      
+
     } on ApiResponseException catch (e) {
       // 处理所有异常（API响应、网络错误、认证错误等）
       String errorMessage = e.message;
-      
+
       // 特殊处理需要重新认证的情况
       // if (e.needsReauth) {
         // errorMessage = '登录已过期，请重新登录';
         // 可以在这里执行重新认证逻辑
       // }
-      
+
       EasyLoading.showError(errorMessage);
       AppLogger.error('Login failed: ${e.message}', e);
       return false;
-      
+
     } catch (e) {
       // 处理其他未知异常
-      const errorMessage = '登录失败，请重试';
+      final errorMessage = _l10n.loginFailed;
       EasyLoading.showError(errorMessage);
       AppLogger.error('Login failed with unknown error', e);
       return false;
-      
+
     } finally {
       EasyLoading.dismiss();
     }
@@ -191,7 +195,7 @@ class AuthController extends GetxController {
     }
 
     try {
-      EasyLoading.show(status: '注册中...');
+      EasyLoading.show(status: _l10n.registering);
 
       final phone = registerPhoneController.text.trim();
       final password = registerPasswordController.text;
@@ -204,14 +208,14 @@ class AuthController extends GetxController {
       );
 
       if (user == null) {
-        EasyLoading.showError('注册返回数据为空，请稍后重试');
+        EasyLoading.showError(_l10n.registerDataEmpty);
         return false;
       }
 
       _currentUser.value = user;
       _isLoggedIn.value = true;
 
-      EasyLoading.showSuccess('注册成功');
+      EasyLoading.showSuccess(_l10n.registerSuccess);
       AppLogger.info('Registration successful for user: ${user.nickname}');
 
       // 清空表单
@@ -225,7 +229,7 @@ class AuthController extends GetxController {
       // 处理所有异常（API响应、网络错误、认证错误等）
       String errorMessage = e.message;
       if (e.isRetryable) {
-        errorMessage += '，请稍后重试';
+        errorMessage += _l10n.pleaseTryAgainLater;
       }
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed: ${e.message}', e);
@@ -233,7 +237,7 @@ class AuthController extends GetxController {
 
     } catch (e) {
       // 处理其他未知异常
-      const errorMessage = '注册失败，请重试';
+      final errorMessage = _l10n.registerFailed;
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed with unknown error', e);
       return false;
@@ -249,25 +253,25 @@ class AuthController extends GetxController {
   /// 重置用户状态，导航回欢迎页
   Future<void> logout() async {
     try {
-      EasyLoading.show(status: '退出中...');
-      
+      EasyLoading.show(status: _l10n.loggingOut);
+
       // 清除本地存储
       await AppServices.instance.localStorage.clearUserData();
-      
+
       // 重置状态
       _currentUser.value = null;
       _isLoggedIn.value = false;
-      
+
       // 清空表单
       _clearAllForms();
-      
-      EasyLoading.showSuccess('已退出登录');
+
+      EasyLoading.showSuccess(_l10n.loggedOut);
       AppLogger.info('User logged out successfully');
-      
+
       // 导航到欢迎页
       Get.offAllNamed('/welcome');
     } catch (e) {
-      EasyLoading.showError('退出登录失败');
+      EasyLoading.showError(_l10n.logoutFailed);
       AppLogger.error('Logout failed', e);
     } finally {
       EasyLoading.dismiss();
@@ -298,14 +302,14 @@ class AuthController extends GetxController {
   /// - [String?] 验证错误信息，null表示验证通过
   String? validateLoginIdentifier(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return '请输入手机号';
+      return _l10n.pleaseEnterPhone;
     }
 
     value = value.trim();
 
     // 验证中国大陆手机号格式
     if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) {
-      return '请输入有效的手机号';
+      return _l10n.pleaseEnterValidPhone;
     }
 
     return null;
@@ -320,17 +324,17 @@ class AuthController extends GetxController {
   /// - [String?] 验证错误信息，null表示验证通过
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return '请输入密码';
+      return _l10n.pleaseEnterPassword;
     }
 
     // 检查密码长度（6-20位）
     if (value.length < 6 || value.length > 20) {
-      return '密码长度应在6-20位之间';
+      return _l10n.passwordLengthError;
     }
 
     // 检查是否包含字母和数字
     if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
-      return '密码需包含字母和数字';
+      return _l10n.passwordFormatError;
     }
 
     return null;
@@ -353,7 +357,7 @@ class AuthController extends GetxController {
 
     // 检查昵称长度（2-20字符）
     if (value.length < 2 || value.length > 20) {
-      return '昵称长度应在2-20个字符之间';
+      return _l10n.nicknameLengthError;
     }
 
     return null;
@@ -368,17 +372,17 @@ class AuthController extends GetxController {
   /// - [String?] 验证错误信息，null表示验证通过
   String? validateRegisterPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return '请输入密码';
+      return _l10n.pleaseEnterPassword;
     }
 
     // 检查密码长度（6-20位）
     if (value.length < 6 || value.length > 20) {
-      return '密码长度应在6-20位之间';
+      return _l10n.passwordLengthError;
     }
 
     // 检查是否包含字母和数字
     if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
-      return '密码需包含字母和数字';
+      return _l10n.passwordFormatError;
     }
 
     return null;
@@ -393,14 +397,14 @@ class AuthController extends GetxController {
   /// - [String?] 验证错误信息，null表示验证通过
   String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return '请输入手机号';
+      return _l10n.pleaseEnterPhone;
     }
 
     value = value.trim();
 
     // 验证中国大陆手机号格式
     if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) {
-      return '请输入有效的手机号';
+      return _l10n.pleaseEnterValidPhone;
     }
 
     return null;
@@ -415,13 +419,13 @@ class AuthController extends GetxController {
   /// - [String?] 验证错误信息，null表示验证通过
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return '请再次输入密码';
+      return _l10n.pleaseEnterPasswordAgain;
     }
-    
+
     if (value != registerPasswordController.text) {
-      return '两次输入的密码不一致';
+      return _l10n.passwordMismatch;
     }
-    
+
     return null;
   }
   
@@ -466,7 +470,7 @@ class AuthController extends GetxController {
       // 导航到首页
       Get.offAllNamed('/home');
     } catch (e) {
-      EasyLoading.showError('进入游客模式失败');
+      EasyLoading.showError(_l10n.guestModeFailed);
       AppLogger.error('Enter guest mode failed', e);
     }
   }

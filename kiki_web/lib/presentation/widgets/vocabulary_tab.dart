@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../controllers/home_controller.dart';
 
 /// 生词页面Tab
@@ -8,6 +9,7 @@ class VocabularyTab extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -19,7 +21,7 @@ class VocabularyTab extends GetView<HomeController> {
           ),
           SizedBox(height: 16),
           Text(
-            '生词功能正在开发中',
+            localizations.vocabularyInDev,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey,

@@ -173,36 +173,41 @@ class ProfileTab extends StatelessWidget {
 
                 // 用户信息
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user?.nickname ?? '用户',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27273F),
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                      Row(
+                  child: Builder(
+                    builder: (context) {
+                      final localizations = AppLocalizations.of(context)!;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.phone_outlined,
-                            size: 14,
-                            color: Color(0xFF6B7280),
-                          ),
-                          SizedBox(width: 4),
                           Text(
-                            '手机号：$maskedPhone',
+                            user?.nickname ?? localizations.defaultUser,
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF6B7280),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF27273F),
                             ),
                           ),
+                          SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone_outlined,
+                                size: 14,
+                                color: Color(0xFF6B7280),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                '${localizations.phoneLabel}$maskedPhone',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF6B7280),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ],
@@ -315,57 +320,65 @@ class ProfileTab extends StatelessWidget {
 
   /// 构建退出登录按钮
   Widget _buildLogoutButton(AuthController authController) {
-    return GestureDetector(
-      onTap: () => _showLogoutDialog(authController),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Color(0xFFE2E8F0),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 4,
-              offset: Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.logout_rounded,
-              size: 20,
-              color: Color(0xFFEF4444),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '退出登录',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFFEF4444),
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+        return GestureDetector(
+          onTap: () => _showLogoutDialog(authController),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Color(0xFFE2E8F0),
+                width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 4,
+                  offset: Offset(0, 1),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.logout_rounded,
+                  size: 20,
+                  color: Color(0xFFEF4444),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  localizations.logOut,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFEF4444),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
   /// 显示退出登录确认对话框
   void _showLogoutDialog(AuthController authController) {
+    final context = Get.context!;
+    final localizations = AppLocalizations.of(context)!;
+
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
-          '退出登录',
+          localizations.logOut,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -373,7 +386,7 @@ class ProfileTab extends StatelessWidget {
           ),
         ),
         content: Text(
-          '确定要退出登录吗？',
+          localizations.confirmLogoutMessage,
           style: TextStyle(
             fontSize: 15,
             color: Color(0xFF6B7280),
@@ -383,7 +396,7 @@ class ProfileTab extends StatelessWidget {
           TextButton(
             onPressed: () => Get.back(),
             child: Text(
-              '取消',
+              localizations.cancel,
               style: TextStyle(
                 color: Color(0xFF6B7280),
                 fontWeight: FontWeight.w500,
@@ -404,7 +417,7 @@ class ProfileTab extends StatelessWidget {
               ),
             ),
             child: Text(
-              '退出',
+              localizations.exit,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),

@@ -557,6 +557,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nickname'**
   String get nickname;
+
+  /// New badge label for new content
+  ///
+  /// In en, this message translates to:
+  /// **'NEW'**
+  String get newBadge;
+
+  /// Item count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemsCount(int count);
+
+  /// Scene count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} scenes'**
+  String scenesCount(int count);
+
+  /// No description provided for @defaultUser.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get defaultUser;
+
+  /// No description provided for @hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint'**
+  String get hint;
+
+  /// No description provided for @loggingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging in...'**
+  String get loggingIn;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed, please try again'**
+  String get loginFailed;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful'**
+  String get loginSuccess;
+
+  /// No description provided for @registering.
+  ///
+  /// In en, this message translates to:
+  /// **'Registering...'**
+  String get registering;
+
+  /// No description provided for @registerSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful'**
+  String get registerSuccess;
+
+  /// No description provided for @registerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed, please try again'**
+  String get registerFailed;
+
+  /// No description provided for @registerDataEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration data is empty, please try again later'**
+  String get registerDataEmpty;
+
+  /// No description provided for @pleaseTryAgainLater.
+  ///
+  /// In en, this message translates to:
+  /// **', please try again later'**
+  String get pleaseTryAgainLater;
+
+  /// No description provided for @loggingOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging out...'**
+  String get loggingOut;
+
+  /// No description provided for @loggedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged out successfully'**
+  String get loggedOut;
+
+  /// No description provided for @logoutFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout failed'**
+  String get logoutFailed;
+
+  /// No description provided for @guestModeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to enter guest mode'**
+  String get guestModeFailed;
+
+  /// No description provided for @pleaseEnterPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number'**
+  String get pleaseEnterPhone;
+
+  /// No description provided for @pleaseEnterValidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get pleaseEnterValidPhone;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @passwordLengthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Password length should be between 6-20 characters'**
+  String get passwordLengthError;
+
+  /// No description provided for @passwordFormatError.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain letters and numbers'**
+  String get passwordFormatError;
+
+  /// No description provided for @pleaseEnterPasswordAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password again'**
+  String get pleaseEnterPasswordAgain;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordMismatch;
+
+  /// No description provided for @nicknameLengthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname length should be between 2-20 characters'**
+  String get nicknameLengthError;
+
+  /// No description provided for @chooseSceneToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a scene to start learning!'**
+  String get chooseSceneToStart;
+
+  /// No description provided for @loadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Load failed'**
+  String get loadFailed;
+
+  /// No description provided for @noCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories'**
+  String get noCategories;
+
+  /// No description provided for @noScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'No scenes'**
+  String get noScenes;
+
+  /// No description provided for @playPronunciation.
+  ///
+  /// In en, this message translates to:
+  /// **'Play pronunciation'**
+  String get playPronunciation;
+
+  /// No description provided for @clickItemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please click on items in the scene'**
+  String get clickItemHint;
+
+  /// Playing audio message
+  ///
+  /// In en, this message translates to:
+  /// **'Playing audio: {name}'**
+  String playingAudio(String name);
+
+  /// No description provided for @learningRecordsInDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning records feature is under development'**
+  String get learningRecordsInDev;
+
+  /// No description provided for @favoritesInDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites feature is under development'**
+  String get favoritesInDev;
+
+  /// No description provided for @settingsInDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings feature is under development'**
+  String get settingsInDev;
+
+  /// No description provided for @vocabularyInDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary feature is under development'**
+  String get vocabularyInDev;
+
+  /// No description provided for @simplifiedChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Simplified Chinese'**
+  String get simplifiedChinese;
+
+  /// No description provided for @traditionalChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional Chinese'**
+  String get traditionalChinese;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

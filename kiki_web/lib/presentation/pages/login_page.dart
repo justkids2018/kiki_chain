@@ -43,7 +43,12 @@ class LoginPage extends StatelessWidget {
                 
                 // 注册提示
                 _buildRegisterPrompt(),
-                
+
+                SizedBox(height: 16),
+
+                // 游客模式按钮
+                _buildGuestModeButton(),
+
                   SizedBox(height: 40),
                 ],
               ),
@@ -338,6 +343,58 @@ class LoginPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  /// 构建游客模式按钮
+  Widget _buildGuestModeButton() {
+    final AuthController authController = Get.find<AuthController>();
+
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white, // 纯色背景
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Color(0xFFE2E8F0), // 标准边框色
+              width: 1,
+            ),
+            boxShadow: [
+              // 极轻阴影
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 4,
+                offset: Offset(0, 1),
+              ),
+            ],
+          ),
+          child: GestureDetector(
+            onTap: authController.enterGuestMode,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person_outline_rounded,
+                  color: Color(0xFF6B7280),
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  localizations.continueAsGuest,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFF6B7280),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

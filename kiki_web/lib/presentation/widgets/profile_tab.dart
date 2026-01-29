@@ -31,77 +31,82 @@ class ProfileTab extends StatelessWidget {
 
   /// 构建未登录状态视图
   Widget _buildGuestView() {
-    return Center(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 40),
-
-            // 默认头像
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Color(0xFFE2E8F0),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.person_outline_rounded,
-                size: 50,
-                color: Color(0xFF6B7280),
-              ),
-            ),
-
-            SizedBox(height: 24),
-
-            // 欢迎文字
-            Text(
-              'Hi，快来登录吧',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF27273F),
-              ),
-            ),
-
-            SizedBox(height: 8),
-
-            Text(
-              '登录后可查看学习记录和收藏',
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xFF6B7280),
-              ),
-            ),
-
-            SizedBox(height: 32),
-
-            // 登录/注册按钮
-            Row(
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+        return Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildActionButton(
-                  text: '登录',
-                  onPressed: () => Get.toNamed('/login'),
-                  isPrimary: true,
+                SizedBox(height: 40),
+
+                // 默认头像
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFE2E8F0),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.person_outline_rounded,
+                    size: 50,
+                    color: Color(0xFF6B7280),
+                  ),
                 ),
 
-                SizedBox(width: 16),
+                SizedBox(height: 24),
 
-                _buildActionButton(
-                  text: '注册',
-                  onPressed: () => Get.toNamed('/register'),
-                  isPrimary: false,
+                // 欢迎文字
+                Text(
+                  localizations.hiPleaseLogin,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF27273F),
+                  ),
                 ),
+
+                SizedBox(height: 8),
+
+                Text(
+                  localizations.loginToViewRecords,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+
+                SizedBox(height: 32),
+
+                // 登录/注册按钮
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildActionButton(
+                      text: localizations.login,
+                      onPressed: () => Get.toNamed('/login'),
+                      isPrimary: true,
+                    ),
+
+                    SizedBox(width: 16),
+
+                    _buildActionButton(
+                      text: localizations.register,
+                      onPressed: () => Get.toNamed('/register'),
+                      isPrimary: false,
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 40),
               ],
             ),
-
-            SizedBox(height: 40),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -207,32 +212,41 @@ class ProfileTab extends StatelessWidget {
           SizedBox(height: 24),
 
           // 功能菜单
-          _buildMenuItem(
-            icon: Icons.history_rounded,
-            title: '学习记录',
-            onTap: () {
-              // TODO: 导航到学习记录页面
-            },
-          ),
+          Builder(
+            builder: (context) => Column(
+              children: [
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.history_rounded,
+                  title: AppLocalizations.of(context)!.learningRecords,
+                  onTap: () {
+                    // TODO: 导航到学习记录页面
+                  },
+                ),
 
-          SizedBox(height: 12),
+                SizedBox(height: 12),
 
-          _buildMenuItem(
-            icon: Icons.star_outline_rounded,
-            title: '我的收藏',
-            onTap: () {
-              // TODO: 导航到我的收藏页面
-            },
-          ),
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.star_outline_rounded,
+                  title: AppLocalizations.of(context)!.myFavorites,
+                  onTap: () {
+                    // TODO: 导航到我的收藏页面
+                  },
+                ),
 
-          SizedBox(height: 12),
+                SizedBox(height: 12),
 
-          _buildMenuItem(
-            icon: Icons.settings_outlined,
-            title: '设置',
-            onTap: () {
-              // TODO: 导航到设置页面
-            },
+                _buildMenuItem(
+                  context: context,
+                  icon: Icons.settings_outlined,
+                  title: AppLocalizations.of(context)!.settings,
+                  onTap: () {
+                    // TODO: 导航到设置页面
+                  },
+                ),
+              ],
+            ),
           ),
 
           SizedBox(height: 24),
@@ -246,6 +260,7 @@ class ProfileTab extends StatelessWidget {
 
   /// 构建功能菜单项
   Widget _buildMenuItem({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required VoidCallback onTap,

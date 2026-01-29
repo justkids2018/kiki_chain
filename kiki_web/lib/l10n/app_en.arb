@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "KikiChain",
+  "appName": "Hi Kiki",
   "@appName": {
     "description": "The application name"
   },
@@ -263,5 +263,57 @@
   "featureDemo": "Feature Demo",
   "@featureDemo": {
     "description": "Feature demo text"
+  },
+  "continueAsGuest": "Continue as Guest",
+  "@continueAsGuest": {
+    "description": "Guest mode button text"
+  },
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Create account title"
+  },
+  "fillInfoToRegister": "Fill in information to complete registration",
+  "@fillInfoToRegister": {
+    "description": "Registration subtitle"
+  },
+  "nicknameOptional": "Nickname (optional, 2-20 characters)",
+  "@nicknameOptional": {
+    "description": "Nickname field label with hint"
+  },
+  "passwordRequirement": "Password (6-20 characters, must contain letters and numbers)",
+  "@passwordRequirement": {
+    "description": "Password field label with requirements"
+  },
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Text asking if user already has account"
+  },
+  "loginNow": "Login Now",
+  "@loginNow": {
+    "description": "Login now link text"
+  },
+  "hiPleaseLogin": "Hi, please login",
+  "@hiPleaseLogin": {
+    "description": "Welcome message for guest users"
+  },
+  "loginToViewRecords": "Login to view learning records and favorites",
+  "@loginToViewRecords": {
+    "description": "Description of benefits after login"
+  },
+  "phoneLabel": "Phone: ",
+  "@phoneLabel": {
+    "description": "Phone number label prefix"
+  },
+  "learningRecords": "Learning Records",
+  "@learningRecords": {
+    "description": "Learning records menu item"
+  },
+  "myFavorites": "My Favorites",
+  "@myFavorites": {
+    "description": "My favorites menu item"
+  },
+  "nickname": "Nickname",
+  "@nickname": {
+    "description": "Nickname field label"
   }
 }

@@ -1,5 +1,6 @@
-pub mod controller;
-pub mod routes;
+// 认证模块导出
+pub mod dtos;
+pub mod handlers;
 
-pub use controller::AuthController;
-pub use routes::{login, register, AuthControllerProvider};
+pub use dtos::{LoginRequest, LoginResponse, RegisterRequest, RegisterResponse};
+pub use handlers::{login_handler, register_handler};

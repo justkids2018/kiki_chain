@@ -1,6 +1,6 @@
 {
   "@@locale": "zh",
-  "appName": "奇奇链",
+  "appName": "Hi Kiki",
   "welcome": "欢迎",
   "login": "登录",
   "logout": "退出登录",
@@ -65,5 +65,18 @@
   "darkMode": "深色模式",
   "pushNotifications": "推送通知",
   "quickSwitch": "快速切换",
-  "featureDemo": "功能演示"
+  "featureDemo": "功能演示",
+  "continueAsGuest": "游客模式继续",
+  "createAccount": "创建账户",
+  "fillInfoToRegister": "填写信息完成注册",
+  "nicknameOptional": "昵称（可选，2-20字符）",
+  "passwordRequirement": "密码（6-20位，需包含字母和数字）",
+  "alreadyHaveAccount": "已有账户？",
+  "loginNow": "立即登录",
+  "hiPleaseLogin": "Hi，快来登录吧",
+  "loginToViewRecords": "登录后可查看学习记录和收藏",
+  "phoneLabel": "手机号：",
+  "learningRecords": "学习记录",
+  "myFavorites": "我的收藏",
+  "nickname": "昵称"
 }

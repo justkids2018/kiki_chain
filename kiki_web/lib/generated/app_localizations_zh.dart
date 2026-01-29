@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appName => '奇奇链';
+  String get appName => 'Hi Kiki';
 
   @override
   String get welcome => '欢迎';
@@ -199,6 +199,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get featureDemo => '功能演示';
+
+  @override
+  String get continueAsGuest => '游客模式继续';
+
+  @override
+  String get createAccount => '创建账户';
+
+  @override
+  String get fillInfoToRegister => '填写信息完成注册';
+
+  @override
+  String get nicknameOptional => '昵称（可选，2-20字符）';
+
+  @override
+  String get passwordRequirement => '密码（6-20位，需包含字母和数字）';
+
+  @override
+  String get alreadyHaveAccount => '已有账户？';
+
+  @override
+  String get loginNow => '立即登录';
+
+  @override
+  String get hiPleaseLogin => 'Hi，快来登录吧';
+
+  @override
+  String get loginToViewRecords => '登录后可查看学习记录和收藏';
+
+  @override
+  String get phoneLabel => '手机号：';
+
+  @override
+  String get learningRecords => '学习记录';
+
+  @override
+  String get myFavorites => '我的收藏';
+
+  @override
+  String get nickname => '昵称';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -206,7 +245,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   AppLocalizationsZhTw(): super('zh_TW');
 
   @override
-  String get appName => '奇奇鏈';
+  String get appName => 'Hi Kiki';
 
   @override
   String get welcome => '歡迎';
@@ -396,4 +435,43 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get featureDemo => '功能演示';
+
+  @override
+  String get continueAsGuest => '訪客模式繼續';
+
+  @override
+  String get createAccount => '創建帳戶';
+
+  @override
+  String get fillInfoToRegister => '填寫資訊完成註冊';
+
+  @override
+  String get nicknameOptional => '暱稱（可選，2-20字元）';
+
+  @override
+  String get passwordRequirement => '密碼（6-20位，需包含字母和數字）';
+
+  @override
+  String get alreadyHaveAccount => '已有帳戶？';
+
+  @override
+  String get loginNow => '立即登入';
+
+  @override
+  String get hiPleaseLogin => 'Hi，快來登入吧';
+
+  @override
+  String get loginToViewRecords => '登入後可查看學習記錄和收藏';
+
+  @override
+  String get phoneLabel => '手機號：';
+
+  @override
+  String get learningRecords => '學習記錄';
+
+  @override
+  String get myFavorites => '我的收藏';
+
+  @override
+  String get nickname => '暱稱';
 }

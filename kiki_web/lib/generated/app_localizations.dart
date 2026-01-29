@@ -99,7 +99,7 @@ abstract class AppLocalizations {
   /// The application name
   ///
   /// In en, this message translates to:
-  /// **'KikiChain'**
+  /// **'Hi Kiki'**
   String get appName;
 
   /// Welcome message
@@ -479,6 +479,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Feature Demo'**
   String get featureDemo;
+
+  /// Guest mode button text
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as Guest'**
+  String get continueAsGuest;
+
+  /// Create account title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// Registration subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in information to complete registration'**
+  String get fillInfoToRegister;
+
+  /// Nickname field label with hint
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname (optional, 2-20 characters)'**
+  String get nicknameOptional;
+
+  /// Password field label with requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Password (6-20 characters, must contain letters and numbers)'**
+  String get passwordRequirement;
+
+  /// Text asking if user already has account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// Login now link text
+  ///
+  /// In en, this message translates to:
+  /// **'Login Now'**
+  String get loginNow;
+
+  /// Welcome message for guest users
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, please login'**
+  String get hiPleaseLogin;
+
+  /// Description of benefits after login
+  ///
+  /// In en, this message translates to:
+  /// **'Login to view learning records and favorites'**
+  String get loginToViewRecords;
+
+  /// Phone number label prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Phone: '**
+  String get phoneLabel;
+
+  /// Learning records menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Learning Records'**
+  String get learningRecords;
+
+  /// My favorites menu item
+  ///
+  /// In en, this message translates to:
+  /// **'My Favorites'**
+  String get myFavorites;
+
+  /// Nickname field label
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get nickname;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

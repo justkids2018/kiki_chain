@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:mp.weixin.qq.com)",
+      "WebSearch",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(tree:*)",
+      "Bash(chmod:*)",
+      "Bash(flutter emulators:*)",
+      "Bash(./scripts/db-start.sh:*)",
+      "Bash(docker-compose -f docker-compose.local.yml up -d --no-build)"
+    ]
+  }
+}

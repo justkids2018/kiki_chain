@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'KikiChain';
+  String get appName => 'Hi Kiki';
 
   @override
   String get welcome => 'Welcome';
@@ -199,4 +199,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get featureDemo => 'Feature Demo';
+
+  @override
+  String get continueAsGuest => 'Continue as Guest';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get fillInfoToRegister => 'Fill in information to complete registration';
+
+  @override
+  String get nicknameOptional => 'Nickname (optional, 2-20 characters)';
+
+  @override
+  String get passwordRequirement => 'Password (6-20 characters, must contain letters and numbers)';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get loginNow => 'Login Now';
+
+  @override
+  String get hiPleaseLogin => 'Hi, please login';
+
+  @override
+  String get loginToViewRecords => 'Login to view learning records and favorites';
+
+  @override
+  String get phoneLabel => 'Phone: ';
+
+  @override
+  String get learningRecords => 'Learning Records';
+
+  @override
+  String get myFavorites => 'My Favorites';
+
+  @override
+  String get nickname => 'Nickname';
 }

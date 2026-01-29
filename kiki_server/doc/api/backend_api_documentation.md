@@ -1,4 +1,4 @@
-# 奇奇满有系统 - 后端API文档
+# Hi Kiki系统 - 后端API文档
 
 **版本**: v1.0
 **更新时间**: 2025年9月15日
@@ -972,8 +972,8 @@ curl -X POST \
 
 ### 环境地址
 - **开发环境**: `http://localhost:8080`
-- **测试环境**: `https://test-api.qiqimanyou.com`
-- **生产环境**: `https://api.qiqimanyou.com`
+- **测试环境**: `https://test-api.hikiki.com`
+- **生产环境**: `https://api.hikiki.com`
 
 ### 请求头要求
 ```
@@ -1000,7 +1000,7 @@ Authorization: Bearer {token}  // 需要认证的接口
   "status": "OK",
   "timestamp": "2025-09-15T10:30:00Z",
   "version": "0.1.0",
-  "service": "qiqimanyou_server"
+  "service": "hikiki_server"
 }
 ```
 

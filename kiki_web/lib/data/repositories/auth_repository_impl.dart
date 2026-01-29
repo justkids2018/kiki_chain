@@ -6,8 +6,9 @@ import '../../core/logging/app_logger.dart';
 import '../../core/services/app_services.dart';
 import '../../core/exceptions/app_exceptions.dart';
 import '../../core/utils/api_response_handler.dart';
+import '../../utils/crypto_utils.dart';
 
-/// Auth 模块的数据层实现，保持与旧版 AuthRepository 等价的行为
+/// Auth 模块的数据层实现
 class AuthRepositoryImpl implements IAuthRepository {
   // 直接从 AppServices 获取依赖，保持现有单例结构
   final RequestManager _requestManager = RequestManager.instance;
@@ -36,16 +37,19 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<User?> login(String identifier, String password) async {
+  Future<User?> login(String phone, String password) async {
     try {
-      AppLogger.info('🔐 尝试登录: $identifier');
+      AppLogger.info('🔐 尝试登录: $phone');
 
-      // 服务器可用，进行正常登录
+      // 密码SHA256加密
+      final encryptedPassword = CryptoUtils.sha256Encrypt(password);
+
+      // 调用登录接口
       final response = await _requestManager.post<Map<String, dynamic>>(
         ApiEndpoints.authLogin,
         data: {
-          'identifier': identifier,
-          'password': password,
+          'phone': phone,
+          'password': encryptedPassword,
         },
       );
 
@@ -53,131 +57,193 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
 
-      // 存储token
-      if (data['token'] != null) {
-        await _localStorage.setAccessToken(data['token']);
-        _requestManager.setAuthToken(data['token']); // 设置到网络层
+      // 提取用户数据和token
+      final userData = data['user'] as Map<String, dynamic>?;
+      final token = data['token'] as String?;
+      final expiresAt = data['expiresAt'] as String?;
+
+      if (userData == null || token == null) {
+        throw ApiResponseException(
+          message: '登录响应数据格式错误',
+          statusCode: 500,
+        );
       }
+
+      // 存储token和过期时间
+      await _localStorage.setAccessToken(token);
+      if (expiresAt != null) {
+        await _localStorage.setString('token_expires_at', expiresAt);
+      }
+      _requestManager.setAuthToken(token);
 
       // 创建用户对象
       final user = User(
-        id: int.tryParse(data['uid']?.toString() ?? '') ?? 0,
-        uid: data['uid'] ?? '',
-        name: data['name'] ?? data['username'] ?? '',
-        email: data['email'] ?? '',
-        phone: data['phone'] ?? '',
-        createdAt: data['created_at'] != null
-            ? DateTime.parse(data['created_at'])
+        id: userData['id'] as String? ?? '',
+        phone: userData['phone'] as String? ?? '',
+        nickname: userData['nickname'] as String? ?? '',
+        avatar: userData['avatar'] as String?,
+        createdAt: userData['createdAt'] != null
+            ? DateTime.parse(userData['createdAt'])
             : DateTime.now(),
-        updatedAt: data['updated_at'] != null
-            ? DateTime.parse(data['updated_at'])
+        lastLoginAt: userData['lastLoginAt'] != null
+            ? DateTime.parse(userData['lastLoginAt'])
             : DateTime.now(),
-        roleId: int.tryParse(data['role_id']?.toString() ?? '') ?? 2,
       );
 
       // 存储用户信息
-      await _localStorage.setUserId(user.id);
+      await _localStorage.setString('user_id', user.id);
       await _localStorage.setUserInfo(user.toJson());
 
-      AppLogger.info('✅ 用户登录成功: ${user.name}');
+      AppLogger.info('✅ 用户登录成功: ${user.nickname}');
       return user;
     } catch (e) {
       AppLogger.error('💥 登录过程出错', e);
 
-      // 如果已经是 ApiResponseException，直接重新抛出
       if (e is ApiResponseException) {
         rethrow;
       }
 
-      // 否则转换为 ApiResponseException
       throw ApiResponseHandler.createException(e);
     }
   }
 
   @override
-  Future<User?> register(
-      String username, int roleId, String password, String phone) async {
+  Future<User?> register(String phone, String password, {String? nickname}) async {
     try {
+      AppLogger.info('📝 尝试注册: $phone');
+
+      // 密码SHA256加密
+      final encryptedPassword = CryptoUtils.sha256Encrypt(password);
+
+      // 构建请求数据
+      final requestData = <String, dynamic>{
+        'phone': phone,
+        'password': encryptedPassword,
+      };
+
+      // 如果提供了昵称，添加到请求中
+      if (nickname != null && nickname.isNotEmpty) {
+        requestData['nickname'] = nickname;
+      }
+
       final response = await _requestManager.post<Map<String, dynamic>>(
         ApiEndpoints.authRegister,
-        data: {
-          'username': username,
-          'role_id': roleId,
-          'password': password,
-          'phone': phone,
-        },
+        data: requestData,
       );
+
+      AppLogger.info('📡 注册响应: $response');
 
       final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
 
-      // 存储token
-      if (data['token'] != null) {
-        await _localStorage.setAccessToken(data['token']);
-        _requestManager.setAuthToken(data['token']);
+      // 提取用户数据和token
+      final userData = data['user'] as Map<String, dynamic>?;
+      final token = data['token'] as String?;
+      final expiresAt = data['expiresAt'] as String?;
+
+      if (userData == null || token == null) {
+        throw ApiResponseException(
+          message: '注册响应数据格式错误',
+          statusCode: 500,
+        );
       }
+
+      // 存储token和过期时间
+      await _localStorage.setAccessToken(token);
+      if (expiresAt != null) {
+        await _localStorage.setString('token_expires_at', expiresAt);
+      }
+      _requestManager.setAuthToken(token);
 
       // 创建用户对象
       final user = User(
-        id: int.tryParse(data['id']?.toString() ?? '') ?? 0,
-        uid: data['uid'] ?? '',
-        name: data['name'] ?? data['username'] ?? '',
-        email: data['email'] ?? '',
-        phone: data['phone'] ?? '',
-        createdAt: data['created_at'] != null
-            ? DateTime.parse(data['created_at'])
+        id: userData['id'] as String? ?? '',
+        phone: userData['phone'] as String? ?? '',
+        nickname: userData['nickname'] as String? ?? '',
+        avatar: userData['avatar'] as String?,
+        createdAt: userData['createdAt'] != null
+            ? DateTime.parse(userData['createdAt'])
             : DateTime.now(),
-        updatedAt: data['updated_at'] != null
-            ? DateTime.parse(data['updated_at'])
+        lastLoginAt: userData['lastLoginAt'] != null
+            ? DateTime.parse(userData['lastLoginAt'])
             : DateTime.now(),
-        roleId: int.tryParse(data['role_id']?.toString() ?? '') ?? 2,
       );
 
       // 存储用户信息
-      await _localStorage.setUserId(user.id);
+      await _localStorage.setString('user_id', user.id);
       await _localStorage.setUserInfo(user.toJson());
 
-      AppLogger.info('User registered successfully: ${user.name}');
+      AppLogger.info('✅ 用户注册成功: ${user.nickname}');
       return user;
     } catch (e) {
-      AppLogger.error('Registration failed');
+      AppLogger.error('💥 注册过程出错', e);
 
-      // 如果已经是 ApiResponseException，直接重新抛出
       if (e is ApiResponseException) {
         rethrow;
       }
 
-      // 否则转换为 ApiResponseException
       throw ApiResponseHandler.createException(e);
     }
   }
 
   @override
-  Future<String?> refreshAccessToken(String refreshToken) async {
+  Future<bool> verifyToken() async {
     try {
-      final response = await _requestManager.post<Map<String, dynamic>>(
-        ApiEndpoints.authRefresh,
-        data: {
-          'refresh_token': refreshToken,
-        },
+      final token = await _localStorage.getAccessToken();
+      if (token == null || token.isEmpty) {
+        return false;
+      }
+
+      final response = await _requestManager.get<Map<String, dynamic>>(
+        ApiEndpoints.authVerify,
       );
 
       final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
 
-      if (data['token'] != null) {
-        await _localStorage.setAccessToken(data['token']);
+      final valid = data['valid'] as bool? ?? false;
+      if (valid) {
+        final expiresAt = data['expiresAt'] as String?;
+        if (expiresAt != null) {
+          await _localStorage.setString('token_expires_at', expiresAt);
+        }
+        AppLogger.info('✅ Token验证成功');
+      } else {
+        AppLogger.warning('⚠️ Token已失效');
+      }
 
-        // 如果有新的刷新token，也要更新
-        if (data['refresh_token'] != null) {
-          await _localStorage.setRefreshToken(data['refresh_token']);
+      return valid;
+    } catch (e) {
+      AppLogger.error('Token验证失败', e);
+      return false;
+    }
+  }
+
+  @override
+  Future<String?> refreshAccessToken() async {
+    try {
+      final response = await _requestManager.post<Map<String, dynamic>>(
+        ApiEndpoints.authRefreshToken,
+      );
+
+      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+
+      final newToken = data['token'] as String?;
+      final expiresAt = data['expiresAt'] as String?;
+
+      if (newToken != null) {
+        await _localStorage.setAccessToken(newToken);
+        _requestManager.setAuthToken(newToken);
+
+        if (expiresAt != null) {
+          await _localStorage.setString('token_expires_at', expiresAt);
         }
 
-        AppLogger.info('Access token refreshed successfully');
-        return data['token'];
+        AppLogger.info('✅ Token刷新成功');
+        return newToken;
       }
 
       return null;
     } catch (e) {
-      AppLogger.error('Token refresh failed', e);
+      AppLogger.error('Token刷新失败', e);
 
       if (e is ApiResponseException) {
         rethrow;

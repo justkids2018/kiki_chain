@@ -1,25 +1,30 @@
 import '../logging/app_logger.dart';
 import '../config/env_config.dart';
 import '../network/api_config.dart';
+import '../network/network_client.dart';
 import '../../data/services/local_storage_service.dart';
 import '../../data/services/user_service.dart';
+import '../../data/services/api/scene_api_service.dart';
 import '../di/service_locator.dart';
 import '../../domain/repositories/i_auth_repository.dart';
+import '../../domain/repositories/i_scene_repository.dart';
+import 'package:get/get.dart';
 
 /// 应用服务 - 统一管理所有业务服务
-/// 
+///
 /// 使用简单的单例模式，避免复杂的依赖注入
 /// 所有服务在这里初始化和访问
 class AppServices {
   AppServices._internal();
   static final AppServices _instance = AppServices._internal();
   static AppServices get instance => _instance;
-  
+
   // 服务实例
   LocalStorageService? _localStorage;
   UserService? _userService;
   IAuthRepository? _authRepository;
-  
+  ISceneRepository? _sceneRepository;
+
   bool _initialized = false;
   
   /// 初始化所有服务
@@ -57,8 +62,12 @@ class AppServices {
       _localStorage = LocalStorageService();
       await _localStorage!.onInit();
       AppLogger.info('✅ 本地存储服务初始化完成');
-      
-      // 4. 初始化业务服务（懒加载，使用时再创建）
+
+      // 4. 注册API服务到GetX
+      Get.put(SceneApiService(httpClient: NetworkClient.instance.httpClient));
+      AppLogger.info('✅ API服务注册完成');
+
+      // 5. 初始化业务服务（懒加载，使用时再创建）
       AppLogger.info('✅ 业务服务准备完成（懒加载）');
       
       _initialized = true;
@@ -93,15 +102,32 @@ class AppServices {
     return _authRepository!;
   }
 
+  /// 场景仓库
+  ISceneRepository get sceneRepository {
+    _sceneRepository ??= ServiceLocator.instance.sceneRepository;
+    return _sceneRepository!;
+  }
+
   /// 允许覆盖认证仓库实例（例如测试场景）
   void setAuthRepository(IAuthRepository repository) {
     _authRepository = repository;
     ServiceLocator.instance.setAuthRepository(repository);
   }
 
+  /// 允许覆盖场景仓库实例（例如测试场景）
+  void setSceneRepository(ISceneRepository repository) {
+    _sceneRepository = repository;
+    ServiceLocator.instance.setSceneRepository(repository);
+  }
+
   void resetAuthRepository() {
     _authRepository = null;
     ServiceLocator.instance.resetAuthRepository();
+  }
+
+  void resetSceneRepository() {
+    _sceneRepository = null;
+    ServiceLocator.instance.resetSceneRepository();
   }
 
   /// 检查初始化状态
@@ -112,7 +138,9 @@ class AppServices {
     _localStorage = null;
     _userService = null;
     _authRepository = null;
+    _sceneRepository = null;
     ServiceLocator.instance.resetAuthRepository();
+    ServiceLocator.instance.resetSceneRepository();
     _initialized = false;
   }
 }

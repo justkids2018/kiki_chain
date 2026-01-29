@@ -27,3 +27,15 @@ cargo test
 ```
 
 更多部署与生产环境说明请见 `部署文档`。
+
+//------SQL----配置
+  General 标签：
+  - Name: Hi Kiki Local
+
+  Connection 标签：
+  - Host: localhost
+  - Port: 5432
+  - Database: hikiki_db
+  - Username: postgres
+  - Password: postgres
+  - ✅ 勾选 Save password

@@ -8,6 +8,7 @@ import '../../core/network/request_manager.dart';
 import '../../core/exceptions/app_exceptions.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../../core/di/service_locator.dart';
+import '../../utils/crypto_utils.dart';
 
 /// 认证控制器
 /// 
@@ -37,14 +38,10 @@ class AuthController extends GetxController {
   final loginPasswordController = TextEditingController();
   
   // 注册表单字段
-  final registerUsernameController = TextEditingController();
   final registerPhoneController = TextEditingController();
+  final registerNicknameController = TextEditingController();
   final registerPasswordController = TextEditingController();
   final registerConfirmPasswordController = TextEditingController();
-  final registerInviteCodeController = TextEditingController();
-  
-  // 角色选择
-  final _selectedRoleId = RxnInt();
   
   // 密码可见性控制
   final _loginPasswordVisible = false.obs;
@@ -58,7 +55,6 @@ class AuthController extends GetxController {
   bool get loginPasswordVisible => _loginPasswordVisible.value;
   bool get registerPasswordVisible => _registerPasswordVisible.value;
   bool get registerConfirmPasswordVisible => _registerConfirmPasswordVisible.value;
-  int? get selectedRoleId => _selectedRoleId.value;
   
   @override
   void onInit() {
@@ -70,23 +66,21 @@ class AuthController extends GetxController {
   loginPasswordController.text = '';
 
     // 注册表单测试数据
-  registerUsernameController.text = '';
   registerPhoneController.text = '';
+  registerNicknameController.text = '';
   registerPasswordController.text = '';
   registerConfirmPasswordController.text = '';
-  registerInviteCodeController.text = '';
   }
-  
+
   @override
   void onClose() {
     // 清理控制器
     loginIdentifierController.dispose();
     loginPasswordController.dispose();
-  registerUsernameController.dispose();
   registerPhoneController.dispose();
+  registerNicknameController.dispose();
   registerPasswordController.dispose();
   registerConfirmPasswordController.dispose();
-  registerInviteCodeController.dispose();
     super.onClose();
   }
 
@@ -109,7 +103,7 @@ class AuthController extends GetxController {
         if (userInfo != null) {
           _currentUser.value = User.fromJson(userInfo);
           _isLoggedIn.value = true;
-          AppLogger.info('User already logged in: ${_currentUser.value?.name}');
+          AppLogger.info('User already logged in: ${_currentUser.value?.nickname}');
         }
       } else {
         RequestManager.instance.clearAuthToken();
@@ -134,10 +128,10 @@ class AuthController extends GetxController {
     
     try {
       EasyLoading.show(status: '登录中...');
-      
+
       final identifier = loginIdentifierController.text.trim();
       final password = loginPasswordController.text;
-      
+
       final user = await _authRepository.login(identifier, password);
       if (user == null) {
         EasyLoading.showError('登录失败，请重试');
@@ -149,7 +143,7 @@ class AuthController extends GetxController {
       _isLoggedIn.value = true;
       
       EasyLoading.showSuccess('登录成功');
-      AppLogger.info('Login successful for user: ${user.name}');
+      AppLogger.info('Login successful for user: ${user.nickname}');
       
       // 清空表单
       _clearLoginForm();
@@ -184,112 +178,49 @@ class AuthController extends GetxController {
     }
   }
   
-  /// 验证邀请码格式和有效性
-  /// 
-  /// 邀请码格式：4位数字，表示当前月份 + 固定01日 (MM01)
-  /// 例如：1001 表示10月1日，0701 表示7月1日
-  /// 邀请码必须与当前月份匹配
-  /// 
-  /// 参数:
-  /// - [inviteCode] 邀请码字符串
-  /// 
-  /// 返回:
-  /// - [bool] 邀请码是否有效
-  bool validateInviteCode(String inviteCode) {
-    // 检查格式：必须是4位数字
-    if (inviteCode.length != 4) {
-      return false;
-    }
-    
-    // 检查是否全为数字
-    if (!RegExp(r'^\d{4}$').hasMatch(inviteCode)) {
-      return false;
-    }
-    
-    // 解析月份和日期
-    final month = int.tryParse(inviteCode.substring(0, 2));
-    final day = int.tryParse(inviteCode.substring(2, 4));
-    
-    // 验证日期必须是01
-    if (day != 1) {
-      return false;
-    }
-    
-    // 验证月份范围
-    if (month == null || month < 1 || month > 12) {
-      return false;
-    }
-    
-    // 获取当前月份
-    final currentMonth = DateTime.now().month;
-    
-    // 验证邀请码必须是当前月份
-    if (month != currentMonth) {
-      return false;
-    }
-    
-    return true;
-  }
-  
   /// 用户注册
-  /// 
-  /// 包含表单验证，确保用户名、邮箱、密码格式正确
+  ///
+  /// 包含表单验证，确保手机号、密码格式正确
   /// 验证密码和确认密码是否一致
-  /// 
+  ///
   /// 返回:
   /// - [bool] 注册是否成功
   Future<bool> register() async {
     if (!registerFormKey.currentState!.validate()) {
       return false;
     }
-    
-    // 检查是否选择了角色
-    if (_selectedRoleId.value == null) {
-      EasyLoading.showError('请选择身份');
-      return false;
-    }
-    
-    // 验证邀请码
-    final inviteCode = registerInviteCodeController.text.trim();
-    if (inviteCode.isEmpty) {
-      EasyLoading.showError('请输入邀请码');
-      return false;
-    }
-    
-    if (!validateInviteCode(inviteCode)) {
-      EasyLoading.showError('邀请码格式不正确');
-      return false;
-    }
-    
+
     try {
       EasyLoading.show(status: '注册中...');
-      
-      final username = registerUsernameController.text.trim();
-      final password = registerPasswordController.text;
+
       final phone = registerPhoneController.text.trim();
-      final roleId = _selectedRoleId.value!;
-      
-      final user = await _authRepository.register(username, roleId, password, phone);
+      final password = registerPasswordController.text;
+      final nickname = registerNicknameController.text.trim();
+
+      final user = await _authRepository.register(
+        phone,
+        password,
+        nickname: nickname.isEmpty ? null : nickname,
+      );
+
       if (user == null) {
         EasyLoading.showError('注册返回数据为空，请稍后重试');
         return false;
       }
-      
-      // 更新用户角色
-      final updatedUser = user.copyWith(roleId: roleId);
-      _currentUser.value = updatedUser;
+
+      _currentUser.value = user;
       _isLoggedIn.value = true;
-      
+
       EasyLoading.showSuccess('注册成功');
-      AppLogger.info('Registration successful for user: ${user.name}');
-      
+      AppLogger.info('Registration successful for user: ${user.nickname}');
+
       // 清空表单
       _clearRegisterForm();
-      
+
       // 导航到首页
       Get.offAllNamed('/home');
       return true;
-      
+
     } on ApiResponseException catch (e) {
       // 处理所有异常（API响应、网络错误、认证错误等）
       String errorMessage = e.message;
@@ -299,14 +230,14 @@ class AuthController extends GetxController {
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed: ${e.message}', e);
       return false;
-      
+
     } catch (e) {
       // 处理其他未知异常
       const errorMessage = '注册失败，请重试';
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed with unknown error', e);
       return false;
-      
+
     } finally {
       EasyLoading.dismiss();
     }
@@ -357,137 +288,124 @@ class AuthController extends GetxController {
   void toggleRegisterConfirmPasswordVisibility() {
     _registerConfirmPasswordVisible.value = !_registerConfirmPasswordVisible.value;
   }
-  
-  /// 设置选择的角色
-  void setSelectedRole(int roleId) {
-    _selectedRoleId.value = roleId;
-  }
-  
-  /// 获取角色名称
-  String getRoleName(int roleId) {
-    switch (roleId) {
-      case 2:
-        return '学生';
-      case 3:
-        return '老师';
-      default:
-        return '未知角色';
-    }
-  }
-  
-  /// 验证登录标识符
-  /// 
+
+  /// 验证登录手机号
+  ///
   /// 参数:
-  /// - [value] 输入的标识符
-  /// 
+  /// - [value] 输入的手机号
+  ///
   /// 返回:
   /// - [String?] 验证错误信息，null表示验证通过
   String? validateLoginIdentifier(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return '请输入用户名或邮箱';
+      return '请输入手机号';
     }
-    
+
     value = value.trim();
-    
-    // 检查是否为邮箱格式
-    if (value.contains('@')) {
-      if (!GetUtils.isEmail(value)) {
-        return '请输入有效的邮箱地址';
-      }
-    } else {
-      // 用户名验证
-      if (value.length < 3 || value.length > 50) {
-        return '用户名长度应在3-50个字符之间';
-      }
+
+    // 验证中国大陆手机号格式
+    if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) {
+      return '请输入有效的手机号';
     }
-    
+
     return null;
   }
   
   /// 验证密码
-  /// 
+  ///
   /// 参数:
   /// - [value] 输入的密码
-  /// 
+  ///
   /// 返回:
   /// - [String?] 验证错误信息，null表示验证通过
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return '请输入密码';
     }
-    
+
+    // 检查密码长度（6-20位）
+    if (value.length < 6 || value.length > 20) {
+      return '密码长度应在6-20位之间';
+    }
+
+    // 检查是否包含字母和数字
+    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
+      return '密码需包含字母和数字';
+    }
+
     return null;
   }
   
-  /// 验证用户名
-  /// 
+  /// 验证昵称
+  ///
   /// 参数:
-  /// - [value] 输入的用户名
-  /// 
+  /// - [value] 输入的昵称
+  ///
   /// 返回:
   /// - [String?] 验证错误信息，null表示验证通过
-  String? validateUsername(String? value) {
+  String? validateNickname(String? value) {
+    // 昵称是可选的
     if (value == null || value.trim().isEmpty) {
-      return '请输入用户名';
+      return null;
     }
-    
+
     value = value.trim();
-    
-    if (value.isEmpty || value.length > 50) {
-      return '用户名长度应在1-50个字符之间';
+
+    // 检查昵称长度（2-20字符）
+    if (value.length < 2 || value.length > 20) {
+      return '昵称长度应在2-20个字符之间';
     }
-    
-    // 检查用户名格式（允许字母、数字、下划线、中文）
-    if (!RegExp(r'^[\w\u4e00-\u9fa5]+$').hasMatch(value)) {
-      return '用户名只能包含字母、数字、下划线和中文';
+
+    return null;
+  }
+
+  /// 验证注册密码
+  ///
+  /// 参数:
+  /// - [value] 输入的密码
+  ///
+  /// 返回:
+  /// - [String?] 验证错误信息，null表示验证通过
+  String? validateRegisterPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return '请输入密码';
     }
-    
+
+    // 检查密码长度（6-20位）
+    if (value.length < 6 || value.length > 20) {
+      return '密码长度应在6-20位之间';
+    }
+
+    // 检查是否包含字母和数字
+    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
+      return '密码需包含字母和数字';
+    }
+
     return null;
   }
   
   /// 验证手机号
-  /// 
+  ///
   /// 参数:
   /// - [value] 输入的手机号
-  /// 
+  ///
   /// 返回:
   /// - [String?] 验证错误信息，null表示验证通过
   String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return '请输入手机号';
     }
-    
+
     value = value.trim();
-    
+
     // 验证中国大陆手机号格式
     if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) {
       return '请输入有效的手机号';
     }
-    
+
     return null;
   }
 
-  /// 验证邮箱
-  /// 
-  /// 参数:
-  /// - [value] 输入的邮箱
-  /// 
-  /// 返回:
-  /// - [String?] 验证错误信息，null表示验证通过
-  String? validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return '请输入邮箱地址';
-    }
-    
-    value = value.trim();
-    
-    if (!GetUtils.isEmail(value)) {
-      return '请输入有效的邮箱地址';
-    }
-    
-    return null;
-  }
-  
   /// 验证确认密码
   /// 
   /// 参数:
@@ -516,12 +434,10 @@ class AuthController extends GetxController {
   
   /// 清空注册表单
   void _clearRegisterForm() {
-    registerUsernameController.clear();
     registerPhoneController.clear();
+    registerNicknameController.clear();
     registerPasswordController.clear();
     registerConfirmPasswordController.clear();
-    registerInviteCodeController.clear();
-    _selectedRoleId.value = null;
     _registerPasswordVisible.value = false;
     _registerConfirmPasswordVisible.value = false;
   }
@@ -531,4 +447,38 @@ class AuthController extends GetxController {
     _clearLoginForm();
     _clearRegisterForm();
   }
+
+  /// 进入游客模式
+  ///
+  /// 生成临时游客ID，允许用户在不登录的情况下使用应用
+  /// 游客数据仅存储在本地
+  Future<void> enterGuestMode() async {
+    try {
+      // 生成游客ID
+      final guestId = CryptoUtils.generateGuestId();
+
+      // 存储游客标识
+      await AppServices.instance.localStorage.setString('guest_id', guestId);
+      await AppServices.instance.localStorage.setBool('is_guest_mode', true);
+
+      AppLogger.info('进入游客模式: $guestId');
+
+      // 导航到首页
+      Get.offAllNamed('/home');
+    } catch (e) {
+      EasyLoading.showError('进入游客模式失败');
+      AppLogger.error('Enter guest mode failed', e);
+    }
+  }
+
+  /// 检查是否为游客模式
+  bool get isGuestMode {
+    return AppServices.instance.localStorage.getBool('is_guest_mode') ?? false;
+  }
+
+  /// 获取游客ID
+  String? get guestId {
+    return AppServices.instance.localStorage.getString('guest_id');
+  }
 }
+

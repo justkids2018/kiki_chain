@@ -1,135 +1,95 @@
 /// 用户实体
-/// 
-/// 对应数据库表结构:
-/// - id: 主键，自增ID
-/// - uid: 用户唯一标识符
-/// - name: 用户名，唯一
-/// - pwd: 密码（不在实体中存储明文）
-/// - email: 邮箱，唯一
-/// - phone: 手机号，唯一
-/// - created_at: 创建时间
-/// - updated_at: 更新时间
-/// - role_id: 角色ID
+///
+/// 对应API响应结构 (doc/api/auth.md):
+/// - id: 用户唯一标识符 (String类型，如 "usr_1a2b3c4d")
+/// - phone: 手机号
+/// - nickname: 用户昵称
+/// - avatar: 头像URL（可选）
+/// - createdAt: 创建时间
+/// - lastLoginAt: 最后登录时间
 class User {
-  final int id;
-  final String uid;
-  final String name;
-  final String email;
+  final String id;
   final String phone;
+  final String nickname;
+  final String? avatar;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final int roleId;
-  
+  final DateTime lastLoginAt;
+
   User({
     required this.id,
-    required this.uid,
-    required this.name,
-    required this.email,
     required this.phone,
+    required this.nickname,
+    this.avatar,
     required this.createdAt,
-    required this.updatedAt,
-    required this.roleId, 
+    required this.lastLoginAt,
   });
-  
+
   /// 从 JSON 创建 User 实例
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] ?? 0,
-      uid: json['uid'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      createdAt: json['created_at'] != null 
-          ? DateTime.parse(json['created_at']) 
+      id: json['id'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      nickname: json['nickname'] as String? ?? '',
+      avatar: json['avatar'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
-      updatedAt: json['updated_at'] != null 
-          ? DateTime.parse(json['updated_at']) 
+      lastLoginAt: json['lastLoginAt'] != null
+          ? DateTime.parse(json['lastLoginAt'])
           : DateTime.now(),
-      roleId: json['role_id'] ?? 1, // 默认角色ID为1（学生）
     );
   }
-  
+
   /// 转换为 JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'uid': uid,
-      'name': name,
-      'email': email,
       'phone': phone,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'role_id': roleId,
+      'nickname': nickname,
+      'avatar': avatar,
+      'createdAt': createdAt.toIso8601String(),
+      'lastLoginAt': lastLoginAt.toIso8601String(),
     };
   }
-  
+
   /// 创建用户副本
   User copyWith({
-    int? id,
-    String? uid,
-    String? name,
-    String? email,
+    String? id,
     String? phone,
+    String? nickname,
+    String? avatar,
     DateTime? createdAt,
-    DateTime? updatedAt,
-    int? roleId,
+    DateTime? lastLoginAt,
   }) {
     return User(
       id: id ?? this.id,
-      uid: uid ?? this.uid,
-      name: name ?? this.name,
-      email: email ?? this.email,
       phone: phone ?? this.phone,
+      nickname: nickname ?? this.nickname,
+      avatar: avatar ?? this.avatar,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      roleId: roleId ?? this.roleId,
+      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );
   }
-  
-  /// 获取用户角色名称
-  String get roleName {
-    switch (roleId) {
-      case 1:
-        return '管理员';
-      case 2:
-        return '学生';
-      case 3:
-        return '老师'; // 根据你的业务需求，可能与教师不同
-      default:
-        return '未知角色';
-    }
-  }
-  
-  /// 检查是否为教师
-  bool get isTeacher =>  roleId == 3;
-  
-  /// 检查是否为学生
-  bool get isStudent => roleId == 2;
-  
-  /// 检查是否为管理员
-  bool get isAdmin => roleId == 1;
-  
+
   @override
   String toString() {
-    return 'User(id: $id, user_id: $uid, name: $name, email: $email, phone: $phone, roleId: $roleId)';
+    return 'User(id: $id, phone: $phone, nickname: $nickname, avatar: $avatar)';
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    
+
     return other is User &&
            other.id == id &&
-           other.uid == uid &&
-           other.name == name &&
-           other.email == email;
+           other.phone == phone &&
+           other.nickname == nickname;
   }
-  
+
   @override
   int get hashCode {
-    return id.hashCode ^ 
-           uid.hashCode ^ 
-           name.hashCode ^ 
-           email.hashCode;
+    return id.hashCode ^
+           phone.hashCode ^
+           nickname.hashCode;
   }
 }

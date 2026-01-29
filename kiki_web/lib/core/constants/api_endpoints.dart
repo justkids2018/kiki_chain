@@ -5,7 +5,8 @@ class ApiEndpoints {
   static const String health = '/health';
   static const String authLogin = '/api/auth/login';
   static const String authRegister = '/api/auth/register';
-  static const String authRefresh = '/api/auth/refresh';
+  static const String authRefreshToken = '/api/auth/refresh-token';
+  static const String authVerify = '/api/auth/verify';
   static const String authLogout = '/api/auth/logout';
   
   // 用户相关

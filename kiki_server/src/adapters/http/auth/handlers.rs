@@ -63,7 +63,7 @@ pub async fn register_handler(
         email: request.email,
         phone: request.phone,
         password: request.password,
-        role_id: request.role_id,
+        role_type: request.role_type,
     };
 
     // 执行 Use Case

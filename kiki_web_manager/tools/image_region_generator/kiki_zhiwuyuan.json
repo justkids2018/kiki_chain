@@ -1,0 +1,184 @@
+[
+  {
+    "type": "chinese",
+    "id": "title_chinese_01",
+    "index": 1,
+    "text": "《植物园》",
+    "text_pinyin": "zhí wù yuán",
+    "text_english": "Botanical Garden",
+    "coordinate": [
+      { "x": 250, "y": 40 },
+      { "x": 750, "y": 40 },
+      { "x": 750, "y": 130 },
+      { "x": 250, "y": 130 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "title_chinese_02",
+    "index": 2,
+    "text": "双语认知大发现",
+    "text_pinyin": "shuāng yǔ rèn zhī dà fā xiàn",
+    "text_english": "Bilingual Cognitive Discovery",
+    "coordinate": [
+      { "x": 180, "y": 130 },
+      { "x": 820, "y": 130 },
+      { "x": 820, "y": 220 },
+      { "x": 180, "y": 220 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_01",
+    "index": 3,
+    "text": "大花朵",
+    "text_pinyin": "dà huā duǒ",
+    "text_english": "Giant Flower",
+    "coordinate": [
+      { "x": 300, "y": 250 },
+      { "x": 420, "y": 250 },
+      { "x": 420, "y": 320 },
+      { "x": 300, "y": 320 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_02",
+    "index": 4,
+    "text": "温室",
+    "text_pinyin": "wēn shì",
+    "text_english": "Greenhouse",
+    "coordinate": [
+      { "x": 600, "y": 250 },
+      { "x": 720, "y": 250 },
+      { "x": 720, "y": 320 },
+      { "x": 600, "y": 320 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_03",
+    "index": 5,
+    "text": "蜜蜂",
+    "text_pinyin": "mì fēng",
+    "text_english": "Bee",
+    "coordinate": [
+      { "x": 880, "y": 220 },
+      { "x": 980, "y": 220 },
+      { "x": 980, "y": 280 },
+      { "x": 880, "y": 280 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_04",
+    "index": 6,
+    "text": "蝴蝶",
+    "text_pinyin": "hú dié",
+    "text_english": "Butterfly",
+    "coordinate": [
+      { "x": 820, "y": 300 },
+      { "x": 920, "y": 300 },
+      { "x": 920, "y": 360 },
+      { "x": 820, "y": 360 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_05",
+    "index": 7,
+    "text": "植物园",
+    "text_pinyin": "zhí wù yuán",
+    "text_english": "Cactus Garden",
+    "coordinate": [
+      { "x": 840, "y": 390 },
+      { "x": 960, "y": 390 },
+      { "x": 960, "y": 450 },
+      { "x": 840, "y": 450 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_06",
+    "index": 8,
+    "text": "园丁",
+    "text_pinyin": "yuán dīng",
+    "text_english": "Gardener",
+    "coordinate": [
+      { "x": 200, "y": 530 },
+      { "x": 300, "y": 530 },
+      { "x": 300, "y": 590 },
+      { "x": 200, "y": 590 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_07",
+    "index": 9,
+    "text": "植物林",
+    "text_pinyin": "zhí wù lín",
+    "text_english": "Bamboo forest",
+    "coordinate": [
+      { "x": 640, "y": 530 },
+      { "x": 760, "y": 530 },
+      { "x": 760, "y": 590 },
+      { "x": 640, "y": 590 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_08",
+    "index": 10,
+    "text": "仙人掌",
+    "text_pinyin": "xiān rén zhǎng",
+    "text_english": "Cactus",
+    "coordinate": [
+      { "x": 300, "y": 680 },
+      { "x": 420, "y": 680 },
+      { "x": 420, "y": 740 },
+      { "x": 300, "y": 740 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_09",
+    "index": 11,
+    "text": "睡莲",
+    "text_pinyin": "shuì lián",
+    "text_english": "Water Lily",
+    "coordinate": [
+      { "x": 500, "y": 680 },
+      { "x": 620, "y": 680 },
+      { "x": 620, "y": 740 },
+      { "x": 500, "y": 740 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_10",
+    "index": 12,
+    "text": "蜗牛",
+    "text_pinyin": "wō niú",
+    "text_english": "Snail",
+    "coordinate": [
+      { "x": 680, "y": 790 },
+      { "x": 780, "y": 790 },
+      { "x": 780, "y": 850 },
+      { "x": 680, "y": 850 }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "label_chinese_11",
+    "index": 13,
+    "text": "蘑菇",
+    "text_pinyin": "mó gu",
+    "text_english": "Mushroom",
+    "coordinate": [
+      { "x": 400, "y": 900 },
+      { "x": 500, "y": 900 },
+      { "x": 500, "y": 960 },
+      { "x": 400, "y": 960 }
+    ]
+  }
+]

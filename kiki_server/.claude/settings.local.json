@@ -10,7 +10,12 @@
       "Bash(flutter emulators:*)",
       "Bash(./scripts/db-start.sh:*)",
       "Bash(docker-compose -f docker-compose.local.yml up -d --no-build)",
-      "Skill(code-review)"
+      "Skill(code-review)",
+      "Bash(cargo check:*)",
+      "Bash(curl:*)",
+      "Bash(jq)",
+      "Bash(docker exec:*)",
+      "Bash(pgrep:*)"
     ]
   }
 }

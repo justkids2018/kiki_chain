@@ -13,7 +13,11 @@
       "Bash(git push:*)",
       "Bash(flutter analyze:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(flutter devices:*)",
+      "Bash(xcrun simctl list:*)",
+      "Skill(code-implementation)",
+      "Bash(flutter clean:*)"
     ]
   }
 }

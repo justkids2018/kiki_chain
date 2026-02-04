@@ -25,7 +25,9 @@ pub struct LoginUserResponse {
     pub token: String,
     pub message: String,
     pub phone: String,
-    pub role_id: i32,
+    pub role_type: i32,
+    pub is_vip: bool,
+    pub vip_expire_at: Option<String>,
 }
 
 /// 用户登录用例
@@ -68,7 +70,9 @@ impl LoginUserUseCase {
             token,
             message: "登录成功".to_string(),
             phone: updated_user.phone().to_string(),
-            role_id: updated_user.role_id(),
+            role_type: updated_user.role_type(),
+            is_vip: updated_user.is_vip(),
+            vip_expire_at: updated_user.vip_expire_at().map(|dt| dt.to_rfc3339()),
         })
     }
 

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:mp.weixin.qq.com)",
+      "WebSearch",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(tree:*)",
+      "Bash(chmod:*)",
+      "Bash(flutter emulators:*)",
+      "Bash(flutter run:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(git push:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(flutter devices:*)",
+      "Bash(xcrun simctl list:*)",
+      "Skill(code-implementation)"
+    ]
+  }
+}

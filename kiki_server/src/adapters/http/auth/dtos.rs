@@ -24,7 +24,10 @@ pub struct LoginResponse {
     pub email: String,
     pub phone: String,
     pub token: String,
-    pub role_id: i32,
+    pub role_type: i32,
+    pub is_vip: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub vip_expire_at: Option<String>,
     pub message: String,
 }
 
@@ -40,7 +43,7 @@ pub struct RegisterRequest {
     pub password: String,
 
     #[serde(default)]
-    pub role_id: i32,
+    pub role_type: i32,
 }
 
 /// 注册响应
@@ -50,6 +53,8 @@ pub struct RegisterResponse {
     pub name: String,
     pub email: String,
     pub phone: String,
+    pub role_type: i32,
+    pub is_vip: bool,
     pub message: String,
 }
 
@@ -63,7 +68,9 @@ impl From<crate::core::use_cases::LoginUserResponse> for LoginResponse {
             email: response.email,
             phone: response.phone,
             token: response.token,
-            role_id: response.role_id,
+            role_type: response.role_type,
+            is_vip: response.is_vip,
+            vip_expire_at: response.vip_expire_at,
             message: response.message,
         }
     }
@@ -76,6 +83,8 @@ impl From<crate::core::use_cases::RegisterUserResponse> for RegisterResponse {
             name: response.name,
             email: response.email,
             phone: response.phone,
+            role_type: response.role_type,
+            is_vip: response.is_vip,
             message: response.message,
         }
     }

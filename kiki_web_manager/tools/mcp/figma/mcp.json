@@ -1,0 +1,23 @@
+{
+  "name": "figma-mcp",
+  "version": "0.1.0",
+  "description": "Expose Figma metadata & Flutter generator endpoints",
+  "env": {
+    "FIGMA_PAT": {
+      "required": true,
+      "description": "Personal Access Token for Figma REST API"
+    },
+    "FIGMA_FILE_KEY": {
+      "required": true,
+      "description": "Default Figma file to query metadata"
+    }
+  },
+  "commands": {
+    "start": {
+      "command": "node",
+      "args": ["./server/index.js"],
+      "description": "Launch local Figma MCP server"
+    }
+  },
+  "capabilities": ["resources", "tools"]
+}

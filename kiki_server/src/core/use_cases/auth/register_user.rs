@@ -17,7 +17,7 @@ pub struct RegisterUserCommand {
     pub email: String,
     pub phone: String,
     pub password: String,
-    pub role_id: i32,
+    pub role_type: i32,
 }
 
 /// 用户注册响应
@@ -27,7 +27,8 @@ pub struct RegisterUserResponse {
     pub name: String,
     pub email: String,
     pub phone: String,
-    pub role_id: i32,
+    pub role_type: i32,
+    pub is_vip: bool,
     pub message: String,
 }
 
@@ -55,7 +56,7 @@ impl RegisterUserUseCase {
             command.email.clone(),
             command.password.clone(),
             command.phone.clone(),
-            command.role_id,
+            command.role_type,
         )?;
 
         self.user_repository.save(&user).await?;
@@ -66,7 +67,8 @@ impl RegisterUserUseCase {
             name: user.name().to_string(),
             email: user.email().to_string(),
             phone: user.phone().to_string(),
-            role_id: user.role_id(),
+            role_type: user.role_type(),
+            is_vip: user.is_vip(),
             message: "注册成功".to_string(),
         })
     }

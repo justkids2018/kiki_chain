@@ -17,14 +17,16 @@ pub struct User {
     phone: String,
     created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,
-    role_id: i32,
+    role_type: i32,
+    is_vip: bool,
+    vip_expire_at: Option<DateTime<Utc>>,
 }
 
 impl User {
     /// 格式化展示用户关键信息，便于日志记录
     pub fn to_string(&self) -> String {
         format!(
-            "User {{ id: {}, uid: {}, name: {}, email: {}, phone: {}, created_at: {}, updated_at: {}, role_id: {} }}",
+            "User {{ id: {}, uid: {}, name: {}, email: {}, phone: {}, created_at: {}, updated_at: {}, role_type: {}, is_vip: {} }}",
             self.id,
             self.uid,
             self.name,
@@ -32,7 +34,8 @@ impl User {
             self.phone,
             self.created_at,
             self.updated_at,
-            self.role_id
+            self.role_type,
+            self.is_vip
         )
     }
 
@@ -43,7 +46,7 @@ impl User {
         email: String,
         pwd: String,
         phone: String,
-        role_id: i32,
+        role_type: i32,
     ) -> Result<Self> {
         if name.trim().is_empty() {
             return Err(DomainError::Validation("用户名不能为空".to_string()));
@@ -68,7 +71,9 @@ impl User {
             phone,
             created_at: now,
             updated_at: now,
-            role_id,
+            role_type,
+            is_vip: false,
+            vip_expire_at: None,
         })
     }
 
@@ -83,7 +88,9 @@ impl User {
         phone: String,
         created_at: DateTime<Utc>,
         updated_at: DateTime<Utc>,
-        role_id: i32,
+        role_type: i32,
+        is_vip: bool,
+        vip_expire_at: Option<DateTime<Utc>>,
     ) -> Result<Self> {
         Ok(Self {
             id,
@@ -94,7 +101,9 @@ impl User {
             phone,
             created_at,
             updated_at,
-            role_id,
+            role_type,
+            is_vip,
+            vip_expire_at,
         })
     }
 
@@ -149,22 +158,53 @@ impl User {
     pub fn updated_at(&self) -> DateTime<Utc> {
         self.updated_at
     }
-    pub fn role_id(&self) -> i32 {
-        self.role_id
+    pub fn role_type(&self) -> i32 {
+        self.role_type
+    }
+    pub fn is_vip(&self) -> bool {
+        self.is_vip
+    }
+    pub fn vip_expire_at(&self) -> Option<DateTime<Utc>> {
+        self.vip_expire_at
     }
 
     /// 获取用户角色枚举
     pub fn role(&self) -> Result<UserRole> {
-        UserRole::from_i32(self.role_id)
+        UserRole::from_i32(self.role_type)
     }
 
     /// 检查是否为管理员
     pub fn is_admin(&self) -> bool {
-        self.role_id == UserRole::Admin.to_i32()
+        self.role_type == UserRole::Admin.to_i32()
     }
 
     /// 检查是否为普通用户
     pub fn is_user(&self) -> bool {
-        self.role_id == UserRole::User.to_i32()
+        self.role_type == UserRole::User.to_i32()
+    }
+
+    /// 检查 VIP 是否有效（未过期）
+    pub fn is_vip_valid(&self) -> bool {
+        if !self.is_vip {
+            return false;
+        }
+        match self.vip_expire_at {
+            Some(expire_at) => Utc::now() < expire_at,
+            None => true, // 永久 VIP
+        }
+    }
+
+    /// 设置 VIP 状态
+    pub fn set_vip(&mut self, expire_at: Option<DateTime<Utc>>) {
+        self.is_vip = true;
+        self.vip_expire_at = expire_at;
+        self.updated_at = Utc::now();
+    }
+
+    /// 取消 VIP 状态
+    pub fn cancel_vip(&mut self) {
+        self.is_vip = false;
+        self.vip_expire_at = None;
+        self.updated_at = Utc::now();
     }
 }

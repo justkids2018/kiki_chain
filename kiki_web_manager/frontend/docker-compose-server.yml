@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # 奇奇漫游记后端服务
+  kikichain-server:
+    image: kikichain-server:latest
+    container_name: kikichain-production
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://qisd:qisd@postgres:5432/edadb
+      - JWT_SECRET=KCiUh7wCULKLwFo2OWd3glfE3F9tRpRk/9RW162sBRIg3IOjFNXxTlcpiGfIINnd
+      - RUST_LOG=info
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - postgres
+    networks:
+      - kikichain-network
+  
+
+  # Postgres 数据库
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qisd
+      POSTGRES_PASSWORD: qisd
+      POSTGRES_DB: edadb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - kikichain-network
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: kikichain-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - kikichain-server
+    networks:
+      - kikichain-network
+
+networks:
+  kikichain-network:
+    driver: bridge
+
+volumes:
+  pgdata:

@@ -355,3 +355,133 @@ pub async fn rate_limit_middleware(
 
     Ok(next.run(request).await)
 }
+
+/// 从请求中提取JWT Claims
+///
+/// 辅助函数，用于从Authorization头中提取并验证JWT token
+/// 创建时间: 2026-01-29
+/// 参数: request - HTTP请求
+/// 返回: JWT Claims或错误响应
+fn extract_claims(request: &Request<Body>) -> Result<crate::utils::jwt::Claims, (StatusCode, Json<Value>)> {
+    let path = request.uri().path();
+
+    // 从Authorization头获取token
+    let auth_header = request
+        .headers()
+        .get(header::AUTHORIZATION)
+        .and_then(|header| header.to_str().ok());
+
+    if let Some(auth_header) = auth_header {
+        if auth_header.starts_with("Bearer ") {
+            let token = &auth_header[7..];
+
+            // 使用JWT工具库验证token
+            match JwtUtils::verify_token(token) {
+                Ok(claims) => {
+                    Logger::info(format!(
+                        "🔐 [认证] Token验证通过: 用户ID={}, 角色={}",
+                        claims.sub, claims.role_type
+                    ));
+                    Ok(claims)
+                }
+                Err(e) => {
+                    Logger::warn(format!(
+                        "⚠️ [认证] Token验证失败: {} - 路径: {}",
+                        e, path
+                    ));
+                    Err(create_error_response(
+                        StatusCode::UNAUTHORIZED,
+                        "INVALID_TOKEN",
+                        "无效的JWT令牌",
+                    ))
+                }
+            }
+        } else {
+            Logger::warn(format!("⚠️ [认证] Authorization头格式错误: {}", path));
+            Err(create_error_response(
+                StatusCode::UNAUTHORIZED,
+                "INVALID_AUTH_HEADER",
+                "Authorization头格式错误",
+            ))
+        }
+    } else {
+        Logger::warn(format!("⚠️ [认证] 缺少Authorization头: {}", path));
+        Err(create_error_response(
+            StatusCode::UNAUTHORIZED,
+            "MISSING_AUTH_TOKEN",
+            "缺少Authorization头",
+        ))
+    }
+}
+
+/// 管理端认证中间件
+///
+/// 仅允许Admin角色(role_type=2)访问
+/// 用于保护管理端API端点
+/// 创建时间: 2026-01-29
+/// 参数: request - HTTP请求, next - 下一个处理器
+/// 返回: HTTP响应
+pub async fn admin_auth_middleware(
+    request: Request<Body>,
+    next: Next,
+) -> Result<Response, (StatusCode, Json<Value>)> {
+    let path = request.uri().path().to_string();
+
+    // 提取并验证JWT claims
+    let claims = extract_claims(&request)?;
+
+    // 检查角色是否为Admin (role_type == 2)
+    if claims.role_type == 2 {
+        Logger::info(format!(
+            "✅ [管理端认证] Admin用户 {} 访问: {}",
+            claims.sub, path
+        ));
+        Ok(next.run(request).await)
+    } else {
+        Logger::warn(format!(
+            "❌ [管理端认证] 非Admin用户 {} (角色={}) 尝试访问管理端: {}",
+            claims.sub, claims.role_type, path
+        ));
+        Err(create_error_response(
+            StatusCode::FORBIDDEN,
+            "INSUFFICIENT_PERMISSIONS",
+            "需要管理员权限",
+        ))
+    }
+}
+
+/// 移动端认证中间件
+///
+/// 允许User(role_type=1)和Admin(role_type=2)角色访问
+/// 用于保护移动端API端点
+/// 创建时间: 2026-01-29
+/// 参数: request - HTTP请求, next - 下一个处理器
+/// 返回: HTTP响应
+pub async fn mobile_auth_middleware(
+    request: Request<Body>,
+    next: Next,
+) -> Result<Response, (StatusCode, Json<Value>)> {
+    let path = request.uri().path().to_string();
+
+    // 提取并验证JWT claims
+    let claims = extract_claims(&request)?;
+
+    // 允许User(1)和Admin(2)角色
+    if claims.role_type == 1 || claims.role_type == 2 {
+        Logger::info(format!(
+            "✅ [移动端认证] 用户 {} (角色={}) 访问: {}",
+            claims.sub, claims.role_type, path
+        ));
+        Ok(next.run(request).await)
+    } else {
+        Logger::warn(format!(
+            "❌ [移动端认证] 无效角色 {} (角色={}) 尝试访问: {}",
+            claims.sub, claims.role_type, path
+        ));
+        Err(create_error_response(
+            StatusCode::FORBIDDEN,
+            "INVALID_ROLE",
+            "无效的用户角色",
+        ))
+    }
+}

@@ -23,11 +23,12 @@ static JWT_CONFIG: OnceLock<JwtConfig> = OnceLock::new();
 /// JWT声明结构
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
-    pub sub: String, // 用户ID
+    pub sub: String,      // 用户ID
     pub phone: String,
     pub email: String,
-    pub exp: i64, // 过期时间
-    pub iat: i64, // 签发时间
+    pub role_type: i32,   // 角色类型
+    pub exp: i64,         // 过期时间
+    pub iat: i64,         // 签发时间
 }
 
 /// JWT工具类
@@ -89,6 +90,7 @@ impl JwtUtils {
             sub: user.uid().to_string(),
             phone: user.phone().to_string(),
             email: user.email().to_string(),
+            role_type: user.role_type(),
             exp: exp.timestamp(),
             iat: now.timestamp(),
         };
@@ -141,6 +143,21 @@ impl JwtUtils {
         }
 
         Ok(claims.sub)
+    }
+
+    /// 从令牌中提取角色
+    ///
+    /// 从JWT令牌中安全提取用户角色
+    /// 参数: token - JWT令牌字符串
+    /// 返回: 角色类型
+    pub fn extract_role(token: &str) -> Result<i32> {
+        let claims = Self::verify_token(token)?;
+
+        if Self::is_token_expired(&claims) {
+            return Err(DomainError::Authentication("令牌已过期".to_string()));
+        }
+
+        Ok(claims.role_type)
     }
 
     /// 刷新令牌

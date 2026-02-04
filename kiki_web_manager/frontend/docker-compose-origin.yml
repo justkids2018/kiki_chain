@@ -1,0 +1,64 @@
+
+services:
+  # ===================== 前端 (Flutter Web + Nginx) =====================
+  frontend:
+    image: kikichain-flutter-web:latest
+    container_name: kikichain-frontend
+    restart: unless-stopped
+    platform: linux/amd64
+    ports:
+      - "80:80"     # HTTP
+      - "443:443"   # HTTPS
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+      - static-assets:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - kikichain-network
+
+  # ===================== 后端 (Rust API) =====================
+  backend:
+    image: kikichain-server:latest
+    container_name: kikichain-backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://qisd:qisd@postgres:5432/edadb
+      - JWT_SECRET=KCiUh7wCULKLwFo2OWd3glfE3F9tRpRk/9RW162sBRIg3IOjFNXxTlcpiGfIINnd
+      - RUST_LOG=info
+    expose:
+      - "8001"   # 仅内网访问
+    depends_on:
+      - postgres
+    networks:
+      - kikichain-network
+
+  # ===================== 数据库 (Postgres) =====================
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qisd
+      POSTGRES_PASSWORD: qisd
+      POSTGRES_DB: edadb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    networks:
+      - kikichain-network
+
+# ===================== 网络 =====================
+networks:
+  kikichain-network:
+    driver: bridge
+
+# ===================== 数据卷 =====================
+volumes:
+  pgdata:
+  static-assets:

@@ -1,3 +1,7 @@
 {
-    "cmake.sourceDirectory": "/Users/qisd/Documents/development/chain/kiki_chain/kiki_web/linux"
+    "cmake.sourceDirectory": "/Users/qisd/Documents/development/chain/kiki_chain/kiki_web/linux",
+    "dart.flutterSdkPath": "/Users/qisd/Documents/android/flutter_sdk",
+    "dart.analysisServerFolding": true,
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true
 }

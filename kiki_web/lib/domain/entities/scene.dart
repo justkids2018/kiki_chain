@@ -8,6 +8,7 @@ class Scene {
   final String categoryId;
   final String coverImage;
   final String interactiveImage;
+  final String? dataFile; // 互动数据文件路径 (JSON)
   final String description;
   final String context;
   final int itemCount;
@@ -22,6 +23,7 @@ class Scene {
     required this.categoryId,
     required this.coverImage,
     required this.interactiveImage,
+    this.dataFile,
     required this.description,
     required this.context,
     required this.itemCount,
@@ -38,6 +40,7 @@ class Scene {
       categoryId: json['categoryId'] as String? ?? json['category_id'] as String? ?? '',
       coverImage: json['coverImage'] as String? ?? json['cover_image'] as String? ?? '',
       interactiveImage: json['interactiveImage'] as String? ?? json['interactive_image'] as String? ?? '',
+      dataFile: json['dataFile'] as String? ?? json['data_file'] as String?,
       description: json['description'] as String? ?? '',
       context: json['context'] as String? ?? '',
       itemCount: json['itemCount'] as int? ?? json['item_count'] as int? ?? 0,
@@ -59,6 +62,7 @@ class Scene {
       'categoryId': categoryId,
       'coverImage': coverImage,
       'interactiveImage': interactiveImage,
+      'dataFile': dataFile,
       'description': description,
       'context': context,
       'itemCount': itemCount,
@@ -75,6 +79,7 @@ class Scene {
     String? categoryId,
     String? coverImage,
     String? interactiveImage,
+    String? dataFile,
     String? description,
     String? context,
     int? itemCount,
@@ -89,6 +94,7 @@ class Scene {
       categoryId: categoryId ?? this.categoryId,
       coverImage: coverImage ?? this.coverImage,
       interactiveImage: interactiveImage ?? this.interactiveImage,
+      dataFile: dataFile ?? this.dataFile,
       description: description ?? this.description,
       context: context ?? this.context,
       itemCount: itemCount ?? this.itemCount,

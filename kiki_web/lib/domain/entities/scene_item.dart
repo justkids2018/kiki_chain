@@ -10,6 +10,7 @@ class SceneItem {
   final String pronunciation;
   final String imageUrl;
   final String audioUrl;
+  final String? dataFile; // 互动数据文件路径 (JSON)
   final int order;
   final Map<String, dynamic>? hotspot; // 热区坐标信息 {x, y, width, height}
 
@@ -22,6 +23,7 @@ class SceneItem {
     required this.pronunciation,
     required this.imageUrl,
     required this.audioUrl,
+    this.dataFile,
     required this.order,
     this.hotspot,
   });
@@ -36,6 +38,7 @@ class SceneItem {
       pronunciation: json['pronunciation'] as String? ?? '',
       imageUrl: json['imageUrl'] as String? ?? json['image_url'] as String? ?? '',
       audioUrl: json['audioUrl'] as String? ?? json['audio_url'] as String? ?? '',
+      dataFile: json['dataFile'] as String? ?? json['data_file'] as String?,
       order: json['order'] as int? ?? 0,
       hotspot: json['hotspot'] as Map<String, dynamic>?,
     );
@@ -51,6 +54,7 @@ class SceneItem {
       'pronunciation': pronunciation,
       'imageUrl': imageUrl,
       'audioUrl': audioUrl,
+      'dataFile': dataFile,
       'order': order,
       'hotspot': hotspot,
     };
@@ -65,6 +69,7 @@ class SceneItem {
     String? pronunciation,
     String? imageUrl,
     String? audioUrl,
+    String? dataFile,
     int? order,
     Map<String, dynamic>? hotspot,
   }) {
@@ -77,6 +82,7 @@ class SceneItem {
       pronunciation: pronunciation ?? this.pronunciation,
       imageUrl: imageUrl ?? this.imageUrl,
       audioUrl: audioUrl ?? this.audioUrl,
+      dataFile: dataFile ?? this.dataFile,
       order: order ?? this.order,
       hotspot: hotspot ?? this.hotspot,
     );

@@ -159,20 +159,40 @@ class SceneListPage extends StatelessWidget {
 
   /// 构建场景网格
   Widget _buildSceneGrid(SceneListController controller) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 300 / 220,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: controller.scenes.length,
-      itemBuilder: (context, index) {
-        final scene = controller.scenes[index];
-        return SceneCard(
-          scene: scene,
-          onTap: () => controller.navigateToSceneDetail(scene),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 根据屏幕宽度动态计算列数
+        // 卡片宽度: 350, 间距: 16
+        final screenWidth = constraints.maxWidth;
+        int crossAxisCount;
+
+        if (screenWidth >= 1200) {
+          // 大屏设备 (iPad Pro 横屏): 3列
+          crossAxisCount = 3;
+        } else if (screenWidth >= 800) {
+          // 中等屏幕 (iPad 竖屏): 2列
+          crossAxisCount = 2;
+        } else {
+          // 小屏设备 (iPhone): 1列
+          crossAxisCount = 1;
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(20),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 7 / 9, // 350 / 450 = 7:9
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 24,
+          ),
+          itemCount: controller.scenes.length,
+          itemBuilder: (context, index) {
+            final scene = controller.scenes[index];
+            return SceneCard(
+              scene: scene,
+              onTap: () => controller.navigateToSceneDetail(scene),
+            );
+          },
         );
       },
     );

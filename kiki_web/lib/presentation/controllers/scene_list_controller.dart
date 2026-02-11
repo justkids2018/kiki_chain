@@ -4,7 +4,7 @@ import '../../domain/entities/scene_category.dart';
 import '../../domain/repositories/i_scene_repository.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/logging/app_logger.dart';
-import '../pages/scene_detail_page.dart';
+import '../../core/constants/app_constants.dart';
 
 /// 场景列表控制器
 ///
@@ -56,13 +56,31 @@ class SceneListController extends GetxController {
     await loadScenes();
   }
 
-  /// 导航到场景详情页
+  /// 导航到场景详情页（直接进入互动学习）
   void navigateToSceneDetail(Scene scene) {
-    AppLogger.info('🚀 Navigating to scene detail: ${scene.name}');
-    Get.to(
-      () => SceneDetailPage(scene: scene),
-      transition: Transition.rightToLeft,
-      duration: const Duration(milliseconds: 300),
+    AppLogger.info('🚀 Navigating to interactive scene: ${scene.name}');
+
+    // 检查场景是否有互动数据文件
+    if (scene.dataFile == null || scene.dataFile!.isEmpty) {
+      AppLogger.warning('⚠️ Scene ${scene.name} has no interactive data file');
+      Get.snackbar(
+        '提示',
+        '该场景暂未开放互动学习功能',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    // 直接导航到互动学习页面
+    Get.toNamed(
+      AppConstants.routeInteractiveImage,
+      arguments: {
+        'jsonFile': scene.dataFile,
+        'imageItem': null,
+        'images': [],
+        'scene': scene, // 传递场景信息用于显示标题等
+      },
     );
   }
 }

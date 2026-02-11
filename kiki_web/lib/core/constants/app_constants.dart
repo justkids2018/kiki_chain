@@ -31,6 +31,8 @@ class AppConstants {
   static const String routeTeacherChat = '/teacher/chat';
   static const String routeInteractiveImage = '/interactive_image';
   static const String routeInteractiveImageHome = '/interactive_image_home';
+  static const String routeSceneList = '/scene_list';
+  static const String routeSceneDetail = '/scene_detail';
   static const String debugDio = '/test/dio';
 
   // 默认值

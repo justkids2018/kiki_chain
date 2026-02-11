@@ -4,6 +4,7 @@ import '../../generated/app_localizations.dart';
 
 /// 场景卡片组件
 ///
+/// 尺寸: 350x450px (7:9 宽高比)
 /// 用于场景列表页展示单个场景
 class SceneCard extends StatelessWidget {
   final Scene scene;
@@ -20,8 +21,8 @@ class SceneCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 300,
-        height: 220,
+        width: 350,
+        height: 450,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           boxShadow: [

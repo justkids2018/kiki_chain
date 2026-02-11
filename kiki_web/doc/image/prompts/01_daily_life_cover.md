@@ -6,12 +6,19 @@
 
 * **用途**: 一级场景分类卡片封面图
 * **场景分类**: 日常生活 (Daily Life Scenes)
-* **图片格式**: PNG
-* **分辨率**: 350 x 450 像素 (宽 x 高)
-* **宽高比**: 7:9
+* **图片格式**: PNG (支持透明通道)
+* **宽高比**: 7:9 (竖版)
+* **多分辨率支持**:
+  - **1x (基础)**: 350 x 450 像素 - 用于低分辨率设备
+  - **2x (Retina)**: 700 x 900 像素 - 用于 iPad/iPhone Retina 显示屏 (推荐)
+  - **3x (高清)**: 1050 x 1350 像素 - 用于 iPhone Plus/Pro 系列
 * **色深**: 24-bit RGB
-* **文件大小**: 建议 < 500KB (优化后)
+* **文件大小**:
+  - 1x: < 200KB
+  - 2x: < 500KB (推荐主要使用)
+  - 3x: < 800KB
 * **适用年龄**: 3-6 岁儿童
+* **优化建议**: 使用 PNG 压缩工具 (如 TinyPNG) 优化文件大小
 
 ---
 
@@ -25,7 +32,9 @@
 
 * **[SCENE_CATEGORY]**: 日常生活 (Daily Life Scenes)
 * **[IMAGE_FORMAT]**: PNG, Portrait 7:9 Aspect Ratio
-* **[OUTPUT_RESOLUTION]**: 350 x 450 像素
+* **[OUTPUT_RESOLUTION]**:
+  - 推荐生成: 700 x 900 像素 (@2x, Retina)
+  - 备选: 1050 x 1350 像素 (@3x, 高清)
 * **🎨 风格基调**: 精致 3D 渲染 (Detailed 3D Rendering)。色彩温暖、明亮、居家感强。
 * **➡️ [COLOR_PALETTE]**: 让色彩自然呈现温暖居家氛围
 * **💡 视角与灯光**: 正面视角或微俯视角。灯光温暖、柔和，营造家的温馨感。
@@ -74,10 +83,12 @@
 Create a detailed 3D rendered cover image for "Daily Life Scenes" category card, designed for children aged 3-6.
 
 Technical Specifications:
-- Format: PNG
-- Resolution: 350 x 450 pixels (7:9 portrait aspect ratio)
+- Format: PNG with transparency support
+- Resolution: 700 x 900 pixels (7:9 portrait aspect ratio, @2x Retina)
+  * Alternative: 1050 x 1350 pixels (@3x for high-end devices)
 - Style: Detailed 3D rendering with warm, cozy atmosphere
 - Rendering: Cinema 4D style, clean and polished
+- File size target: < 500KB (use PNG compression)
 
 Visual Style:
 - Warm, bright colors with homey feel - let colors emerge naturally from the daily life theme
@@ -113,6 +124,7 @@ Style Requirements:
 - Moderate saturation, not too bright or dull
 - Warm and inviting atmosphere
 - Suitable for children aged 3-6
+- High resolution for Retina displays
 
 Prohibited Elements:
 - No human characters
@@ -120,18 +132,37 @@ Prohibited Elements:
 - No complex backgrounds
 - No overly realistic style
 
-Quality: Ultra high detail, Cinema 4D cute render, warm and inviting atmosphere, child-friendly aesthetic, suitable for category card cover.
+Quality: Ultra high detail, Cinema 4D cute render, warm and inviting atmosphere, child-friendly aesthetic, optimized for Retina displays, suitable for category card cover.
 ```
 
 ---
 
 ## 📐 设计规格详细说明
 
-### 画面尺寸
+### 画面尺寸 (多分辨率)
+
+#### @2x (Retina) - 推荐主要使用
+* **宽度**: 700 像素
+* **高度**: 900 像素
+* **宽高比**: 7:9 (竖版)
+* **安全区域**: 上下左右各留 40 像素
+* **显示尺寸**: 在设备上显示为 350x450 点
+* **适用设备**: iPad, iPhone Retina 显示屏
+
+#### @3x (高清) - 可选
+* **宽度**: 1050 像素
+* **高度**: 1350 像素
+* **宽高比**: 7:9 (竖版)
+* **安全区域**: 上下左右各留 60 像素
+* **显示尺寸**: 在设备上显示为 350x450 点
+* **适用设备**: iPhone Plus/Pro 系列
+
+#### @1x (基础) - 备用
 * **宽度**: 350 像素
 * **高度**: 450 像素
 * **宽高比**: 7:9 (竖版)
 * **安全区域**: 上下左右各留 20 像素
+* **适用设备**: 低分辨率设备
 
 ### 主体物品规格
 * **物品数量**: 3-5 个
@@ -140,22 +171,45 @@ Quality: Ultra high detail, Cinema 4D cute render, warm and inviting atmosphere,
 * **物品位置**: 居中或稍偏下，留出上方空间
 * **设计原则**: 简约不杂乱，轻盈温馨，富有童趣
 
+### Flutter 资源配置
+在 Flutter 项目中，图片应按以下结构组织：
+```
+assets/images/categories/
+  daily_life.png          # @1x (350x450)
+  2.0x/daily_life.png     # @2x (700x900) - 推荐
+  3.0x/daily_life.png     # @3x (1050x1350) - 可选
+```
+
+Flutter 会根据设备像素密度自动选择合适的图片资源。
+
 ---
 
 ## ✅ 质量检查清单
 
-- [ ] 分辨率: 350 x 450 像素
+### @2x (Retina) 版本 - 推荐
+- [ ] 分辨率: 700 x 900 像素
 - [ ] 格式: PNG (24-bit RGB)
 - [ ] 宽高比: 7:9 (竖版)
 - [ ] 主体物品: 3-5 个
 - [ ] 色调: 温暖米色系
-- [ ] 清晰度: 主体锐利
+- [ ] 清晰度: 主体锐利，适合 Retina 显示
 - [ ] 无人物角色
 - [ ] 无文字标题
 - [ ] 氛围: 温馨居家
 - [ ] 风格: 3D 渲染
 - [ ] 适合儿童: 可爱友好
 - [ ] 文件大小: < 500KB
+- [ ] 已使用 PNG 压缩工具优化
+
+### @3x (高清) 版本 - 可选
+- [ ] 分辨率: 1050 x 1350 像素
+- [ ] 文件大小: < 800KB
+- [ ] 其他要求同 @2x 版本
+
+### @1x (基础) 版本 - 备用
+- [ ] 分辨率: 350 x 450 像素
+- [ ] 文件大小: < 200KB
+- [ ] 其他要求同 @2x 版本
 
 ---
 
@@ -178,7 +232,15 @@ Quality: Ultra high detail, Cinema 4D cute render, warm and inviting atmosphere,
 
 ---
 
-**生成日期**: 2026-01-29
-**版本**: v1.0
+**生成日期**: 2026-02-04
+**版本**: v2.0 (优化多分辨率支持)
 **适用场景**: 日常生活分类卡片封面图
-**卡片尺寸**: 350 x 450 px
+**推荐尺寸**: 700 x 900 px (@2x Retina)
+**备选尺寸**: 1050 x 1350 px (@3x 高清)
+**基础尺寸**: 350 x 450 px (@1x 备用)
+
+### 📱 设备适配说明
+- **iPad/iPhone Retina**: 自动使用 @2x (700x900) 版本
+- **iPhone Plus/Pro**: 自动使用 @3x (1050x1350) 版本
+- **低分辨率设备**: 自动使用 @1x (350x450) 版本
+- Flutter 会根据设备像素密度自动选择最佳图片资源

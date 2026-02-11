@@ -8,7 +8,7 @@ import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_stroke_display.dart';
 
 class InteractiveImagePage extends StatefulWidget {
-  const InteractiveImagePage({Key? key}) : super(key: key);
+  InteractiveImagePage({Key? key}) : super(key: key);
 
   @override
   State<InteractiveImagePage> createState() => _InteractiveImagePageState();

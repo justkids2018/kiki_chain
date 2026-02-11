@@ -74,7 +74,6 @@ dependencies:
   
   # WebView
   webview_flutter: ^4.0.7
-  flutter_inappwebview: ^5.7.2+3
   
   # Development tools
   image_picker: ^0.8.7+1
@@ -120,6 +119,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/categories/
     - assets/images/toy/
     - assets/data/
     - assets/data/toy/

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
-import '../scene_list_page.dart';
+import '../../../core/constants/app_constants.dart';
 
 /// 互动图片首页 - 显示场景分类
 class InteractiveImageHomePage extends StatelessWidget {
@@ -159,20 +159,37 @@ class InteractiveImageHomePage extends StatelessWidget {
       }
 
       // 分类卡片横向滚动列表
-      return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-        itemCount: controller.categories.length,
-        itemBuilder: (context, index) {
-          final category = controller.categories[index];
-          return CategoryCard(
-            category: category,
-            onTap: () {
-              // 导航到场景列表页
-              Get.to(
-                () => SceneListPage(category: category),
-                transition: Transition.rightToLeft,
-                duration: const Duration(milliseconds: 300),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          // 计算卡片居中显示的垂直padding
+          final screenHeight = constraints.maxHeight;
+          final cardHeight = 450.0;
+          final verticalPadding = (screenHeight - cardHeight) / 2;
+          final safePadding = verticalPadding.clamp(20.0, 80.0);
+
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: safePadding,
+            ),
+            itemCount: controller.categories.length,
+            itemBuilder: (context, index) {
+              final category = controller.categories[index];
+              return Padding(
+                padding: EdgeInsets.only(
+                  right: index < controller.categories.length - 1 ? 20 : 0,
+                ),
+                child: CategoryCard(
+                  category: category,
+                  onTap: () {
+                    // 导航到场景列表页
+                    Get.toNamed(
+                      AppConstants.routeSceneList,
+                      arguments: category,
+                    );
+                  },
+                ),
               );
             },
           );

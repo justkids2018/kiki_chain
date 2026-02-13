@@ -27,31 +27,61 @@ class CharacterStrokeGrid extends StatelessWidget {
     }
 
     final total = cells.length;
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      alignment: WrapAlignment.center,
-      children: List<Widget>.generate(total, (index) {
-        final cell = cells[index];
-        if (!cell.isVisible) {
-          return _PendingCharacterCell(
-            key: ValueKey('pending-${cell.character}-$index'),
-            size: cellSize,
-          );
-        }
 
-        return TianZiGeChar(
-          key: ValueKey('char-${cell.character}-$index'),
-          character: cell.character,
+    // Build character widgets
+    final characterWidgets = List<Widget>.generate(total, (index) {
+      final cell = cells[index];
+      if (!cell.isVisible) {
+        return _PendingCharacterCell(
+          key: ValueKey('pending-${cell.character}-$index'),
           size: cellSize,
-          animate: cell.shouldAnimate,
-          strokeColor: strokeColor,
-          animationSpeed: animationSpeed,
-          onAnimationComplete: cell.shouldAnimate
-              ? () => onCharacterComplete?.call(index)
-              : null,
         );
-      }),
+      }
+
+      return TianZiGeChar(
+        key: ValueKey('char-${cell.character}-$index'),
+        character: cell.character,
+        size: cellSize,
+        animate: cell.shouldAnimate,
+        strokeColor: strokeColor,
+        animationSpeed: animationSpeed,
+        onAnimationComplete: cell.shouldAnimate
+            ? () => onCharacterComplete?.call(index)
+            : null,
+      );
+    });
+
+    // Layout: 2 columns per row, left-aligned
+    final rows = <Widget>[];
+    for (int i = 0; i < total; i += 2) {
+      final rowChildren = <Widget>[];
+
+      // First character in row
+      rowChildren.add(characterWidgets[i]);
+
+      // Second character in row (if exists)
+      if (i + 1 < total) {
+        rowChildren.add(const SizedBox(width: 16));
+        rowChildren.add(characterWidgets[i + 1]);
+      }
+
+      rows.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: rowChildren,
+        ),
+      );
+
+      // Add spacing between rows
+      if (i + 2 < total) {
+        rows.add(const SizedBox(height: 16));
+      }
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start, // Left-align rows
+      children: rows,
     );
   }
 }

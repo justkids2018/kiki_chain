@@ -210,29 +210,28 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 );
               }
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Character grid - centered
-                    Center(
-                      child: _buildCharacterGrid(controller, region.text),
-                    ),
-                    const SizedBox(height: 24),
-                    // English translation with four-line-three-grid - centered
-                    if (region.textEnglish.isNotEmpty)
-                      Center(
-                        child: EnglishFourLineGrid(
+              return Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // English translation with four-line-three-grid - on top
+                      if (region.textEnglish.isNotEmpty)
+                        EnglishFourLineGrid(
                           text: region.textEnglish,
                           fontSize: 55,
                           fontColor: Colors.black87,
                           height: 130,
                           markVowels: true,
                         ),
-                      ),
-                  ],
+                      if (region.textEnglish.isNotEmpty)
+                        const SizedBox(height: 24),
+                      // Character grid - below English
+                      _buildCharacterGrid(controller, region.text),
+                    ],
+                  ),
                 ),
               );
             }),
@@ -339,30 +338,28 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           children: [
             // Character grid
             Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Character grid - centered
-                    Center(
-                      child: _buildCharacterGrid(controller, region.text),
-                    ),
-                    const SizedBox(height: 20),
-                    // English translation with four-line-three-grid - centered
-                    if (region.textEnglish.isNotEmpty)
-                      Center(
-                        child: EnglishFourLineGrid(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // English translation with four-line-three-grid - on top
+                      if (region.textEnglish.isNotEmpty)
+                        EnglishFourLineGrid(
                           text: region.textEnglish,
                           fontSize: 50,
                           fontColor: Colors.black87,
                           height: 120,
                           markVowels: true,
                         ),
-                      ),
-                  ],
+                      if (region.textEnglish.isNotEmpty)
+                        const SizedBox(height: 20),
+                      // Character grid - below English
+                      _buildCharacterGrid(controller, region.text),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -455,21 +452,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               ),
               child: const Icon(Icons.settings,
                   color: Colors.white, size: 24),
-            ),
-          ),
-
-          const SizedBox(width: 12),
-
-          // Hint Button
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              '提示',
-              style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
         ],

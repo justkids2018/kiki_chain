@@ -5,7 +5,8 @@ import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
-import 'widgets/english_stroke_display.dart';
+import 'widgets/english_four_line_grid.dart';
+import '../../widgets/settings_dialog.dart';
 
 class InteractiveImagePage extends StatefulWidget {
   InteractiveImagePage({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             children: [
               // Left: Large Interactive Image
               Expanded(
-                flex: 3,
+                flex: 7,  // Changed from 3 to 7 for 70:30 ratio
                 child: _buildLargeImageContainer(
                   controller: controller,
                   aspectRatio: aspectRatio,
@@ -88,7 +89,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
               // Right: Character Panel (compact)
               Expanded(
-                flex: 2,
+                flex: 3,  // Changed from 2 to 3 for 70:30 ratio
                 child: _buildCompactCharacterPanel(controller),
               ),
             ],
@@ -212,17 +213,24 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Character grid
-                    _buildCharacterGrid(controller, region.text),
-                    const SizedBox(height: 20),
-                    // English translation with animation
+                    // Character grid - centered
+                    Center(
+                      child: _buildCharacterGrid(controller, region.text),
+                    ),
+                    const SizedBox(height: 24),
+                    // English translation with four-line-three-grid - centered
                     if (region.textEnglish.isNotEmpty)
-                      EnglishStrokeDisplay(
-                        text: region.textEnglish,
-                        fontSize: 24,
-                        fontColor: Colors.black,
-                        animationSpeed: 1.0,
+                      Center(
+                        child: EnglishFourLineGrid(
+                          text: region.textEnglish,
+                          fontSize: 55,
+                          fontColor: Colors.black87,
+                          height: 130,
+                          markVowels: true,
+                        ),
                       ),
                   ],
                 ),
@@ -335,17 +343,24 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Character grid
-                    _buildCharacterGrid(controller, region.text),
-                    const SizedBox(height: 16),
-                    // English translation with animation
+                    // Character grid - centered
+                    Center(
+                      child: _buildCharacterGrid(controller, region.text),
+                    ),
+                    const SizedBox(height: 20),
+                    // English translation with four-line-three-grid - centered
                     if (region.textEnglish.isNotEmpty)
-                      EnglishStrokeDisplay(
-                        text: region.textEnglish,
-                        fontSize: 18,
-                        fontColor: Colors.blue[700] ?? Colors.blue,
-                        animationSpeed: 1.0,
+                      Center(
+                        child: EnglishFourLineGrid(
+                          text: region.textEnglish,
+                          fontSize: 50,
+                          fontColor: Colors.black87,
+                          height: 120,
+                          markVowels: true,
+                        ),
                       ),
                   ],
                 ),
@@ -429,6 +444,22 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
           const Spacer(),
 
+          // Settings Button
+          GestureDetector(
+            onTap: () => Get.dialog(const SettingsDialog()),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.settings,
+                  color: Colors.white, size: 24),
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
           // Hint Button
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -487,7 +518,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Center(
       child: CharacterStrokeGrid(
         cells: cells,
-        cellSize: 100,
+        cellSize: 120, // 从 100 增加到 120，更适合儿童
         onCharacterComplete: controller.onCharacterAnimationComplete,
       ),
     );

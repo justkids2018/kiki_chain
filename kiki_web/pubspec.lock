@@ -421,6 +421,22 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.7.2"
+  get_storage:
+    dependency: "direct main"
+    description:
+      name: get_storage
+      sha256: "39db1fffe779d0c22b3a744376e86febe4ade43bf65e06eab5af707dc84185a2"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.1.1"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: "517b20870220c48752eafa0ba1a797a092fb22df0d89535fd9991e86ee2cdd9c"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "6.3.2"
   highlight:
     dependency: "direct main"
     description:

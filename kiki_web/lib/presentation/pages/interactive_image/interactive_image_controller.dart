@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:get/get.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../data/models/image_item.dart';
@@ -64,7 +65,13 @@ class InteractiveImageController extends GetxController {
       
       // 接收图片列表
       if (arguments['images'] != null && arguments['images'] is List) {
-        _imagesList = arguments['images'] as List<ImageItem>;
+        final imagesList = arguments['images'] as List;
+        // 只有当列表不为空且第一个元素是 ImageItem 时才转换
+        if (imagesList.isNotEmpty && imagesList.first is ImageItem) {
+          _imagesList = imagesList.cast<ImageItem>();
+        } else {
+          _imagesList = [];
+        }
       }
     } else {
       // 默认值
@@ -96,7 +103,9 @@ class InteractiveImageController extends GetxController {
     }
 
     // 本地资源路径
-    if (jsonFile.contains('dongwuyuan')) {
+    if (jsonFile.contains('toy')) {
+      return 'assets/images/toy/kiki_toy.png';
+    } else if (jsonFile.contains('dongwuyuan')) {
       return 'assets/images/kiki_dongwuyuan.jpg';
     } else if (jsonFile.contains('zhiwuyuan')) {
       return 'assets/images/kiki_zhiwuyuan.jpg';
@@ -139,17 +148,29 @@ class InteractiveImageController extends GetxController {
       }
       loadingProgress.value = 0.3;
 
-      // Load regions and image dimensions in parallel
+      // Load regions and image dimensions in parallel with timeout
       AppLogger.debug('Starting data loading');
-      await Future.wait([
-        _loadRegions(),
-        _loadImageDimensions(),
-      ]);
+      try {
+        await Future.wait([
+          _loadRegions(),
+          _loadImageDimensions(),
+        ]).timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            AppLogger.warning('Data loading timed out after 15 seconds');
+            throw TimeoutException('Loading timed out');
+          },
+        );
+      } catch (e) {
+        AppLogger.error('Data loading failed', e);
+        // Continue anyway to show the page
+      }
 
       AppLogger.debug('Data loading completed');
       loadingProgress.value = 1.0;
       await Future.delayed(const Duration(milliseconds: 300));
       isLoaded.value = true;
+      AppLogger.info('Initialization completed successfully');
     } catch (e) {
       AppLogger.error('Initialization error', e);
       errorMessage.value = "Failed to initialize: $e";

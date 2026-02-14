@@ -163,11 +163,21 @@ class _TianZiGeCharState extends State<TianZiGeChar>
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9F0),
-        border: Border.all(color: const Color(0xFFE0C0A0), width: 2),
+        color: const Color(0xFFFFFEF7), // 更浅的奶油色，更适合儿童
+        border: Border.all(color: const Color(0xFFFF9B9B), width: 3), // 珊瑚粉色边框，加粗
+        borderRadius: BorderRadius.circular(8), // 添加圆角
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Stack(
-        children: [
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6), // 内容也需要圆角裁剪
+        child: Stack(
+          children: [
           CustomPaint(
             size: Size(widget.size, widget.size),
             painter: _TianZiGePainter(),
@@ -193,6 +203,7 @@ class _TianZiGeCharState extends State<TianZiGeChar>
           ),
         ],
       ),
+      ),
     );
   }
 }
@@ -201,9 +212,9 @@ class _TianZiGePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFE0C0A0).withOpacity(0.5)
+      ..color = const Color(0xFFFFE4C4).withOpacity(0.6) // 更浅的网格线
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = 1.5; // 稍微加粗
 
     void drawDashedLine(Offset start, Offset end) {
       const dashWidth = 4.0;

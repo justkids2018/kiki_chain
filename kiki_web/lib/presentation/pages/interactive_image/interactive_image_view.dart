@@ -163,11 +163,16 @@ class _InteractiveImageViewState extends State<InteractiveImageView> {
     final width = (maxX - minX) * scaleX;
     final height = (maxY - minY) * scaleY;
 
+    // Calculate center position and radius for circular indicator
+    final centerX = left + width / 2;
+    final centerY = top + height / 2;
+    final radius = min(width, height) / 2;
+
     return Positioned(
-      left: left,
-      top: top,
-      width: width,
-      height: height,
+      left: centerX - radius - 10, // Extra space for glow
+      top: centerY - radius - 10,
+      width: (radius + 10) * 2,
+      height: (radius + 10) * 2,
       child: GestureDetector(
         onTap: () {
           // 只触发回调，气泡由上层的全局 GestureDetector 处理
@@ -175,9 +180,27 @@ class _InteractiveImageViewState extends State<InteractiveImageView> {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.red, width: 1),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.transparent,
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              center: Alignment.center,
+              radius: 0.5,
+              colors: [
+                Colors.transparent, // Transparent center
+                Colors.transparent, // Keep center transparent
+                Colors.blue.withOpacity(0.3), // Start glow at edge
+                Colors.blue.withOpacity(0.5), // Stronger glow
+                Colors.blue.withOpacity(0.2), // Fade out
+              ],
+              stops: const [0.0, 0.7, 0.85, 0.95, 1.0],
+            ),
+            boxShadow: [
+              // Outer glow for more visibility
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.4),
+                blurRadius: 15,
+                spreadRadius: 3,
+              ),
+            ],
           ),
         ),
       ),

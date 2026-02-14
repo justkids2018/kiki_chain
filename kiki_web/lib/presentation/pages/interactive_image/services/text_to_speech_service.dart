@@ -1,9 +1,12 @@
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:get/get.dart';
 import '../../../../core/logging/app_logger.dart';
+import '../../../../core/settings/app_settings_service.dart';
 import '../../../../domain/entities/interactive_region.dart';
 
 class TextToSpeechService {
   final FlutterTts _tts = FlutterTts();
+  AppSettingsService? _settings;
 
   TextToSpeechService();
 
@@ -85,10 +88,17 @@ class TextToSpeechService {
   /// 设置中文语音参数（优化中文发音）
   Future<void> _setChineseSettings() async {
     try {
+      // Try to get settings service, fallback to default if not available
+      _settings ??= Get.isRegistered<AppSettingsService>()
+          ? Get.find<AppSettingsService>()
+          : null;
+
+      final rates = _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+
       await _tts.setLanguage("zh-CN");
-      await _tts.setSpeechRate(0.85); // 中文稍慢，更清晰
-      await _tts.setVolume(1.0); // 最大音量
-      await _tts.setPitch(1.0); // 正常音调
+      await _tts.setSpeechRate(rates['chinese']!);
+      await _tts.setVolume(1.0);
+      await _tts.setPitch(1.0);
     } catch (e) {
       AppLogger.warning('Failed to set Chinese TTS settings', e);
     }
@@ -97,8 +107,15 @@ class TextToSpeechService {
   /// 设置英文语音参数
   Future<void> _setEnglishSettings() async {
     try {
+      // Try to get settings service, fallback to default if not available
+      _settings ??= Get.isRegistered<AppSettingsService>()
+          ? Get.find<AppSettingsService>()
+          : null;
+
+      final rates = _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+
       await _tts.setLanguage("en-US");
-      await _tts.setSpeechRate(1.0); // 英文正常速度
+      await _tts.setSpeechRate(rates['english']!);
       await _tts.setVolume(1.0);
       await _tts.setPitch(1.0);
     } catch (e) {

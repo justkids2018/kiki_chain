@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
@@ -16,6 +18,14 @@ class InteractiveImagePage extends StatefulWidget {
 }
 
 class _InteractiveImagePageState extends State<InteractiveImagePage> {
+  // Platform-specific sizing
+  bool get _isAndroid => !kIsWeb && Platform.isAndroid;
+
+  double get _englishFontSizeTablet => _isAndroid ? 14.0 : 55.0;
+  double get _englishFontSizePhone => _isAndroid ? 14.0 : 50.0;
+  double get _englishGridHeight => _isAndroid ? 80.0 : 130.0;
+  double get _chineseCellSize => _isAndroid ? 80.0 : 120.0;
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.isRegistered<InteractiveImageController>()
@@ -221,9 +231,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       if (region.textEnglish.isNotEmpty)
                         EnglishFourLineGrid(
                           text: region.textEnglish,
-                          fontSize: 55,
+                          fontSize: _englishFontSizeTablet,
                           fontColor: Colors.black87,
-                          height: 130,
+                          height: _englishGridHeight,
                           markVowels: true,
                         ),
                       if (region.textEnglish.isNotEmpty)
@@ -349,9 +359,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       if (region.textEnglish.isNotEmpty)
                         EnglishFourLineGrid(
                           text: region.textEnglish,
-                          fontSize: 50,
+                          fontSize: _englishFontSizePhone,
                           fontColor: Colors.black87,
-                          height: 120,
+                          height: _englishGridHeight,
                           markVowels: true,
                         ),
                       if (region.textEnglish.isNotEmpty)
@@ -500,7 +510,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Center(
       child: CharacterStrokeGrid(
         cells: cells,
-        cellSize: 120, // 从 100 增加到 120，更适合儿童
+        cellSize: _chineseCellSize, // Platform-specific size
         onCharacterComplete: controller.onCharacterAnimationComplete,
       ),
     );

@@ -140,7 +140,12 @@ class InteractiveImageController extends GetxController {
       // Initialize TTS - continue even if it fails
       try {
         AppLogger.debug('Initializing TTS');
-        await _ttsService.initialize();
+        await _ttsService.initialize().timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            AppLogger.warning('TTS initialization timed out after 5 seconds');
+          },
+        );
         AppLogger.debug('TTS initialized successfully');
       } catch (e) {
         AppLogger.warning('TTS initialization failed', e);

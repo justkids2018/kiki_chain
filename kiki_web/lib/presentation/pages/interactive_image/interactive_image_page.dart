@@ -21,9 +21,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
 
-  double get _englishFontSizeTablet => _isAndroid ? 14.0 : 55.0;
-  double get _englishFontSizePhone => _isAndroid ? 14.0 : 50.0;
-  double get _englishGridHeight => _isAndroid ? 80.0 : 130.0;
+  double get _englishFontSizeTablet => _isAndroid ? 26.0 : 55.0;
+  double get _englishFontSizePhone => _isAndroid ? 24.0 : 50.0;
+  double get _englishGridHeight => _isAndroid ? 110.0 : 130.0;
   double get _chineseCellSize => _isAndroid ? 80.0 : 120.0;
 
   @override

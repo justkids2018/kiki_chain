@@ -1,0 +1,315 @@
+import '../../domain/entities/scene.dart';
+import 'mock_scene_items.dart';
+
+/// Mock数据 - 场景列表
+///
+/// 包含15个场景的Mock数据
+/// 对应场景结构定义文档中的场景
+class MockScenes {
+  /// 日常生活场景 (6个)
+  static final List<Scene> dailyLifeScenes = [
+    Scene(
+      id: 'scene_breakfast',
+      name: '早餐时间',
+      nameEn: 'Breakfast Time',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/breakfast_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友和家人一起吃早餐，桌上摆满了丰盛的早餐食物',
+      context: '早上7点，小明坐在餐桌前，妈妈正在准备早餐',
+      itemCount: 6,
+      order: 1,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_school_ready',
+      name: '准备上学',
+      nameEn: 'Getting Ready for School',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/school_ready_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友整理书包，准备去上学',
+      context: '早上8点，小明在房间里整理书包，准备出门上学',
+      itemCount: 6,
+      order: 2,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_cooking_with_mom',
+      name: '帮妈妈做饭',
+      nameEn: 'Helping Mom Cook',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/cooking_with_mom_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友在厨房帮妈妈准备晚餐',
+      context: '下午5点，小明在厨房帮妈妈洗菜、准备食材',
+      itemCount: 6,
+      order: 3,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_tv_time',
+      name: '看电视时间',
+      nameEn: 'TV Time in Living Room',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/tv_time_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友和家人一起在客厅看电视',
+      context: '晚上7点，小明和爸爸妈妈坐在沙发上看动画片',
+      itemCount: 6,
+      order: 4,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_bedtime',
+      name: '睡前准备',
+      nameEn: 'Bedtime Routine',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/bedtime_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友准备睡觉，整理房间',
+      context: '晚上9点，小明洗完澡，准备上床睡觉',
+      itemCount: 6,
+      order: 5,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_room_cleaning',
+      name: '周末打扫房间',
+      nameEn: 'Weekend Room Cleaning',
+      categoryId: 'category_daily_life',
+      coverImage: 'assets/images/scenes/room_cleaning_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '小朋友周末帮忙打扫自己的房间',
+      context: '周六上午，小明整理自己的房间，把玩具和书本收拾好',
+      itemCount: 6,
+      order: 6,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+  ];
+
+  /// 游乐场景 (3个)
+  static final List<Scene> playgroundScenes = [
+    Scene(
+      id: 'scene_amusement_park',
+      name: '游乐园',
+      nameEn: 'Amusement Park',
+      categoryId: 'category_playground',
+      coverImage: 'assets/images/scenes/amusement_park_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '欢乐的游乐园场景，学习各种游乐设施',
+      context: '周末，小明和家人一起去游乐园玩',
+      itemCount: 6,
+      order: 1,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_zoo',
+      name: '动物园',
+      nameEn: 'Zoo',
+      categoryId: 'category_playground',
+      coverImage: 'assets/images/scenes/zoo_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '有趣的动物园场景，学习各种动物名称',
+      context: '春天，小明和同学们一起参观动物园',
+      itemCount: 6,
+      order: 2,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_aquarium',
+      name: '海洋馆',
+      nameEn: 'Aquarium',
+      categoryId: 'category_playground',
+      coverImage: 'assets/images/scenes/aquarium_cover.jpg',
+      interactiveImage: 'assets/images/toy/kiki_toy.png',
+      dataFile: 'assets/data/toy/kiki_toy.json',
+      description: '神秘的海洋馆场景，学习海洋生物',
+      context: '暑假，小明和爸爸妈妈一起参观海洋馆',
+      itemCount: 6,
+      order: 3,
+      isNew: false,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+  ];
+
+  /// 数字认知场景 (1个)
+  static final List<Scene> numbersScenes = [
+    Scene(
+      id: 'scene_numbers',
+      name: '数字认知',
+      nameEn: 'Numbers 0-9',
+      categoryId: 'category_numbers',
+      coverImage: 'assets/images/scenes/numbers_cover.jpg',
+      interactiveImage: 'assets/images/scenes/numbers_interactive.jpg',
+      description: '学习数字0-9的中英文读写',
+      context: '数学课上，老师教小朋友认识数字',
+      itemCount: 10,
+      order: 1,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+  ];
+
+  /// 字母认知场景 (2个)
+  static final List<Scene> lettersScenes = [
+    Scene(
+      id: 'scene_letters_am',
+      name: '字母认知 A-L',
+      nameEn: 'Letters A-L',
+      categoryId: 'category_letters',
+      coverImage: 'assets/images/scenes/letters_am_cover.jpg',
+      interactiveImage: 'assets/images/scenes/letters_am_interactive.jpg',
+      description: '学习英文字母A-L的读写',
+      context: '英语课上，老师教小朋友认识字母',
+      itemCount: 12,
+      order: 1,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_letters_nz',
+      name: '字母认知 M-X',
+      nameEn: 'Letters M-X',
+      categoryId: 'category_letters',
+      coverImage: 'assets/images/scenes/letters_nz_cover.jpg',
+      interactiveImage: 'assets/images/scenes/letters_nz_interactive.jpg',
+      description: '学习英文字母M-X的读写',
+      context: '英语课上，老师继续教小朋友认识字母',
+      itemCount: 12,
+      order: 2,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+  ];
+
+  /// 传统节日场景 (3个)
+  static final List<Scene> traditionalFestivalsScenes = [
+    Scene(
+      id: 'scene_spring_festival',
+      name: '春节',
+      nameEn: 'Spring Festival',
+      categoryId: 'category_traditional_festivals',
+      coverImage: 'assets/images/scenes/spring_festival_cover.jpg',
+      interactiveImage: 'assets/images/scenes/spring_festival_interactive.jpg',
+      description: '热闹的春节场景，学习春节相关物品和习俗',
+      context: '春节到了，小明和家人一起庆祝新年',
+      itemCount: 12,
+      order: 1,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_dragon_boat',
+      name: '端午节',
+      nameEn: 'Dragon Boat Festival',
+      categoryId: 'category_traditional_festivals',
+      coverImage: 'assets/images/scenes/dragon_boat_cover.jpg',
+      interactiveImage: 'assets/images/scenes/dragon_boat_interactive.jpg',
+      description: '欢乐的端午节场景，学习端午节相关物品和习俗',
+      context: '端午节，小明和家人一起包粽子、看龙舟比赛',
+      itemCount: 12,
+      order: 2,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+    Scene(
+      id: 'scene_solar_terms',
+      name: '二十四节气',
+      nameEn: '24 Solar Terms',
+      categoryId: 'category_traditional_festivals',
+      coverImage: 'assets/images/scenes/solar_terms_cover.jpg',
+      interactiveImage: 'assets/images/scenes/solar_terms_interactive.jpg',
+      description: '学习中国传统二十四节气，了解四季变化',
+      context: '自然课上，老师教小朋友认识二十四节气',
+      itemCount: 12,
+      order: 3,
+      isNew: true,
+      createdAt: DateTime(2026, 1, 28),
+    ),
+  ];
+
+  /// 所有场景列表
+  static final List<Scene> allScenes = [
+    ...dailyLifeScenes,
+    ...playgroundScenes,
+    ...numbersScenes,
+    ...lettersScenes,
+    ...traditionalFestivalsScenes,
+  ];
+
+  /// 按分类ID获取场景列表
+  static List<Scene> getScenesByCategory(String categoryId) {
+    return allScenes.where((scene) => scene.categoryId == categoryId).toList();
+  }
+
+  /// 根据ID获取场景
+  static Scene? getSceneById(String id) {
+    try {
+      return allScenes.firstWhere((scene) => scene.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 获取场景列表（模拟 API 响应）
+  static Map<String, dynamic> getScenesByCategoryResponse(String categoryId) {
+    final scenes = getScenesByCategory(categoryId);
+
+    return {
+      "code": 200,
+      "message": "成功",
+      "data": {
+        "categoryId": categoryId,
+        "total": scenes.length,
+        "scenes": scenes.map((scene) => scene.toJson()).toList(),
+      }
+    };
+  }
+
+  /// 获取场景详情（模拟 API 响应）
+  static Map<String, dynamic>? getSceneDetailResponse(String sceneId) {
+    final scene = getSceneById(sceneId);
+
+    if (scene == null) {
+      return {
+        "code": 404,
+        "message": "场景不存在",
+        "data": null
+      };
+    }
+
+    // 获取场景物品
+    final items = MockSceneItems.getItemsBySceneId(sceneId);
+
+    return {
+      "code": 200,
+      "message": "成功",
+      "data": {
+        "scene": scene.toJson(),
+        "items": items.map((item) => item.toJson()).toList(),
+      }
+    };
+  }
+
+  /// 获取所有场景数量
+  static int getTotalSceneCount() {
+    return allScenes.length;
+  }
+}

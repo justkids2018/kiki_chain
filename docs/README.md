@@ -75,6 +75,31 @@
 
 ---
 
+## 💾 数据库文档
+
+**路径**: `database/`
+
+### 数据库设计 ✅
+
+- **[数据库文档导航](./database/README.md)**
+  - 表结构设计
+  - 迁移管理
+  - ER 图设计
+  - 索引优化
+
+### 文档结构
+
+```
+database/
+├── schema/           # 表结构文档
+├── migrations/       # 迁移历史
+└── design/          # 设计文档
+```
+
+> 🤖 **AI 维护** | 🔗 **三端共享**
+
+---
+
 ## 🔌 API 文档
 
 **路径**: `api/`
@@ -149,20 +174,41 @@
 
 **路径**: `workflow/`
 
-### 开发流程
+### 核心工作流 ✅
 
-- **[AI 驱动开发流程](./workflow/AI_DRIVEN_DEVELOPMENT.md)** ✅
-  - 角色定义
-  - 任务管理
-  - 三端同步策略
-  - 开发规范
+1. **[AI 驱动开发流程](./workflow/AI_DRIVEN_DEVELOPMENT.md)**
+   - 角色定义
+   - 任务管理系统
+   - 三端同步策略
+   - 开发流程规范
 
-### 协作规范
+2. **[任务结构定义](./workflow/TASK_STRUCTURE.md)**
+   - 三端任务分类
+   - 任务命名规范
+   - 任务模板
+   - 任务优先级管理
 
-待创建：
+3. **[高效工作流指南](./workflow/EFFICIENT_WORKFLOW.md)**
+   - 5 步工作流
+   - 实战演练
+   - 三端协同开发
+   - 快速迭代方法
 
-- **collaboration.md** - 协作指南
-- **git_workflow.md** - Git 工作流
+4. **[协作开发指南](./workflow/COLLABORATION_GUIDE.md)** ⭐ **推荐阅读**
+   - 你和 AI 的协作模式
+   - 每日工作节奏
+   - 项目掌控方法
+   - 常见问题解答
+
+5. **[高级 AI 开发模式](./workflow/ADVANCED_AI_DEVELOPMENT.md)**
+   - Agent 驱动开发
+   - 架构先行方法
+   - 持续开发实践
+   - 专业工程师模式
+
+### 待创建 📝
+
+- **git_workflow.md** - Git 工作流规范
 
 > 🤖 **AI 维护** | 👨‍💼 **产品经理协作**
 

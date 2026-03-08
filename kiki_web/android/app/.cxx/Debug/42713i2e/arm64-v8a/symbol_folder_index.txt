@@ -1,0 +1,1 @@
+/Users/qisd/Documents/development/chain/kiki_chain/kiki_web/build/app/intermediates/cxx/Debug/42713i2e/obj/arm64-v8a

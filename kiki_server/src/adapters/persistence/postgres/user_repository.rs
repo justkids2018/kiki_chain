@@ -103,7 +103,7 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn find_by_id(&self, id: &UserId) -> Result<Option<User>> {
-        let row = sqlx::query("SELECT *, role_type::integer as role_type FROM \"users\" WHERE \"id\" = $1")
+        let row = sqlx::query("SELECT * FROM \"users\" WHERE \"id\" = $1")
             .bind(id.to_string())
             .fetch_optional(&self.pool)
             .await
@@ -120,7 +120,7 @@ impl UserRepository for PostgresUserRepository {
 
     async fn find_by_phone_and_pwd(&self, identifier: &str, pwd: &str) -> Result<Option<User>> {
         let row = sqlx::query(
-            "SELECT *, role_type::integer as role_type FROM \"users\" WHERE \"phone\" = $1 AND \"password_hash\" = $2",
+            "SELECT * FROM \"users\" WHERE \"phone\" = $1 AND \"password_hash\" = $2",
         )
         .bind(identifier)
         .bind(pwd)
@@ -138,7 +138,7 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn find_by_phone(&self, phone: &str) -> Result<Option<User>> {
-        let row = sqlx::query("SELECT *, role_type::integer as role_type FROM \"users\" WHERE \"phone\" = $1")
+        let row = sqlx::query("SELECT * FROM \"users\" WHERE \"phone\" = $1")
             .bind(phone)
             .fetch_optional(&self.pool)
             .await
@@ -154,7 +154,7 @@ impl UserRepository for PostgresUserRepository {
     }
 
     async fn find_by_uid(&self, uid: &str) -> Result<Option<User>> {
-        let row = sqlx::query("SELECT *, role_type::integer as role_type FROM \"users\" WHERE \"id\" = $1")
+        let row = sqlx::query("SELECT * FROM \"users\" WHERE \"id\" = $1")
             .bind(uid)
             .fetch_optional(&self.pool)
             .await

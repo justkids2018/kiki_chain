@@ -78,7 +78,7 @@ class SceneListController extends GetxController {
       arguments: {
         'jsonFile': scene.dataFile,
         'imageItem': null,
-        'images': [],
+        'images': <dynamic>[], // 使用空的 dynamic 列表而不是 ImageItem 列表
         'scene': scene, // 传递场景信息用于显示标题等
       },
     );

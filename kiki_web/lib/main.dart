@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kikichain/core/constants/app_constants.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import 'config/app_routes.dart';
 import 'core/app_initializer.dart';
+import 'core/settings/app_settings_service.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/language_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化 GetStorage
+  await GetStorage.init();
 
   // 强制横屏方向
   await SystemChrome.setPreferredOrientations([
@@ -22,9 +27,14 @@ void main() async {
 
   // 初始化应用程序
   await AppInitializer.initialize();
+
   // 全局注册控制器
   Get.put(AuthController());
   Get.put(LanguageController());
+
+  // 初始化全局设置服务
+  Get.put(AppSettingsService());
+
   // 运行应用
   runApp(
     const MyApp(),

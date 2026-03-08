@@ -1,0 +1,66 @@
+// {{entity_name}} Repository Interface
+// 由契约自动生成: {{contract_file}}
+
+import '../entities/{{snake_case_name}}.dart';
+
+/// {{entity_name}} Repository Interface
+///
+/// {{description}}
+abstract class I{{entity_name}}Repository {
+{{#if has_create_api}}
+  /// 创建 {{entity_name}}
+  ///
+  /// 返回创建的 {{entity_name}} 实例
+  /// 如果请求失败则抛出异常
+  Future<{{entity_name}}> create{{entity_name}}({
+{{#each create_fields}}
+    required {{dart_type}} {{camelCase name}},
+{{/each}}
+  });
+
+{{/if}}
+{{#if has_get_api}}
+  /// 根据 ID 获取 {{entity_name}}
+  ///
+  /// 返回指定 ID 的 {{entity_name}} 实例
+  /// 如果未找到或请求失败则抛出异常
+  Future<{{entity_name}}> get{{entity_name}}ById(int id);
+
+{{/if}}
+{{#if has_list_api}}
+  /// 获取 {{entity_name}} 列表
+  ///
+  /// 支持分页查询
+  /// 返回 {{entity_name}} 列表
+  /// 如果请求失败则抛出异常
+  Future<List<{{entity_name}}>> get{{entity_name}}List({
+    int page = 1,
+    int pageSize = 20,
+{{#each query_fields}}
+    {{dart_type}}? {{camelCase name}},
+{{/each}}
+  });
+
+{{/if}}
+{{#if has_update_api}}
+  /// 更新 {{entity_name}}
+  ///
+  /// 返回更新后的 {{entity_name}} 实例
+  /// 如果请求失败则抛出异常
+  Future<{{entity_name}}> update{{entity_name}}({
+    required int id,
+{{#each update_fields}}
+    required {{dart_type}} {{camelCase name}},
+{{/each}}
+  });
+
+{{/if}}
+{{#if has_delete_api}}
+  /// 删除 {{entity_name}}
+  ///
+  /// 返回是否删除成功
+  /// 如果请求失败则抛出异常
+  Future<bool> delete{{entity_name}}(int id);
+
+{{/if}}
+}

@@ -1,0 +1,39 @@
+// {{entity_name}} Repository 接口定义
+// 由契约自动生成: {{contract_file}}
+
+use async_trait::async_trait;
+use crate::core::entities::{{entity_name}};
+use crate::core::errors::Result;
+
+/// {{entity_name}} 仓储接口
+///
+/// 定义了 {{entity_name}} 实体的数据访问方法
+#[async_trait]
+pub trait {{entity_name}}Repository: Send + Sync {
+    /// 保存 {{entity_name}}（创建或更新）
+    async fn save(&self, entity: &{{entity_name}}) -> Result<()>;
+
+    /// 根据 ID 查找 {{entity_name}}
+    async fn find_by_id(&self, id: i64) -> Result<Option<{{entity_name}}}>;
+
+{{#if has_list_api}}
+    /// 分页查询 {{entity_name}} 列表
+    async fn find_all(&self, page: i32, size: i32) -> Result<Vec<{{entity_name}}}>;
+
+    /// 统计总数
+    async fn count(&self) -> Result<i64>;
+{{/if}}
+
+{{#each unique_fields}}
+    /// 根据 {{name}} 查找 {{../entity_name}}
+    async fn find_by_{{snake_case name}}(&self, {{snake_case name}}: &{{rust_type}}) -> Result<Option<{{../entity_name}}}>;
+
+{{/each}}
+    /// 删除 {{entity_name}}
+    async fn delete(&self, id: i64) -> Result<()>;
+
+{{#if has_soft_delete}}
+    /// 软删除 {{entity_name}}
+    async fn soft_delete(&self, id: i64) -> Result<()>;
+{{/if}}
+}

@@ -1,0 +1,28 @@
+/// {{description}}
+class {{EntityName}} {
+{{#each fields}}
+  final {{dart_type}} {{camelCaseName}};
+{{/each}}
+
+  const {{EntityName}}({
+{{#each fields}}
+    {{#if required}}required {{/if}}this.{{camelCaseName}},
+{{/each}}
+  });
+
+  factory {{EntityName}}.fromJson(Map<String, dynamic> json) {
+    return {{EntityName}}(
+{{#each fields}}
+      {{camelCaseName}}: json['{{name}}'],
+{{/each}}
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+{{#each fields}}
+      '{{name}}': {{camelCaseName}},
+{{/each}}
+    };
+  }
+}

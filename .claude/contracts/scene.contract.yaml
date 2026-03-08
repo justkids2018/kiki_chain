@@ -1,0 +1,403 @@
+# Scene 契约定义
+
+# 基本信息
+name: Scene
+description: 学习场景 - 用户可以浏览和学习的互动场景
+version: v1.0
+created_at: 2026-03-04
+status: active
+
+# 数据模型定义
+schema:
+  fields:
+    # 标准字段
+    id:
+      type: integer
+      required: true
+      rust: i64
+      dart: int
+      db: BIGSERIAL PRIMARY KEY
+      description: 场景唯一标识
+
+    # 业务字段
+    name:
+      type: string
+      required: true
+      rust: String
+      dart: String
+      db: VARCHAR(255) NOT NULL
+      description: 场景名称
+      validation:
+        - rule: min_length
+          value: 2
+        - rule: max_length
+          value: 255
+
+    description:
+      type: string
+      required: false
+      rust: Option<String>
+      dart: String?
+      db: TEXT
+      description: 场景描述
+
+    category_id:
+      type: string
+      required: true
+      rust: String
+      dart: String
+      db: VARCHAR(50) NOT NULL
+      description: 所属分类 ID
+      foreign_key:
+        table: scene_categories
+        column: id
+
+    data_file:
+      type: string
+      required: false
+      rust: Option<String>
+      dart: String?
+      db: VARCHAR(500)
+      description: 互动数据文件路径（JSON）
+
+    image_url:
+      type: string
+      required: false
+      rust: Option<String>
+      dart: String?
+      db: VARCHAR(500)
+      description: 场景封面图片 URL
+
+    difficulty_level:
+      type: integer
+      required: true
+      rust: i32
+      dart: int
+      db: INTEGER DEFAULT 1
+      description: 难度等级（1-5）
+      validation:
+        - rule: min
+          value: 1
+        - rule: max
+          value: 5
+
+    is_published:
+      type: boolean
+      required: true
+      rust: bool
+      dart: bool
+      db: BOOLEAN DEFAULT false
+      description: 是否已发布
+
+    sort_order:
+      type: integer
+      required: true
+      rust: i32
+      dart: int
+      db: INTEGER DEFAULT 0
+      description: 排序顺序
+
+    # 标准时间戳
+    created_at:
+      type: datetime
+      required: true
+      rust: DateTime<Utc>
+      dart: DateTime
+      db: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      description: 创建时间
+
+    updated_at:
+      type: datetime
+      required: true
+      rust: DateTime<Utc>
+      dart: DateTime
+      db: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      description: 更新时间
+
+    deleted_at:
+      type: datetime
+      required: false
+      rust: Option<DateTime<Utc>>
+      dart: DateTime?
+      db: TIMESTAMP NULL
+      description: 删除时间（软删除）
+
+# API 定义
+apis:
+  # 移动端 API（用户端 - 只读）
+  mobile:
+    - method: GET
+      path: /api/v1/mobile/scenes/categories
+      description: 获取场景分类列表
+      response: SceneCategory[]
+      auth: User
+      cache: 300  # 缓存 5 分钟
+
+    - method: GET
+      path: /api/v1/mobile/scenes
+      description: 根据分类获取场景列表
+      query_params:
+        - name: category_id
+          type: string
+          required: true
+          description: 分类 ID
+        - name: page
+          type: integer
+          required: false
+          default: 1
+        - name: size
+          type: integer
+          required: false
+          default: 20
+      response: Scene[]
+      auth: User
+
+    - method: GET
+      path: /api/v1/mobile/scenes/{id}
+      description: 获取场景详情
+      path_params:
+        - name: id
+          type: integer
+          description: 场景 ID
+      response: SceneDetail
+      auth: User
+
+    - method: GET
+      path: /api/v1/mobile/scenes/search
+      description: 搜索场景
+      query_params:
+        - name: keyword
+          type: string
+          required: true
+          description: 搜索关键词
+        - name: page
+          type: integer
+          required: false
+          default: 1
+        - name: size
+          type: integer
+          required: false
+          default: 20
+      response: Scene[]
+      auth: User
+
+  # 管理后台 API（管理员 - 完整 CRUD）
+  admin:
+    - method: GET
+      path: /api/v1/admin/scenes
+      description: 获取场景列表（管理后台，带分页和筛选）
+      query_params:
+        - name: page
+          type: integer
+          required: false
+          default: 1
+        - name: size
+          type: integer
+          required: false
+          default: 20
+        - name: category_id
+          type: string
+          required: false
+          description: 按分类筛选
+        - name: keyword
+          type: string
+          required: false
+          description: 搜索关键词
+        - name: is_published
+          type: boolean
+          required: false
+          description: 按发布状态筛选
+      response: Paginated<Scene>
+      auth: Admin
+
+    - method: GET
+      path: /api/v1/admin/scenes/{id}
+      description: 获取场景详情（管理后台）
+      path_params:
+        - name: id
+          type: integer
+      response: Scene
+      auth: Admin
+
+    - method: POST
+      path: /api/v1/admin/scenes
+      description: 创建场景
+      body: CreateSceneRequest
+      body_schema:
+        name: string (required)
+        description: string (optional)
+        category_id: string (required)
+        data_file: string (optional)
+        image_url: string (optional)
+        difficulty_level: integer (required, 1-5)
+        is_published: boolean (required)
+        sort_order: integer (required)
+      response: Scene
+      auth: Admin
+
+    - method: PUT
+      path: /api/v1/admin/scenes/{id}
+      description: 更新场景
+      path_params:
+        - name: id
+          type: integer
+      body: UpdateSceneRequest
+      body_schema:
+        name: string (optional)
+        description: string (optional)
+        category_id: string (optional)
+        data_file: string (optional)
+        image_url: string (optional)
+        difficulty_level: integer (optional, 1-5)
+        is_published: boolean (optional)
+        sort_order: integer (optional)
+      response: Scene
+      auth: Admin
+
+    - method: DELETE
+      path: /api/v1/admin/scenes/{id}
+      description: 删除场景（软删除）
+      path_params:
+        - name: id
+          type: integer
+      response: Success
+      auth: Admin
+
+    - method: POST
+      path: /api/v1/admin/scenes/batch
+      description: 批量导入场景
+      body: BatchImportRequest
+      body_schema:
+        scenes: Scene[] (required)
+      response: BatchImportResult
+      auth: Admin
+
+    - method: PUT
+      path: /api/v1/admin/scenes/{id}/publish
+      description: 发布/取消发布场景
+      path_params:
+        - name: id
+          type: integer
+      body: PublishRequest
+      body_schema:
+        is_published: boolean (required)
+      response: Scene
+      auth: Admin
+
+# 数据库配置
+database:
+  table: scenes
+  indexes:
+    - columns: [category_id]
+      unique: false
+      description: 分类查询索引
+    - columns: [is_published, sort_order]
+      unique: false
+      description: 发布状态和排序复合索引
+    - columns: [created_at]
+      unique: false
+      description: 创建时间索引
+    - columns: [name]
+      unique: false
+      type: gin  # PostgreSQL 全文搜索
+      description: 名称全文搜索索引
+  relations:
+    - table: scene_categories
+      type: belongs_to
+      foreign_key: category_id
+      on_delete: RESTRICT  # 不允许删除有场景的分类
+    - table: scene_items
+      type: has_many
+      foreign_key: scene_id
+      on_delete: CASCADE  # 删除场景时级联删除场景项
+    - table: user_learning_records
+      type: has_many
+      foreign_key: scene_id
+      on_delete: CASCADE
+  soft_delete: true
+  timestamps: true
+
+# 业务规则
+business_rules:
+  - rule: 场景名称必须唯一（同一分类下）
+    validation: UNIQUE(name, category_id) WHERE deleted_at IS NULL
+
+  - rule: 已发布的场景必须有封面图
+    validation: is_published = true THEN image_url IS NOT NULL
+
+  - rule: 难度等级必须在 1-5 之间
+    validation: difficulty_level BETWEEN 1 AND 5
+
+  - rule: 排序顺序不能为负数
+    validation: sort_order >= 0
+
+# 缓存策略
+cache:
+  - key: scenes:category:{category_id}
+    ttl: 300  # 5 分钟
+    invalidate_on:
+      - scene_created
+      - scene_updated
+      - scene_deleted
+
+  - key: scenes:detail:{id}
+    ttl: 600  # 10 分钟
+    invalidate_on:
+      - scene_updated
+      - scene_deleted
+
+# 权限控制
+permissions:
+  mobile:
+    - action: read
+      condition: is_published = true AND deleted_at IS NULL
+  admin:
+    - action: read
+      condition: deleted_at IS NULL
+    - action: create
+      condition: has_role('admin')
+    - action: update
+      condition: has_role('admin')
+    - action: delete
+      condition: has_role('admin')
+
+# 测试数据
+test_data:
+  - name: "日常问候"
+    description: "学习日常问候用语"
+    category_id: "daily_life"
+    difficulty_level: 1
+    is_published: true
+    sort_order: 1
+
+  - name: "餐厅点餐"
+    description: "学习在餐厅点餐的常用语"
+    category_id: "daily_life"
+    difficulty_level: 2
+    is_published: true
+    sort_order: 2
+
+# 迁移说明
+migration_notes: |
+  1. 创建 scenes 表
+  2. 添加外键约束到 scene_categories
+  3. 创建索引（category_id, is_published+sort_order, created_at, name）
+  4. 添加唯一约束（name, category_id）
+  5. 插入测试数据（可选）
+
+# 相关契约
+related_contracts:
+  - scene_category.contract.yaml
+  - scene_item.contract.yaml
+  - user_learning_record.contract.yaml
+
+---
+
+# 变更历史
+changelog:
+  - version: v1.0
+    date: 2026-03-04
+    changes:
+      - 初始版本
+      - 定义基本字段和 API
+      - 添加移动端和管理后台 API

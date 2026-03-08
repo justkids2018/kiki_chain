@@ -1,0 +1,174 @@
+// {{entity_name}} API Service
+// 由契约自动生成: {{contract_file}}
+
+import 'package:dio/dio.dart';
+import '../../domain/entities/{{snake_case_name}}.dart';
+import '../../domain/repositories/i_{{snake_case_name}}_repository.dart';
+import '../../core/network/api_client.dart';
+import '../../core/logging/app_logger.dart';
+
+/// {{entity_name}} API Service
+///
+/// 实现 I{{entity_name}}Repository 接口
+/// 负责与后端 API 通信
+class {{entity_name}}ApiService implements I{{entity_name}}Repository {
+  final ApiClient _apiClient;
+
+  {{entity_name}}ApiService({ApiClient? apiClient})
+      : _apiClient = apiClient ?? ApiClient();
+
+{{#if has_create_api}}
+  @override
+  Future<{{entity_name}}> create{{entity_name}}({
+{{#each create_fields}}
+    required {{dart_type}} {{camelCase name}},
+{{/each}}
+  }) async {
+    try {
+      AppLogger.info('📤 Creating {{entity_name}}');
+
+      final response = await _apiClient.post(
+        '{{create_api_path}}',
+        data: {
+{{#each create_fields}}
+          '{{snake_case name}}': {{camelCase name}},
+{{/each}}
+        },
+      );
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        AppLogger.info('✅ {{entity_name}} created successfully');
+        return {{entity_name}}.fromJson(data);
+      } else {
+        throw Exception(response.data['message'] ?? '创建失败');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('❌ Failed to create {{entity_name}}', e);
+      throw Exception('创建失败: ${e.message}');
+    }
+  }
+
+{{/if}}
+{{#if has_get_api}}
+  @override
+  Future<{{entity_name}}> get{{entity_name}}ById(int id) async {
+    try {
+      AppLogger.info('📥 Fetching {{entity_name}} with id: $id');
+
+      final response = await _apiClient.get('{{get_api_path_template}}/$id');
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        AppLogger.info('✅ {{entity_name}} fetched successfully');
+        return {{entity_name}}.fromJson(data);
+      } else {
+        throw Exception(response.data['message'] ?? '查询失败');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('❌ Failed to fetch {{entity_name}}', e);
+      throw Exception('查询失败: ${e.message}');
+    }
+  }
+
+{{/if}}
+{{#if has_list_api}}
+  @override
+  Future<List<{{entity_name}}>> get{{entity_name}}List({
+    int page = 1,
+    int pageSize = 20,
+{{#each query_fields}}
+    {{dart_type}}? {{camelCase name}},
+{{/each}}
+  }) async {
+    try {
+      AppLogger.info('📥 Fetching {{entity_name}} list (page: $page, size: $pageSize)');
+
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'size': pageSize,
+{{#each query_fields}}
+        if ({{camelCase name}} != null) '{{snake_case name}}': {{camelCase name}},
+{{/each}}
+      };
+
+      final response = await _apiClient.get(
+        '{{list_api_path}}',
+        queryParameters: queryParams,
+      );
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        final items = data['items'] as List;
+
+        AppLogger.info('✅ Fetched ${items.length} {{entity_name}}(s)');
+
+        return items
+            .map((item) => {{entity_name}}.fromJson(item))
+            .toList();
+      } else {
+        throw Exception(response.data['message'] ?? '查询列表失败');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('❌ Failed to fetch {{entity_name}} list', e);
+      throw Exception('查询列表失败: ${e.message}');
+    }
+  }
+
+{{/if}}
+{{#if has_update_api}}
+  @override
+  Future<{{entity_name}}> update{{entity_name}}({
+    required int id,
+{{#each update_fields}}
+    required {{dart_type}} {{camelCase name}},
+{{/each}}
+  }) async {
+    try {
+      AppLogger.info('📤 Updating {{entity_name}} with id: $id');
+
+      final response = await _apiClient.put(
+        '{{update_api_path_template}}/$id',
+        data: {
+{{#each update_fields}}
+          '{{snake_case name}}': {{camelCase name}},
+{{/each}}
+        },
+      );
+
+      if (response.data['success'] == true) {
+        final data = response.data['data'];
+        AppLogger.info('✅ {{entity_name}} updated successfully');
+        return {{entity_name}}.fromJson(data);
+      } else {
+        throw Exception(response.data['message'] ?? '更新失败');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('❌ Failed to update {{entity_name}}', e);
+      throw Exception('更新失败: ${e.message}');
+    }
+  }
+
+{{/if}}
+{{#if has_delete_api}}
+  @override
+  Future<bool> delete{{entity_name}}(int id) async {
+    try {
+      AppLogger.info('🗑️ Deleting {{entity_name}} with id: $id');
+
+      final response = await _apiClient.delete('{{delete_api_path_template}}/$id');
+
+      if (response.data['success'] == true) {
+        AppLogger.info('✅ {{entity_name}} deleted successfully');
+        return true;
+      } else {
+        throw Exception(response.data['message'] ?? '删除失败');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('❌ Failed to delete {{entity_name}}', e);
+      throw Exception('删除失败: ${e.message}');
+    }
+  }
+
+{{/if}}
+}

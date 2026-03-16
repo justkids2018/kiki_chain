@@ -14,10 +14,12 @@ services:
     volumes:
       # 持久化数据
       - hikiki_pgdata:/var/lib/postgresql/data
-      # 自动执行初始化脚本
-      - ../kiki_web/doc/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # 自动执行初始化脚本（完整建表 + 示例数据）
+      - ../docs/database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      # 场景表迁移脚本（补充运行）
+      - ./migrations/002_scene_tables.sql:/docker-entrypoint-initdb.d/02_scene_tables.sql:ro
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - hikiki-network
     healthcheck:
@@ -25,6 +27,34 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # ===================== Rust 后端应用 =====================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hikiki_app_local
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/hikiki_db
+      JWT_SECRET: hikiki-local-jwt-secret-change-in-production
+      LOG_LEVEL: info
+      LOG_COLORS: "true"
+      TZ: Asia/Shanghai
+    ports:
+      - "8081:8081"
+    networks:
+      - hikiki-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
 
 # ===================== 网络 =====================
 networks:
@@ -35,3 +65,4 @@ networks:
 volumes:
   hikiki_pgdata:
     driver: local
+

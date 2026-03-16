@@ -1,57 +1,51 @@
 // 移动端路由模块
-// 提供移动端专用的API端点
-// 需要User或Admin角色认证
-// 创建时间: 2026-01-29
+// 所有路由需要 User 或 Admin 角色认证
 
 use axum::{middleware, routing::get, Router};
 use tracing::info;
 
 use crate::adapters::http::middleware::mobile_auth_middleware;
-use crate::framework::bootstrap::api_paths::ApiPaths;
+use crate::adapters::http::scene::{
+    get_categories_handler, get_recommendations_handler, get_scene_detail_handler,
+    get_scenes_by_category_handler, search_scenes_handler,
+};
+use crate::adapters::http::user::{get_profile_handler, update_profile_handler};
+use crate::framework::bootstrap::{api_paths::ApiPaths, AppState};
 
 /// 创建移动端路由
-///
-/// 所有路由都需要通过mobile_auth_middleware认证
-/// 允许User(role_type=1)和Admin(role_type=2)角色访问
-pub fn create_mobile_routes() -> Router {
+pub fn create_mobile_routes(app_state: AppState) -> Router {
     info!("📱 [移动端模块] 初始化移动端路由");
-    info!("  ├── 用户信息路由: GET {}", ApiPaths::MOBILE_USER_INFO);
-    info!("  └── 个人资料路由: GET {}", ApiPaths::MOBILE_PROFILE);
 
     Router::new()
-        .route(ApiPaths::MOBILE_USER_INFO, get(get_user_info))
-        .route(ApiPaths::MOBILE_PROFILE, get(get_profile))
+        // ===== 用户 =====
+        .route(
+            ApiPaths::MOBILE_USER_PROFILE,
+            get(get_profile_handler)
+                .put(update_profile_handler)
+                .with_state(app_state.user_repository.clone()),
+        )
+        // ===== 场景 =====
+        .route(
+            ApiPaths::MOBILE_SCENE_CATEGORIES,
+            get(get_categories_handler).with_state(app_state.get_categories_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_SCENE_BY_CATEGORY,
+            get(get_scenes_by_category_handler)
+                .with_state(app_state.get_scenes_by_category_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_SCENE_SEARCH,
+            get(search_scenes_handler).with_state(app_state.search_scenes_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_SCENE_RECOMMENDATIONS,
+            get(get_recommendations_handler)
+                .with_state(app_state.get_recommendations_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_SCENE_DETAIL,
+            get(get_scene_detail_handler).with_state(app_state.get_scene_detail_uc.clone()),
+        )
         .layer(middleware::from_fn(mobile_auth_middleware))
-}
-
-/// 获取用户信息
-async fn get_user_info() -> axum::response::Json<serde_json::Value> {
-    use serde_json::json;
-
-    info!("📱 [移动端] 获取用户信息");
-
-    axum::response::Json(json!({
-        "success": true,
-        "message": "移动端用户信息",
-        "data": {
-            "endpoint": "mobile/user/info",
-            "description": "此端点需要User或Admin角色"
-        }
-    }))
-}
-
-/// 获取个人资料
-async fn get_profile() -> axum::response::Json<serde_json::Value> {
-    use serde_json::json;
-
-    info!("📱 [移动端] 获取个人资料");
-
-    axum::response::Json(json!({
-        "success": true,
-        "message": "移动端个人资料",
-        "data": {
-            "endpoint": "mobile/profile",
-            "description": "此端点需要User或Admin角色"
-        }
-    }))
 }

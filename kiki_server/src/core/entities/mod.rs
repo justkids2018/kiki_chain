@@ -1,3 +1,7 @@
+pub mod scene;
+
+pub use scene::{Scene, SceneCategory, SceneDetail, SceneItem};
+
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use uuid::Uuid;

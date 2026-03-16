@@ -1,6 +1,9 @@
 // 端口定义
 // 暴露业务内核所需的外部依赖接口（Repository / Gateway）
 
+pub mod scene_repository;
+pub use scene_repository::SceneRepository;
+
 use async_trait::async_trait;
 
 use crate::core::entities::User;

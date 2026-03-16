@@ -22,16 +22,16 @@ pub fn create_routes(app_state: AppState) -> Router {
     info!("  ├── 🔐 认证模块路由已注册");
 
     // 移动端路由（需要User或Admin角色）
-    let mobile_routes = mobile::create_mobile_routes();
+    let mobile_routes = mobile::create_mobile_routes(app_state.clone());
     info!("  ├── 📱 移动端模块路由已注册");
 
     // 管理端路由（仅需Admin角色）
-    let admin_routes = admin::create_admin_routes();
+    let admin_routes = admin::create_admin_routes(app_state.clone());
     info!("  ├── 🔧 管理端模块路由已注册");
 
     // CORS配置
     let cors_layer = create_cors_layer(config.cors_origins().to_vec());
-    info!("  ├── 🌐 CORS 中间件已配置: {:?}", config.cors_origins());
+    info!("  ├── 🌐 CORS 中间件已配置");
 
     // 合并所有路由
     let app_router = Router::new()
@@ -43,14 +43,24 @@ pub fn create_routes(app_state: AppState) -> Router {
         .layer(middleware::from_fn(request_response_data_log_middleware))
         .layer(cors_layer);
 
-    info!("  ├── ⚠️ 错误处理中间件已配置");
-    info!("  └── 📝 请求响应日志中间件已配置");
     info!("🎯 [主路由] 应用路由初始化完成");
     info!("📋 [路由架构]");
-    info!("   ├── /health (无认证)");
-    info!("   ├── /api/v1/auth/* (无认证)");
-    info!("   ├── /api/v1/mobile/* (User或Admin角色)");
-    info!("   └── /api/v1/admin/* (仅Admin角色)");
+    info!("   ├── GET  /health");
+    info!("   ├── POST /api/v1/auth/login");
+    info!("   ├── POST /api/v1/auth/register");
+    info!("   ├── GET  /api/v1/auth/verify");
+    info!("   ├── POST /api/v1/auth/logout");
+    info!("   ├── GET  /api/v1/mobile/user/profile");
+    info!("   ├── PUT  /api/v1/mobile/user/profile");
+    info!("   ├── GET  /api/v1/mobile/scene/categories");
+    info!("   ├── GET  /api/v1/mobile/scene/categories/:id/scenes");
+    info!("   ├── GET  /api/v1/mobile/scene/:id");
+    info!("   ├── GET  /api/v1/mobile/scene/search");
+    info!("   ├── GET  /api/v1/mobile/scene/recommendations");
+    info!("   ├── GET/POST   /api/v1/admin/scene/categories");
+    info!("   ├── PUT/DELETE /api/v1/admin/scene/categories/:id");
+    info!("   ├── GET/POST   /api/v1/admin/scene/scenes");
+    info!("   └── GET/PUT/DELETE /api/v1/admin/scene/scenes/:id");
 
     app_router
 }
@@ -67,4 +77,3 @@ async fn health_check() -> axum::response::Json<serde_json::Value> {
         "service": "qiqimanyou_server"
     }))
 }
-

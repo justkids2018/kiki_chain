@@ -232,7 +232,7 @@ pub fn create_cors_layer(allowed_origins: Vec<String>) -> CorsLayer {
     match origins {
         Ok(origins) => CorsLayer::new()
             .allow_origin(origins)
-            .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
+            .allow_methods([Method::GET, Method::POST, Method::PUT, Method::PATCH, Method::DELETE])
             .allow_headers([header::CONTENT_TYPE, header::AUTHORIZATION, header::ACCEPT])
             .allow_credentials(true),
         Err(e) => {

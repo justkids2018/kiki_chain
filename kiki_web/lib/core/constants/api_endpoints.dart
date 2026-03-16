@@ -1,57 +1,44 @@
 /// 应用程序API端点
+/// 与 kiki_server 路由保持一致，统一使用 /api/v1/ 前缀
 class ApiEndpoints {
-  // 认证相关
-  // 注意：baseUrl
+  // 健康检查
   static const String health = '/health';
-  static const String authLogin = '/api/auth/login';
-  static const String authRegister = '/api/auth/register';
-  static const String authRefreshToken = '/api/auth/refresh-token';
-  static const String authVerify = '/api/auth/verify';
-  static const String authLogout = '/api/auth/logout';
-  
-  // 用户相关
-  static const String userProfile = '/api/user/profile';
-  static const String userUpdate = '/api/user/update';
-  
-  // 生词相关
-  static const String vocabularyList = '/api/vocabulary/list';
-  static const String vocabularyAdd = '/api/vocabulary/add';
-  static const String vocabularyUpdate = '/api/vocabulary/update';
-  static const String vocabularyDelete = '/api/vocabulary/delete';
-  
-  // 学习相关
-  static const String learningProgress = '/api/learning/progress';
-  static const String learningRecord = '/api/learning/record';
-  
-  // 内容相关
-  static const String contentList = '/api/content/list';
-  static const String contentDetail = '/api/content/detail';
-  
-  // 文件上传
-  static const String uploadFile = '/api/upload/file';
-  static const String uploadImage = '/api/upload/image';
-  
-  // 学生作业模块
-  static const String studentAssignments = '/api/student-assignments';
-  static const String studentTeacherAssignments = '/api/student/teacher';
-  static const String studentConversation = '/api/student/conversation';
-  static const String teacherStudentAssignments = '/api/teachers';
-  
-  // 老师查看学生作业
-  static const String getTeacherStudentAssignments = '/api/teachers/{teacher_uid}/student-assignments';
-  
-  // 静态资源
-  static const String staticFiles = '/api/static/';
-  
+
+  // 认证相关 (无需认证)
+  static const String authLogin = '/api/v1/auth/login';
+  static const String authRegister = '/api/v1/auth/register';
+  static const String authRefreshToken = '/api/v1/auth/refresh-token';
+  static const String authVerify = '/api/v1/auth/verify';
+  static const String authLogout = '/api/v1/auth/logout';
+
+  // 移动端 - 用户
+  static const String userProfile = '/api/v1/mobile/user/profile';
+
+  // 移动端 - 场景
+  static const String sceneCategories = '/api/v1/mobile/scene/categories';
+  static const String sceneSearch = '/api/v1/mobile/scene/search';
+  static const String sceneRecommendations = '/api/v1/mobile/scene/recommendations';
+
   // 工具方法
-  static String userById(int id) => '/api/user/$id';
-  // 用户列表（查询）
-  static const String userList = '/api/user';
-  static String vocabularyById(int id) => '/api/vocabulary/$id';
-  static String contentById(int id) => '/api/content/$id';
-  
-  // 学生作业相关工具方法
-  static String studentAssignmentById(String id) => '/api/student-assignments/$id';
-  static String teacherAssignmentsByTeacherId(String teacherId) => '/api/student/teacher/$teacherId/assignments';
-  static String teacherStudentAssignmentsByTeacherUid(String teacherUid) => '/api/teachers/$teacherUid/student-assignments';
+  static String sceneByCategoryId(String categoryId) =>
+      '/api/v1/mobile/scene/categories/$categoryId/scenes';
+  static String sceneDetail(String sceneId) =>
+      '/api/v1/mobile/scene/$sceneId';
+
+  // 管理端 - 场景分类
+  static const String adminSceneCategories = '/api/v1/admin/scene/categories';
+  static String adminSceneCategoryById(String id) =>
+      '/api/v1/admin/scene/categories/$id';
+
+  // 管理端 - 场景
+  static const String adminScenes = '/api/v1/admin/scene/scenes';
+  static String adminSceneById(String id) => '/api/v1/admin/scene/scenes/$id';
+
+  // 管理端 - 用户
+  static const String adminUsers = '/api/v1/admin/users';
+  static String adminUserById(String id) => '/api/v1/admin/users/$id';
+
+  // 文件上传
+  static const String uploadFile = '/api/v1/upload/file';
+  static const String uploadImage = '/api/v1/upload/image';
 }

@@ -17,7 +17,7 @@ class EnvConfig {
   static AppEnvironment _currentEnv = AppEnvironment.development;
 
   /// 是否使用 Mock 数据（开发阶段使用）
-  static bool _useMock = true;
+  static bool _useMock = false;
 
   /// 获取当前环境
   static AppEnvironment get currentEnv => _currentEnv;

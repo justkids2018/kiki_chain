@@ -21,14 +21,13 @@ class SceneRepositoryImpl implements ISceneRepository {
 
       final response = await _apiService.getCategories();
 
-      // Check response code
-      if (response['code'] != 200) {
+      // 检查响应格式 (服务器返回 {success: true, data: [...]})
+      if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Failed to fetch categories');
       }
 
-      // Parse categories from response
-      final data = response['data'] as Map<String, dynamic>;
-      final categoriesJson = data['categories'] as List<dynamic>;
+      // 解析分类数据 (data 是数组，不是嵌套对象)
+      final categoriesJson = response['data'] as List<dynamic>;
 
       final categories = categoriesJson
           .map((json) => SceneCategory.fromJson(json as Map<String, dynamic>))
@@ -53,14 +52,13 @@ class SceneRepositoryImpl implements ISceneRepository {
 
       final response = await _apiService.getScenesByCategory(categoryId);
 
-      // Check response code
-      if (response['code'] != 200) {
+      // 检查响应格式 (服务器返回 {success: true, data: [...]})
+      if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Failed to fetch scenes');
       }
 
-      // Parse scenes from response
-      final data = response['data'] as Map<String, dynamic>;
-      final scenesJson = data['scenes'] as List<dynamic>;
+      // 解析场景数据 (data 是数组，不是嵌套对象)
+      final scenesJson = response['data'] as List<dynamic>;
 
       final scenes = scenesJson
           .map((json) => Scene.fromJson(json as Map<String, dynamic>))
@@ -89,8 +87,8 @@ class SceneRepositoryImpl implements ISceneRepository {
         throw Exception('Scene not found');
       }
 
-      // Check response code
-      if (response['code'] != 200) {
+      // 检查响应格式 (服务器返回 {success: true, data: {...}})
+      if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Failed to fetch scene detail');
       }
 
@@ -120,12 +118,12 @@ class SceneRepositoryImpl implements ISceneRepository {
         pageSize: pageSize,
       );
 
-      // Check response code
-      if (response['code'] != 200) {
+      // 检查响应格式 (服务器返回 {success: true, data: {...}})
+      if (response['success'] != true) {
         throw Exception(response['message'] ?? 'Failed to search scenes');
       }
 
-      // Parse search results
+      // 解析搜索结果
       final data = response['data'] as Map<String, dynamic>;
       final scenesJson = data['scenes'] as List<dynamic>;
 

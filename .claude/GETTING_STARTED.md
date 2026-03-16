@@ -28,6 +28,7 @@
 
 ### Step 1: 查看现有 Skills
 
+
 ```bash
 # 查看根级 skills（全局协调）
 ls .claude/skills/

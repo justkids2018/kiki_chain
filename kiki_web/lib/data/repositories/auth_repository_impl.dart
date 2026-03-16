@@ -306,7 +306,7 @@ class AuthRepositoryImpl implements IAuthRepository {
   Future<User?> updateUserInfo(Map<String, dynamic> userData) async {
     try {
       final response = await _requestManager.put<Map<String, dynamic>>(
-        ApiEndpoints.userUpdate,
+        ApiEndpoints.userProfile,
         data: userData,
       );
 

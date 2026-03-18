@@ -2,6 +2,7 @@ use sqlx::PgPool;
 use std::sync::Arc;
 
 use crate::adapters::persistence::{PostgresSceneRepository, PostgresUserRepository};
+use crate::adapters::storage::QiniuService;
 use crate::core::ports::{SceneRepository, UserRepository};
 use crate::core::use_cases::{
     AdminSceneUseCase, GetCategoriesUseCase, GetRecommendationsUseCase,
@@ -32,6 +33,9 @@ pub struct AppState {
 
     // 用户仓储（供 profile 接口使用）
     pub user_repository: Arc<dyn UserRepository>,
+
+    // 七牛云存储服务
+    pub qiniu_service: Option<Arc<QiniuService>>,
 }
 
 pub struct DependencyContainer {
@@ -62,6 +66,18 @@ impl DependencyContainer {
         // 管理端用例
         let admin_scene_uc = Arc::new(AdminSceneUseCase::new(scene_repository.clone()));
 
+        // 七牛云服务（可选）
+        let qiniu_service = match QiniuService::from_env() {
+            Ok(service) => {
+                Logger::startup_info("✅ 七牛云服务初始化成功");
+                Some(Arc::new(service))
+            }
+            Err(e) => {
+                Logger::startup_info(&format!("⚠️  七牛云服务未配置: {}", e));
+                None
+            }
+        };
+
         Logger::startup_info("✅ 依赖注入容器初始化完成");
 
         let app_state = AppState {
@@ -75,6 +91,7 @@ impl DependencyContainer {
             get_recommendations_uc,
             admin_scene_uc,
             user_repository,
+            qiniu_service,
         };
 
         Self { app_state }

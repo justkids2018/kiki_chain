@@ -18,9 +18,9 @@ export interface LoginResponse {
 
 export const authAPI = {
   login(params: LoginParams) {
-    return request.post<any, LoginResponse>('/api/v1/auth/login', params)
+    return request.post<any, LoginResponse>('/api/v1/admin/auth/login', params)
   },
-  
+
   logout() {
     return request.post('/api/v1/auth/logout')
   }

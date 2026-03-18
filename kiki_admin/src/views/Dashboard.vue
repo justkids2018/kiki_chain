@@ -104,12 +104,13 @@ const fetchStats = async () => {
       userAPI.list()
     ])
     
+    const scenes = scenesRes.data?.scenes ?? scenesRes.data ?? []
     stats.totalCategories = categoriesRes.data.length
-    stats.totalScenes = scenesRes.data.length
+    stats.totalScenes = scenes.length
     stats.totalUsers = usersRes.data.length
-    stats.totalItems = scenesRes.data.reduce((sum, scene) => sum + scene.item_count, 0)
-    
-    recentScenes.value = scenesRes.data
+    stats.totalItems = scenes.reduce((sum: number, scene: any) => sum + (scene.item_count ?? 0), 0)
+
+    recentScenes.value = [...scenes]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       .slice(0, 5)
     

@@ -36,6 +36,7 @@
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
               :preview-src-list="[row.cover_image]"
+              preview-teleported
             />
           </template>
         </el-table-column>
@@ -47,6 +48,7 @@
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
               :preview-src-list="[row.interactive_image]"
+              preview-teleported
             />
           </template>
         </el-table-column>
@@ -108,10 +110,10 @@
           <el-input v-model="form.name_en" placeholder="如：Spring Couplets" />
         </el-form-item>
         <el-form-item label="封面图" prop="cover_image">
-          <el-input v-model="form.cover_image" placeholder="图片 URL" />
+          <ImageUpload v-model="form.cover_image" folder="scenes" />
         </el-form-item>
         <el-form-item label="互动大图" prop="interactive_image">
-          <el-input v-model="form.interactive_image" placeholder="互动场景大图 URL" />
+          <ImageUpload v-model="form.interactive_image" folder="scenes" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" :rows="2" />
@@ -175,6 +177,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { sceneAPI, type Scene } from '../api/scenes'
 import { categoryAPI, type Category } from '../api/categories'
+import ImageUpload from '../components/ImageUpload.vue'
 
 const router = useRouter()
 const loading = ref(false)

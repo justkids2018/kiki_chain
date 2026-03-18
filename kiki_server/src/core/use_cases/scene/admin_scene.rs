@@ -31,24 +31,28 @@ pub struct CreateSceneCommand {
     pub id: String,
     pub category_id: String,
     pub name: String,
+    pub name_en: Option<String>,
     pub cover_image: Option<String>,
     pub interactive_image: Option<String>,
     pub description: Option<String>,
+    pub context: Option<String>,
     pub display_order: i32,
     pub is_new: bool,
-    pub items_data: Option<serde_json::Value>, // JSON 数组
+    pub items_data: Option<serde_json::Value>,
 }
 
 pub struct UpdateSceneCommand {
     pub id: String,
     pub name: Option<String>,
+    pub name_en: Option<String>,
     pub cover_image: Option<String>,
     pub interactive_image: Option<String>,
     pub description: Option<String>,
+    pub context: Option<String>,
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
     pub is_visible: Option<bool>,
-    pub items_data: Option<serde_json::Value>, // JSON 数组
+    pub items_data: Option<serde_json::Value>,
 }
 
 /// 管理端场景用例（分类和场景的 CRUD）
@@ -163,9 +167,11 @@ impl AdminSceneUseCase {
             id: cmd.id,
             category_id: cmd.category_id,
             name: cmd.name,
+            name_en: cmd.name_en,
             cover_image: cmd.cover_image,
             interactive_image: cmd.interactive_image,
             description: cmd.description,
+            context: cmd.context,
             item_count,
             display_order: cmd.display_order,
             is_new: cmd.is_new,
@@ -184,9 +190,11 @@ impl AdminSceneUseCase {
         let mut scene = detail.scene;
 
         if let Some(name) = cmd.name { scene.name = name; }
+        if let Some(name_en) = cmd.name_en { scene.name_en = Some(name_en); }
         if let Some(img) = cmd.cover_image { scene.cover_image = Some(img); }
         if let Some(img) = cmd.interactive_image { scene.interactive_image = Some(img); }
         if let Some(desc) = cmd.description { scene.description = Some(desc); }
+        if let Some(ctx) = cmd.context { scene.context = Some(ctx); }
         if let Some(order) = cmd.display_order { scene.display_order = order; }
         if let Some(is_new) = cmd.is_new { scene.is_new = is_new; }
         if let Some(visible) = cmd.is_visible { scene.is_visible = visible; }

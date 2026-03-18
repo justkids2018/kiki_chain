@@ -17,6 +17,25 @@
             <span style="font-size: 24px">{{ row.icon }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="cover_image" label="封面" width="100" align="center">
+          <template #default="{ row }">
+            <el-image
+              v-if="row.cover_image"
+              :src="row.cover_image"
+              :preview-src-list="[row.cover_image]"
+              fit="cover"
+              style="width: 60px; height: 60px; border-radius: 8px"
+              preview-teleported
+            >
+              <template #error>
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: #f5f7fa; color: #909399; font-size: 12px">
+                  无图
+                </div>
+              </template>
+            </el-image>
+            <span v-else style="color: #909399; font-size: 12px">未设置</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="名称" width="150" />
         <el-table-column prop="description" label="描述" />
         <el-table-column prop="order" label="排序" width="80" align="center" />
@@ -51,7 +70,7 @@
           <el-input v-model="form.icon" placeholder="Emoji 图标，如：🎉" maxlength="2" />
         </el-form-item>
         <el-form-item label="封面图" prop="cover_image">
-          <el-input v-model="form.cover_image" placeholder="图片 URL" />
+          <ImageUpload v-model="form.cover_image" folder="categories" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" :rows="3" />
@@ -77,6 +96,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { categoryAPI, type Category } from '../api/categories'
+import ImageUpload from '../components/ImageUpload.vue'
 
 const loading = ref(false)
 const categories = ref<Category[]>([])

@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # axum - 升级到最新版本 0.8.4
-axum = { version = "0.8.4", features = ["macros"] }
+axum = { version = "0.8.4", features = ["macros", "multipart"] }
 tokio = { version = "1.39.1", features = ["full"] }
 
 # serde
@@ -58,6 +58,10 @@ regex = "1.10.0"
 strum_macros = "0.26.4"
 uuid = { version = "1.4.0", features = ["v4", "fast-rng", "serde"] }
 bytes = "1.10.1"
+
+# qiniu cloud storage
+reqwest = { version = "0.12", features = ["json", "multipart"] }
+qiniu-sdk = { version = "0.2", features = ["upload-token"] }
 
 # 强制使用兼容版本避免edition2024问题
 [dependencies.base64ct]

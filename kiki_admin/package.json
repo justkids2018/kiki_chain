@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
+    "@types/crypto-js": "^4.2.2",
     "axios": "^1.13.6",
+    "crypto-js": "^4.2.0",
     "element-plus": "^2.13.5",
     "pinia": "^3.0.4",
+    "qiniu-js": "^3.4.3",
     "vue": "^3.5.30",
     "vue-router": "^5.0.3"
   },

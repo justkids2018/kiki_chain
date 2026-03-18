@@ -57,10 +57,40 @@ class CategoryCard extends StatelessWidget {
 
   /// 构建封面图片
   Widget _buildCoverImage() {
+    // 如果封面图片为空或无效，直接显示占位符
+    if (category.coverImage.isEmpty ||
+        (!category.coverImage.startsWith('http://') &&
+         !category.coverImage.startsWith('https://'))) {
+      return Container(
+        color: _getCategoryColor(),
+        child: Center(
+          child: Text(
+            category.icon,
+            style: const TextStyle(fontSize: 120),
+          ),
+        ),
+      );
+    }
+
     return Positioned.fill(
-      child: Image.asset(
+      child: Image.network(
         category.coverImage,
         fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: _getCategoryColor().withValues(alpha: 0.3),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
         errorBuilder: (context, error, stackTrace) {
           // 如果图片加载失败，显示占位符
           return Container(

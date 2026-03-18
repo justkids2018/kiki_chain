@@ -19,6 +19,7 @@
             fit="cover"
             style="width: 80px; height: 80px; border-radius: 4px"
             :preview-src-list="[sceneDetail.cover_image]"
+            preview-teleported
           />
         </el-descriptions-item>
         <el-descriptions-item label="互动大图">
@@ -28,6 +29,7 @@
             fit="cover"
             style="width: 80px; height: 80px; border-radius: 4px"
             :preview-src-list="[sceneDetail.interactive_image]"
+            preview-teleported
           />
         </el-descriptions-item>
         <el-descriptions-item label="描述" :span="2">
@@ -73,6 +75,7 @@
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
               :preview-src-list="[row.image_url]"
+              preview-teleported
             />
           </template>
         </el-table-column>

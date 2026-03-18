@@ -46,9 +46,11 @@ impl PostgresSceneRepository {
             id: row.get("id"),
             category_id: row.get("category_id"),
             name: row.get("name"),
+            name_en: row.try_get("name_en").ok(),
             cover_image: row.try_get("cover_image").ok(),
             interactive_image: row.try_get("interactive_image").ok(),
             description: row.try_get("description").ok(),
+            context: row.try_get("context").ok(),
             item_count: row.try_get("item_count").unwrap_or(0),
             display_order: row.try_get("display_order").unwrap_or(0),
             is_new: row.try_get("is_new").unwrap_or(false),
@@ -258,15 +260,17 @@ impl SceneRepository for PostgresSceneRepository {
         sqlx::query(
             r#"
             INSERT INTO scenes
-                (id, category_id, name, cover_image, interactive_image, description,
+                (id, category_id, name, name_en, cover_image, interactive_image, description, context,
                  item_count, display_order, is_new, is_visible, items_data, created_at, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
             ON CONFLICT (id) DO UPDATE SET
                 category_id = EXCLUDED.category_id,
                 name = EXCLUDED.name,
+                name_en = EXCLUDED.name_en,
                 cover_image = EXCLUDED.cover_image,
                 interactive_image = EXCLUDED.interactive_image,
                 description = EXCLUDED.description,
+                context = EXCLUDED.context,
                 item_count = EXCLUDED.item_count,
                 display_order = EXCLUDED.display_order,
                 is_new = EXCLUDED.is_new,
@@ -278,9 +282,11 @@ impl SceneRepository for PostgresSceneRepository {
         .bind(&scene.id)
         .bind(&scene.category_id)
         .bind(&scene.name)
+        .bind(&scene.name_en)
         .bind(&scene.cover_image)
         .bind(&scene.interactive_image)
         .bind(&scene.description)
+        .bind(&scene.context)
         .bind(scene.item_count)
         .bind(scene.display_order)
         .bind(scene.is_new)

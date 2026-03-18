@@ -16,15 +16,8 @@ use crate::framework::bootstrap::{api_paths::ApiPaths, AppState};
 pub fn create_mobile_routes(app_state: AppState) -> Router {
     info!("📱 [移动端模块] 初始化移动端路由");
 
-    Router::new()
-        // ===== 用户 =====
-        .route(
-            ApiPaths::MOBILE_USER_PROFILE,
-            get(get_profile_handler)
-                .put(update_profile_handler)
-                .with_state(app_state.user_repository.clone()),
-        )
-        // ===== 场景 =====
+    // 公开路由（无需认证）
+    let public_routes = Router::new()
         .route(
             ApiPaths::MOBILE_SCENE_CATEGORIES,
             get(get_categories_handler).with_state(app_state.get_categories_uc.clone()),
@@ -46,6 +39,17 @@ pub fn create_mobile_routes(app_state: AppState) -> Router {
         .route(
             ApiPaths::MOBILE_SCENE_DETAIL,
             get(get_scene_detail_handler).with_state(app_state.get_scene_detail_uc.clone()),
+        );
+
+    // 需要认证的路由
+    let protected_routes = Router::new()
+        .route(
+            ApiPaths::MOBILE_USER_PROFILE,
+            get(get_profile_handler)
+                .put(update_profile_handler)
+                .with_state(app_state.user_repository.clone()),
         )
-        .layer(middleware::from_fn(mobile_auth_middleware))
+        .layer(middleware::from_fn(mobile_auth_middleware));
+
+    public_routes.merge(protected_routes)
 }

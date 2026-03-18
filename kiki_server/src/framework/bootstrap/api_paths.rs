@@ -27,6 +27,9 @@ impl ApiPaths {
     // 管理端路由前缀
     pub const ADMIN_PREFIX: &'static str = "/api/v1/admin";
 
+    // 管理端 - 认证（无需认证）
+    pub const ADMIN_LOGIN: &'static str = "/api/v1/admin/auth/login";
+
     // 管理端 - 用户
     pub const ADMIN_USERS: &'static str = "/api/v1/admin/users";
     pub const ADMIN_USER_DETAIL: &'static str = "/api/v1/admin/users/{id}";
@@ -39,4 +42,8 @@ impl ApiPaths {
     // 管理端 - 场景
     pub const ADMIN_SCENES: &'static str = "/api/v1/admin/scene/scenes";
     pub const ADMIN_SCENE_DETAIL: &'static str = "/api/v1/admin/scene/scenes/{id}";
+
+    // 管理端 - 文件上传
+    pub const ADMIN_UPLOAD_TOKEN: &'static str = "/api/v1/admin/upload/token";
+    pub const ADMIN_UPLOAD_IMAGE: &'static str = "/api/v1/admin/upload/image";
 }

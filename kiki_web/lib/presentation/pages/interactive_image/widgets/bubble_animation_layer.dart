@@ -178,8 +178,7 @@ class _BubbleAnimationLayerState extends State<BubbleAnimationLayer>
   Widget build(BuildContext context) {
     return Positioned.fill(
       child: GestureDetector(
-        onLongPressDown: (details) {
-          // 长按时在按下位置创建气泡
+        onTapDown: (details) {
           _createBubbles(details.localPosition);
         },
         child: Stack(

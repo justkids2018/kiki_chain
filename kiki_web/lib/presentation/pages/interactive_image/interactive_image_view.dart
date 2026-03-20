@@ -24,7 +24,28 @@ class InteractiveImageView extends StatefulWidget {
   State<InteractiveImageView> createState() => _InteractiveImageViewState();
 }
 
-class _InteractiveImageViewState extends State<InteractiveImageView> {
+class _InteractiveImageViewState extends State<InteractiveImageView>
+    with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     AppLogger.debug(
@@ -169,39 +190,43 @@ class _InteractiveImageViewState extends State<InteractiveImageView> {
     final radius = min(width, height) / 2;
 
     return Positioned(
-      left: centerX - radius - 10, // Extra space for glow
+      left: centerX - radius - 10,
       top: centerY - radius - 10,
       width: (radius + 10) * 2,
       height: (radius + 10) * 2,
       child: GestureDetector(
-        onTap: () {
-          // 只触发回调，气泡由上层的全局 GestureDetector 处理
-          widget.onRegionTap(region);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              center: Alignment.center,
-              radius: 0.5,
-              colors: [
-                Colors.transparent, // Transparent center
-                Colors.transparent, // Keep center transparent
-                Colors.blue.withOpacity(0.3), // Start glow at edge
-                Colors.blue.withOpacity(0.5), // Stronger glow
-                Colors.blue.withOpacity(0.2), // Fade out
-              ],
-              stops: const [0.0, 0.7, 0.85, 0.95, 1.0],
-            ),
-            boxShadow: [
-              // Outer glow for more visibility
-              BoxShadow(
-                color: Colors.blue.withOpacity(0.4),
-                blurRadius: 15,
-                spreadRadius: 3,
+        onTap: () => widget.onRegionTap(region),
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _pulseAnimation.value,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.yellow.withOpacity(0.55),
+                  border: Border.all(
+                    color: Colors.orange.withOpacity(0.9),
+                    width: 3,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withOpacity(0.5),
+                      blurRadius: 12,
+                      spreadRadius: 4,
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.touch_app,
+                    color: Colors.orange,
+                    size: 28,
+                  ),
+                ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

@@ -23,11 +23,10 @@
 
 ### I. 📌 核心配置与色调
 
-* **[SCENE_CATEGORY]**: 数字认知 (Number Recognition)
+* **[SCENE_CATEGORY]**: 数字学习 (Number Recognition)
 * **[IMAGE_FORMAT]**: PNG, Portrait 7:9 Aspect Ratio
 * **[OUTPUT_RESOLUTION]**: 350 x 450 像素
 * **🎨 风格基调**: 精致 3D 渲染 (Detailed 3D Rendering)。色彩清新、明亮、教育感强。
-* **➡️ [COLOR_PALETTE]**: 薄荷绿/天蓝色/柠檬黄/淡紫色
 * **💡 视角与灯光**: 正面视角或微俯视角。灯光清晰、明亮，强调数字的立体感。
 
 ---

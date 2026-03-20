@@ -139,23 +139,6 @@ class CategoryCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 图标
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF00C37D).withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(
-                  child: Text(
-                    category.icon,
-                    style: const TextStyle(fontSize: 32),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
               // 分类名称
               Text(
                 category.name,

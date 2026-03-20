@@ -1,37 +1,37 @@
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../../core/network/request_manager.dart';
+import '../../core/network/network_client.dart';
 import '../../core/constants/api_endpoints.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/services/app_services.dart';
 import '../../core/exceptions/app_exceptions.dart';
-import '../../core/utils/api_response_handler.dart';
-import '../../utils/crypto_utils.dart';
 import '../../config/env_config.dart';
 import '../services/api/auth_api_service.dart';
 
 /// Auth 模块的数据层实现
+///
+/// 遵循项目统一规范：直接解析 response['success'] / response['data']，
+/// 密码使用明文（与后端存储格式一致）。
 class AuthRepositoryImpl implements IAuthRepository {
-  // 直接从 AppServices 获取依赖，保持现有单例结构
   final RequestManager _requestManager = RequestManager.instance;
-  final AuthApiService _authApiService = AuthApiService();
+  final AuthApiService _authApiService = AuthApiService(
+    httpClient: NetworkClient.instance.httpClient,
+  );
 
-  // 便捷访问器
   get _localStorage => AppServices.instance.localStorage;
 
   @override
   Future<bool> checkServerHealth() async {
     try {
       AppLogger.info('🏥 检查服务器健康状态...');
-      final response = await _requestManager
-          .get<Map<String, dynamic>>(ApiEndpoints.health);
-      final result = ApiResponseHandler.handleSafe<dynamic>(response);
-
-      if (result.isSuccess) {
+      final response =
+          await _requestManager.get<Map<String, dynamic>>(ApiEndpoints.health);
+      if (response['success'] == true) {
         AppLogger.info('✅ 服务器状态正常');
         return true;
       }
-      AppLogger.warning('⚠️ 服务器健康检查失败: ${result.message}');
+      AppLogger.warning('⚠️ 服务器健康检查失败: ${response['message']}');
       return false;
     } catch (e) {
       AppLogger.warning('⚠️ 服务器不可用: $e');
@@ -44,79 +44,67 @@ class AuthRepositoryImpl implements IAuthRepository {
     try {
       AppLogger.info('🔐 尝试登录: $phone');
 
-      // Mock模式下使用明文密码，真实API使用SHA256加密
-      final passwordToSend = EnvConfig.useMock
-          ? password
-          : CryptoUtils.sha256Encrypt(password);
+      // 明文密码（与后端数据库存储格式一致）
+      final passwordToSend = EnvConfig.useMock ? password : password;
 
-      // 调用登录接口（使用 AuthApiService，自动处理 Mock/真实 API）
       final response = await _authApiService.login(phone, passwordToSend);
 
       AppLogger.info('📡 登录响应: $response');
 
-      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      if (response['success'] != true) {
+        throw ApiResponseException(
+          message: response['message']?.toString() ?? '登录失败',
+          statusCode: 401,
+        );
+      }
 
-      // 提取用户数据和token
-      final userData = data['user'] as Map<String, dynamic>?;
+      // 后端 data 结构：{uid, name, email, phone, token, role_type, is_vip, ...}
+      final data = response['data'] as Map<String, dynamic>;
       final token = data['token'] as String?;
-      final expiresAt = data['expiresAt'] as String?;
 
-      if (userData == null || token == null) {
+      if (token == null) {
         throw const ApiResponseException(
-          message: '登录响应数据格式错误',
+          message: '登录响应缺少 token',
           statusCode: 500,
         );
       }
 
-      // 存储token和过期时间
       await _localStorage.setAccessToken(token);
-      if (expiresAt != null) {
-        await _localStorage.setString('token_expires_at', expiresAt);
-      }
       _requestManager.setAuthToken(token);
 
-      // 创建用户对象
       final user = User(
-        id: userData['id'] as String? ?? '',
-        phone: userData['phone'] as String? ?? '',
-        nickname: userData['nickname'] as String? ?? '',
-        avatar: userData['avatar'] as String?,
-        createdAt: userData['createdAt'] != null
-            ? DateTime.parse(userData['createdAt'])
-            : DateTime.now(),
-        lastLoginAt: userData['lastLoginAt'] != null
-            ? DateTime.parse(userData['lastLoginAt'])
-            : DateTime.now(),
+        id: data['uid'] as String? ?? '',
+        phone: data['phone'] as String? ?? '',
+        nickname: data['name'] as String? ?? '',
+        avatar: null,
+        createdAt: DateTime.now(),
+        lastLoginAt: DateTime.now(),
       );
 
-      // 存储用户信息
       await _localStorage.setString('user_id', user.id);
       await _localStorage.setUserInfo(user.toJson());
 
       AppLogger.info('✅ 用户登录成功: ${user.nickname}');
       return user;
-    } catch (e) {
-      AppLogger.error('💥 登录过程出错', e);
-
-      if (e is ApiResponseException) {
-        rethrow;
-      }
-
-      throw ApiResponseHandler.createException(e);
+    } catch (e, stackTrace) {
+      AppLogger.error('💥 登录过程出错', e, stackTrace);
+      if (e is ApiResponseException) rethrow;
+      throw ApiResponseException(
+        message: e.toString(),
+        statusCode: 500,
+      );
     }
   }
 
   @override
-  Future<User?> register(String phone, String password, {String? nickname}) async {
+  Future<User?> register(String phone, String password,
+      {String? nickname}) async {
     try {
       AppLogger.info('📝 尝试注册: $phone');
 
-      // Mock模式下使用明文密码，真实API使用SHA256加密
-      final passwordToSend = EnvConfig.useMock
-          ? password
-          : CryptoUtils.sha256Encrypt(password);
+      // 明文密码
+      final passwordToSend = password;
 
-      // 调用注册接口（使用 AuthApiService，自动处理 Mock/真实 API）
       final response = await _authApiService.register(
         phone,
         passwordToSend,
@@ -125,55 +113,53 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       AppLogger.info('📡 注册响应: $response');
 
-      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
-
-      // 提取用户数据和token
-      final userData = data['user'] as Map<String, dynamic>?;
-      final token = data['token'] as String?;
-      final expiresAt = data['expiresAt'] as String?;
-
-      if (userData == null || token == null) {
-        throw const ApiResponseException(
-          message: '注册响应数据格式错误',
-          statusCode: 500,
+      if (response['success'] != true) {
+        throw ApiResponseException(
+          message: response['message']?.toString() ?? '注册失败',
+          statusCode: 400,
         );
       }
 
-      // 存储token和过期时间
-      await _localStorage.setAccessToken(token);
-      if (expiresAt != null) {
-        await _localStorage.setString('token_expires_at', expiresAt);
-      }
-      _requestManager.setAuthToken(token);
+      // 注册响应 data：{uid, name, email, phone, role_type, is_vip}（无 token）
+      final data = response['data'] as Map<String, dynamic>;
 
-      // 创建用户对象
       final user = User(
-        id: userData['id'] as String? ?? '',
-        phone: userData['phone'] as String? ?? '',
-        nickname: userData['nickname'] as String? ?? '',
-        avatar: userData['avatar'] as String?,
-        createdAt: userData['createdAt'] != null
-            ? DateTime.parse(userData['createdAt'])
-            : DateTime.now(),
-        lastLoginAt: userData['lastLoginAt'] != null
-            ? DateTime.parse(userData['lastLoginAt'])
-            : DateTime.now(),
+        id: data['uid'] as String? ?? '',
+        phone: data['phone'] as String? ?? '',
+        nickname: data['name'] as String? ?? '',
+        avatar: null,
+        createdAt: DateTime.now(),
+        lastLoginAt: DateTime.now(),
       );
 
-      // 存储用户信息
       await _localStorage.setString('user_id', user.id);
       await _localStorage.setUserInfo(user.toJson());
 
-      AppLogger.info('✅ 用户注册成功: ${user.nickname}');
-      return user;
-    } catch (e) {
-      AppLogger.error('💥 注册过程出错', e);
-
-      if (e is ApiResponseException) {
-        rethrow;
+      // 注册成功后自动登录以获取 token
+      try {
+        final loginResponse =
+            await _authApiService.login(phone, passwordToSend);
+        if (loginResponse['success'] == true) {
+          final loginData = loginResponse['data'] as Map<String, dynamic>;
+          final token = loginData['token'] as String?;
+          if (token != null) {
+            await _localStorage.setAccessToken(token);
+            _requestManager.setAuthToken(token);
+          }
+        }
+      } catch (_) {
+        // 自动登录失败不影响注册成功结果
       }
 
-      throw ApiResponseHandler.createException(e);
+      AppLogger.info('✅ 用户注册成功: ${user.nickname}');
+      return user;
+    } catch (e, stackTrace) {
+      AppLogger.error('💥 注册过程出错', e, stackTrace);
+      if (e is ApiResponseException) rethrow;
+      throw ApiResponseException(
+        message: e.toString(),
+        statusCode: 500,
+      );
     }
   }
 
@@ -181,27 +167,17 @@ class AuthRepositoryImpl implements IAuthRepository {
   Future<bool> verifyToken() async {
     try {
       final token = await _localStorage.getAccessToken();
-      if (token == null || token.isEmpty) {
-        return false;
-      }
+      if (token == null || token.isEmpty) return false;
 
-      final response = await _requestManager.get<Map<String, dynamic>>(
-        ApiEndpoints.authVerify,
-      );
+      final response = await _requestManager
+          .get<Map<String, dynamic>>(ApiEndpoints.authVerify);
 
-      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      if (response['success'] != true) return false;
 
-      final valid = data['valid'] as bool? ?? false;
-      if (valid) {
-        final expiresAt = data['expiresAt'] as String?;
-        if (expiresAt != null) {
-          await _localStorage.setString('token_expires_at', expiresAt);
-        }
-        AppLogger.info('✅ Token验证成功');
-      } else {
-        AppLogger.warning('⚠️ Token已失效');
-      }
+      final data = response['data'] as Map<String, dynamic>?;
+      final valid = data?['valid'] as bool? ?? false;
 
+      AppLogger.info(valid ? '✅ Token验证成功' : '⚠️ Token已失效');
       return valid;
     } catch (e) {
       AppLogger.error('Token验证失败', e);
@@ -212,36 +188,25 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<String?> refreshAccessToken() async {
     try {
-      final response = await _requestManager.post<Map<String, dynamic>>(
-        ApiEndpoints.authRefreshToken,
-      );
+      final response = await _requestManager
+          .post<Map<String, dynamic>>(ApiEndpoints.authRefreshToken);
 
-      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      if (response['success'] != true) return null;
 
-      final newToken = data['token'] as String?;
-      final expiresAt = data['expiresAt'] as String?;
+      final data = response['data'] as Map<String, dynamic>?;
+      final newToken = data?['token'] as String?;
 
       if (newToken != null) {
         await _localStorage.setAccessToken(newToken);
         _requestManager.setAuthToken(newToken);
-
-        if (expiresAt != null) {
-          await _localStorage.setString('token_expires_at', expiresAt);
-        }
-
         AppLogger.info('✅ Token刷新成功');
-        return newToken;
       }
 
-      return null;
+      return newToken;
     } catch (e) {
       AppLogger.error('Token刷新失败', e);
-
-      if (e is ApiResponseException) {
-        rethrow;
-      }
-
-      throw ApiResponseHandler.createException(e);
+      if (e is ApiResponseException) rethrow;
+      throw ApiResponseException(message: e.toString(), statusCode: 500);
     }
   }
 
@@ -249,23 +214,15 @@ class AuthRepositoryImpl implements IAuthRepository {
   Future<bool> logout() async {
     try {
       final token = await _localStorage.getAccessToken();
-
       if (token != null) {
-        // 调用服务器登出接口并校验响应
-        final response = await _requestManager
+        await _requestManager
             .post<Map<String, dynamic>>(ApiEndpoints.authLogout);
-        ApiResponseHandler.handle<dynamic>(response);
       }
-
-      // 清除本地认证数据
       await _localStorage.clearAuthData();
-
       AppLogger.info('User logged out successfully');
       return true;
     } catch (e) {
       AppLogger.error('Logout failed', e);
-
-      // 即使服务器登出失败，也要清除本地数据
       await _localStorage.clearAuthData();
       return false;
     }
@@ -275,23 +232,20 @@ class AuthRepositoryImpl implements IAuthRepository {
   Future<User?> getCurrentUser() async {
     try {
       final userInfo = _localStorage.getUserInfo();
+      if (userInfo != null) return User.fromJson(userInfo);
 
-      if (userInfo != null) {
-        return User.fromJson(userInfo);
-      }
-
-      // 如果本地没有用户信息，尝试从服务器获取
       final token = await _localStorage.getAccessToken();
       if (token != null) {
         final response = await _requestManager
             .get<Map<String, dynamic>>(ApiEndpoints.userProfile);
-        final data =
-            ApiResponseHandler.handle<Map<String, dynamic>?>(response);
 
-        if (data != null && data.isNotEmpty) {
-          final user = User.fromJson(data);
-          await _localStorage.setUserInfo(user.toJson());
-          return user;
+        if (response['success'] == true) {
+          final data = response['data'] as Map<String, dynamic>?;
+          if (data != null && data.isNotEmpty) {
+            final user = User.fromJson(data);
+            await _localStorage.setUserInfo(user.toJson());
+            return user;
+          }
         }
       }
 
@@ -310,13 +264,17 @@ class AuthRepositoryImpl implements IAuthRepository {
         data: userData,
       );
 
-      final data =
-          ApiResponseHandler.handle<Map<String, dynamic>?>(response);
+      if (response['success'] != true) {
+        throw ApiResponseException(
+          message: response['message']?.toString() ?? '更新失败',
+          statusCode: 400,
+        );
+      }
 
+      final data = response['data'] as Map<String, dynamic>?;
       if (data != null && data.isNotEmpty) {
         final user = User.fromJson(data);
         await _localStorage.setUserInfo(user.toJson());
-
         AppLogger.info('User info updated successfully');
         return user;
       }
@@ -324,7 +282,8 @@ class AuthRepositoryImpl implements IAuthRepository {
       return null;
     } catch (e) {
       AppLogger.error('Failed to update user info', e);
-      throw ApiResponseHandler.createException(e);
+      if (e is ApiResponseException) rethrow;
+      throw ApiResponseException(message: e.toString(), statusCode: 500);
     }
   }
 
@@ -335,14 +294,10 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<String?> getAccessToken() async {
-    return await _localStorage.getAccessToken();
-  }
+  Future<String?> getAccessToken() async => await _localStorage.getAccessToken();
 
   @override
-  Future<String?> getRefreshToken() async {
-    return await _localStorage.getRefreshToken();
-  }
+  Future<String?> getRefreshToken() async => await _localStorage.getRefreshToken();
 
   @override
   Future<void> clearAuthData() async {

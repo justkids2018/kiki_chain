@@ -222,11 +222,24 @@ class InteractiveImageController extends GetxController {
     }
   }
 
+  bool _isSpeaking = false;
+
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
+    // Update UI immediately for instant visual feedback
     activeRegion.value = region;
     _restartCharacterAnimation(region.text);
-    await _ttsService.speakRegion(region);
+
+    // If already speaking, stop first then speak new region
+    if (_isSpeaking) {
+      await _ttsService.stop();
+    }
+    _isSpeaking = true;
+    try {
+      await _ttsService.speakRegion(region);
+    } finally {
+      _isSpeaking = false;
+    }
   }
 
   /// Speak only the pinyin pronunciation

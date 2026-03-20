@@ -8,6 +8,10 @@ class TextToSpeechService {
   final FlutterTts _tts = FlutterTts();
   AppSettingsService? _settings;
 
+  // Cache current language/rate to avoid redundant system calls
+  String? _currentLanguage;
+  double? _currentRate;
+
   TextToSpeechService();
 
   /// Initialize TTS engine
@@ -49,13 +53,14 @@ class TextToSpeechService {
   /// Speak the region's Chinese text and English text
   Future<void> speakRegion(InteractiveRegion region) async {
     try {
-      // Speak Chinese with optimized settings
+      await _tts.stop();
       await _setChineseSettings();
       await _tts.speak(region.text);
 
-      // Speak English with optimized settings
-      await _setEnglishSettings();
-      await _tts.speak(region.textEnglish);
+      if (region.textEnglish.isNotEmpty) {
+        await _setEnglishSettings();
+        await _tts.speak(region.textEnglish);
+      }
     } catch (e) {
       AppLogger.error('TTS error', e);
     }
@@ -85,41 +90,58 @@ class TextToSpeechService {
     }
   }
 
-  /// 设置中文语音参数（优化中文发音）
+  /// 设置中文语音参数（优化中文发音，缓存避免重复系统调用）
   Future<void> _setChineseSettings() async {
     try {
-      // Try to get settings service, fallback to default if not available
       _settings ??= Get.isRegistered<AppSettingsService>()
           ? Get.find<AppSettingsService>()
           : null;
 
       final rates = _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+      final rate = rates['chinese']!;
 
-      await _tts.setLanguage("zh-CN");
-      await _tts.setSpeechRate(rates['chinese']!);
-      await _tts.setVolume(1.0);
-      await _tts.setPitch(1.0);
+      if (_currentLanguage != 'zh-CN') {
+        await _tts.setLanguage("zh-CN");
+        _currentLanguage = 'zh-CN';
+      }
+      if (_currentRate != rate) {
+        await _tts.setSpeechRate(rate);
+        _currentRate = rate;
+      }
     } catch (e) {
       AppLogger.warning('Failed to set Chinese TTS settings', e);
     }
   }
 
-  /// 设置英文语音参数
+  /// 设置英文语音参数（缓存避免重复系统调用）
   Future<void> _setEnglishSettings() async {
     try {
-      // Try to get settings service, fallback to default if not available
       _settings ??= Get.isRegistered<AppSettingsService>()
           ? Get.find<AppSettingsService>()
           : null;
 
       final rates = _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+      final rate = rates['english']!;
 
-      await _tts.setLanguage("en-US");
-      await _tts.setSpeechRate(rates['english']!);
-      await _tts.setVolume(1.0);
-      await _tts.setPitch(1.0);
+      if (_currentLanguage != 'en-US') {
+        await _tts.setLanguage("en-US");
+        _currentLanguage = 'en-US';
+      }
+      if (_currentRate != rate) {
+        await _tts.setSpeechRate(rate);
+        _currentRate = rate;
+      }
     } catch (e) {
       AppLogger.warning('Failed to set English TTS settings', e);
+    }
+  }
+
+  /// Stop current speech
+  Future<void> stop() async {
+    try {
+      await _tts.stop();
+    } catch (e) {
+      AppLogger.warning('TTS stop error', e);
     }
   }
 

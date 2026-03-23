@@ -28,6 +28,7 @@
       </template>
 
       <el-table :data="scenes" v-loading="loading" border>
+        <el-table-column label="序号" type="index" width="60" align="center" :index="(i) => (currentPage - 1) * pageSize + i + 1" />
         <el-table-column prop="cover_image" label="封面" width="100" align="center">
           <template #default="{ row }">
             <el-image

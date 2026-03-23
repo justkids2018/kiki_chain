@@ -163,7 +163,7 @@ class InteractiveImageHomePage extends StatelessWidget {
         builder: (context, constraints) {
           // 计算卡片居中显示的垂直padding
           final screenHeight = constraints.maxHeight;
-          final cardHeight = 450.0;
+          final cardHeight = 440.0;
           final verticalPadding = (screenHeight - cardHeight) / 2;
           final safePadding = verticalPadding.clamp(20.0, 80.0);
 

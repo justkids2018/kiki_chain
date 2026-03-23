@@ -76,6 +76,43 @@ class SceneRepositoryImpl implements ISceneRepository {
     }
   }
 
+  /// 获取场景列表（包含原始数据）
+  /// 返回 Map，包含 Scene 对象和原始 JSON 数据
+  Future<List<Map<String, dynamic>>> getScenesByCategoryWithRawData(String categoryId) async {
+    try {
+      AppLogger.info('📦 Fetching scenes with raw data for category: $categoryId');
+
+      final response = await _apiService.getScenesByCategory(categoryId);
+
+      // 检查响应格式
+      if (response['success'] != true) {
+        throw Exception(response['message'] ?? 'Failed to fetch scenes');
+      }
+
+      // 解析场景数据
+      final scenesJson = response['data'] as List<dynamic>;
+
+      final scenesWithRawData = scenesJson.map((json) {
+        final jsonMap = json as Map<String, dynamic>;
+        return {
+          'scene': Scene.fromJson(jsonMap),
+          'rawData': jsonMap, // 保留原始数据（包含 items_data）
+        };
+      }).toList();
+
+      // Sort by order
+      scenesWithRawData.sort((a, b) =>
+        (a['scene'] as Scene).order.compareTo((b['scene'] as Scene).order));
+
+      AppLogger.info('✅ Fetched ${scenesWithRawData.length} scenes with raw data');
+
+      return scenesWithRawData;
+    } catch (e, stackTrace) {
+      AppLogger.error('❌ Failed to fetch scenes with raw data', e, stackTrace);
+      rethrow;
+    }
+  }
+
   @override
   Future<Map<String, dynamic>> getSceneDetail(String sceneId) async {
     try {

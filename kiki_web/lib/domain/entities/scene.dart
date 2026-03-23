@@ -15,6 +15,7 @@ class Scene {
   final int order;
   final bool isNew;
   final DateTime createdAt;
+  final List<dynamic>? itemsData; // 内嵌的互动数据（新数据结构）
 
   const Scene({
     required this.id,
@@ -30,6 +31,7 @@ class Scene {
     required this.order,
     required this.isNew,
     required this.createdAt,
+    this.itemsData,
   });
 
   factory Scene.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,7 @@ class Scene {
           : (json['created_at'] != null
               ? DateTime.parse(json['created_at'] as String)
               : DateTime.now()),
+      itemsData: json['items_data'] as List<dynamic>? ?? json['itemsData'] as List<dynamic>?,
     );
   }
 
@@ -69,6 +72,7 @@ class Scene {
       'order': order,
       'isNew': isNew,
       'createdAt': createdAt.toIso8601String(),
+      'items_data': itemsData,
     };
   }
 
@@ -86,6 +90,7 @@ class Scene {
     int? order,
     bool? isNew,
     DateTime? createdAt,
+    List<dynamic>? itemsData,
   }) {
     return Scene(
       id: id ?? this.id,
@@ -101,6 +106,7 @@ class Scene {
       order: order ?? this.order,
       isNew: isNew ?? this.isNew,
       createdAt: createdAt ?? this.createdAt,
+      itemsData: itemsData ?? this.itemsData,
     );
   }
 

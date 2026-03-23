@@ -60,9 +60,9 @@ class SceneListController extends GetxController {
   void navigateToSceneDetail(Scene scene) {
     AppLogger.info('🚀 Navigating to interactive scene: ${scene.name}');
 
-    // 检查场景是否有互动数据文件
-    if (scene.dataFile == null || scene.dataFile!.isEmpty) {
-      AppLogger.warning('⚠️ Scene ${scene.name} has no interactive data file');
+    // 检查场景是否有互动数据（新的数据结构使用 itemCount）
+    if (scene.itemCount <= 0) {
+      AppLogger.warning('⚠️ Scene ${scene.name} has no interactive items');
       Get.snackbar(
         '提示',
         '该场景暂未开放互动学习功能',
@@ -73,13 +73,16 @@ class SceneListController extends GetxController {
     }
 
     // 直接导航到互动学习页面
+    // 注意：新的数据结构中，数据已经内嵌在 scene 对象中（通过 API 的 items_data 字段）
+    // 需要传递原始的 JSON 数据（包含 items_data），而不是转换后的 Scene 对象
     Get.toNamed(
       AppConstants.routeInteractiveImage,
       arguments: {
-        'jsonFile': scene.dataFile,
+        'jsonFile': scene.dataFile, // 保留兼容性，但可能为 null
         'imageItem': null,
         'images': <dynamic>[], // 使用空的 dynamic 列表而不是 ImageItem 列表
-        'scene': scene, // 传递场景信息用于显示标题等
+        'scene': scene.toJson(), // 传递 JSON Map，保留所有字段
+        'sceneObject': scene, // 同时传递 Scene 对象用于类型安全的属性访问
       },
     );
   }

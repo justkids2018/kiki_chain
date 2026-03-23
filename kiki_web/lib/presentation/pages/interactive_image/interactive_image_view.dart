@@ -184,49 +184,52 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
     final width = (maxX - minX) * scaleX;
     final height = (maxY - minY) * scaleY;
 
-    // Calculate center position and radius for circular indicator
-    final centerX = left + width / 2;
-    final centerY = top + height / 2;
-    final radius = min(width, height) / 2;
+    // Calculate center position for circular indicator (visual only)
+    final centerX = width / 2;
+    final centerY = height / 2;
+    final indicatorSize = min(width, height) * 0.6;
 
     return Positioned(
-      left: centerX - radius - 10,
-      top: centerY - radius - 10,
-      width: (radius + 10) * 2,
-      height: (radius + 10) * 2,
+      left: left,
+      top: top,
+      width: width,
+      height: height,
       child: GestureDetector(
-        onTap: () => widget.onRegionTap(region),
-        child: AnimatedBuilder(
-          animation: _pulseAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _pulseAnimation.value,
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.yellow.withOpacity(0.55),
-                  border: Border.all(
-                    color: Colors.orange.withOpacity(0.9),
-                    width: 3,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withOpacity(0.5),
-                      blurRadius: 12,
-                      spreadRadius: 4,
+        onTap: () {
+          AppLogger.debug('Region tapped: ${region.text} at ($left, $top) size: ${width}x$height');
+          widget.onRegionTap(region);
+        },
+        child: Stack(
+          children: [
+            // Full clickable area (transparent)
+            Container(
+              color: Colors.transparent,
+            ),
+            // Visual indicator - subtle border frame
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3 + (_pulseAnimation.value - 0.7) * 0.4),
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.15 + (_pulseAnimation.value - 0.7) * 0.2),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.touch_app,
-                    color: Colors.orange,
-                    size: 28,
-                  ),
-                ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

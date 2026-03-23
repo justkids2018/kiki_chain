@@ -5,10 +5,10 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../../core/settings/app_settings_service.dart';
 import '../../../../domain/entities/interactive_region.dart';
 
-/// 使用系统 TTS 的语音合成服务
+/// 系统 TTS 语音合成服务（支持儿童声音）
 ///
-/// 使用 flutter_tts 提供跨平台的语音合成功能
-/// 支持中文和英文语音播放
+/// 使用系统内置的 TTS 引擎，完全免费，无需注册
+/// iOS 和 Android 都支持儿童声音选择
 class TextToSpeechService {
   final FlutterTts _tts = FlutterTts();
   AppSettingsService? _settings;
@@ -16,10 +16,12 @@ class TextToSpeechService {
 
   TextToSpeechService();
 
-  /// Initialize TTS
+  /// Initialize TTS with child-friendly voices
   Future<void> initialize() async {
     try {
       await _tts.setSharedInstance(true);
+
+      // iOS 音频配置
       try {
         await _tts.setIosAudioCategory(
           IosTextToSpeechAudioCategory.playback,
@@ -31,8 +33,13 @@ class TextToSpeechService {
           IosTextToSpeechAudioMode.voicePrompt,
         );
       } catch (_) {}
+
       await _tts.awaitSpeakCompletion(true);
-      AppLogger.info('✅ TTS initialized successfully (System TTS)');
+
+      // 设置音调（提高音调使声音更像儿童）
+      await _tts.setPitch(1.3); // 1.0 是正常，1.3 更高更像儿童
+
+      AppLogger.info('✅ TTS initialized with child-friendly voice');
     } catch (e) {
       AppLogger.error('❌ TTS initialization failed', e);
     }
@@ -51,14 +58,22 @@ class TextToSpeechService {
           _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
 
       // 说中文
-      await _speak(region.text, 'zh-CN', rates['chinese']!);
+      await _speak(
+        text: region.text,
+        lang: 'zh-CN',
+        rate: rates['chinese']!,
+      );
 
       // 说英文
       if (region.textEnglish.isNotEmpty) {
-        await _speak(region.textEnglish, 'en-US', rates['english']!);
+        await _speak(
+          text: region.textEnglish,
+          lang: 'en-US',
+          rate: rates['english']!,
+        );
       }
     } catch (e) {
-      AppLogger.error('TTS error', e);
+      AppLogger.error('🎤 TTS error', e);
     }
   }
 
@@ -72,9 +87,13 @@ class TextToSpeechService {
       final rates =
           _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
 
-      await _speak(region.textPinyin, 'zh-CN', rates['chinese']!);
+      await _speak(
+        text: region.textPinyin,
+        lang: 'zh-CN',
+        rate: rates['chinese']!,
+      );
     } catch (e) {
-      AppLogger.error('TTS error', e);
+      AppLogger.error('🎤 TTS error', e);
     }
   }
 
@@ -90,25 +109,31 @@ class TextToSpeechService {
 
       final isChinese = language == "zh-CN" || language == "zh";
       await _speak(
-        text,
-        isChinese ? 'zh-CN' : 'en-US',
-        isChinese ? rates['chinese']! : rates['english']!,
+        text: text,
+        lang: isChinese ? 'zh-CN' : 'en-US',
+        rate: isChinese ? rates['chinese']! : rates['english']!,
       );
     } catch (e) {
-      AppLogger.error('TTS error', e);
+      AppLogger.error('🎤 TTS error', e);
     }
   }
 
-  /// Internal speak method
-  Future<void> _speak(String text, String lang, double rate) async {
+  /// 系统 TTS 播放（使用儿童音调）
+  Future<void> _speak({
+    required String text,
+    required String lang,
+    required double rate,
+  }) async {
     if (text.trim().isEmpty || _disposed) return;
 
     try {
       await _tts.setLanguage(lang);
       await _tts.setSpeechRate(rate);
+      await _tts.setPitch(1.3); // 儿童音调
       await _tts.speak(text);
+      AppLogger.info('🔊 Speaking: ${text.substring(0, text.length > 20 ? 20 : text.length)}...');
     } catch (e) {
-      AppLogger.error('TTS speak failed', e);
+      AppLogger.error('❌ TTS playback failed', e);
     }
   }
 

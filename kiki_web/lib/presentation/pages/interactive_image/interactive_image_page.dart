@@ -192,7 +192,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   /// Build right panel with character display and controls (Compact for Tablet)
   Widget _buildCompactCharacterPanel(InteractiveImageController controller) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(0, 24, 24, 24),
+      margin: const EdgeInsets.fromLTRB(8, 24, 24, 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
@@ -206,87 +206,193 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       ),
       child: Column(
         children: [
+          // Panel header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00C37D),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '互动学习',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[600],
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Character grid (scrollable)
           Expanded(
             child: Obx(() {
               final region = controller.activeRegion.value;
               if (region == null) {
                 return Center(
-                  child: Icon(
-                    Icons.touch_app_outlined,
-                    size: 40,
-                    color: Colors.grey[300],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00C37D).withOpacity(0.08),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.touch_app_outlined,
+                          size: 36,
+                          color: Color(0xFF00C37D),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        '点击图中物品',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '开始互动学习',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
 
-              return Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // English translation with four-line-three-grid - on top
-                      if (region.textEnglish.isNotEmpty)
-                        EnglishFourLineGrid(
-                          text: region.textEnglish,
-                          fontSize: _englishFontSizeTablet,
-                          fontColor: Colors.black87,
-                          height: _englishGridHeight,
-                          markVowels: true,
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Chinese character name — primary label
+                    if (region.text.isNotEmpty)
+                      Text(
+                        region.text,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          letterSpacing: 4,
                         ),
-                      if (region.textEnglish.isNotEmpty)
-                        const SizedBox(height: 24),
-                      // Character grid - below English
-                      _buildCharacterGrid(controller, region.text),
-                    ],
-                  ),
+                        textAlign: TextAlign.center,
+                      ),
+                    if (region.text.isNotEmpty)
+                      const SizedBox(height: 12),
+
+                    // English translation with four-line-three-grid
+                    if (region.textEnglish.isNotEmpty)
+                      EnglishFourLineGrid(
+                        text: region.textEnglish,
+                        fontSize: _englishFontSizeTablet,
+                        fontColor: Colors.black87,
+                        height: _englishGridHeight,
+                        markVowels: true,
+                      ),
+                    if (region.textEnglish.isNotEmpty)
+                      const SizedBox(height: 20),
+
+                    // Divider label
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.grey[200])),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '笔顺练习',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[400],
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: Colors.grey[200])),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Character stroke grid
+                    _buildCharacterGrid(controller, region.text),
+                  ],
                 ),
               );
             }),
           ),
 
-          // Bottom: Play button (circle)
+          // Bottom: Play button
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
-                  color: Colors.grey[200]!,
+                  color: Colors.grey[100]!,
                   width: 1,
                 ),
               ),
             ),
             child: Obx(() {
               final region = controller.activeRegion.value;
+              final isActive = region != null;
               return GestureDetector(
-                onTap: region != null
-                    ? () => controller.speakRegion(region)
-                    : null,
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: region != null
-                        ? const Color(0xFFFF6B6B)
-                        : Colors.grey[300],
-                    shape: BoxShape.circle,
-                    boxShadow: region != null
-                        ? [
-                            BoxShadow(
-                              color: const Color(0xFFFF6B6B).withOpacity(0.4),
-                              blurRadius: 12,
-                              offset: const Offset(0, 6),
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: const Icon(
-                    Icons.volume_up_rounded,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+                onTap: isActive ? () => controller.speakRegion(region) : null,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? const Color(0xFF00C37D)
+                            : Colors.grey[200],
+                        shape: BoxShape.circle,
+                        boxShadow: isActive
+                            ? [
+                                BoxShadow(
+                                  color: const Color(0xFF00C37D).withOpacity(0.35),
+                                  blurRadius: 14,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ]
+                            : [],
+                      ),
+                      child: Icon(
+                        Icons.volume_up_rounded,
+                        color: isActive ? Colors.white : Colors.grey[400],
+                        size: 26,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '点击朗读',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isActive
+                            ? const Color(0xFF00C37D)
+                            : Colors.grey[400],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               );
             }),
@@ -302,28 +408,34 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       final region = controller.activeRegion.value;
 
       if (region == null) {
-        // Minimal state: only show play button
-        return GestureDetector(
-          onTap: () {}, // No action when no region selected
-          child: Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.grey[400],
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
+        // Minimal state: hint pill
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.touch_app_outlined, size: 18, color: const Color(0xFF00C37D)),
+              const SizedBox(width: 6),
+              Text(
+                '点击物品',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
                 ),
-              ],
-            ),
-            child: Icon(
-              Icons.volume_up_rounded,
-              color: Colors.white.withOpacity(0.6),
-              size: 32,
-            ),
+              ),
+            ],
           ),
         );
       }
@@ -348,64 +460,87 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           children: [
             // Character grid
             Flexible(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // English translation with four-line-three-grid - on top
-                      if (region.textEnglish.isNotEmpty)
-                        EnglishFourLineGrid(
-                          text: region.textEnglish,
-                          fontSize: _englishFontSizePhone,
-                          fontColor: Colors.black87,
-                          height: _englishGridHeight,
-                          markVowels: true,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Chinese label
+                    if (region.text.isNotEmpty)
+                      Text(
+                        region.text,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          letterSpacing: 3,
                         ),
-                      if (region.textEnglish.isNotEmpty)
-                        const SizedBox(height: 20),
-                      // Character grid - below English
-                      _buildCharacterGrid(controller, region.text),
-                    ],
-                  ),
+                        textAlign: TextAlign.center,
+                      ),
+                    if (region.text.isNotEmpty)
+                      const SizedBox(height: 10),
+                    // English four-line grid
+                    if (region.textEnglish.isNotEmpty)
+                      EnglishFourLineGrid(
+                        text: region.textEnglish,
+                        fontSize: _englishFontSizePhone,
+                        fontColor: Colors.black87,
+                        height: _englishGridHeight,
+                        markVowels: true,
+                      ),
+                    if (region.textEnglish.isNotEmpty)
+                      const SizedBox(height: 16),
+                    // Character stroke grid
+                    _buildCharacterGrid(controller, region.text),
+                  ],
                 ),
               ),
             ),
 
-            // Play button (circle at bottom)
+            // Play button
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
               decoration: BoxDecoration(
                 border: Border(
-                  top: BorderSide(
-                    color: Colors.grey[200]!,
-                    width: 1,
-                  ),
+                  top: BorderSide(color: Colors.grey[100]!, width: 1),
                 ),
               ),
               child: GestureDetector(
                 onTap: () => controller.speakRegion(region),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFF6B6B),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFF6B6B).withOpacity(0.4),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF00C37D),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF00C37D).withOpacity(0.35),
+                            blurRadius: 12,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.volume_up_rounded,
-                    color: Colors.white,
-                    size: 28,
-                  ),
+                      child: const Icon(
+                        Icons.volume_up_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '点击朗读',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: const Color(0xFF00C37D),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

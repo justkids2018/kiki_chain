@@ -181,7 +181,7 @@ class SceneListPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            childAspectRatio: 7 / 9, // 350 / 450 = 7:9
+            childAspectRatio: 10 / 11, // 400 / 440 — wider card ratio
             crossAxisSpacing: 20,
             mainAxisSpacing: 24,
           ),

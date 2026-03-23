@@ -21,8 +21,8 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 350,
-        height: 450,
+        width: 400,
+        height: 440,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
@@ -164,19 +164,10 @@ class CategoryCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // 场景数量和物品数量
-              Row(
-                children: [
-                  _buildInfoChip(
-                    icon: Icons.grid_view_rounded,
-                    text: localizations.scenesCount(category.sceneCount),
-                  ),
-                  const SizedBox(width: 8),
-                  _buildInfoChip(
-                    icon: Icons.category_rounded,
-                    text: localizations.itemsCount(category.totalItemCount),
-                  ),
-                ],
+              // 场景数量
+              _buildInfoChip(
+                icon: Icons.grid_view_rounded,
+                text: localizations.scenesCount(category.sceneCount),
               ),
             ],
           ),

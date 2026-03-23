@@ -21,8 +21,8 @@ class SceneCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 350,
-        height: 450,
+        width: 400,
+        height: 440,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
@@ -57,20 +57,32 @@ class SceneCard extends StatelessWidget {
 
   /// 构建封面图片
   Widget _buildCoverImage() {
+    if (scene.coverImage.isEmpty ||
+        (!scene.coverImage.startsWith('http://') &&
+         !scene.coverImage.startsWith('https://'))) {
+      return Container(
+        color: _getSceneColor(),
+        child: const Center(
+          child: Icon(Icons.image_outlined, size: 48, color: Colors.white),
+        ),
+      );
+    }
     return Positioned.fill(
-      child: Image.asset(
+      child: Image.network(
         scene.coverImage,
         fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: _getSceneColor().withValues(alpha: 0.3),
+            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+          );
+        },
         errorBuilder: (context, error, stackTrace) {
-          // 如果图片加载失败，显示占位符
           return Container(
             color: _getSceneColor(),
             child: const Center(
-              child: Icon(
-                Icons.image_outlined,
-                size: 48,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.image_outlined, size: 48, color: Colors.white),
             ),
           );
         },
@@ -99,14 +111,11 @@ class SceneCard extends StatelessWidget {
 
   /// 构建内容区域
   Widget _buildContent() {
-    return Builder(
-      builder: (context) {
-        final localizations = AppLocalizations.of(context)!;
-        return Positioned(
-          left: 12,
-          right: 12,
-          bottom: 12,
-          child: Column(
+    return Positioned(
+      left: 12,
+      right: 12,
+      bottom: 12,
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -134,44 +143,9 @@ class SceneCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 6),
-
-              // 物品数量
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF00C37D).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: const Color(0xFF00C37D),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.category_rounded,
-                      size: 11,
-                      color: Color(0xFF00C37D),
-                    ),
-                    const SizedBox(width: 3),
-                    Text(
-                      localizations.itemsCount(scene.itemCount),
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Color(0xFF00C37D),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         );
-      },
-    );
   }
 
   /// 构建 NEW 标签

@@ -29,10 +29,13 @@ class InteractiveImageController extends GetxController {
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
   late String _imagePath;
-  
+
   // 当前图片项和所有图片列表
   ImageItem? _currentImageItem;
   List<ImageItem> _imagesList = [];
+
+  // 场景对象（包含内嵌的 items_data）
+  dynamic _scene;
 
   InteractiveImageController({
     IInteractiveImageRepository? repository,
@@ -45,14 +48,34 @@ class InteractiveImageController extends GetxController {
     _getParametersFromRoute();
   }
 
-  /// 从路由参数获取 JSON 文件、图片路径、ImageItem 和图片列表
+  /// 从路由参数获取 JSON 文件、图片路径、ImageItem、图片列表和场景对象
   void _getParametersFromRoute() {
     // 获取传递的参数
     final arguments = Get.arguments;
 
     if (arguments != null && arguments is Map) {
-      // 接收 ImageItem（更优先）
-      if (arguments['imageItem'] != null && arguments['imageItem'] is ImageItem) {
+      // 接收 scene 对象（新的数据结构，优先级最高）
+      if (arguments['scene'] != null) {
+        _scene = arguments['scene'];
+        // 从 scene 对象中提取图片路径
+        if (_scene is Map) {
+          _imagePath = _scene['interactive_image'] ?? _scene['interactiveImage'] ?? '';
+        } else {
+          // 如果是 Scene 对象，直接访问属性
+          try {
+            _imagePath = _scene.interactiveImage ?? '';
+          } catch (e) {
+            AppLogger.warning('Failed to extract image path from scene object', e);
+            _imagePath = '';
+          }
+        }
+        // jsonFile 可能为 null（新数据结构中数据内嵌在 scene 中）
+        _jsonFilePath = arguments['jsonFile'] ?? '';
+        AppLogger.info('Using scene object with embedded data');
+        AppLogger.info('Scene name: ${_scene is Map ? _scene['name'] : (_scene?.name ?? 'unknown')}');
+      }
+      // 接收 ImageItem（次优先）
+      else if (arguments['imageItem'] != null && arguments['imageItem'] is ImageItem) {
         _currentImageItem = arguments['imageItem'] as ImageItem;
         _jsonFilePath = _currentImageItem!.jsonFile;
         _imagePath = _currentImageItem!.imagePath;
@@ -62,7 +85,7 @@ class InteractiveImageController extends GetxController {
             arguments['jsonFile'] ?? 'assets/data/kiki_zhiwuyuan.json';
         _imagePath = _getImagePathFromJsonFile(_jsonFilePath);
       }
-      
+
       // 接收图片列表
       if (arguments['images'] != null && arguments['images'] is List) {
         final imagesList = arguments['images'] as List;
@@ -81,6 +104,7 @@ class InteractiveImageController extends GetxController {
 
     AppLogger.debug('JSON File = $_jsonFilePath');
     AppLogger.debug('Image Path = $_imagePath');
+    AppLogger.debug('Has Scene = ${_scene != null}');
     AppLogger.debug('Current ImageItem = ${_currentImageItem?.title}');
     AppLogger.debug('Images count = ${_imagesList.length}');
   }
@@ -139,16 +163,16 @@ class InteractiveImageController extends GetxController {
 
       // Initialize TTS - continue even if it fails
       try {
-        AppLogger.debug('Initializing TTS');
+        AppLogger.info('🎤 Starting TTS initialization...');
         await _ttsService.initialize().timeout(
           const Duration(seconds: 5),
           onTimeout: () {
-            AppLogger.warning('TTS initialization timed out after 5 seconds');
+            AppLogger.warning('⏱️ TTS initialization timed out after 5 seconds');
           },
         );
-        AppLogger.debug('TTS initialized successfully');
+        AppLogger.info('✅ TTS initialized successfully (Edge TTS + fallback)');
       } catch (e) {
-        AppLogger.warning('TTS initialization failed', e);
+        AppLogger.error('❌ TTS initialization failed', e);
         // Continue without TTS
       }
       loadingProgress.value = 0.3;
@@ -185,15 +209,57 @@ class InteractiveImageController extends GetxController {
 
   Future<void> _loadRegions() async {
     try {
-      AppLogger.debug('Loading regions from: $_jsonFilePath');
-      final loadedRegions =
-          await _repository.loadRegions(jsonPath: _jsonFilePath);
+      List<InteractiveRegion> loadedRegions = [];
+
+      // 优先从 scene 对象的 items_data 中加载数据（新数据结构）
+      if (_scene != null) {
+        AppLogger.info('Loading regions from scene object (embedded data)');
+        try {
+          List<dynamic>? itemsData;
+
+          // 尝试从 scene 对象中提取 items_data
+          if (_scene is Map) {
+            itemsData = _scene['items_data'] ?? _scene['itemsData'];
+            AppLogger.debug('Scene is Map, items_data: ${itemsData?.length ?? 0} items');
+          } else {
+            // 如果是 Scene 对象，直接从 arguments 中获取（因为 Scene 类没有 items_data 属性）
+            final arguments = Get.arguments;
+            if (arguments != null && arguments is Map) {
+              // 从原始 API 响应中获取 items_data
+              final sceneData = arguments['scene'];
+              if (sceneData is Map) {
+                itemsData = sceneData['items_data'] ?? sceneData['itemsData'];
+                AppLogger.debug('Extracted items_data from arguments Map: ${itemsData?.length ?? 0} items');
+              }
+            }
+          }
+
+          if (itemsData != null && itemsData.isNotEmpty) {
+            loadedRegions = itemsData
+                .map((e) => InteractiveRegion.fromJson(e as Map<String, dynamic>))
+                .toList();
+            AppLogger.info('Loaded ${loadedRegions.length} regions from scene.items_data');
+          } else {
+            AppLogger.warning('Scene object has no items_data or it is empty');
+          }
+        } catch (e) {
+          AppLogger.error('Error loading regions from scene object', e);
+        }
+      }
+
+      // 如果从 scene 对象加载失败，且有 jsonFile 路径，则从 JSON 文件加载（兼容旧数据结构）
+      if (loadedRegions.isEmpty && _jsonFilePath.isNotEmpty) {
+        AppLogger.debug('Loading regions from JSON file: $_jsonFilePath');
+        loadedRegions = await _repository.loadRegions(jsonPath: _jsonFilePath);
+      }
+
       if (loadedRegions.isNotEmpty) {
         regions.assignAll(loadedRegions);
-        AppLogger.info('Loaded ${loadedRegions.length} regions');
+        AppLogger.info('Successfully loaded ${loadedRegions.length} regions');
       } else {
-        AppLogger.warning('No regions loaded from: $_jsonFilePath');
+        AppLogger.warning('No regions loaded');
       }
+
       loadingProgress.value = 0.7;
     } catch (e) {
       AppLogger.error('Error loading regions', e);
@@ -226,6 +292,8 @@ class InteractiveImageController extends GetxController {
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
+    AppLogger.info('🔊 Speaking region: ${region.text} / ${region.textEnglish}');
+
     // Update UI immediately for instant visual feedback
     activeRegion.value = region;
     _restartCharacterAnimation(region.text);

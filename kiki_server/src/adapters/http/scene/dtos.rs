@@ -122,6 +122,7 @@ pub struct UpdateSceneRequest {
     pub interactive_image: Option<String>,
     pub description: Option<String>,
     pub context: Option<String>,
+    #[serde(rename = "order")]
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
     pub is_visible: Option<bool>,

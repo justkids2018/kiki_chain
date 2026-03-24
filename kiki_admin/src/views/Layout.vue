@@ -47,7 +47,11 @@
       </el-header>
       
       <el-main>
-        <router-view />
+        <router-view v-slot="{ Component, route: currentRoute }">
+          <keep-alive>
+            <component :is="Component" :key="currentRoute.fullPath" />
+          </keep-alive>
+        </router-view>
       </el-main>
     </el-container>
   </el-container>

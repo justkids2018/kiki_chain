@@ -1,7 +1,7 @@
 <template>
   <div class="image-upload">
     <div v-if="imageUrl" class="image-preview">
-      <el-image :src="imageUrl" fit="cover" class="preview-image">
+      <el-image :src="displayUrl" fit="cover" class="preview-image">
         <template #error>
           <div class="image-error">
             <el-icon><Picture /></el-icon>
@@ -38,10 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Upload, Delete, Picture } from '@element-plus/icons-vue'
-import { uploadToQiniu } from '../utils/qiniu'
+import { uploadToQiniu, toCDNUrl } from '../utils/qiniu'
 
 interface Props {
   modelValue?: string
@@ -60,6 +60,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const imageUrl = ref(props.modelValue)
+const displayUrl = computed(() => toCDNUrl(imageUrl.value))
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const fileInput = ref<HTMLInputElement>()

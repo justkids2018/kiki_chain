@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../logging/app_logger.dart';
 import '../config/env_config.dart';
 import '../network/api_config.dart';
@@ -37,8 +38,8 @@ class AppServices {
     AppLogger.info('🚀 开始初始化应用服务...');
     
     try {
-      // 1. 初始化环境配置
-      await EnvConfig.load();
+      // 1. 初始化环境配置（release 模式自动使用生产环境）
+      await EnvConfig.load(kReleaseMode ? 'production' : null);
       AppLogger.info('✅ 环境配置初始化完成');
       
       // 2. 初始化网络层（使用 env 配置）

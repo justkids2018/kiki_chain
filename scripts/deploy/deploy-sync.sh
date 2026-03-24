@@ -33,7 +33,7 @@ echo -e "${GREEN}  ✅ 服务器连接正常${NC}"
 
 # 同��代码
 echo -e "${YELLOW}[2/3] 同步代码到服务器...${NC}"
-rsync -avz --delete \
+rsync -avz \
     --exclude 'target/' \
     --exclude 'node_modules/' \
     --exclude '.git/' \
@@ -43,6 +43,8 @@ rsync -avz --delete \
     --exclude 'kiki_server/target/' \
     --exclude 'kiki_admin/node_modules/' \
     --exclude 'kiki_admin/dist/' \
+    --exclude 'certbot/' \
+    --exclude 'backups/' \
     "$LOCAL_DIR/" "$SERVER:$REMOTE_DIR/"
 
 echo -e "${GREEN}  ✅ 代码同步完成${NC}"

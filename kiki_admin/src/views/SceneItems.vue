@@ -15,20 +15,20 @@
         <el-descriptions-item label="封面图片">
           <el-image
             v-if="sceneDetail.cover_image"
-            :src="sceneDetail.cover_image"
+            :src="toCDNUrl(sceneDetail.cover_image)"
             fit="cover"
             style="width: 80px; height: 80px; border-radius: 4px"
-            :preview-src-list="[sceneDetail.cover_image]"
+            :preview-src-list="[toCDNUrl(sceneDetail.cover_image)]"
             preview-teleported
           />
         </el-descriptions-item>
         <el-descriptions-item label="互动大图">
           <el-image
             v-if="sceneDetail.interactive_image"
-            :src="sceneDetail.interactive_image"
+            :src="toCDNUrl(sceneDetail.interactive_image)"
             fit="cover"
             style="width: 80px; height: 80px; border-radius: 4px"
-            :preview-src-list="[sceneDetail.interactive_image]"
+            :preview-src-list="[toCDNUrl(sceneDetail.interactive_image)]"
             preview-teleported
           />
         </el-descriptions-item>
@@ -59,10 +59,13 @@
               {{ sceneName }} - 物品管理
             </span>
           </div>
-          <el-button type="primary" @click="handleAdd">
-            <el-icon><Plus /></el-icon>
-            新建物品
-          </el-button>
+          <div style="display: flex; gap: 12px">
+            <el-button @click="handleRefresh" :loading="refreshing">刷新</el-button>
+            <el-button type="primary" @click="handleAdd">
+              <el-icon><Plus /></el-icon>
+              新建物品
+            </el-button>
+          </div>
         </div>
       </template>
 
@@ -71,10 +74,10 @@
           <template #default="{ row }">
             <el-image
               v-if="row.image_url"
-              :src="row.image_url"
+              :src="toCDNUrl(row.image_url)"
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
-              :preview-src-list="[row.image_url]"
+              :preview-src-list="[toCDNUrl(row.image_url)]"
               preview-teleported
             />
           </template>
@@ -167,13 +170,15 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { itemAPI, type SceneItem } from '../api/items'
 import { sceneAPI } from '../api/scenes'
 import { categoryAPI, type Category } from '../api/categories'
+import { toCDNUrl } from '../utils/qiniu'
 
 const route = useRoute()
-const sceneId = route.params.id as string
+const sceneId = computed(() => route.params.id as string)
 const sceneName = ref('')
 const sceneDetail = ref<any>(null)
 const categories = ref<Category[]>([])
 const loading = ref(false)
+const refreshing = ref(false)
 const items = ref<SceneItem[]>([])
 
 const categoryName = computed(() => {
@@ -219,7 +224,7 @@ const fetchCategories = async () => {
 
 const fetchScene = async () => {
   try {
-    const res = await sceneAPI.get(sceneId)
+    const res = await sceneAPI.get(sceneId.value)
     sceneName.value = res.data.name
     sceneDetail.value = res.data
   } catch (error) {
@@ -230,12 +235,22 @@ const fetchScene = async () => {
 const fetchItems = async () => {
   loading.value = true
   try {
-    const res = await itemAPI.list(sceneId)
+    const res = await itemAPI.list(sceneId.value)
     items.value = res.data.sort((a, b) => a.order - b.order)
   } catch (error) {
     console.error('Failed to fetch items:', error)
   } finally {
     loading.value = false
+  }
+}
+
+const handleRefresh = async () => {
+  refreshing.value = true
+  try {
+    await Promise.all([fetchScene(), fetchItems()])
+    ElMessage.success('数据已刷新')
+  } finally {
+    refreshing.value = false
   }
 }
 
@@ -308,7 +323,7 @@ const handleSubmit = async () => {
         await itemAPI.update(currentId.value, data)
         ElMessage.success('更新成功')
       } else {
-        await itemAPI.create(sceneId, data)
+        await itemAPI.create(sceneId.value, data)
         ElMessage.success('创建成功')
       }
       

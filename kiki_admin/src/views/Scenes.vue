@@ -20,23 +20,26 @@
               />
             </el-select>
           </div>
-          <el-button type="primary" @click="handleAdd">
-            <el-icon><Plus /></el-icon>
-            新建场景
-          </el-button>
+          <div style="display: flex; gap: 12px">
+            <el-button @click="handleRefresh" :loading="loading">刷新</el-button>
+            <el-button type="primary" @click="handleAdd">
+              <el-icon><Plus /></el-icon>
+              新建场景
+            </el-button>
+          </div>
         </div>
       </template>
 
       <el-table :data="scenes" v-loading="loading" border>
-        <el-table-column label="序号" type="index" width="60" align="center" :index="(i) => (currentPage - 1) * pageSize + i + 1" />
+        <el-table-column label="序号" type="index" width="60" align="center" :index="(i: number) => (currentPage - 1) * pageSize + i + 1" />
         <el-table-column prop="cover_image" label="封面" width="100" align="center">
           <template #default="{ row }">
             <el-image
               v-if="row.cover_image"
-              :src="row.cover_image"
+              :src="toCDNUrl(row.cover_image)"
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
-              :preview-src-list="[row.cover_image]"
+              :preview-src-list="[toCDNUrl(row.cover_image)]"
               preview-teleported
             />
           </template>
@@ -45,10 +48,10 @@
           <template #default="{ row }">
             <el-image
               v-if="row.interactive_image"
-              :src="row.interactive_image"
+              :src="toCDNUrl(row.interactive_image)"
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
-              :preview-src-list="[row.interactive_image]"
+              :preview-src-list="[toCDNUrl(row.interactive_image)]"
               preview-teleported
             />
           </template>
@@ -173,14 +176,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { sceneAPI, type Scene } from '../api/scenes'
 import { categoryAPI, type Category } from '../api/categories'
 import ImageUpload from '../components/ImageUpload.vue'
+import { toCDNUrl } from '../utils/qiniu'
 
-const router = useRouter()
 const loading = ref(false)
 const scenes = ref<Scene[]>([])
 const categories = ref<Category[]>([])
@@ -266,6 +268,10 @@ const handlePageChange = (page: number) => {
 const handleSizeChange = (size: number) => {
   pageSize.value = size
   currentPage.value = 1 // 重置到第一页
+  fetchScenes()
+}
+
+const handleRefresh = () => {
   fetchScenes()
 }
 

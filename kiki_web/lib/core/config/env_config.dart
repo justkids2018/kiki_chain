@@ -80,7 +80,7 @@ class EnvConfig {
   /// 设置默认配置（当配置文件加载失败时使用）
   static void _setDefaultConfig() {
     _config.addAll({
-      'API_BASE_URL': 'http://127.0.0.1:8080',
+      'API_BASE_URL': 'http://127.0.0.1:8081',
       'ENV_TYPE': 'dev',
       'DEBUG': 'true',
       'ENABLE_LOGGING': 'true',
@@ -125,7 +125,7 @@ class EnvConfig {
   // === 业务配置访问器 ===
   
   /// API基础URL
-  static String get apiBaseUrl => getString('API_BASE_URL', 'http://127.0.0.1:8080');
+  static String get apiBaseUrl => getString('API_BASE_URL', 'http://127.0.0.1:8081');
   
   /// 环境类型
   static String get envType => getString('ENV_TYPE', 'dev');

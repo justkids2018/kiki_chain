@@ -1,7 +1,0 @@
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/libmatchers-56a8abfc50dc06de.rmeta: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchers-0.2.0/src/lib.rs
-
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/libmatchers-56a8abfc50dc06de.rlib: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchers-0.2.0/src/lib.rs
-
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/matchers-56a8abfc50dc06de.d: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchers-0.2.0/src/lib.rs
-
-/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchers-0.2.0/src/lib.rs:

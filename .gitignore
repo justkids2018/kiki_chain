@@ -1,0 +1,17 @@
+# Build artifacts
+kiki_server/target/
+kiki_web/.dart_tool/
+kiki_web/build/
+kiki_admin/node_modules/
+kiki_admin/dist/
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+
+# IDE
+.idea/
+
+# Environment secrets (keep templates)
+.env.local

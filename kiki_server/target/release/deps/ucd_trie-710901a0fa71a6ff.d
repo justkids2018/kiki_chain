@@ -1,8 +1,0 @@
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/libucd_trie-710901a0fa71a6ff.rmeta: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/owned.rs
-
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/libucd_trie-710901a0fa71a6ff.rlib: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/owned.rs
-
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/release/deps/ucd_trie-710901a0fa71a6ff.d: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/owned.rs
-
-/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/lib.rs:
-/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ucd-trie-0.1.7/src/owned.rs:

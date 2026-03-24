@@ -1,6 +1,0 @@
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/debug/deps/libtracing_log-68d5925c375fd686.rmeta: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/log_tracer.rs
-
-/Users/qisd/Documents/development/chain/kiki_chain/kiki_server/target/debug/deps/tracing_log-68d5925c375fd686.d: /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/lib.rs /Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/log_tracer.rs
-
-/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/lib.rs:
-/Users/qisd/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tracing-log-0.2.0/src/log_tracer.rs:

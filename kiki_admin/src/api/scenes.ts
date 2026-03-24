@@ -12,6 +12,7 @@ export interface Scene {
   context: string
   order: number
   is_new: boolean
+  is_visible: boolean
   item_count: number
   items_data?: any // JSON 数组
   created_at: string

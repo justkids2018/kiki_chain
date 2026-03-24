@@ -68,23 +68,23 @@ class ApiConfig {
   
   /// 快速环境配置 - 开发环境
   static void initDev() => init(
-    baseUrl: 'http://127.0.0.1:8080',
+    baseUrl: 'http://127.0.0.1:8081',
     enableLogging: true,
-    enableCache: true, // 开发环境启用缓存用于测试
+    enableCache: true,
   );
-  
+
   /// 快速环境配置 - 生产环境
   static void initProd() => init(
-    baseUrl: 'https://api.example.com/v1',
+    baseUrl: 'https://mtrain.xyz',
     enableLogging: false,
-    enableCache: true, // 生产环境启用缓存提升性能
+    enableCache: true,
   );
-  
+
   /// 快速环境配置 - 测试环境
   static void initTest() => init(
-    baseUrl: 'https://test-api.example.com/v1',
+    baseUrl: 'https://mtrain.xyz',
     enableLogging: true,
-    enableCache: false, // 测试环境禁用缓存确保数据准确性
+    enableCache: false,
   );
   
   /// 获取实例

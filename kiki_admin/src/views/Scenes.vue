@@ -303,7 +303,7 @@ const handleEdit = (row: Scene) => {
     context: row.context,
     order: row.order,
     is_new: row.is_new,
-    is_visible: row.is_visible !== undefined ? row.is_visible : true
+    isVisible: row.is_visible !== undefined ? row.is_visible : true
   })
   // 如果有 items_data，格式化显示
   itemsDataText.value = row.items_data ? JSON.stringify(row.items_data, null, 2) : ''

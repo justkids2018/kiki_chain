@@ -9,15 +9,6 @@
             placeholder="手机号"
             prefix-icon="User"
             size="large"
-          />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model="form.password"
-            type="password"
-            placeholder="密码"
-            prefix-icon="Lock"
-            size="large"
             @keyup.enter="handleLogin"
           />
         </el-form-item>
@@ -49,13 +40,12 @@ const formRef = ref<FormInstance>()
 const loading = ref(false)
 
 const form = reactive({
-  identifier: '13900139002',
-  password: 'admin123'
+  identifier: '',
+  password: ''   // 后端兼容字段，前端不再展示
 })
 
 const rules: FormRules = {
-  identifier: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  identifier: [{ required: true, message: '请输入手机号', trigger: 'blur' }]
 }
 
 const handleLogin = async () => {

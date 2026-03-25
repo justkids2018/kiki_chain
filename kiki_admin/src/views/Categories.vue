@@ -12,17 +12,13 @@
       </template>
       
       <el-table :data="categories" v-loading="loading" border>
-        <el-table-column prop="icon" label="图标" width="80" align="center">
-          <template #default="{ row }">
-            <span style="font-size: 24px">{{ row.icon }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column type="index" label="序号" width="70" align="center" />
         <el-table-column prop="cover_image" label="封面" width="100" align="center">
           <template #default="{ row }">
             <el-image
               v-if="row.cover_image"
-              :src="row.cover_image"
-              :preview-src-list="[row.cover_image]"
+              :src="toCDNUrl(row.cover_image)"
+              :preview-src-list="[toCDNUrl(row.cover_image)]"
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 8px"
               preview-teleported
@@ -97,6 +93,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { categoryAPI, type Category } from '../api/categories'
 import ImageUpload from '../components/ImageUpload.vue'
+import { toCDNUrl } from '../utils/qiniu'
 
 const loading = ref(false)
 const categories = ref<Category[]>([])

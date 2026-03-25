@@ -114,10 +114,10 @@
           <el-input v-model="form.name_en" placeholder="如：Spring Couplets" />
         </el-form-item>
         <el-form-item label="封面图" prop="cover_image">
-          <ImageUpload v-model="form.cover_image" folder="scenes" />
+          <ImageUpload v-model="form.cover_image" folder="scenes" :fileName="form.name_en" />
         </el-form-item>
         <el-form-item label="互动大图" prop="interactive_image">
-          <ImageUpload v-model="form.interactive_image" folder="scenes" />
+          <ImageUpload v-model="form.interactive_image" folder="scenes" :fileName="form.name_en ? form.name_en + '_interactive' : ''" />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" :rows="2" />

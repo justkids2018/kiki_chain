@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import '../logging/app_logger.dart';
 import 'api_config.dart';
 import 'http_client.dart';
@@ -46,7 +48,13 @@ class NetworkClient {
       receiveTimeout: Duration(milliseconds: config.receiveTimeout),
       headers: Map<String, dynamic>.from(config.headers),
     ));
-    
+
+    // 允许直连 IP 走 HTTPS（证书为域名签发，绕过主机名校验）
+    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+
     // 添加拦截器
     _setupInterceptors();
   }

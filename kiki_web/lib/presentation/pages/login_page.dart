@@ -17,39 +17,34 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
     final localizations = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
+    final isCompact = size.width < 600; // phone vs iPad
 
     return Scaffold(
-      backgroundColor: Color(0xFFF8FAFC), // Light Base 浅色模式背景，纯色不使用毛玻璃
+      backgroundColor: Color(0xFFF8FAFC),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: isCompact ? 20 : 24),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 400),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                SizedBox(height: 60),
-                
-                // 头部
-                _buildHeader(localizations),
-                
-                SizedBox(height: 50),
-                
-                // 登录卡片
-                _buildLoginCard(authController, localizations),
-                
-                SizedBox(height: 30),
-                
-                // 注册提示
+
+                SizedBox(height: isCompact ? 28 : 50),
+
+                _buildLoginCard(authController, localizations, isCompact),
+
+                SizedBox(height: isCompact ? 20 : 30),
+
                 _buildRegisterPrompt(),
 
-                SizedBox(height: 16),
+                SizedBox(height: isCompact ? 12 : 16),
 
-                // 游客模式按钮
                 _buildGuestModeButton(),
 
-                  SizedBox(height: 40),
+                SizedBox(height: isCompact ? 24 : 40),
                 ],
               ),
             ),
@@ -59,23 +54,25 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  /// 构建页面头部 - Refined设计
-  Widget _buildHeader(AppLocalizations localizations) {
+  Widget _buildHeader(AppLocalizations localizations, bool isCompact) {
+    final logoSize = isCompact ? 56.0 : 72.0;
+    final iconSize = isCompact ? 28.0 : 36.0;
+    final titleSize = isCompact ? 24.0 : 28.0;
+    final subtitleSize = isCompact ? 14.0 : 16.0;
+
     return Column(
       children: [
-        // Logo - 简洁设计，突出Liquid Green主色调
         Container(
-          width: 72,
-          height: 72,
+          width: logoSize,
+          height: logoSize,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF00C37D), Color(0xFF3FD280)], // 核心色到强调色
+              colors: [Color(0xFF00C37D), Color(0xFF3FD280)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(isCompact ? 14 : 18),
             boxShadow: [
-              // 极轻阴影：遵循普通页面规范
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 8,
@@ -85,55 +82,50 @@ class LoginPage extends StatelessWidget {
           ),
           child: Icon(
             Icons.school_rounded,
-            size: 36,
+            size: iconSize,
             color: Colors.white,
           ),
         ),
-        
-        SizedBox(height: 32),
-        
-        // 标题 - SF Pro字体规范
+
+        SizedBox(height: isCompact ? 20 : 32),
+
         Text(
           localizations.welcomeBack,
           style: TextStyle(
-            fontSize: 28, // 标题 Semibold
+            fontSize: titleSize,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF27273F), // 主文字色
-            letterSpacing: -0.01, // 字间距收紧，专业排版
+            color: Color(0xFF27273F),
+            letterSpacing: -0.01,
             height: 1.2,
           ),
         ),
-        
-        SizedBox(height: 12),
-        
-        // 副标题 - SF Pro Text
+
+        SizedBox(height: isCompact ? 8 : 12),
+
         Text(
           localizations.pleaseLoginToAccount,
           style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w400, // Regular
-            color: Color(0xFF6B7280), // 次要文字色
-            height: 1.4, // HIG规范行高
+            fontSize: subtitleSize,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF6B7280),
+            height: 1.4,
           ),
         ),
       ],
     );
   }
 
-  /// 构建登录卡片 - 简洁纯色设计
-  Widget _buildLoginCard(AuthController controller, AppLocalizations localizations) {
+  Widget _buildLoginCard(AuthController controller, AppLocalizations localizations, bool isCompact) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(32),
+      padding: isCompact
+          ? EdgeInsets.symmetric(horizontal: 20, vertical: 24)
+          : EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.white, // 纯色背景，符合普通页面规范
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Color(0xFFE2E8F0), // 标准边框色
-          width: 1,
-        ),
+        border: Border.all(color: Color(0xFFE2E8F0), width: 1),
         boxShadow: [
-          // 极轻阴影：遵循普通页面规范
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
@@ -291,107 +283,60 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  /// 构建注册提示 - 简洁设计
   Widget _buildRegisterPrompt() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white, // 纯色背景
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Color(0xFFE2E8F0), // 标准边框色
-          width: 1,
-        ),
-        boxShadow: [
-          // 极轻阴影
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Builder(
-        builder: (context) {
-          final localizations = AppLocalizations.of(context)!;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                localizations.noAccountYet,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFF6B7280), // 次要文字色
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              
-              SizedBox(width: 8),
-              
-              GestureDetector(
-                onTap: () => Get.toNamed('/register'),
-                child: Text(
-                  localizations.register,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFF00C37D), // Liquid Green主色调
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  /// 构建游客模式按钮
-  Widget _buildGuestModeButton() {
-    final AuthController authController = Get.find<AuthController>();
-
     return Builder(
       builder: (context) {
         final localizations = AppLocalizations.of(context)!;
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          decoration: BoxDecoration(
-            color: Colors.white, // 纯色背景
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Color(0xFFE2E8F0), // 标准边框色
-              width: 1,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              localizations.noAccountYet,
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF6B7280),
+                fontWeight: FontWeight.w400,
+              ),
             ),
-            boxShadow: [
-              // 极轻阴影
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 4,
-                offset: Offset(0, 1),
+            SizedBox(width: 6),
+            GestureDetector(
+              onTap: () => Get.toNamed('/register'),
+              child: Text(
+                localizations.register,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF00C37D),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildGuestModeButton() {
+    final AuthController authController = Get.find<AuthController>();
+    return Builder(
+      builder: (context) {
+        final localizations = AppLocalizations.of(context)!;
+        return GestureDetector(
+          onTap: authController.enterGuestMode,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_outline_rounded, color: Color(0xFF9CA3AF), size: 16),
+              SizedBox(width: 6),
+              Text(
+                localizations.continueAsGuest,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF9CA3AF),
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ],
-          ),
-          child: GestureDetector(
-            onTap: authController.enterGuestMode,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.person_outline_rounded,
-                  color: Color(0xFF6B7280),
-                  size: 20,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  localizations.continueAsGuest,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFF6B7280),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
           ),
         );
       },

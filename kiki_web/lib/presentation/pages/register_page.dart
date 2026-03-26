@@ -30,9 +30,6 @@ class RegisterPage extends StatelessWidget {
                 children: [
                   SizedBox(height: 40),
 
-                // 头部
-                _buildHeader(),
-
                 SizedBox(height: 30),
 
                 // 注册卡片

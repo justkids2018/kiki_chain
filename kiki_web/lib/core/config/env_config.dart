@@ -7,7 +7,7 @@ class EnvConfig {
   static bool _initialized = false;
   
   /// 当前环境类型 - 支持dart-define参数
-  static const String _defaultEnv = 'dev';
+  static const String _defaultEnv = 'prod';
   
   /// 获取当前环境类型
   /// 优先使用 dart-define 的 APP_ENV 参数，其次使用默认值
@@ -128,7 +128,7 @@ class EnvConfig {
   static String get apiBaseUrl => getString('API_BASE_URL', 'http://127.0.0.1:8081');
   
   /// 环境类型
-  static String get envType => getString('ENV_TYPE', 'dev');
+  static String get envType => getString('ENV_TYPE', 'prod');
   
   /// 是否为调试模式
   static bool get isDebug => getBool('DEBUG', true);

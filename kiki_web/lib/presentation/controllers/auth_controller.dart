@@ -66,8 +66,8 @@ class AuthController extends GetxController {
     _initializeAuthState();
 
   // 测试默认手机号和密码
-  loginIdentifierController.text = '';
-  loginPasswordController.text = '';
+  loginIdentifierController.text = '13800138003';
+  loginPasswordController.text = 'password123';
 
     // 注册表单测试数据
   registerPhoneController.text = '';

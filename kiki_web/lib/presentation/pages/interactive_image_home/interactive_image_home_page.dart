@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
+import '../../widgets/app_loading_widget.dart';
 import '../../../core/constants/app_constants.dart';
 
 /// 互动图片首页 - 显示场景分类
@@ -17,13 +18,19 @@ class InteractiveImageHomePage extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           backgroundColor: const Color(0xFFF8F8F8), // 更浅的灰色背景（从EEEEEE改成F8F8F8）
-          body: Stack(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // Title 左对齐
             children: [
-              // 全屏卡片列表
-              _buildCategoryList(controller),
               // 悬浮标题
               SafeArea(
                 child: _buildFloatingHeader(context),
+              ),
+              // 卡片区域 - 自动占据剩余空间并居中
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  child: _buildCategoryList(controller),
+                ),
               ),
             ],
           ),
@@ -93,9 +100,7 @@ class InteractiveImageHomePage extends StatelessWidget {
     return Obx(() {
       // 加载中状态
       if (controller.isLoadingCategories.value) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const AppLoadingWidget(message: '加载中...');
       }
 
       // 错误状态
@@ -178,49 +183,38 @@ class InteractiveImageHomePage extends StatelessWidget {
         );
       }
 
-      // 分类卡片：横向滚动列表，卡片互相挨着
+      // 分类卡片：横向滚动列表，自动适配可用空间
       return LayoutBuilder(
         builder: (context, constraints) {
-          final screenHeight = constraints.maxHeight;
+          final availableHeight = constraints.maxHeight;
           final screenWidth = constraints.maxWidth;
-
-          // Header height estimate
-          final topPadding = MediaQuery.of(context).padding.top;
-          final headerHeight = topPadding + 12 + 40 + 32; // top inset + padding + pill + gap below header (增加到32)
-
-          // Bottom margin (增加到32)
-          const bottomMargin = 32.0;
-
-          // Available height for cards (between header and bottom)
-          final availableHeight = screenHeight - headerHeight - bottomMargin;
 
           // Card aspect ratio: portrait 7:9
           const cardAspectRatio = 7.0 / 9.0;
 
-          // Card height fits in available space
-          double cardHeight = availableHeight;
+          // Card height fits in available space (留一些边距)
+          double cardHeight = (availableHeight * 0.85).clamp(200.0, 500.0);
           double cardWidth = cardHeight * cardAspectRatio;
 
           // On wide screens, cap width
-          final maxCardWidth = screenWidth * 0.75;
+          final maxCardWidth = screenWidth * 0.7;
           if (cardWidth > maxCardWidth) {
             cardWidth = maxCardWidth;
             cardHeight = cardWidth / cardAspectRatio;
           }
 
-          return Container(
-            color: const Color(0xFFF8F8F8), // 与整体背景一致，去掉白色背景
-            child: Padding(
-              padding: EdgeInsets.only(top: headerHeight, bottom: bottomMargin),
+          return Center(
+            child: SizedBox(
+              height: cardHeight,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 24), // 左右边距增加到24
+                padding: const EdgeInsets.symmetric(horizontal: 25), // 左右边距 25dp
                 itemCount: controller.categories.length,
                 itemBuilder: (context, index) {
                   final category = controller.categories[index];
                   return Padding(
                     padding: EdgeInsets.only(
-                      right: index < controller.categories.length - 1 ? 20 : 0, // 卡片间距增加到20
+                      right: index < controller.categories.length - 1 ? 30 : 0, // 卡片间距 30dp
                     ),
                     child: SizedBox(
                       width: cardWidth,

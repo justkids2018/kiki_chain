@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../logging/app_logger.dart';
 import 'api_config.dart';
 import 'http_client.dart';
@@ -49,11 +48,21 @@ class NetworkClient {
       headers: Map<String, dynamic>.from(config.headers),
     ));
 
-    // 允许直连 IP 走 HTTPS（证书为域名签发，绕过主机名校验）
-    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
-      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-      return client;
-    };
+    // 允许直连 IP 走 HTTPS（仅在非 Web 平台）
+    if (!kIsWeb) {
+      // Web 平台不支持 IOHttpClientAdapter
+      try {
+        // 动态导入以避免 Web 平台编译错误
+        // ignore: avoid_dynamic_calls
+        (_dio.httpClientAdapter as dynamic).onHttpClientCreate = (dynamic client) {
+          // ignore: avoid_dynamic_calls
+          client.badCertificateCallback = (dynamic cert, String host, int port) => true;
+          return client;
+        };
+      } catch (e) {
+        AppLogger.warning('无法配置 HTTP 客户端适配器（Web 平台不支持）', e);
+      }
+    }
 
     // 添加拦截器
     _setupInterceptors();

@@ -1,0 +1,952 @@
+/* ============================================
+   PDP 魔法森林大冒险 - 动画系统
+   Keyframes & Animation Library
+   ============================================ */
+
+/* ================================
+   🎬 场景转场动画
+   Scene Transitions
+   ================================ */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes pageFlip {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(-90deg);
+    transform-origin: left center;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg);
+    transform-origin: left center;
+  }
+}
+
+/* ================================
+   ✨ 元素入场动画
+   Element Entrance
+   ================================ */
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  80% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cascadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes typewriter {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-80px) scaleY(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(8px) scaleY(1.02);
+  }
+  80% {
+    transform: translateY(-4px) scaleY(0.99);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* ================================
+   🦁 角色动画
+   Character Animations
+   ================================ */
+
+@keyframes characterEnterLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-120px) scale(0.7) rotate(-10deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(15px) scale(1.05) rotate(2deg);
+  }
+  70% {
+    transform: translateX(-5px) scale(0.98) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes characterEnterRight {
+  0% {
+    opacity: 0;
+    transform: translateX(120px) scale(0.7) rotate(10deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-15px) scale(1.05) rotate(-2deg);
+  }
+  70% {
+    transform: translateX(5px) scale(0.98) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes characterBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-12px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes characterWave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(14deg);
+  }
+  30% {
+    transform: rotate(-8deg);
+  }
+  45% {
+    transform: rotate(14deg);
+  }
+  60% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes characterGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 40px rgba(255, 193, 7, 0.3));
+  }
+}
+
+@keyframes characterFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+}
+
+/* ================================
+   🔘 按钮动画
+   Button Animations
+   ================================ */
+
+@keyframes breathe {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2),
+                0 0 20px rgba(255, 215, 0, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4),
+                0 0 40px rgba(255, 215, 0, 0.2),
+                0 0 60px rgba(255, 215, 0, 0.1);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor,
+                0 0 40px currentColor;
+  }
+}
+
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ================================
+   🌠 粒子动画
+   Particle Animations
+   ================================ */
+
+@keyframes floatParticle {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(0) scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20vh) translateX(var(--drift-x, 30px)) scale(0.3);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(15px, -20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(-10px, -40px) rotate(180deg);
+  }
+  75% {
+    transform: translate(20px, -60px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, -80px) rotate(360deg);
+  }
+}
+
+@keyframes firefly {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    transform: translate(var(--fly-x1, 20px), var(--fly-y1, -30px));
+  }
+  60% {
+    transform: translate(var(--fly-x2, -15px), var(--fly-y2, -50px));
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2) rotate(90deg);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8) rotate(180deg);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1) rotate(270deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+@keyframes starBurst {
+  0% {
+    opacity: 1;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2) rotate(360deg);
+  }
+}
+
+/* ================================
+   📝 文字动画
+   Text Animations
+   ================================ */
+
+@keyframes textReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes goldenShine {
+  0% {
+    background-position: -200% center;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
+                 0 0 40px rgba(255, 193, 7, 0.3);
+  }
+  100% {
+    background-position: 200% center;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes letterBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-16px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes waveText {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 15px currentColor,
+                 0 0 30px currentColor;
+  }
+}
+
+/* ================================
+   🎆 特效动画
+   Special Effects
+   ================================ */
+
+@keyframes rainbow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes fogRoll {
+  0% {
+    opacity: 0.3;
+    transform: translateX(-10%) scaleX(1.2);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateX(5%) scaleX(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(-10%) scaleX(1.2);
+  }
+}
+
+@keyframes energyPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5),
+                0 0 60px rgba(255, 193, 7, 0.3),
+                0 0 90px rgba(255, 152, 0, 0.1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes victoryBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.3) rotate(180deg);
+  }
+  60% {
+    transform: scale(0.9) rotate(300deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes confetti {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-60vh) translateX(var(--confetti-x, 20px)) rotate(180deg) scale(0.9);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-40vh) translateX(var(--confetti-x2, -15px)) rotate(360deg) scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(var(--confetti-x3, 10px)) rotate(720deg) scale(0.5);
+  }
+}
+
+@keyframes magicOrbit {
+  0% {
+    transform: rotate(0deg) translateX(var(--orbit-radius, 60px)) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(var(--orbit-radius, 60px)) rotate(-360deg);
+  }
+}
+
+@keyframes lightBeam {
+  0% {
+    opacity: 0;
+    transform: scaleY(0) translateY(100%);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleY(1.1) translateY(-5%);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+/* ================================
+   📊 进度条动画
+   Progress Animations
+   ================================ */
+
+@keyframes progressFill {
+  0% {
+    width: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: var(--progress-width, 100%);
+    opacity: 1;
+  }
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    transform: scale(1.3);
+    box-shadow: 0 0 15px currentColor,
+                0 0 30px currentColor;
+  }
+}
+
+@keyframes mapGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.6);
+  }
+}
+
+@keyframes lineGrow {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dotComplete {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+    background: var(--gold-primary);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    background: var(--color-success);
+  }
+}
+
+/* ================================
+   💬 对话框动画
+   Dialog Animations
+   ================================ */
+
+@keyframes dialogSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialogBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(30px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  70% {
+    transform: scale(0.97) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes bubblePop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes typingDot {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+/* ================================
+   🃏 卡片动画
+   Card Animations
+   ================================ */
+
+@keyframes cardFlip {
+  0% {
+    transform: perspective(800px) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(800px) rotateY(90deg);
+  }
+  100% {
+    transform: perspective(800px) rotateY(0deg);
+  }
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0.5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@keyframes cardShine {
+  0% {
+    background-position: -200% -200%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+@keyframes cardReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotateX(15deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) rotateX(-2deg);
+  }
+  100% {
+    transform: scale(1) rotateX(0);
+  }
+}
+
+@keyframes cardSelect {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  30% {
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
+  }
+}
+
+/* ================================
+   🎯 工具类动画
+   Utility Animation Classes
+   ================================ */
+
+/* 基础入场 */
+.anim-fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-smooth) both;
+}
+
+.anim-fade-out {
+  animation: fadeOut var(--duration-normal) var(--ease-smooth) both;
+}
+
+.anim-slide-in-right {
+  animation: slideInRight var(--duration-normal) var(--ease-decelerate) both;
+}
+
+.anim-slide-out-left {
+  animation: slideOutLeft var(--duration-normal) var(--ease-accelerate) both;
+}
+
+.anim-slide-in-up {
+  animation: slideInUp var(--duration-normal) var(--ease-decelerate) both;
+}
+
+.anim-bounce-in {
+  animation: bounceIn var(--duration-slow) var(--ease-bounce) both;
+}
+
+.anim-pop-in {
+  animation: popIn var(--duration-normal) var(--ease-elastic) both;
+}
+
+.anim-scale-in {
+  animation: scaleIn var(--duration-normal) var(--ease-smooth) both;
+}
+
+.anim-float-up {
+  animation: floatUp var(--duration-slow) var(--ease-decelerate) both;
+}
+
+.anim-drop-in {
+  animation: dropIn var(--duration-slow) var(--ease-bounce) both;
+}
+
+/* 循环动画 */
+.anim-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.anim-float {
+  animation: characterFloat 4s ease-in-out infinite;
+}
+
+.anim-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.anim-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+.anim-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+.anim-character-glow {
+  animation: characterGlow 3s ease-in-out infinite;
+}
+
+/* 延迟工具类 */
+.anim-delay-100 { animation-delay: 100ms; }
+.anim-delay-200 { animation-delay: 200ms; }
+.anim-delay-300 { animation-delay: 300ms; }
+.anim-delay-400 { animation-delay: 400ms; }
+.anim-delay-500 { animation-delay: 500ms; }
+.anim-delay-600 { animation-delay: 600ms; }
+.anim-delay-700 { animation-delay: 700ms; }
+.anim-delay-800 { animation-delay: 800ms; }
+.anim-delay-1000 { animation-delay: 1000ms; }
+.anim-delay-1500 { animation-delay: 1500ms; }
+
+/* 持续时间工具类 */
+.anim-duration-fast { animation-duration: var(--duration-fast); }
+.anim-duration-normal { animation-duration: var(--duration-normal); }
+.anim-duration-slow { animation-duration: var(--duration-slow); }
+.anim-duration-very-slow { animation-duration: var(--duration-very-slow); }
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

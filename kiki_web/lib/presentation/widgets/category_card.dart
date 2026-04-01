@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../generated/app_localizations.dart';
@@ -21,21 +22,37 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 400,
-        height: 440,
+        // 全屏高度，宽由父组件控制
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
+            // 主阴影 - 更强的立体感
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+              spreadRadius: 0,
+            ),
+            // 次阴影 - 柔和的扩散
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 40,
+              offset: const Offset(0, 12),
+              spreadRadius: -4,
+            ),
+            // 顶部高光 - 增强凸起效果
+            BoxShadow(
+              color: Colors.white.withValues(alpha: 0.5),
+              blurRadius: 1,
+              offset: const Offset(0, -1),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16), // 圆角裁剪（从24改成16）
           child: Stack(
+            fit: StackFit.expand,
             children: [
               // 背景图片
               _buildCoverImage(),
@@ -139,30 +156,30 @@ class CategoryCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // 分类名称
+              // 分类名称（标题变小）
               Text(
                 category.name,
                 style: const TextStyle(
-                  fontSize: 28,
+                  fontSize: 24, // 从28改成24
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   height: 1.2,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6), // 从8改成6
 
-              // 描述
+              // 描述（内容变小）
               Text(
                 category.description,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 12, // 从14改成12
                   color: Colors.white.withValues(alpha: 0.9),
-                  height: 1.4,
+                  height: 1.3, // 从1.4改成1.3
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10), // 从12改成10
 
               // 场景数量
               _buildInfoChip(
@@ -176,36 +193,42 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  /// 构建信息标签
+  /// 构建信息标签（毛玻璃效果）
   Widget _buildInfoChip({required IconData icon, required String text}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF00C37D).withValues(alpha: 0.25),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 14,
-            color: Colors.white,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.grey.withValues(alpha: 0.3), // 灰色毛玻璃
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1,
             ),
           ),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 10, // 图标再小一些（从12改成10）
+                color: Colors.white,
+              ),
+              const SizedBox(width: 3), // 从4改成3
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 10, // 字体再小一些（从11改成10）
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

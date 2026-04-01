@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
@@ -148,29 +149,29 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     required double aspectRatio,
   }) {
     return Container(
-      margin: const EdgeInsets.all(24),
+      margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(24),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
               color: Colors.grey[50],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
               child: InteractiveViewer(
                 minScale: 0.5,
                 maxScale: 4.0,
@@ -552,10 +553,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   Widget _buildBackgroundImage(String path) {
     if (path.startsWith('http')) {
-      return Image.network(
-        path,
+      return CachedNetworkImage(
+        imageUrl: path,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(color: Colors.grey[200]),
+        errorWidget: (_, __, ___) => Container(color: Colors.grey[200]),
       );
     }
     return Image.asset(
@@ -567,7 +568,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   Widget _buildTopBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           // Back Button

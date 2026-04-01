@@ -176,34 +176,32 @@ class _BubbleAnimationLayerState extends State<BubbleAnimationLayer>
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: GestureDetector(
-        onTapDown: (details) {
-          _createBubbles(details.localPosition);
-        },
-        child: Stack(
-          children: [
-            // 子 widget
-            widget.child,
+    return GestureDetector(
+      onTapDown: (details) {
+        _createBubbles(details.localPosition);
+      },
+      child: Stack(
+        children: [
+          // 子 widget
+          widget.child,
 
-            // 气泡动画层
-            Positioned.fill(
-              child: IgnorePointer(
-                child: AnimatedBuilder(
-                  animation: _bubbleController,
-                  builder: (context, child) {
-                    return CustomPaint(
-                      painter: _BubblePainter(
-                        bubbles: _bubbles,
-                        progress: _bubbleController.value,
-                      ),
-                    );
-                  },
-                ),
+          // 气泡动画层
+          Positioned.fill(
+            child: IgnorePointer(
+              child: AnimatedBuilder(
+                animation: _bubbleController,
+                builder: (context, child) {
+                  return CustomPaint(
+                    painter: _BubblePainter(
+                      bubbles: _bubbles,
+                      progress: _bubbleController.value,
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

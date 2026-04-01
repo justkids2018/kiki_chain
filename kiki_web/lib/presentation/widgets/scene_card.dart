@@ -21,36 +21,36 @@ class SceneCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        // 移除固定尺寸，使用父组件传入的约束
-        // width: 400,
-        // height: 440,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Stack(
-            children: [
-              // 背景图片
-              _buildCoverImage(),
-
-              // 渐变遮罩
-              _buildGradientOverlay(),
-
-              // 内容区域
-              _buildContent(),
-
-              // NEW 标签
-              if (scene.isNew) _buildNewBadge(),
+      child: AspectRatio(
+        aspectRatio: 7 / 9, // 保持 7:9 宽高比
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
             ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                // 背景图片
+                _buildCoverImage(),
+
+                // 渐变遮罩
+                _buildGradientOverlay(),
+
+                // 内容区域
+                _buildContent(),
+
+                // NEW 标签
+                if (scene.isNew) _buildNewBadge(),
+              ],
+            ),
           ),
         ),
       ),

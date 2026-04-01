@@ -3,13 +3,13 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
 import '../../widgets/settings_dialog.dart';
+import '../../widgets/glass_back_button.dart';
 
 class InteractiveImagePage extends StatefulWidget {
   InteractiveImagePage({Key? key}) : super(key: key);
@@ -41,8 +41,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
         final imageWidth = controller.imageWidth.value;
         final imageHeight = controller.imageHeight.value;
-        final aspectRatio = imageWidth > 0 && imageHeight > 0 
-            ? imageWidth / imageHeight 
+        final aspectRatio = imageWidth > 0 && imageHeight > 0
+            ? imageWidth / imageHeight
             : 1.0;
 
         // Responsive design: default to tablet, only switch to phone if smaller
@@ -83,7 +83,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Column(
       children: [
         // Top Navigation Bar
-        _buildTopBar(context),
+        _buildFloatingTopBar(context),
 
         // Main Content Area
         Expanded(
@@ -91,7 +91,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             children: [
               // Left: Large Interactive Image
               Expanded(
-                flex: 7,  // Changed from 3 to 7 for 70:30 ratio
+                flex: 7,  // 70:30 ratio
                 child: _buildLargeImageContainer(
                   controller: controller,
                   aspectRatio: aspectRatio,
@@ -100,7 +100,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
               // Right: Character Panel (compact)
               Expanded(
-                flex: 3,  // Changed from 2 to 3 for 70:30 ratio
+                flex: 3,  // 70:30 ratio
                 child: _buildCompactCharacterPanel(controller),
               ),
             ],
@@ -121,7 +121,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         Column(
           children: [
             // Top Navigation Bar
-            _buildTopBar(context),
+            _buildFloatingTopBar(context),
 
             // Full screen image
             Expanded(
@@ -149,29 +149,29 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     required double aspectRatio,
   }) {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(32),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(20),
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               color: Colors.grey[50],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               child: InteractiveViewer(
                 minScale: 0.5,
                 maxScale: 4.0,
@@ -553,10 +553,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   Widget _buildBackgroundImage(String path) {
     if (path.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: path,
+      return Image.network(
+        path,
         fit: BoxFit.cover,
-        errorWidget: (_, __, ___) => Container(color: Colors.grey[200]),
+        errorBuilder: (_, __, ___) => Container(color: Colors.grey[200]),
       );
     }
     return Image.asset(
@@ -566,46 +566,43 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  Widget _buildTopBar(BuildContext context) {
+  Widget _buildFloatingTopBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          // Back Button
-          GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back_rounded,
-                  color: Colors.white, size: 28),
-            ),
-          ),
+          // Back Button - using unified glass component
+          const GlassBackButton(),
 
           const Spacer(),
 
-          // Settings Button
+          // Settings Button with glass effect
           GestureDetector(
             onTap: () => Get.dialog(const SettingsDialog()),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle,
+            child: ClipOval(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Icon(Icons.settings,
+                      color: Colors.white, size: 20),
+                ),
               ),
-              child: const Icon(Icons.settings,
-                  color: Colors.white, size: 24),
             ),
           ),
         ],
       ),
     );
   }
-
-
 
   Widget _buildCharacterGrid(
     InteractiveImageController controller,
@@ -646,10 +643,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Center(
       child: CharacterStrokeGrid(
         cells: cells,
-        cellSize: _chineseCellSize, // Platform-specific size
+        cellSize: _chineseCellSize,
         onCharacterComplete: controller.onCharacterAnimationComplete,
       ),
     );
   }
-
 }

@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'widgets/bubble_animation_layer.dart';
@@ -124,13 +123,13 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
     );
   }
 
-  /// 构建图片组件，支持本地和网络图片（网络图片使用缓存）
+  /// 构建图片组件，支持本地和网络图片
   Widget _buildImage(String imagePath, BuildContext context) {
     return imagePath.startsWith('http://') || imagePath.startsWith('https://')
-        ? CachedNetworkImage(
-            imageUrl: imagePath,
+        ? Image.network(
+            imagePath,
             fit: BoxFit.fill,
-            errorWidget: (context, url, error) {
+            errorBuilder: (context, error, stackTrace) {
               return _buildErrorWidget(context, imagePath);
             },
           )

@@ -1,143 +1,148 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../../core/settings/app_settings_service.dart';
 import '../../../../domain/entities/interactive_region.dart';
+import 'cloud_tts_service.dart';
 
-/// 系统 TTS 语音合成服务（支持儿童声音）
-///
-/// 使用系统内置的 TTS 引擎，完全免费，无需注册
-/// iOS 和 Android 都支持儿童声音选择
 class TextToSpeechService {
   final FlutterTts _tts = FlutterTts();
+  final CloudTtsService _cloudTts = CloudTtsService();
   AppSettingsService? _settings;
   bool _disposed = false;
+  bool _initialized = false;
 
   TextToSpeechService();
 
-  /// Initialize TTS with child-friendly voices
   Future<void> initialize() async {
+    if (_initialized) return;
     try {
-      await _tts.setSharedInstance(true);
-
-      // iOS 音频配置
-      try {
-        await _tts.setIosAudioCategory(
-          IosTextToSpeechAudioCategory.playback,
-          [
-            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-            IosTextToSpeechAudioCategoryOptions.mixWithOthers,
-          ],
-          IosTextToSpeechAudioMode.voicePrompt,
-        );
-      } catch (_) {}
+      // Android：必须先设置音量，否则部分机型静音
+      if (!kIsWeb && Platform.isAndroid) {
+        await _initAndroid();
+      } else if (!kIsWeb && Platform.isIOS) {
+        await _initIos();
+      }
 
       await _tts.awaitSpeakCompletion(true);
+      await _tts.setPitch(1.3);
+      await _tts.setVolume(1.0);
 
-      // 设置音调（提高音调使声音更像儿童）
-      await _tts.setPitch(1.3); // 1.0 是正常，1.3 更高更像儿童
+      // 注册错误回调，方便排查 Android 问题
+      _tts.setErrorHandler((msg) {
+        AppLogger.error('TTS error: $msg');
+      });
 
-      AppLogger.info('✅ TTS initialized with child-friendly voice');
+      _initialized = true;
+      AppLogger.info('TTS initialized');
     } catch (e) {
-      AppLogger.error('❌ TTS initialization failed', e);
+      AppLogger.error('TTS initialization failed', e);
     }
   }
 
-  /// Speak the region's audio (Chinese and English)
+  Future<void> _initAndroid() async {
+    try {
+      // 优先使用 Google TTS 引擎（发音最好）
+      await _tts.setEngine('com.google.android.tts');
+    } catch (_) {
+      // 没有 Google TTS 时使用系统默认引擎，忽略错误
+    }
+    // setSharedInstance 是 iOS 专属 API，Android 上跳过
+  }
+
+  Future<void> _initIos() async {
+    try {
+      await _tts.setSharedInstance(true);
+      await _tts.setIosAudioCategory(
+        IosTextToSpeechAudioCategory.playback,
+        [
+          IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+          IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+          IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+        ],
+        IosTextToSpeechAudioMode.voicePrompt,
+      );
+    } catch (_) {}
+  }
+
   Future<void> speakRegion(InteractiveRegion region) async {
     if (_disposed) return;
     try {
       await stop();
+      final rates = _getRates();
 
-      _settings ??= Get.isRegistered<AppSettingsService>()
-          ? Get.find<AppSettingsService>()
-          : null;
-      final rates =
-          _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+      await _speak(text: region.text, lang: 'zh-CN', rate: rates['chinese']!);
 
-      // 说中文
-      await _speak(
-        text: region.text,
-        lang: 'zh-CN',
-        rate: rates['chinese']!,
-      );
-
-      // 说英文
       if (region.textEnglish.isNotEmpty) {
-        await _speak(
-          text: region.textEnglish,
-          lang: 'en-US',
-          rate: rates['english']!,
-        );
+        await _speak(text: region.textEnglish, lang: 'en-US', rate: rates['english']!);
       }
     } catch (e) {
-      AppLogger.error('🎤 TTS error', e);
+      AppLogger.error('TTS speakRegion error', e);
     }
   }
 
-  /// Speak pinyin pronunciation
   Future<void> speakPinyin(InteractiveRegion region) async {
     if (_disposed) return;
     try {
-      _settings ??= Get.isRegistered<AppSettingsService>()
-          ? Get.find<AppSettingsService>()
-          : null;
-      final rates =
-          _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
-
-      await _speak(
-        text: region.textPinyin,
-        lang: 'zh-CN',
-        rate: rates['chinese']!,
-      );
+      final rates = _getRates();
+      await _speak(text: region.textPinyin, lang: 'zh-CN', rate: rates['chinese']!);
     } catch (e) {
-      AppLogger.error('🎤 TTS error', e);
+      AppLogger.error('TTS speakPinyin error', e);
     }
   }
 
-  /// Speak custom text
-  Future<void> speak(String text, {String language = "en-US"}) async {
+  Future<void> speak(String text, {String language = 'en-US'}) async {
     if (_disposed) return;
     try {
-      _settings ??= Get.isRegistered<AppSettingsService>()
-          ? Get.find<AppSettingsService>()
-          : null;
-      final rates =
-          _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
-
-      final isChinese = language == "zh-CN" || language == "zh";
+      final rates = _getRates();
+      final isChinese = language == 'zh-CN' || language == 'zh';
       await _speak(
         text: text,
         lang: isChinese ? 'zh-CN' : 'en-US',
         rate: isChinese ? rates['chinese']! : rates['english']!,
       );
     } catch (e) {
-      AppLogger.error('🎤 TTS error', e);
+      AppLogger.error('TTS speak error', e);
     }
   }
 
-  /// 系统 TTS 播放（使用儿童音调）
+  Map<String, double> _getRates() {
+    _settings ??= Get.isRegistered<AppSettingsService>()
+        ? Get.find<AppSettingsService>()
+        : null;
+    return _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+  }
+
   Future<void> _speak({
     required String text,
     required String lang,
     required double rate,
   }) async {
     if (text.trim().isEmpty || _disposed) return;
-
     try {
+      // 1. 尝试云 TTS（Edge TTS → Azure TTS）
+      final cloudSuccess = await _cloudTts.speak(text, language: lang);
+      if (cloudSuccess) {
+        AppLogger.info('Cloud TTS success: "$text"');
+        return;
+      }
+
+      // 2. 降级到系统 TTS
+      AppLogger.info('Fallback to system TTS: "$text"');
       await _tts.setLanguage(lang);
       await _tts.setSpeechRate(rate);
-      await _tts.setPitch(1.3); // 儿童音调
-      await _tts.speak(text);
-      AppLogger.info('🔊 Speaking: ${text.substring(0, text.length > 20 ? 20 : text.length)}...');
+      await _tts.setVolume(1.0);
+      await _tts.setPitch(1.3);
+      final result = await _tts.speak(text);
+      AppLogger.info('System TTS result: $result — "$text"');
     } catch (e) {
-      AppLogger.error('❌ TTS playback failed', e);
+      AppLogger.error('TTS _speak failed', e);
     }
   }
 
-  /// Stop current speech
   Future<void> stop() async {
     try {
       await _tts.stop();
@@ -146,9 +151,9 @@ class TextToSpeechService {
     }
   }
 
-  /// Dispose TTS resources
   void dispose() {
     _disposed = true;
     _tts.stop();
+    _cloudTts.dispose();
   }
 }

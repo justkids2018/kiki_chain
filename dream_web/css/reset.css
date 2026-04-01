@@ -1,0 +1,166 @@
+/* ============================================
+   PDP 魔法森林大冒险 - 样式重置
+   Reset & Base Styles
+   ============================================ */
+
+/* ---- 基准设置 ---- */
+/* 固定16px基准，不使用rem自适应（由vw/clamp处理响应式） */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ---- 全局盒模型 ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- 文档基础 ---- */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: 'Nunito', -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2D2D2D;
+  background-color: #1A3C34;
+  
+  /* 字体渲染优化 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* 触摸优化 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  
+  /* 禁止文本选中（游戏应用） */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ---- HTML元素重置 ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+p {
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ---- 媒体元素 ---- */
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+canvas {
+  display: block;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* ---- 表单元素重置 ---- */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ---- 表格重置 ---- */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ---- 滚动条美化 ---- */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ---- 无障碍 ---- */
+/* 允许需要键盘导航时恢复焦点样式 */
+:focus-visible {
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- 动画性能优化 ---- */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ---- 安全区适配（刘海屏） ---- */
+/* 注意：不在 body 上设置 safe-area padding，
+   否则会压缩 #app 的可用高度。
+   各场景通过自身的 padding-top/bottom + env() 处理安全区域。 */

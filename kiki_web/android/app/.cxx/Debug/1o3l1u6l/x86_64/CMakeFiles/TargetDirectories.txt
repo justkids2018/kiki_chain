@@ -1,0 +1,2 @@
+/Users/qisd/Documents/development/chain/kiki_chain/kiki_web/android/app/.cxx/Debug/1o3l1u6l/x86_64/CMakeFiles/edit_cache.dir
+/Users/qisd/Documents/development/chain/kiki_chain/kiki_web/android/app/.cxx/Debug/1o3l1u6l/x86_64/CMakeFiles/rebuild_cache.dir

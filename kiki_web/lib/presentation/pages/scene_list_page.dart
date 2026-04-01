@@ -5,10 +5,8 @@ import '../controllers/scene_list_controller.dart';
 import '../widgets/scene_card.dart';
 import '../../domain/entities/scene_category.dart';
 
-/// 场景列表页面
-///
-/// 显示某个分类下的所有场景
-class SceneListPage extends StatelessWidget {
+/// 场景列表页面 — 层叠式卡片布局
+class SceneListPage extends StatefulWidget {
   final SceneCategory category;
 
   const SceneListPage({
@@ -17,9 +15,37 @@ class SceneListPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SceneListPage> createState() => _SceneListPageState();
+}
+
+class _SceneListPageState extends State<SceneListPage> {
+  late PageController _pageController;
+  double _currentPage = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(
+      viewportFraction: 0.75, // 显示部分左右卡片
+      initialPage: 0,
+    );
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page ?? 0.0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<SceneListController>(
-      init: SceneListController(category: category),
+      init: SceneListController(category: widget.category),
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.grey[50],
@@ -31,14 +57,14 @@ class SceneListPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      category.name,
+                      widget.category.name,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      localizations.scenesCount(category.sceneCount),
+                      localizations.scenesCount(widget.category.sceneCount),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -59,142 +85,130 @@ class SceneListPage extends StatelessWidget {
     );
   }
 
-  /// 构建页面主体
   Widget _buildBody(SceneListController controller) {
     return Obx(() {
-      // 加载中状态
       if (controller.isLoadingScenes.value) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       }
 
-      // 错误状态
       if (controller.errorMessage.value.isNotEmpty) {
-        return Builder(
-          builder: (context) {
-            final localizations = AppLocalizations.of(context)!;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations.loadFailed,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      controller.errorMessage.value,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: () => controller.refreshScenes(),
-                    icon: const Icon(Icons.refresh),
-                    label: Text(localizations.retry),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+        return Builder(builder: (context) {
+          final localizations = AppLocalizations.of(context)!;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(localizations.loadFailed,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800])),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(controller.errorMessage.value,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      textAlign: TextAlign.center),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: () => controller.refreshScenes(),
+                  icon: const Icon(Icons.refresh),
+                  label: Text(localizations.retry),
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12)),
+                ),
+              ],
+            ),
+          );
+        });
       }
 
-      // 空状态
       if (controller.scenes.isEmpty) {
-        return Builder(
-          builder: (context) {
-            final localizations = AppLocalizations.of(context)!;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.inbox_outlined,
-                    size: 64,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    localizations.noScenes,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+        return Builder(builder: (context) {
+          final localizations = AppLocalizations.of(context)!;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(localizations.noScenes,
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+              ],
+            ),
+          );
+        });
       }
 
-      // 场景网格列表
-      return _buildSceneGrid(controller);
+      return _buildStackedCardList(controller);
     });
   }
 
-  Widget _buildSceneGrid(SceneListController controller) {
+  /// 构建层叠式卡片列表（3D 效果）
+  Widget _buildStackedCardList(SceneListController controller) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final screenWidth = constraints.maxWidth;
-        int crossAxisCount;
-        double aspectRatio;
+        final availableHeight = constraints.maxHeight;
+        final cardHeight = (availableHeight * 0.7).clamp(300.0, 500.0);
+        final cardWidth = cardHeight * (7 / 9);
 
-        if (screenWidth >= 1100) {
-          crossAxisCount = 3;
-          aspectRatio = 0.9;
-        } else if (screenWidth >= 600) {
-          // iPad portrait
-          crossAxisCount = 2;
-          aspectRatio = 0.9;
-        } else {
-          // iPhone: 2 列，方形卡片
-          crossAxisCount = 2;
-          aspectRatio = 1.0;
-        }
-
-        return GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: aspectRatio,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 14,
-          ),
+        return PageView.builder(
+          controller: _pageController,
           itemCount: controller.scenes.length,
           itemBuilder: (context, index) {
             final scene = controller.scenes[index];
-            return SceneCard(
+            return _buildCardItem(
               scene: scene,
+              index: index,
+              cardWidth: cardWidth,
+              cardHeight: cardHeight,
               onTap: () => controller.navigateToSceneDetail(scene),
             );
           },
         );
       },
+    );
+  }
+
+  /// 构建单个卡片项（带 3D 变换）
+  Widget _buildCardItem({
+    required scene,
+    required int index,
+    required double cardWidth,
+    required double cardHeight,
+    required VoidCallback onTap,
+  }) {
+    // 计算当前卡片与中心位置的距离
+    final difference = index - _currentPage;
+
+    // 缩放效果：中间卡片最大(1.0)，两侧卡片缩小(0.85)
+    final scale = 1.0 - (difference.abs() * 0.15).clamp(0.0, 0.15);
+
+    // 透明度效果：中间卡片完全不透明，两侧卡片半透明
+    final opacity = 1.0 - (difference.abs() * 0.3).clamp(0.0, 0.5);
+
+    // 垂直位移：两侧卡片略微下沉
+    final verticalOffset = difference.abs() * 20.0;
+
+    return Center(
+      child: Transform(
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, 0.001) // 透视效果
+          ..scale(scale)
+          ..translate(0.0, verticalOffset, 0.0),
+        alignment: Alignment.center,
+        child: Opacity(
+          opacity: opacity,
+          child: SizedBox(
+            width: cardWidth,
+            height: cardHeight,
+            child: SceneCard(
+              scene: scene,
+              onTap: onTap,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

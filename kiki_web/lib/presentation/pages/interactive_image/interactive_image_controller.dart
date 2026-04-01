@@ -6,6 +6,7 @@ import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
 import 'services/text_to_speech_service.dart';
+import 'services/stroke_order_service.dart';
 
 class InteractiveImageController extends GetxController {
   late final IInteractiveImageRepository _repository;
@@ -161,13 +162,13 @@ class InteractiveImageController extends GetxController {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
 
-      // Initialize TTS - continue even if it fails
+      // Initialize TTS - continue even if it fails (reduced timeout for faster loading)
       try {
         AppLogger.info('🎤 Starting TTS initialization...');
         await _ttsService.initialize().timeout(
-          const Duration(seconds: 5),
+          const Duration(seconds: 2),
           onTimeout: () {
-            AppLogger.warning('⏱️ TTS initialization timed out after 5 seconds');
+            AppLogger.warning('⏱️ TTS initialization timed out after 2 seconds');
           },
         );
         AppLogger.info('✅ TTS initialized successfully (Edge TTS + fallback)');
@@ -197,7 +198,11 @@ class InteractiveImageController extends GetxController {
 
       AppLogger.debug('Data loading completed');
       loadingProgress.value = 1.0;
-      await Future.delayed(const Duration(milliseconds: 300));
+
+      // 预加载当前场景的笔顺数据（后台静默下载）
+      _preloadStrokeData();
+
+      // 移除人为延迟，立即显示页面
       isLoaded.value = true;
       AppLogger.info('Initialization completed successfully');
     } catch (e) {
@@ -382,5 +387,43 @@ Interactive Image Diagnostics:
         .split('')
         .where((char) => char.trim().isNotEmpty)
         .length;
+  }
+
+  /// 预加载当前场景的笔顺数据
+  void _preloadStrokeData() {
+    try {
+      // 提取当前场景的所有汉字
+      final characters = <String>{};
+      for (var region in regions) {
+        for (var rune in region.text.runes) {
+          final char = String.fromCharCode(rune);
+          if (_isChinese(char)) {
+            characters.add(char);
+          }
+        }
+      }
+
+      if (characters.isEmpty) {
+        AppLogger.debug('No Chinese characters found in current scene');
+        return;
+      }
+
+      AppLogger.info('Preloading stroke data for ${characters.length} characters');
+
+      // 后台预加载（不阻塞 UI）
+      StrokeOrderService()
+          .preloadCharacters(characters.toList())
+          .catchError((e) {
+        AppLogger.warning('Stroke data preload failed: $e');
+      });
+    } catch (e) {
+      AppLogger.error('Failed to preload stroke data', e);
+    }
+  }
+
+  /// 判断是否为中文字符
+  bool _isChinese(String char) {
+    final code = char.codeUnitAt(0);
+    return code >= 0x4E00 && code <= 0x9FFF;
   }
 }

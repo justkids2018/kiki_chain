@@ -1,0 +1,245 @@
+/* ============================================
+   PDP 魔法森林大冒险 - CSS 变量体系
+   Design Tokens & CSS Custom Properties
+   ============================================ */
+
+:root {
+  /* ================================
+     🐯 守护者色彩系统 
+     Guardian Color System
+     ================================ */
+  
+  /* 老虎 - 勇气守护者 */
+  --tiger-primary: #FF6B35;
+  --tiger-secondary: #FF8A5C;
+  --tiger-light: #FFAB91;
+  --tiger-dark: #E65100;
+  --tiger-gradient: linear-gradient(135deg, #FF6B35 0%, #FF8A5C 50%, #FFB74D 100%);
+  --tiger-gradient-radial: radial-gradient(circle, #FF8A5C 0%, #FF6B35 70%);
+  
+  /* 孔雀 - 魅力守护者 */
+  --peacock-primary: #7C4DFF;
+  --peacock-secondary: #B388FF;
+  --peacock-light: #D1C4E9;
+  --peacock-dark: #651FFF;
+  --peacock-gradient: linear-gradient(135deg, #7C4DFF 0%, #B388FF 50%, #CE93D8 100%);
+  --peacock-gradient-radial: radial-gradient(circle, #B388FF 0%, #7C4DFF 70%);
+  
+  /* 考拉 - 和平守护者 */
+  --koala-primary: #4CAF50;
+  --koala-secondary: #81C784;
+  --koala-light: #C8E6C9;
+  --koala-dark: #388E3C;
+  --koala-gradient: linear-gradient(135deg, #4CAF50 0%, #81C784 50%, #A5D6A7 100%);
+  --koala-gradient-radial: radial-gradient(circle, #81C784 0%, #4CAF50 70%);
+  
+  /* 猫头鹰 - 智慧守护者 */
+  --owl-primary: #2196F3;
+  --owl-secondary: #64B5F6;
+  --owl-light: #BBDEFB;
+  --owl-dark: #1565C0;
+  --owl-gradient: linear-gradient(135deg, #2196F3 0%, #64B5F6 50%, #90CAF9 100%);
+  --owl-gradient-radial: radial-gradient(circle, #64B5F6 0%, #2196F3 70%);
+
+  /* ================================
+     🎨 背景色 
+     Background Colors
+     ================================ */
+  --bg-forest: #1A3C34;
+  --bg-forest-light: #2D5A4E;
+  --bg-night: #0D253F;
+  --bg-night-light: #1A3A5C;
+  --bg-warm: #F5F0E8;
+  --bg-cream: #FFF8E7;
+  --bg-forest-gradient: linear-gradient(180deg, #1A3C34 0%, #0D253F 100%);
+  --bg-night-gradient: linear-gradient(180deg, #0D253F 0%, #1A1A2E 100%);
+  --bg-warm-gradient: linear-gradient(180deg, #FFF8E7 0%, #F5F0E8 100%);
+
+  /* ================================
+     ✍️ 文字色
+     Text Colors
+     ================================ */
+  --text-white: #FFFFFF;
+  --text-dark: #2D2D2D;
+  --text-brown: #5C4033;
+  --text-gold: #FFE082;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-light: rgba(255, 255, 255, 0.85);
+
+  /* ================================
+     🚦 功能色
+     Functional Colors
+     ================================ */
+  --color-warning: #E65100;
+  --color-success: #00BFA5;
+  --color-accent: #FF4081;
+  --color-info: #448AFF;
+  --color-danger: #F44336;
+
+  /* ================================
+     🌟 金色系
+     Gold Theme
+     ================================ */
+  --gold-primary: #FFD700;
+  --gold-light: #FFC107;
+  --gold-dark: #FF9800;
+  --gold-gradient: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FF9800 100%);
+  --gold-shimmer: linear-gradient(90deg, #FFD700 0%, #FFF8E1 30%, #FFD700 60%, #FFF8E1 100%);
+  --gold-text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 193, 7, 0.3);
+
+  /* ================================
+     🔤 字体系统
+     Typography System
+     ================================ */
+  --font-family: 'Nunito', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-heading-family: 'Fredoka', 'PingFang SC', sans-serif;
+  --font-heading: 700;
+  --font-subheading: 600;
+  --font-body: 400;
+  --font-bold: 700;
+
+  /* 字号 */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.75rem;   /* 28px */
+  --text-4xl: 2rem;      /* 32px */
+  --text-5xl: 2.5rem;    /* 40px */
+
+  /* 行高 */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* ================================
+     📐 圆角系统
+     Border Radius
+     ================================ */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-2xl: 48px;
+  --radius-full: 9999px;
+
+  /* ================================
+     🌑 阴影系统
+     Shadow System
+     ================================ */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+  
+  /* 彩色发光阴影 */
+  --shadow-glow-gold: 0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 193, 7, 0.2);
+  --shadow-glow-tiger: 0 0 20px rgba(255, 107, 53, 0.4), 0 0 40px rgba(255, 107, 53, 0.2);
+  --shadow-glow-peacock: 0 0 20px rgba(124, 77, 255, 0.4), 0 0 40px rgba(124, 77, 255, 0.2);
+  --shadow-glow-koala: 0 0 20px rgba(76, 175, 80, 0.4), 0 0 40px rgba(76, 175, 80, 0.2);
+  --shadow-glow-owl: 0 0 20px rgba(33, 150, 243, 0.4), 0 0 40px rgba(33, 150, 243, 0.2);
+  --shadow-glow-accent: 0 0 20px rgba(255, 64, 129, 0.4), 0 0 40px rgba(255, 64, 129, 0.2);
+  
+  /* 内发光 */
+  --shadow-inner-glow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+
+  /* ================================
+     ⏱ 动画时长
+     Animation Duration
+     ================================ */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 800ms;
+  --duration-very-slow: 1500ms;
+  --duration-dramatic: 2500ms;
+
+  /* ================================
+     🎢 缓动函数
+     Easing Functions
+     ================================ */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-decelerate: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.175);
+
+  /* ================================
+     🔮 毛玻璃效果
+     Glassmorphism
+     ================================ */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-light: rgba(255, 255, 255, 0.12);
+  --glass-bg-medium: rgba(255, 255, 255, 0.18);
+  --glass-bg-dark: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-light: rgba(255, 255, 255, 0.25);
+  --glass-blur: blur(20px);
+  --glass-blur-sm: blur(10px);
+  --glass-blur-lg: blur(40px);
+
+  /* ================================
+     📏 间距系统
+     Spacing System (基础单位 4px)
+     ================================ */
+  --space-0: 0;
+  --space-1: 4px;     /* 0.25rem */
+  --space-2: 8px;     /* 0.5rem */
+  --space-3: 12px;    /* 0.75rem */
+  --space-4: 16px;    /* 1rem */
+  --space-5: 20px;    /* 1.25rem */
+  --space-6: 24px;    /* 1.5rem */
+  --space-8: 32px;    /* 2rem */
+  --space-10: 40px;   /* 2.5rem */
+  --space-12: 48px;   /* 3rem */
+  --space-16: 64px;   /* 4rem */
+  --space-20: 80px;   /* 5rem */
+
+  /* ================================
+     📱 布局常量
+     Layout Constants
+     ================================ */
+  --max-width: 480px;
+  --min-touch-target: 48px;
+  --header-height: 56px;
+  --bottom-safe: env(safe-area-inset-bottom, 0px);
+  
+  /* ================================
+     🖼 层级系统
+     Z-Index System
+     ================================ */
+  --z-background: -1;
+  --z-default: 1;
+  --z-content: 10;
+  --z-overlay: 100;
+  --z-dialog: 200;
+  --z-toast: 300;
+  --z-loading: 400;
+  --z-top: 999;
+}
+
+/* ================================
+   🌙 深色/夜间场景变量覆盖
+   Dark Scene Overrides
+   ================================ */
+[data-scene="night"],
+[data-scene="climax"] {
+  --glass-bg: rgba(0, 0, 0, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ================================
+   ☀️ 暖色场景变量覆盖
+   Warm Scene Overrides
+   ================================ */
+[data-scene="result"],
+[data-scene="welcome"] {
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+}

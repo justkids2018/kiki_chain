@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entities/scene.dart';
 import '../../generated/app_localizations.dart';
 
@@ -21,8 +22,9 @@ class SceneCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 400,
-        height: 440,
+        // 移除固定尺寸，使用父组件传入的约束
+        // width: 400,
+        // height: 440,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
@@ -68,24 +70,19 @@ class SceneCard extends StatelessWidget {
       );
     }
     return Positioned.fill(
-      child: Image.network(
-        scene.coverImage,
+      child: CachedNetworkImage(
+        imageUrl: scene.coverImage,
         fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: _getSceneColor().withValues(alpha: 0.3),
-            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: _getSceneColor(),
-            child: const Center(
-              child: Icon(Icons.image_outlined, size: 48, color: Colors.white),
-            ),
-          );
-        },
+        placeholder: (context, url) => Container(
+          color: _getSceneColor().withValues(alpha: 0.3),
+          child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: _getSceneColor(),
+          child: const Center(
+            child: Icon(Icons.image_outlined, size: 48, color: Colors.white),
+          ),
+        ),
       ),
     );
   }

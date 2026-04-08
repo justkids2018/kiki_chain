@@ -27,7 +27,10 @@ class TextToSpeechService {
         await _initIos();
       }
 
-      await _tts.awaitSpeakCompletion(true);
+      // Android 上 awaitSpeakCompletion 有时导致静默不播，不启用
+      if (!kIsWeb && !Platform.isAndroid) {
+        await _tts.awaitSpeakCompletion(true);
+      }
       await _tts.setPitch(1.3);
       await _tts.setVolume(1.0);
 
@@ -44,13 +47,21 @@ class TextToSpeechService {
   }
 
   Future<void> _initAndroid() async {
+    // 先不设置特定引擎，用系统默认（避免 Google TTS 不可用时卡住）
+    // 尝试设置 Google TTS（有则用，没有则继续用系统默认）
     try {
-      // 优先使用 Google TTS 引擎（发音最好）
-      await _tts.setEngine('com.google.android.tts');
+      final engines = await _tts.getEngines;
+      AppLogger.info('Available TTS engines: $engines');
+      if (engines != null && (engines as List).contains('com.google.android.tts')) {
+        await _tts.setEngine('com.google.android.tts');
+        AppLogger.info('Using Google TTS engine');
+      } else {
+        AppLogger.info('Google TTS not available, using system default engine');
+      }
     } catch (_) {
-      // 没有 Google TTS 时使用系统默认引擎，忽略错误
+      AppLogger.warning('Could not query TTS engines, using system default');
     }
-    // setSharedInstance 是 iOS 专属 API，Android 上跳过
+    // Android 不需要 setSharedInstance（iOS 专属）
   }
 
   Future<void> _initIos() async {
@@ -123,6 +134,16 @@ class TextToSpeechService {
   }) async {
     if (text.trim().isEmpty || _disposed) return;
     try {
+      // Ensure TTS is initialized before speaking (handles fast tap before fire-and-forget completes)
+      if (!_initialized) {
+        await initialize().timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            AppLogger.warning('TTS init timed out in _speak, proceeding anyway');
+          },
+        );
+      }
+
       // 1. 尝试云 TTS（Edge TTS → Azure TTS）
       final cloudSuccess = await _cloudTts.speak(text, language: lang);
       if (cloudSuccess) {
@@ -131,11 +152,18 @@ class TextToSpeechService {
       }
 
       // 2. 降级到系统 TTS
-      AppLogger.info('Fallback to system TTS: "$text"');
+      AppLogger.info('Fallback to system TTS: "$text" [$lang]');
       await _tts.setLanguage(lang);
       await _tts.setSpeechRate(rate);
       await _tts.setVolume(1.0);
       await _tts.setPitch(1.3);
+
+      // Android 上先确认语言可用
+      if (!kIsWeb && Platform.isAndroid) {
+        final langAvailable = await _tts.isLanguageAvailable(lang);
+        AppLogger.info('System TTS language "$lang" available: $langAvailable');
+      }
+
       final result = await _tts.speak(text);
       AppLogger.info('System TTS result: $result — "$text"');
     } catch (e) {

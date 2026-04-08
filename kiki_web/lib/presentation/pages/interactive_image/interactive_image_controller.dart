@@ -161,43 +161,34 @@ class InteractiveImageController extends GetxController {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
 
-      // Initialize TTS - continue even if it fails
-      try {
-        AppLogger.info('🎤 Starting TTS initialization...');
-        await _ttsService.initialize().timeout(
-          const Duration(seconds: 5),
-          onTimeout: () {
-            AppLogger.warning('⏱️ TTS initialization timed out after 5 seconds');
-          },
-        );
-        AppLogger.info('✅ TTS initialized successfully (Edge TTS + fallback)');
-      } catch (e) {
+      // TTS 初始化在后台运行，不阻塞 UI 显示
+      _ttsService.initialize().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          AppLogger.warning('⏱️ TTS initialization timed out after 5 seconds');
+        },
+      ).catchError((e) {
         AppLogger.error('❌ TTS initialization failed', e);
-        // Continue without TTS
-      }
-      loadingProgress.value = 0.3;
+      });
 
-      // Load regions and image dimensions in parallel with timeout
-      AppLogger.debug('Starting data loading');
-      try {
-        await Future.wait([
-          _loadRegions(),
-          _loadImageDimensions(),
-        ]).timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            AppLogger.warning('Data loading timed out after 15 seconds');
-            throw TimeoutException('Loading timed out');
-          },
-        );
-      } catch (e) {
+      // 只等待数据加载（最多 15 秒）
+      await Future.wait([
+        _loadRegions(),
+        _loadImageDimensions(),
+      ]).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          AppLogger.warning('Data loading timed out after 15 seconds');
+          throw TimeoutException('Loading timed out');
+        },
+      ).catchError((e) {
         AppLogger.error('Data loading failed', e);
-        // Continue anyway to show the page
-      }
+        return <void>[];
+      });
 
-      AppLogger.debug('Data loading completed');
+      AppLogger.debug('Initialization completed');
       loadingProgress.value = 1.0;
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 200));
       isLoaded.value = true;
       AppLogger.info('Initialization completed successfully');
     } catch (e) {
@@ -269,6 +260,30 @@ class InteractiveImageController extends GetxController {
 
   Future<void> _loadImageDimensions() async {
     try {
+      // 优先从 scene 数据中直接读取嵌入的像素尺寸（跳过图片解码，速度最快）
+      if (_scene != null) {
+        double? embeddedWidth;
+        double? embeddedHeight;
+
+        if (_scene is Map) {
+          final w = _scene['image_width'];
+          final h = _scene['image_height'];
+          if (w != null && h != null) {
+            embeddedWidth = (w as num).toDouble();
+            embeddedHeight = (h as num).toDouble();
+          }
+        }
+
+        if (embeddedWidth != null && embeddedHeight != null) {
+          AppLogger.info('Image dimensions from scene data: $embeddedWidth x $embeddedHeight (no decode needed)');
+          imageWidth.value = embeddedWidth;
+          imageHeight.value = embeddedHeight;
+          loadingProgress.value = 0.9;
+          return;
+        }
+      }
+
+      // 降级：解码图片获取尺寸（首次访问较慢，但结果会被缓存）
       AppLogger.debug('Loading image from: $_imagePath');
 
       final dimensions = await _repository.loadImageDimensions(_imagePath);

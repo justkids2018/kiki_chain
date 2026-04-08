@@ -68,7 +68,7 @@ class ApiConfig {
   
   /// 快速环境配置 - 开发环境
   static void initDev() => init(
-    baseUrl: 'http://127.0.0.1:8081',
+    baseUrl: 'http://192.168.3.101:8081',
     enableLogging: true,
     enableCache: true,
   );

@@ -1,4 +1,3 @@
-import '../../../config/env_config.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/http_client.dart';
 import '../../mock/mock_categories.dart';
@@ -7,7 +6,7 @@ import '../../mock/mock_scenes.dart';
 /// 场景 API 服务
 ///
 /// 对接 kiki_server /api/v1/mobile/scene/... 路由
-/// 支持 Mock 模式和真实 API 模式切换
+/// 不再使用 Mock 模式，直接调用真实 API
 class SceneApiService {
   final HttpClient? _httpClient;
 
@@ -17,10 +16,6 @@ class SceneApiService {
   ///
   /// API: GET /api/v1/mobile/scene/categories
   Future<Map<String, dynamic>> getCategories() async {
-    if (EnvConfig.useMock) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return MockCategories.getCategoriesResponse();
-    }
     return await _httpClient!.get(ApiEndpoints.sceneCategories);
   }
 
@@ -28,10 +23,6 @@ class SceneApiService {
   ///
   /// API: GET /api/v1/mobile/scene/categories/{categoryId}/scenes
   Future<Map<String, dynamic>> getScenesByCategory(String categoryId) async {
-    if (EnvConfig.useMock) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return MockScenes.getScenesByCategoryResponse(categoryId);
-    }
     return await _httpClient!.get(ApiEndpoints.sceneByCategoryId(categoryId));
   }
 
@@ -39,10 +30,6 @@ class SceneApiService {
   ///
   /// API: GET /api/v1/mobile/scene/{sceneId}
   Future<Map<String, dynamic>?> getSceneDetail(String sceneId) async {
-    if (EnvConfig.useMock) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return MockScenes.getSceneDetailResponse(sceneId);
-    }
     return await _httpClient!.get(ApiEndpoints.sceneDetail(sceneId));
   }
 
@@ -54,19 +41,6 @@ class SceneApiService {
     int page = 1,
     int pageSize = 20,
   }) async {
-    if (EnvConfig.useMock) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return {
-        "success": true,
-        "message": "成功",
-        "data": {
-          "total": 0,
-          "page": page,
-          "page_size": pageSize,
-          "scenes": [],
-        }
-      };
-    }
     return await _httpClient!.get(
       ApiEndpoints.sceneSearch,
       queryParameters: {
@@ -81,17 +55,6 @@ class SceneApiService {
   ///
   /// API: GET /api/v1/mobile/scene/recommendations?limit=10
   Future<Map<String, dynamic>> getRecommendations({int limit = 10}) async {
-    if (EnvConfig.useMock) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return {
-        "success": true,
-        "message": "成功",
-        "data": {
-          "reason": "热门场景推荐",
-          "scenes": []
-        }
-      };
-    }
     return await _httpClient!.get(
       ApiEndpoints.sceneRecommendations,
       queryParameters: {'limit': limit},

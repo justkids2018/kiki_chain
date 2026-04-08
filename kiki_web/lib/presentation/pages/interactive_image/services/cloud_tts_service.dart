@@ -103,8 +103,30 @@ class CloudTtsService {
   /// 播放音频文件
   Future<void> _playAudio(String audioPath) async {
     try {
+      final file = File(audioPath);
+      final fileSize = await file.length().catchError((_) => 0);
+      AppLogger.info('_playAudio: path=$audioPath, exists=${await file.exists()}, size=$fileSize');
+      if (!await file.exists()) {
+        throw StateError('Audio file not found: $audioPath');
+      }
+
+      // Stop previous playback first to avoid overlapping sessions.
+      await _player.stop();
+      AppLogger.info('_playAudio: setFilePath...');
       await _player.setFilePath(audioPath);
+      await _player.seek(Duration.zero);
+      AppLogger.info('_playAudio: playing...');
       await _player.play();
+
+      // Wait until playback is completed on Android before stopping/returning.
+      AppLogger.info('_playAudio: waiting for completion...');
+      await _player.playerStateStream
+          .firstWhere(
+            (state) => state.processingState == ProcessingState.completed,
+          )
+          .timeout(const Duration(seconds: 15));
+
+      AppLogger.info('_playAudio: completed');
       await _player.stop();
     } catch (e) {
       AppLogger.error('Failed to play audio', e);
@@ -139,13 +161,28 @@ class CloudTtsService {
           )
           .timeout(const Duration(milliseconds: edgeTtsTimeout));
 
+      AppLogger.info('Edge TTS response: status=${response.statusCode}, bodyBytes=${response.bodyBytes.length}');
       if (response.statusCode == 200) {
+        if (response.bodyBytes.isEmpty) {
+          AppLogger.warning('Edge TTS returned 200 but empty body');
+          return null;
+        }
+        // 检查是否是有效音频（mp3 magic bytes: FF FB / FF F3 / FF F2 / ID3）
+        final bytes = response.bodyBytes;
+        final isValidMp3 = (bytes.length > 2) &&
+            ((bytes[0] == 0xFF && (bytes[1] == 0xFB || bytes[1] == 0xF3 || bytes[1] == 0xF2)) ||
+             (bytes[0] == 0x49 && bytes[1] == 0x44 && bytes[2] == 0x33));
+        AppLogger.info('Edge TTS body valid mp3: $isValidMp3, first 4 bytes: ${bytes.take(4).toList()}');
+        if (!isValidMp3) {
+          AppLogger.warning('Edge TTS returned non-mp3 data: ${String.fromCharCodes(bytes.take(200))}');
+          return null;
+        }
         await _writeToCache(cacheKey, response.bodyBytes);
         final path = _getCachePath(cacheKey);
         AppLogger.info('Edge TTS success: $text');
         return path;
       } else {
-        AppLogger.warning('Edge TTS failed: ${response.statusCode}');
+        AppLogger.warning('Edge TTS failed: ${response.statusCode} body=${response.body.substring(0, response.body.length.clamp(0, 200))}');
         return null;
       }
     } catch (e) {

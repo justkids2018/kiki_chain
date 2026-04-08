@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../controllers/scene_list_controller.dart';
 import '../widgets/scene_card.dart';
 import '../widgets/glass_back_button.dart';
+import '../widgets/app_loading_widget.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../domain/entities/scene.dart';
 
@@ -29,7 +30,7 @@ class _SceneListPageState extends State<SceneListPage> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      viewportFraction: 0.75,
+      viewportFraction: 0.82,
       initialPage: 0,
     );
     _pageController.addListener(() {
@@ -115,7 +116,7 @@ class _SceneListPageState extends State<SceneListPage> {
   Widget _buildBody(SceneListController controller) {
     return Obx(() {
       if (controller.isLoadingScenes.value) {
-        return const Center(child: CircularProgressIndicator(color: Colors.white));
+        return const AppLoadingWidget(message: '加载中...');
       }
 
       if (controller.errorMessage.value.isNotEmpty) {
@@ -214,9 +215,9 @@ class _SceneListPageState extends State<SceneListPage> {
     required VoidCallback onTap,
   }) {
     final difference = index - _currentPage;
-    final scale = 1.0 - (difference.abs() * 0.12).clamp(0.0, 0.12);
-    final opacity = 1.0 - (difference.abs() * 0.35).clamp(0.0, 0.55);
-    final verticalOffset = difference.abs() * 24.0;
+    final scale = 1.0 - (difference.abs() * 0.20).clamp(0.0, 0.20);
+    final opacity = 1.0 - (difference.abs() * 0.40).clamp(0.0, 0.65);
+    final verticalOffset = difference.abs() * 30.0;
 
     return Center(
       child: Transform(

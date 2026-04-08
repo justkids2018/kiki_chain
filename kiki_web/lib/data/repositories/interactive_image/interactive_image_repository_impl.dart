@@ -9,6 +9,9 @@ import '../../../domain/entities/interactive_region.dart';
 import 'i_interactive_image_repository.dart';
 
 class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
+  // Static cache: image path → {width, height}. Survives navigation, eliminates re-decode.
+  static final Map<String, Map<String, double>> _dimensionsCache = {};
+
   static final Dio _dio = Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 10),
@@ -68,13 +71,19 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
 
   @override
   Future<Map<String, double>> loadImageDimensions(String imagePath) async {
+    // Return cached dimensions immediately on repeat visits
+    if (_dimensionsCache.containsKey(imagePath)) {
+      AppLogger.info('Image dimensions from cache: $imagePath');
+      return _dimensionsCache[imagePath]!;
+    }
+
     try {
       late ui.Image image;
       
       // 判断是远程 URL 还是本地资源
       if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         // 从网络加载图片
-        print("Repository: Loading image dimensions from network URL");
+        AppLogger.debug('Loading image dimensions from network URL: $imagePath');
         final imageProvider = NetworkImage(imagePath);
         final stream = imageProvider.resolve(ImageConfiguration.empty);
         final Completer<ui.Image> completer = Completer<ui.Image>();
@@ -123,10 +132,12 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
         );
       }
 
-      return {
+      final dims = {
         'width': image.width.toDouble(),
         'height': image.height.toDouble(),
       };
+      _dimensionsCache[imagePath] = dims;
+      return dims;
     } catch (e) {
       AppLogger.error('Error loading image dimensions', e);
       // Return fallback dimensions

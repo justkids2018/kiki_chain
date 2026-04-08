@@ -26,7 +26,14 @@ void main() async {
   ]);
 
   // 初始化应用程序
-  await AppInitializer.initialize();
+  print('💡 🚀 开始初始化应用服务...');
+  try {
+    await AppInitializer.initialize();
+    print('✅ 应用初始化完成');
+  } catch (e, stackTrace) {
+    print('❌ 应用初始化失败: $e');
+    print('堆栈: $stackTrace');
+  }
 
   // 全局注册控制器
   Get.put(AuthController());

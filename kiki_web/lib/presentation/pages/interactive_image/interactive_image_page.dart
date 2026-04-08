@@ -10,6 +10,7 @@ import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
 import '../../widgets/settings_dialog.dart';
 import '../../widgets/glass_back_button.dart';
+import '../../widgets/app_loading_widget.dart';
 
 class InteractiveImagePage extends StatefulWidget {
   InteractiveImagePage({Key? key}) : super(key: key);
@@ -22,9 +23,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
 
-  double get _englishFontSizeTablet => _isAndroid ? 26.0 : 55.0;
-  double get _englishFontSizePhone => _isAndroid ? 24.0 : 50.0;
-  double get _englishGridHeight => _isAndroid ? 110.0 : 130.0;
+  double get _englishFontSizeTablet => _isAndroid ? 22.0 : 40.0;
+  double get _englishFontSizePhone => _isAndroid ? 20.0 : 36.0;
+  double get _englishGridHeight => _isAndroid ? 90.0 : 105.0;
   double get _chineseCellSize => _isAndroid ? 80.0 : 120.0;
 
   @override
@@ -34,43 +35,71 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         : Get.put(InteractiveImageController());
 
     return Scaffold(
-      body: Obx(() {
-        if (!controller.isLoaded.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final imageWidth = controller.imageWidth.value;
-        final imageHeight = controller.imageHeight.value;
-        final aspectRatio = imageWidth > 0 && imageHeight > 0
-            ? imageWidth / imageHeight
-            : 1.0;
-
-        // Responsive design: default to tablet, only switch to phone if smaller
-        final size = MediaQuery.of(context).size;
-        final isPhone = size.width < 600; // Only phone layout if width < 600
-
-        return Stack(
-          children: [
-            // 1. Blurred Background
-            Positioned.fill(
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  color: Colors.black.withOpacity(0.2),
-                  child: _buildBackgroundImage(controller.imagePath),
-                ),
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // 1. Permanent blurred background — starts loading immediately, eliminates black flash
+          Positioned.fill(
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.2),
+                child: _buildBackgroundImage(controller.imagePath),
               ),
             ),
+          ),
 
-            // 2. Main Content - Responsive layout
-            SafeArea(
-              child: isPhone
-                  ? _buildPhoneLayout(context, controller, aspectRatio)
-                  : _buildTabletLayout(context, controller, aspectRatio),
-            ),
-          ],
-        );
-      }),
+          // 2. Dark overlay (always present)
+          Positioned.fill(
+            child: Container(color: Colors.black.withValues(alpha: 0.35)),
+          ),
+
+          // 3. Reactive content: loading spinner OR main layout
+          Obx(() {
+            if (!controller.isLoaded.value) {
+              return AppLoadingWidget(
+                message: '加载中...',
+                progress: controller.loadingProgress.value > 0
+                    ? controller.loadingProgress.value
+                    : null,
+              );
+            }
+
+            final imageWidth = controller.imageWidth.value;
+            final imageHeight = controller.imageHeight.value;
+            final aspectRatio = imageWidth > 0 && imageHeight > 0
+                ? imageWidth / imageHeight
+                : 1.0;
+
+            // Responsive design: default to tablet, only switch to phone if smaller
+            final size = MediaQuery.of(context).size;
+            final isPhone = size.width < 600;
+
+            return Stack(
+              children: [
+                // Main content — vertically centered in full screen
+                Positioned.fill(
+                  child: Center(
+                    child: isPhone
+                        ? _buildPhoneLayout(context, controller, aspectRatio)
+                        : _buildTabletLayout(context, controller, aspectRatio),
+                  ),
+                ),
+
+                // Floating TopBar (always on top layer)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SafeArea(
+                    child: _buildFloatingTopBar(context),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
     );
   }
 
@@ -80,33 +109,46 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     InteractiveImageController controller,
     double aspectRatio,
   ) {
-    return Column(
-      children: [
-        // Top Navigation Bar
-        _buildFloatingTopBar(context),
+    final screenSize = MediaQuery.of(context).size;
+    final screenHeight = screenSize.height;
 
-        // Main Content Area
-        Expanded(
-          child: Row(
-            children: [
-              // Left: Large Interactive Image
-              Expanded(
-                flex: 7,  // 70:30 ratio
-                child: _buildLargeImageContainer(
-                  controller: controller,
-                  aspectRatio: aspectRatio,
-                ),
-              ),
+    // 计算可用宽度（屏幕宽度 - 左右边距30dp）
+    final availableWidth = screenSize.width - 60;
 
-              // Right: Character Panel (compact)
-              Expanded(
-                flex: 3,  // 70:30 ratio
-                child: _buildCompactCharacterPanel(controller),
+    // 根据图片宽高比计算图片高度
+    // 假设图片占据左侧60%的宽度
+    final imageWidth = availableWidth * 0.6;
+    final imageHeight = imageWidth / aspectRatio;
+
+    // 整体布局高度由图片高度决定，但不超过屏幕高度
+    final layoutHeight = imageHeight.clamp(0.0, screenHeight - 100);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30), // 左右边距30dp
+      child: SizedBox(
+        height: layoutHeight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 左右两侧拉伸到相同高度
+          children: [
+            // Left: Square Interactive Image
+            Flexible(
+              flex: 6,
+              child: _buildLargeImageContainer(
+                controller: controller,
               ),
-            ],
-          ),
+            ),
+
+            const SizedBox(width: 24), // 间距24
+
+            // Right: Character Panel (compact)
+            Flexible(
+              flex: 4,
+              child: _buildCompactCharacterPanel(controller),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -118,19 +160,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   ) {
     return Stack(
       children: [
-        Column(
-          children: [
-            // Top Navigation Bar
-            _buildFloatingTopBar(context),
-
-            // Full screen image
-            Expanded(
-              child: _buildLargeImageContainer(
-                controller: controller,
-                aspectRatio: aspectRatio,
-              ),
-            ),
-          ],
+        // Full screen image
+        _buildLargeImageContainer(
+          controller: controller,
         ),
 
         // Floating character panel overlay (bottom-right corner)
@@ -143,44 +175,45 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  /// Build large image container optimized for touch interaction
+  /// Build large image container — square (1:1) aspect ratio
   Widget _buildLargeImageContainer({
     required InteractiveImageController controller,
-    required double aspectRatio,
   }) {
-    return Container(
-      margin: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.grey[50],
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: InteractiveViewer(
-                minScale: 0.5,
-                maxScale: 4.0,
-                child: InteractiveImageView(
-                  imagePath: controller.imagePath,
-                  originalWidth: controller.imageWidth.value,
-                  originalHeight: controller.imageHeight.value,
-                  regions: controller.regions,
-                  onRegionTap: controller.speakRegion,
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey[50],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: InteractiveImageView(
+                    imagePath: controller.imagePath,
+                    originalWidth: controller.imageWidth.value,
+                    originalHeight: controller.imageHeight.value,
+                    regions: controller.regions,
+                    onRegionTap: controller.speakRegion,
+                  ),
                 ),
               ),
             ),
@@ -193,13 +226,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   /// Build right panel with character display and controls (Compact for Tablet)
   Widget _buildCompactCharacterPanel(InteractiveImageController controller) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(8, 24, 24, 24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -247,7 +279,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         width: 72,
                         height: 72,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00C37D).withOpacity(0.08),
+                          color: const Color(0xFF00C37D).withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -279,26 +311,11 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               }
 
               return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Chinese character name — primary label
-                    if (region.text.isNotEmpty)
-                      Text(
-                        region.text,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                          letterSpacing: 4,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    if (region.text.isNotEmpty)
-                      const SizedBox(height: 12),
-
                     // English translation with four-line-three-grid
                     if (region.textEnglish.isNotEmpty)
                       EnglishFourLineGrid(
@@ -309,7 +326,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         markVowels: true,
                       ),
                     if (region.textEnglish.isNotEmpty)
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 14),
 
                     // Divider label
                     Row(
@@ -329,7 +346,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         Expanded(child: Divider(color: Colors.grey[200])),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
 
                     // Character stroke grid
                     _buildCharacterGrid(controller, region.text),
@@ -341,7 +358,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
           // Bottom: Play button
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
@@ -359,8 +376,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 56,
-                      height: 56,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: isActive
                             ? const Color(0xFF00C37D)
@@ -369,9 +386,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         boxShadow: isActive
                             ? [
                                 BoxShadow(
-                                  color: const Color(0xFF00C37D).withOpacity(0.35),
-                                  blurRadius: 14,
-                                  offset: const Offset(0, 6),
+                                  color: const Color(0xFF00C37D).withValues(alpha: 0.35),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
                                 ),
                               ]
                             : [],
@@ -379,10 +396,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       child: Icon(
                         Icons.volume_up_rounded,
                         color: isActive ? Colors.white : Colors.grey[400],
-                        size: 26,
+                        size: 22,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     Text(
                       '点击朗读',
                       style: TextStyle(
@@ -417,7 +434,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -426,7 +443,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.touch_app_outlined, size: 18, color: const Color(0xFF00C37D)),
+              const Icon(Icons.touch_app_outlined, size: 18, color: Color(0xFF00C37D)),
               const SizedBox(width: 6),
               Text(
                 '点击物品',
@@ -450,7 +467,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -467,20 +484,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Chinese label
-                    if (region.text.isNotEmpty)
-                      Text(
-                        region.text,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                          letterSpacing: 3,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    if (region.text.isNotEmpty)
-                      const SizedBox(height: 10),
                     // English four-line grid
                     if (region.textEnglish.isNotEmpty)
                       EnglishFourLineGrid(
@@ -513,14 +516,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 52,
-                      height: 52,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: const Color(0xFF00C37D),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF00C37D).withOpacity(0.35),
+                            color: const Color(0xFF00C37D).withValues(alpha: 0.35),
                             blurRadius: 12,
                             offset: const Offset(0, 5),
                           ),
@@ -529,15 +532,15 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       child: const Icon(
                         Icons.volume_up_rounded,
                         color: Colors.white,
-                        size: 24,
+                        size: 22,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
+                    const Text(
                       '点击朗读',
                       style: TextStyle(
                         fontSize: 10,
-                        color: const Color(0xFF00C37D),
+                        color: Color(0xFF00C37D),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -556,13 +559,13 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       return Image.network(
         path,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(color: Colors.grey[200]),
+        errorBuilder: (_, __, ___) => Container(color: Colors.grey[900]),
       );
     }
     return Image.asset(
       path,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(color: Colors.grey[200]),
+      errorBuilder: (_, __, ___) => Container(color: Colors.grey[900]),
     );
   }
 
@@ -571,12 +574,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          // Back Button - using unified glass component
+          // Back Button
           const GlassBackButton(),
 
           const Spacer(),
 
-          // Settings Button with glass effect
+          // Settings Button
           GestureDetector(
             onTap: () => Get.dialog(const SettingsDialog()),
             child: ClipOval(
@@ -586,10 +589,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.grey.withValues(alpha: 0.45),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),

@@ -31,18 +31,20 @@ class AppServices {
   /// 初始化所有服务
   Future<void> initialize() async {
     if (_initialized) {
-      AppLogger.info('🔄 应用服务已初始化，跳过重复初始化');
+      print('🔄 应用服务已初始化，跳过重复初始化');
       return;
     }
-    
-    AppLogger.info('🚀 开始初始化应用服务...');
-    
+
+    print('🚀 开始初始化应用服务...');
+
     try {
       // 1. 初始化环境配置（release 模式自动使用生产环境）
+      print('📝 开始加载环境配置...');
       await EnvConfig.load(kReleaseMode ? 'production' : null);
-      AppLogger.info('✅ 环境配置初始化完成');
-      
+      print('✅ 环境配置初始化完成: ${EnvConfig.apiBaseUrl}');
+
       // 2. 初始化网络层（使用 env 配置）
+      print('🌐 开始初始化网络层...');
       ApiConfig.init(
         baseUrl: EnvConfig.apiBaseUrl, // 例如 http://127.0.0.1:8080
         connectTimeout: EnvConfig.connectTimeout,
@@ -57,26 +59,28 @@ class AppServices {
         enableCache: EnvConfig.enableCache,
         enableNetworkStatusCheck: true,
       );
-      AppLogger.info('✅ 网络层初始化完成 (baseUrl: ${EnvConfig.apiBaseUrl})');
-      
+      print('✅ 网络层初始化完成 (baseUrl: ${EnvConfig.apiBaseUrl})');
+
       // 3. 初始化本地存储服务
+      print('💾 开始初始化本地存储...');
       _localStorage = LocalStorageService();
       await _localStorage!.onInit();
-      AppLogger.info('✅ 本地存储服务初始化完成');
+      print('✅ 本地存储服务初始化完成');
 
       // 4. 注册API服务到GetX
+      print('🔌 开始注册API服务...');
       Get.put(SceneApiService(httpClient: NetworkClient.instance.httpClient));
-      AppLogger.info('✅ API服务注册完成');
+      print('✅ API服务注册完成');
 
       // 5. 初始化业务服务（懒加载，使用时再创建）
-      AppLogger.info('✅ 业务服务准备完成（懒加载）');
-      
+      print('✅ 业务服务准备完成（懒加载）');
+
       _initialized = true;
-      AppLogger.info('🎉 应用服务初始化完成');
-      
+      print('🎉 应用服务初始化完成');
+
     } catch (e, stackTrace) {
-      AppLogger.error('❌ 应用服务初始化失败: $e');
-      AppLogger.error('堆栈跟踪: $stackTrace');
+      print('❌ 应用服务初始化失败: $e');
+      print('堆栈跟踪: $stackTrace');
       rethrow;
     }
   }

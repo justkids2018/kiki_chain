@@ -52,6 +52,8 @@ kiki_chain/                          # 项目根目录
 - **[📖 文档架构说明](./DOCUMENTATION_STRUCTURE.md)** - 文档组织架构和规范
 - **[🎯 任务看板](./tasks/TASK_BOARD.md)** - 当前开发任务和进度
 - **[🔄 AI 驱动开发流程](./docs/workflow/AI_DRIVEN_DEVELOPMENT.md)** - 开发工作流和协作方式
+- **[🤖 Agent 协作手册](./AGENT.md)** - 项目梳理、架构规则与本地启动约定
+- **[☁️ 云端部署手册](./CLOUD.md)** - 阿里云现状、服务器启动与腾讯云迁移占位
 
 ### 📋 产品文档
 

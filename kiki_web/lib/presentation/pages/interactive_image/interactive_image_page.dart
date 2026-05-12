@@ -8,25 +8,52 @@ import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
+import 'widgets/bubble_animation_layer.dart';
 import '../../widgets/settings_dialog.dart';
 import '../../widgets/glass_back_button.dart';
 import '../../widgets/app_loading_widget.dart';
 
 class InteractiveImagePage extends StatefulWidget {
-  InteractiveImagePage({Key? key}) : super(key: key);
+  const InteractiveImagePage({Key? key}) : super(key: key);
 
   @override
   State<InteractiveImagePage> createState() => _InteractiveImagePageState();
 }
 
 class _InteractiveImagePageState extends State<InteractiveImagePage> {
+  final GlobalKey _effectLayerKey = GlobalKey();
+  final ScreenDiffusionController _diffusionController =
+      ScreenDiffusionController();
+
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
 
-  double get _englishFontSizeTablet => _isAndroid ? 22.0 : 40.0;
+  double get _englishFontSizeTablet => _isAndroid ? 14.0 : 24.0;
   double get _englishFontSizePhone => _isAndroid ? 20.0 : 36.0;
-  double get _englishGridHeight => _isAndroid ? 90.0 : 105.0;
+  double get _englishGridHeight => _isAndroid ? 56.0 : 74.0;
   double get _chineseCellSize => _isAndroid ? 80.0 : 120.0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _diffusionController.dispose();
+    super.dispose();
+  }
+
+  void _triggerScreenDiffusion(Offset globalPosition) {
+    final context = _effectLayerKey.currentContext;
+    if (context == null) return;
+
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox) return;
+
+    final localPosition = renderObject.globalToLocal(globalPosition);
+    _diffusionController.trigger(localPosition);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +104,29 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
             return Stack(
               children: [
-                // Main content — vertically centered in full screen
+                // Main content — vertically centered below status bar
                 Positioned.fill(
-                  child: Center(
-                    child: isPhone
-                        ? _buildPhoneLayout(context, controller, aspectRatio)
-                        : _buildTabletLayout(context, controller, aspectRatio),
+                  child: SafeArea(
+                    bottom: false,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 35),
+                      child: ScreenDiffusionLayer(
+                        controller: _diffusionController,
+                        child: Container(
+                          key: _effectLayerKey,
+                          alignment:
+                              isPhone ? Alignment.center : Alignment.center,
+                          child: isPhone
+                              ? _buildPhoneLayout(
+                                  context, controller, aspectRatio)
+                              : _buildTabletLayout(
+                                  context,
+                                  controller,
+                                  aspectRatio,
+                                ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
 
@@ -110,21 +154,24 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     double aspectRatio,
   ) {
     final screenSize = MediaQuery.of(context).size;
-    final screenHeight = screenSize.height;
+    final mediaPadding = MediaQuery.of(context).padding;
 
-    // 计算可用宽度（屏幕宽度 - 左右边距30dp）
-    final availableWidth = screenSize.width - 60;
+    // 计算可用宽度（屏幕宽度 - 左右边距70dp）
+    final availableWidth = screenSize.width - 70;
 
     // 根据图片宽高比计算图片高度
-    // 假设图片占据左侧60%的宽度
-    final imageWidth = availableWidth * 0.6;
+    // 图片区域占据约58%，右侧面板42%
+    final imageWidth = availableWidth * 0.58;
     final imageHeight = imageWidth / aspectRatio;
 
-    // 整体布局高度由图片高度决定，但不超过屏幕高度
-    final layoutHeight = imageHeight.clamp(0.0, screenHeight - 100);
+    // 上下各留35dp呼吸空间（SafeArea已处理状态栏）
+    final maxLayoutHeight =
+        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 70)
+            .clamp(380.0, double.infinity);
+    final layoutHeight = imageHeight.clamp(0.0, maxLayoutHeight);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30), // 左右边距30dp
+      padding: const EdgeInsets.symmetric(horizontal: 35), // 左右边距35dp
       child: SizedBox(
         height: layoutHeight,
         child: Row(
@@ -133,7 +180,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           children: [
             // Left: Square Interactive Image
             Flexible(
-              flex: 6,
+              flex: 58,
               child: _buildLargeImageContainer(
                 controller: controller,
               ),
@@ -143,7 +190,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
             // Right: Character Panel (compact)
             Flexible(
-              flex: 4,
+              flex: 42,
               child: _buildCompactCharacterPanel(controller),
             ),
           ],
@@ -213,6 +260,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                     originalHeight: controller.imageHeight.value,
                     regions: controller.regions,
                     onRegionTap: controller.speakRegion,
+                    onRegionTapDown: _triggerScreenDiffusion,
                   ),
                 ),
               ),
@@ -237,180 +285,173 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           ),
         ],
       ),
-      child: Column(
+      child: Stack(
         children: [
-          // Panel header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(
-              children: [
-                Container(
-                  width: 4,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00C37D),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 12, 0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF00C37D),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '互动学习',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[600],
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  '互动学习',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[600],
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+              Expanded(
+                child: Obx(() {
+                  final region = controller.activeRegion.value;
+                  if (region == null) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF00C37D)
+                                  .withValues(alpha: 0.08),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.touch_app_outlined,
+                              size: 36,
+                              color: Color(0xFF00C37D),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            '点击图中物品',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '开始互动学习',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
 
-          // Character grid (scrollable)
-          Expanded(
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 90),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (region.textEnglish.isNotEmpty)
+                          EnglishFourLineGrid(
+                            text: region.textEnglish,
+                            fontSize: _englishFontSizeTablet,
+                            fontColor: Colors.black87,
+                            height: _englishGridHeight,
+                            markVowels: true,
+                          ),
+                        if (region.textEnglish.isNotEmpty)
+                          const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(child: Divider(color: Colors.grey[200])),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                '笔顺练习',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey[400],
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                            Expanded(child: Divider(color: Colors.grey[200])),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        _buildCharacterGrid(controller, region.text),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 12,
             child: Obx(() {
               final region = controller.activeRegion.value;
-              if (region == null) {
-                return Center(
+              final isActive = region != null;
+              return Center(
+                child: GestureDetector(
+                  onTap: isActive ? () => controller.speakRegion(region) : null,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        width: 72,
-                        height: 72,
+                        width: 42,
+                        height: 42,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00C37D).withValues(alpha: 0.08),
+                          color: isActive
+                              ? const Color(0xFF00C37D)
+                              : Colors.grey[200],
                           shape: BoxShape.circle,
+                          boxShadow: isActive
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFF00C37D)
+                                        .withValues(alpha: 0.32),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ]
+                              : [],
                         ),
-                        child: const Icon(
-                          Icons.touch_app_outlined,
-                          size: 36,
-                          color: Color(0xFF00C37D),
+                        child: Icon(
+                          Icons.volume_up_rounded,
+                          color: isActive ? Colors.white : Colors.grey[400],
+                          size: 20,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 4),
                       Text(
-                        '点击图中物品',
+                        '点击朗读',
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        '开始互动学习',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[400],
+                          fontSize: 10,
+                          color: isActive
+                              ? const Color(0xFF00C37D)
+                              : Colors.grey[400],
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-                );
-              }
-
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // English translation with four-line-three-grid
-                    if (region.textEnglish.isNotEmpty)
-                      EnglishFourLineGrid(
-                        text: region.textEnglish,
-                        fontSize: _englishFontSizeTablet,
-                        fontColor: Colors.black87,
-                        height: _englishGridHeight,
-                        markVowels: true,
-                      ),
-                    if (region.textEnglish.isNotEmpty)
-                      const SizedBox(height: 14),
-
-                    // Divider label
-                    Row(
-                      children: [
-                        Expanded(child: Divider(color: Colors.grey[200])),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            '笔顺练习',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[400],
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey[200])),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Character stroke grid
-                    _buildCharacterGrid(controller, region.text),
-                  ],
-                ),
-              );
-            }),
-          ),
-
-          // Bottom: Play button
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Colors.grey[100]!,
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Obx(() {
-              final region = controller.activeRegion.value;
-              final isActive = region != null;
-              return GestureDetector(
-                onTap: isActive ? () => controller.speakRegion(region) : null,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? const Color(0xFF00C37D)
-                            : Colors.grey[200],
-                        shape: BoxShape.circle,
-                        boxShadow: isActive
-                            ? [
-                                BoxShadow(
-                                  color: const Color(0xFF00C37D).withValues(alpha: 0.35),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ]
-                            : [],
-                      ),
-                      child: Icon(
-                        Icons.volume_up_rounded,
-                        color: isActive ? Colors.white : Colors.grey[400],
-                        size: 22,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '点击朗读',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: isActive
-                            ? const Color(0xFF00C37D)
-                            : Colors.grey[400],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
                 ),
               );
             }),
@@ -443,7 +484,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.touch_app_outlined, size: 18, color: Color(0xFF00C37D)),
+              const Icon(Icons.touch_app_outlined,
+                  size: 18, color: Color(0xFF00C37D)),
               const SizedBox(width: 6),
               Text(
                 '点击物品',
@@ -523,7 +565,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF00C37D).withValues(alpha: 0.35),
+                            color:
+                                const Color(0xFF00C37D).withValues(alpha: 0.35),
                             blurRadius: 12,
                             offset: const Offset(0, 5),
                           ),
@@ -596,8 +639,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       width: 1,
                     ),
                   ),
-                  child: const Icon(Icons.settings,
-                      color: Colors.white, size: 20),
+                  child:
+                      const Icon(Icons.settings, color: Colors.white, size: 20),
                 ),
               ),
             ),

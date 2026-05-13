@@ -23,16 +23,25 @@ class SceneListPage extends StatefulWidget {
 }
 
 class _SceneListPageState extends State<SceneListPage> {
+  static const double _viewportFraction = 0.52;
+  // Keep face overlap around 10-20dp. Slightly increase inter-card distance by
+  // reducing overlap 10dp from previous 14dp to 4dp.
+  static const double _targetCardOverlap = 4.0;
+  static const int _virtualLoopMultiplier = 500;
   late PageController _pageController;
   double _currentPage = 0.0;
 
   @override
   void initState() {
     super.initState();
+    // Start from the middle for smooth bi-direction infinite loop.
+    const initialPage = _virtualLoopMultiplier ~/ 2;
     _pageController = PageController(
-      viewportFraction: 0.82,
-      initialPage: 0,
+      // Make each page slot narrower than card width to create overlap.
+      viewportFraction: _viewportFraction,
+      initialPage: initialPage,
     );
+    _currentPage = initialPage.toDouble();
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page ?? 0.0;
@@ -80,11 +89,13 @@ class _SceneListPageState extends State<SceneListPage> {
       if (controller.scenes.isEmpty) {
         return Container(color: Colors.grey[900]);
       }
-      final idx = _currentPage.round().clamp(0, controller.scenes.length - 1);
+      final idx = _toRealIndex(_currentPage.round(), controller.scenes.length);
       final scene = controller.scenes[idx];
       final imageUrl = scene.coverImage;
 
-      if (imageUrl.isEmpty || (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://'))) {
+      if (imageUrl.isEmpty ||
+          (!imageUrl.startsWith('http://') &&
+              !imageUrl.startsWith('https://'))) {
         return Container(color: Colors.grey[900]);
       }
 
@@ -127,7 +138,10 @@ class _SceneListPageState extends State<SceneListPage> {
               const Icon(Icons.error_outline, size: 64, color: Colors.white54),
               const SizedBox(height: 16),
               Text('加载失败',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
               const SizedBox(height: 8),
               Text(controller.errorMessage.value,
                   style: const TextStyle(fontSize: 14, color: Colors.white70),
@@ -145,7 +159,8 @@ class _SceneListPageState extends State<SceneListPage> {
 
       if (controller.scenes.isEmpty) {
         return const Center(
-          child: Text('暂无场景', style: TextStyle(fontSize: 16, color: Colors.white70)),
+          child: Text('暂无场景',
+              style: TextStyle(fontSize: 16, color: Colors.white70)),
         );
       }
 
@@ -158,10 +173,16 @@ class _SceneListPageState extends State<SceneListPage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final availableHeight = constraints.maxHeight;
+        final availableWidth = constraints.maxWidth;
         // 为标题预留空间（标题高度约 60px）
         final titleHeight = 60.0;
-        final cardHeight = ((availableHeight - titleHeight) * 0.72).clamp(300.0, 560.0);
-        final cardWidth = cardHeight * (7 / 9);
+        final maxCardHeight =
+            ((availableHeight - titleHeight) * 0.68).clamp(280.0, 520.0);
+        // Card is intentionally wider so neighboring cards overlap each other.
+        final maxCardWidth = (availableWidth * 0.66).clamp(240.0, 440.0);
+        final cardWidth = maxCardWidth;
+        final cardHeight = (cardWidth / (7 / 9)).clamp(280.0, maxCardHeight);
+        final pageSpacing = availableWidth * _viewportFraction;
 
         return Stack(
           children: [
@@ -170,14 +191,19 @@ class _SceneListPageState extends State<SceneListPage> {
               top: titleHeight,
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: controller.scenes.length,
+                itemCount: controller.scenes.length <= 1
+                    ? controller.scenes.length
+                    : controller.scenes.length * _virtualLoopMultiplier,
                 itemBuilder: (context, index) {
-                  final scene = controller.scenes[index];
+                  final realIndex =
+                      _toRealIndex(index, controller.scenes.length);
+                  final scene = controller.scenes[realIndex];
                   return _buildCardItem(
                     scene: scene,
                     index: index,
                     cardWidth: cardWidth,
                     cardHeight: cardHeight,
+                    pageSpacing: pageSpacing,
                     onTap: () => controller.navigateToSceneDetail(scene),
                   );
                 },
@@ -207,24 +233,37 @@ class _SceneListPageState extends State<SceneListPage> {
     );
   }
 
+  int _toRealIndex(int index, int length) {
+    if (length <= 0) return 0;
+    return index % length;
+  }
+
   Widget _buildCardItem({
     required Scene scene,
     required int index,
     required double cardWidth,
     required double cardHeight,
+    required double pageSpacing,
     required VoidCallback onTap,
   }) {
     final difference = index - _currentPage;
-    final scale = 1.0 - (difference.abs() * 0.20).clamp(0.0, 0.20);
-    final opacity = 1.0 - (difference.abs() * 0.40).clamp(0.0, 0.65);
-    final verticalOffset = difference.abs() * 30.0;
+    final absDifference = difference.abs();
+    final scale = 1.0 - (absDifference * 0.10).clamp(0.0, 0.22);
+    final opacity = 1.0 - (absDifference * 0.16).clamp(0.0, 0.38);
+    final verticalOffset = absDifference * 14.0;
+    // PageView already moves each page by pageSpacing. We apply an extra
+    // correction so adjacent card faces overlap by about _targetCardOverlap.
+    final targetCenterDistance = cardWidth - _targetCardOverlap;
+    final horizontalOffset = difference * (targetCenterDistance - pageSpacing);
+    final rotateZ = (difference * 0.10).clamp(-0.14, 0.14);
 
     return Center(
       child: Transform(
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001)
+          ..rotateZ(rotateZ)
           ..scale(scale)
-          ..translate(0.0, verticalOffset, 0.0),
+          ..translate(horizontalOffset, verticalOffset, 0.0),
         alignment: Alignment.center,
         child: Opacity(
           opacity: opacity,

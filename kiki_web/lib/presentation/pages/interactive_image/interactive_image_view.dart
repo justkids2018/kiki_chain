@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
-import 'widgets/bubble_animation_layer.dart';
 
 class InteractiveImageView extends StatefulWidget {
   final String imagePath;
@@ -10,6 +9,10 @@ class InteractiveImageView extends StatefulWidget {
   final double originalHeight;
   final List<InteractiveRegion> regions;
   final Function(InteractiveRegion) onRegionTap;
+  final ValueChanged<Offset>? onRegionTapDown;
+  // Debug switch for region frame overlay. Keep default OFF in production.
+  // Turn ON temporarily when validating click areas or diagnosing tap issues.
+  final bool showRegionDebugFrames;
 
   const InteractiveImageView({
     Key? key,
@@ -18,6 +21,8 @@ class InteractiveImageView extends StatefulWidget {
     required this.originalHeight,
     required this.regions,
     required this.onRegionTap,
+    this.onRegionTapDown,
+    this.showRegionDebugFrames = false,
   }) : super(key: key);
 
   @override
@@ -46,6 +51,7 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
     _pulseController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     AppLogger.debug(
@@ -86,7 +92,8 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
           displayWidth = constraints.maxHeight * aspectRatio;
         }
 
-        AppLogger.verbose('Calculated display size - $displayWidth x $displayHeight');
+        AppLogger.verbose(
+            'Calculated display size - $displayWidth x $displayHeight');
 
         final scaleX = displayWidth / widget.originalWidth;
         final scaleY = displayHeight / widget.originalHeight;
@@ -105,11 +112,27 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
                   ),
                   // Layer 2: Interactive Regions + Bubble touch overlay
                   Positioned.fill(
-                    child: BubbleAnimationLayer(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTapDown: (details) {
+                        widget.onRegionTapDown?.call(details.globalPosition);
+                        final hitRegion = _findBestRegionAt(
+                          details.localPosition,
+                          scaleX,
+                          scaleY,
+                        );
+                        if (hitRegion != null) {
+                          final rect = _regionRect(hitRegion, scaleX, scaleY);
+                          AppLogger.debug(
+                              'Region tapped(best-hit): ${hitRegion.text} at (${rect.left}, ${rect.top}) size: ${rect.width}x${rect.height}');
+                          widget.onRegionTap(hitRegion);
+                        }
+                      },
                       child: Stack(
                         children: [
-                          ...widget.regions
-                              .map((region) => _buildRegion(region, scaleX, scaleY)),
+                          if (widget.showRegionDebugFrames)
+                            ...widget.regions.map((region) =>
+                                _buildRegionFrame(region, scaleX, scaleY)),
                         ],
                       ),
                     ),
@@ -168,9 +191,48 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
     );
   }
 
-  Widget _buildRegion(InteractiveRegion region, double scaleX, double scaleY) {
+  Widget _buildRegionFrame(
+      InteractiveRegion region, double scaleX, double scaleY) {
     if (region.coordinates.isEmpty) return const SizedBox();
 
+    final rect = _regionRect(region, scaleX, scaleY);
+
+    return Positioned(
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      child: IgnorePointer(
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.white.withValues(
+                    alpha: 0.3 + (_pulseAnimation.value - 0.7) * 0.4,
+                  ),
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withValues(
+                      alpha: 0.15 + (_pulseAnimation.value - 0.7) * 0.2,
+                    ),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Rect _regionRect(InteractiveRegion region, double scaleX, double scaleY) {
     final xValues = region.coordinates.map((e) => e.x).toList();
     final yValues = region.coordinates.map((e) => e.y).toList();
 
@@ -179,59 +241,34 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
     final minY = yValues.reduce(min);
     final maxY = yValues.reduce(max);
 
-    final left = minX * scaleX;
-    final top = minY * scaleY;
-    final width = (maxX - minX) * scaleX;
-    final height = (maxY - minY) * scaleY;
-
-    // Calculate center position for circular indicator (visual only)
-    final centerX = width / 2;
-    final centerY = height / 2;
-    final indicatorSize = min(width, height) * 0.6;
-
-    return Positioned(
-      left: left,
-      top: top,
-      width: width,
-      height: height,
-      child: GestureDetector(
-        onTap: () {
-          AppLogger.debug('Region tapped: ${region.text} at ($left, $top) size: ${width}x$height');
-          widget.onRegionTap(region);
-        },
-        child: Stack(
-          children: [
-            // Full clickable area (transparent)
-            Container(
-              color: Colors.transparent,
-            ),
-            // Visual indicator - subtle border frame
-            Positioned.fill(
-              child: AnimatedBuilder(
-                animation: _pulseAnimation,
-                builder: (context, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3 + (_pulseAnimation.value - 0.7) * 0.4),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white.withOpacity(0.15 + (_pulseAnimation.value - 0.7) * 0.2),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+    return Rect.fromLTWH(
+      minX * scaleX,
+      minY * scaleY,
+      (maxX - minX) * scaleX,
+      (maxY - minY) * scaleY,
     );
+  }
+
+  InteractiveRegion? _findBestRegionAt(
+    Offset localPosition,
+    double scaleX,
+    double scaleY,
+  ) {
+    final hits = <MapEntry<InteractiveRegion, Rect>>[];
+
+    for (final region in widget.regions) {
+      if (region.coordinates.isEmpty) continue;
+      final rect = _regionRect(region, scaleX, scaleY);
+      if (rect.contains(localPosition)) {
+        hits.add(MapEntry(region, rect));
+      }
+    }
+
+    if (hits.isEmpty) return null;
+
+    // Resolve overlap by preferring the smallest hit area (inner region wins).
+    double area(Rect r) => r.width * r.height;
+    hits.sort((a, b) => area(a.value).compareTo(area(b.value)));
+    return hits.first.key;
   }
 }

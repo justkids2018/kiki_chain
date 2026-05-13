@@ -30,7 +30,7 @@
     <div v-else class="upload-placeholder" @click="triggerUpload">
       <el-icon class="upload-icon"><Plus /></el-icon>
       <div class="upload-text">点击上传图片</div>
-      <div class="upload-hint">支持 JPG、PNG，自动压缩至 200KB 以内</div>
+      <div class="upload-hint">支持 JPG、PNG，目标 150KB，超过 160KB 禁止上传</div>
     </div>
 
     <input
@@ -125,9 +125,12 @@ const handleFileChange = async (event: Event) => {
   uploadProgress.value = 0
 
   try {
-    // 压缩图片（目标 < 200KB）
+    // 压缩图片（目标 150KB，硬上限 160KB）
     uploadProgress.value = 10
-    const compressed = await compressImage(file)
+    const compressed = await compressImage(file, 150, 160)
+    if (compressed.size > 160 * 1024) {
+      throw new Error('压缩后仍超过 160KB，已禁止上传')
+    }
     const compressedKB = Math.round(compressed.size / 1024)
     const originalKB = Math.round(file.size / 1024)
     if (originalKB !== compressedKB) {

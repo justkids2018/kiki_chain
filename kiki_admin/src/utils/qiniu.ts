@@ -19,13 +19,21 @@ export function toCDNUrl(url: string | null | undefined): string {
 
 /**
  * 压缩图片（仅降低质量，不修改尺寸）
- * 依次尝试 quality 0.92 → 0.82 → 0.72 → 0.62 → 0.50
- * 若仍超出目标大小，使用最低质量结果
+ * 反复压缩：优先追求目标大小，最多允许到硬上限
+ * - 优先保留原格式；若 PNG 无法达标，自动尝试 JPEG
+ * - 不修改像素尺寸，只调整编码质量
+ * - 若最低质量仍超过硬上限，则抛错，阻止上传
  * @param file 原始图片文件
- * @param targetKB 目标大小（KB），默认 200
+ * @param targetKB 目标大小（KB），默认 150
+ * @param maxAllowedKB 硬上限（KB），默认 160
  */
-export async function compressImage(file: File, targetKB: number = 200): Promise<File> {
+export async function compressImage(
+  file: File,
+  targetKB: number = 150,
+  maxAllowedKB: number = 160
+): Promise<File> {
   const TARGET = targetKB * 1024
+  const HARD_MAX = maxAllowedKB * 1024
   if (file.size <= TARGET) return file
 
   return new Promise((resolve, reject) => {
@@ -42,30 +50,85 @@ export async function compressImage(file: File, targetKB: number = 200): Promise
       canvas.height = img.naturalHeight
       ctx.drawImage(img, 0, 0)
 
-      const qualities = [0.92, 0.82, 0.72, 0.62, 0.50]
-      const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg'
-      const ext = file.type === 'image/png' ? 'png' : 'jpg'
-      const outName = file.name.replace(/\.[^.]+$/, `.${ext}`)
+      const toBlob = (mimeType: string, quality?: number): Promise<Blob> =>
+        new Promise((ok, fail) => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                fail(new Error('图片压缩失败'))
+                return
+              }
+              ok(blob)
+            },
+            mimeType,
+            quality
+          )
+        })
 
-      const tryQuality = (idx: number) => {
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error('图片压缩失败'))
-              return
+      const runCompress = async (mimeType: string, ext: 'png' | 'jpg') => {
+        const outName = file.name.replace(/\.[^.]+$/, `.${ext}`)
+
+        // PNG 质量参数无效，先试一次原编码。
+        if (mimeType === 'image/png') {
+          const blob = await toBlob(mimeType)
+          return {
+            blob,
+            file: new File([blob], outName, { type: mimeType }),
+          }
+        }
+
+        // JPEG 反复降质量直到达标。
+        let bestBlob: Blob | null = null
+        let quality = 0.92
+        const minQuality = 0.06
+        const step = 0.06
+
+        while (quality >= minQuality) {
+          const blob = await toBlob(mimeType, quality)
+          bestBlob = blob
+          if (blob.size <= TARGET) {
+            return {
+              blob,
+              file: new File([blob], outName, { type: mimeType }),
             }
-            if (blob.size <= TARGET || idx >= qualities.length - 1) {
-              resolve(new File([blob], outName, { type: mimeType }))
-            } else {
-              tryQuality(idx + 1)
-            }
-          },
-          mimeType,
-          qualities[idx]
-        )
+          }
+          quality = Number((quality - step).toFixed(2))
+        }
+
+        return {
+          blob: bestBlob!,
+          file: new File([bestBlob!], outName, { type: mimeType }),
+        }
       }
 
-      tryQuality(0)
+        ; (async () => {
+          // 1) 原格式优先
+          const preferPng = file.type === 'image/png'
+          const first = await runCompress(preferPng ? 'image/png' : 'image/jpeg', preferPng ? 'png' : 'jpg')
+          if (first.blob.size <= TARGET) {
+            resolve(first.file)
+            return
+          }
+
+          // 2) PNG 未达标时，降级为 JPEG 强压缩
+          const second = await runCompress('image/jpeg', 'jpg')
+          if (second.blob.size <= TARGET) {
+            resolve(second.file)
+            return
+          }
+
+          // 3) 若未达到目标，但已在硬上限以内，允许上传
+          if (second.blob.size <= HARD_MAX) {
+            resolve(second.file)
+            return
+          }
+
+          reject(
+            new Error(
+              `图片无法压缩到 ${maxAllowedKB}KB 以内（当前最小约 ${Math.round(second.blob.size / 1024)}KB）`
+            )
+          )
+        })().catch(reject)
     }
 
     img.onerror = () => {

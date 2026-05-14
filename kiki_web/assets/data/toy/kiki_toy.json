@@ -6,6 +6,7 @@
     "text": "球",
     "text_pinyin": "qiú",
     "text_english": "Ball",
+    "text_phonetic": "/bɔːl/",
     "coordinate": [
       {
         "x": 573,
@@ -32,6 +33,7 @@
     "text": "鸭子",
     "text_pinyin": "yā zi",
     "text_english": "Duck",
+    "text_phonetic": "/dʌk/",
     "coordinate": [
       {
         "x": 915,
@@ -58,6 +60,7 @@
     "text": "积木",
     "text_pinyin": "jī mù",
     "text_english": "Blocks",
+    "text_phonetic": "/blɑːks/",
     "coordinate": [
       {
         "x": 1197,
@@ -84,12 +87,25 @@
     "text": "汽车",
     "text_pinyin": "qì chē",
     "text_english": "Car",
+    "text_phonetic": "/kɑːr/",
     "coordinate": [
-  { "x": 1059, "y": 1289 },
-{ "x": 1506, "y": 1289 },
-{ "x": 1059, "y": 1617 },
-{ "x": 1506, "y": 1617 }
-]
+      {
+        "x": 1059,
+        "y": 1289
+      },
+      {
+        "x": 1506,
+        "y": 1289
+      },
+      {
+        "x": 1059,
+        "y": 1617
+      },
+      {
+        "x": 1506,
+        "y": 1617
+      }
+    ]
   },
   {
     "type": "chinese",
@@ -98,12 +114,25 @@
     "text": "拨浪鼓",
     "text_pinyin": "bō lang gǔ",
     "text_english": "Drum",
+    "text_phonetic": "/drʌm/",
     "coordinate": [
-  { "x": 721, "y": 1352 },
-{ "x": 1028, "y": 1352 },
-{ "x": 721, "y": 1609 },
-{ "x": 1028, "y": 1609 }
-]
+      {
+        "x": 721,
+        "y": 1352
+      },
+      {
+        "x": 1028,
+        "y": 1352
+      },
+      {
+        "x": 721,
+        "y": 1609
+      },
+      {
+        "x": 1028,
+        "y": 1609
+      }
+    ]
   },
   {
     "type": "chinese",
@@ -112,11 +141,24 @@
     "text": "摇铃",
     "text_pinyin": "yáo líng",
     "text_english": "Rattle",
+    "text_phonetic": "/ˈrætl/",
     "coordinate": [
-  { "x": 376, "y": 1184 },
-{ "x": 713, "y": 1184 },
-{ "x": 376, "y": 1432 },
-{ "x": 713, "y": 1432 }
-]
+      {
+        "x": 376,
+        "y": 1184
+      },
+      {
+        "x": 713,
+        "y": 1184
+      },
+      {
+        "x": 376,
+        "y": 1432
+      },
+      {
+        "x": 713,
+        "y": 1432
+      }
+    ]
   }
 ]

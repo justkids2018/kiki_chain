@@ -23,7 +23,7 @@ Routing map:
 - End-to-end feature delivery -> just-dev-pipeline
 - Generate requirement/logic/api docs from code -> just-feature-doc-generator
 - Generate hotspot JSON from image + MD -> just-hotspot-generator
-- Card production full chain (Prompt to Admin) -> just-card-production-workflow
+- Card production full chain (Prompt to Admin) -> just-card-to-json-workflow
 - Design review before coding -> just-plan-eng-review
 - QA and verification -> just-qa
 - Pre-commit review -> just-review
@@ -41,8 +41,8 @@ Use these phrases as strong routing signals in addition to semantic intent.
 	- Trigger words: 根据代码出文档, 反向生成功能文档, 梳理功能逻辑, 生成接口文档, 需求文档整理
 - `just-hotspot-generator`
 	- Trigger words: 图片生成热区, 自动标注热区, 根据图片生成JSON, 生成items_data, 1024x1024坐标, card/object热区
-- `just-card-production-workflow`
-	- Trigger words: 卡片全流程, 从prompt到admin, banana出图到上传, 图片转json再校验, 89分门槛, 学习卡片workflow, 学习卡片生产流程, 学习法卡片workflow, 卡片生成并上传, 一张卡从出图到提交
+- `just-card-to-json-workflow`
+	- Trigger words: 卡片全流程, 从prompt到admin, 图片+md生成json, 图片转json再校验, 只给目录跑流程, 目录到json校验, 89分门槛, 学习卡片workflow, 学习卡片生产流程, 学习法卡片workflow, 卡片生成并上传, 一张卡从出图到提交
 - `just-plan-eng-review`
 	- Trigger words: 先评审方案, 技术方案评审, 架构评审, 开发前评审, 风险评审
 - `just-qa`

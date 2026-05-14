@@ -12,6 +12,7 @@ class CharacterStrokeGrid extends StatelessWidget {
     this.strokeColor = Colors.black,
     this.animationSpeed = 2.0,
     this.onCharacterComplete,
+    this.onCharacterTap,
   });
 
   final List<CharacterCell> cells;
@@ -19,6 +20,7 @@ class CharacterStrokeGrid extends StatelessWidget {
   final Color strokeColor;
   final double animationSpeed;
   final ValueChanged<int>? onCharacterComplete;
+  final void Function(int index, String character)? onCharacterTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +33,35 @@ class CharacterStrokeGrid extends StatelessWidget {
     // Build character widgets
     final characterWidgets = List<Widget>.generate(total, (index) {
       final cell = cells[index];
+      final onTap = onCharacterTap == null
+          ? null
+          : () => onCharacterTap!.call(index, cell.character);
+
       if (!cell.isVisible) {
-        return _PendingCharacterCell(
-          key: ValueKey('pending-${cell.character}-$index'),
-          size: cellSize,
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: _PendingCharacterCell(
+            key: ValueKey('pending-${cell.character}-$index'),
+            size: cellSize,
+          ),
         );
       }
 
-      return TianZiGeChar(
-        key: ValueKey('char-${cell.character}-$index'),
-        character: cell.character,
-        size: cellSize,
-        animate: cell.shouldAnimate,
-        strokeColor: strokeColor,
-        animationSpeed: animationSpeed,
-        onAnimationComplete: cell.shouldAnimate
-            ? () => onCharacterComplete?.call(index)
-            : null,
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: TianZiGeChar(
+          key: ValueKey('char-${cell.character}-$index'),
+          character: cell.character,
+          size: cellSize,
+          animate: cell.shouldAnimate,
+          strokeColor: strokeColor,
+          animationSpeed: animationSpeed,
+          onAnimationComplete: cell.shouldAnimate
+              ? () => onCharacterComplete?.call(index)
+              : null,
+        ),
       );
     });
 

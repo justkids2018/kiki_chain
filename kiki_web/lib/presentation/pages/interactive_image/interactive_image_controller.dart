@@ -25,6 +25,7 @@ class InteractiveImageController extends GetxController {
   final visibleCharCount = 0.obs;
   final totalCharCount = 0.obs;
   String? _lastInitializedText;
+  bool _singleCharacterMode = false;
 
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
@@ -59,23 +60,27 @@ class InteractiveImageController extends GetxController {
         _scene = arguments['scene'];
         // 从 scene 对象中提取图片路径
         if (_scene is Map) {
-          _imagePath = _scene['interactive_image'] ?? _scene['interactiveImage'] ?? '';
+          _imagePath =
+              _scene['interactive_image'] ?? _scene['interactiveImage'] ?? '';
         } else {
           // 如果是 Scene 对象，直接访问属性
           try {
             _imagePath = _scene.interactiveImage ?? '';
           } catch (e) {
-            AppLogger.warning('Failed to extract image path from scene object', e);
+            AppLogger.warning(
+                'Failed to extract image path from scene object', e);
             _imagePath = '';
           }
         }
         // jsonFile 可能为 null（新数据结构中数据内嵌在 scene 中）
         _jsonFilePath = arguments['jsonFile'] ?? '';
         AppLogger.info('Using scene object with embedded data');
-        AppLogger.info('Scene name: ${_scene is Map ? _scene['name'] : (_scene?.name ?? 'unknown')}');
+        AppLogger.info(
+            'Scene name: ${_scene is Map ? _scene['name'] : (_scene?.name ?? 'unknown')}');
       }
       // 接收 ImageItem（次优先）
-      else if (arguments['imageItem'] != null && arguments['imageItem'] is ImageItem) {
+      else if (arguments['imageItem'] != null &&
+          arguments['imageItem'] is ImageItem) {
         _currentImageItem = arguments['imageItem'] as ImageItem;
         _jsonFilePath = _currentImageItem!.jsonFile;
         _imagePath = _currentImageItem!.imagePath;
@@ -211,7 +216,8 @@ class InteractiveImageController extends GetxController {
           // 尝试从 scene 对象中提取 items_data
           if (_scene is Map) {
             itemsData = _scene['items_data'] ?? _scene['itemsData'];
-            AppLogger.debug('Scene is Map, items_data: ${itemsData?.length ?? 0} items');
+            AppLogger.debug(
+                'Scene is Map, items_data: ${itemsData?.length ?? 0} items');
           } else {
             // 如果是 Scene 对象，直接从 arguments 中获取（因为 Scene 类没有 items_data 属性）
             final arguments = Get.arguments;
@@ -220,16 +226,16 @@ class InteractiveImageController extends GetxController {
               final sceneData = arguments['scene'];
               if (sceneData is Map) {
                 itemsData = sceneData['items_data'] ?? sceneData['itemsData'];
-                AppLogger.debug('Extracted items_data from arguments Map: ${itemsData?.length ?? 0} items');
+                AppLogger.debug(
+                    'Extracted items_data from arguments Map: ${itemsData?.length ?? 0} items');
               }
             }
           }
 
           if (itemsData != null && itemsData.isNotEmpty) {
-            loadedRegions = itemsData
-                .map((e) => InteractiveRegion.fromJson(e as Map<String, dynamic>))
-                .toList();
-            AppLogger.info('Loaded ${loadedRegions.length} regions from scene.items_data');
+            loadedRegions = InteractiveRegion.parseItemsData(itemsData);
+            AppLogger.info(
+                'Loaded ${loadedRegions.length} regions from scene.items_data');
           } else {
             AppLogger.warning('Scene object has no items_data or it is empty');
           }
@@ -275,7 +281,8 @@ class InteractiveImageController extends GetxController {
         }
 
         if (embeddedWidth != null && embeddedHeight != null) {
-          AppLogger.info('Image dimensions from scene data: $embeddedWidth x $embeddedHeight (no decode needed)');
+          AppLogger.info(
+              'Image dimensions from scene data: $embeddedWidth x $embeddedHeight (no decode needed)');
           imageWidth.value = embeddedWidth;
           imageHeight.value = embeddedHeight;
           loadingProgress.value = 0.9;
@@ -307,27 +314,51 @@ class InteractiveImageController extends GetxController {
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
-    AppLogger.info('🔊 Speaking region: ${region.text} / ${region.textEnglish}');
+    AppLogger.info(
+        '🔊 Speaking region: ${region.text} / ${region.textEnglish}');
 
     // Update UI immediately for instant visual feedback
     activeRegion.value = region;
     _restartCharacterAnimation(region.text);
 
-    // If already speaking, stop first then speak new region
-    if (_isSpeaking) {
-      await _ttsService.stop();
-    }
-    _isSpeaking = true;
-    try {
+    await _interruptAndSpeak(() async {
       await _ttsService.speakRegion(region);
-    } finally {
-      _isSpeaking = false;
-    }
+    });
   }
 
   /// Speak only the pinyin pronunciation
   Future<void> speakPinyin(InteractiveRegion region) async {
-    await _ttsService.speakPinyin(region);
+    activeRegion.value = region;
+    await _interruptAndSpeak(() async {
+      await _ttsService.speakPinyin(region);
+    });
+  }
+
+  /// Speak only English word for the active region.
+  Future<void> speakEnglishWord(InteractiveRegion region) async {
+    final english = region.textEnglish.trim();
+    if (english.isEmpty) return;
+
+    activeRegion.value = region;
+    await _interruptAndSpeak(() async {
+      await _ttsService.speak(english, language: 'en-US');
+    });
+  }
+
+  /// Speak a single Chinese character and focus the character cell.
+  Future<void> speakChineseChar(
+    InteractiveRegion region,
+    int charIndex,
+    String character,
+  ) async {
+    final trimmed = character.trim();
+    if (trimmed.isEmpty) return;
+
+    activeRegion.value = region;
+    _focusCharacter(region.text, charIndex);
+    await _interruptAndSpeak(() async {
+      await _ttsService.speak(trimmed, language: 'zh-CN');
+    });
   }
 
   /// Debug info
@@ -350,7 +381,8 @@ Interactive Image Diagnostics:
   }
 
   void initializeCharacterProgress(String text) {
-    if (_lastInitializedText == text && totalCharCount.value == _countCharacters(text)) {
+    if (_lastInitializedText == text &&
+        totalCharCount.value == _countCharacters(text)) {
       return;
     }
     _setupCharacterProgress(text);
@@ -358,6 +390,11 @@ Interactive Image Diagnostics:
 
   void onCharacterAnimationComplete(int index) {
     if (index != currentCharIndex.value) {
+      return;
+    }
+
+    if (_singleCharacterMode) {
+      currentCharIndex.value = -1;
       return;
     }
 
@@ -372,16 +409,50 @@ Interactive Image Diagnostics:
   }
 
   void _restartCharacterAnimation(String text) {
+    _singleCharacterMode = false;
     _setupCharacterProgress(text, force: true);
+  }
+
+  void _focusCharacter(String text, int charIndex) {
+    final chars =
+        text.split('').where((char) => char.trim().isNotEmpty).toList();
+    if (chars.isEmpty) {
+      currentCharIndex.value = -1;
+      visibleCharCount.value = 0;
+      totalCharCount.value = 0;
+      return;
+    }
+
+    final safeIndex = charIndex.clamp(0, chars.length - 1);
+    _lastInitializedText = text;
+    _singleCharacterMode = true;
+    totalCharCount.value = chars.length;
+    visibleCharCount.value = chars.length;
+    currentCharIndex.value = safeIndex;
+  }
+
+  Future<void> _interruptAndSpeak(Future<void> Function() action) async {
+    if (_isSpeaking) {
+      await _ttsService.stop();
+    }
+    _isSpeaking = true;
+    try {
+      await action();
+    } finally {
+      _isSpeaking = false;
+    }
   }
 
   void _setupCharacterProgress(String text, {bool force = false}) {
     final total = _countCharacters(text);
-    if (!force && _lastInitializedText == text && totalCharCount.value == total) {
+    if (!force &&
+        _lastInitializedText == text &&
+        totalCharCount.value == total) {
       return;
     }
 
     _lastInitializedText = text;
+    _singleCharacterMode = false;
     totalCharCount.value = total;
     if (total <= 0) {
       visibleCharCount.value = 0;
@@ -393,9 +464,6 @@ Interactive Image Diagnostics:
   }
 
   int _countCharacters(String text) {
-    return text
-        .split('')
-        .where((char) => char.trim().isNotEmpty)
-        .length;
+    return text.split('').where((char) => char.trim().isNotEmpty).length;
   }
 }

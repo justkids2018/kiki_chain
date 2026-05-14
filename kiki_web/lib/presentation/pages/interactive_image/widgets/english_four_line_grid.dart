@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'four_line_grid_painter.dart';
+import '../utils/letter_position.dart';
 import '../utils/vowel_marker.dart';
 
 /// Widget that displays English text on a four-line-three-grid (四线三格) system,
@@ -22,23 +23,34 @@ class EnglishFourLineGrid extends StatelessWidget {
     this.markVowels = false,
   }) : super(key: key);
 
+  double _calculateGridWidth(BuildContext context) {
+    final textScale = MediaQuery.textScalerOf(context);
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: GoogleFonts.quicksand(
+          fontSize: fontSize,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0,
+          height: 1.0,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+      textScaler: textScale,
+    )..layout();
+
+    // Follow word length and keep extra horizontal breathing room.
+    return (painter.width + 30).clamp(100.0, 420.0);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final gridWidth = _calculateGridWidth(context);
+
+    return SizedBox(
+      width: gridWidth,
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: CustomPaint(
         painter: FourLineGridPainter(
           lineColor: const Color(0xFFDDDDDD),
@@ -49,23 +61,13 @@ class EnglishFourLineGrid extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // Position text so baseline aligns with line 3 (at 2/3 height)
-            // Line 3 is at 66.7% from top, which is the baseline for English text
-            final baselinePosition = constraints.maxHeight * (2.0 / 3.0);
-
-            // Adjust positioning to place lowercase letters' main body in the second grid
-            // Using 0.8 to move text higher, plus additional 4dp adjustment
-            final textTop = baselinePosition - fontSize * 0.8 - 4;
-
-            return Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: textTop,
-                  child: _buildText(),
-                ),
-              ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: _buildText(constraints.maxHeight),
+              ),
             );
           },
         ),
@@ -73,59 +75,91 @@ class EnglishFourLineGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildText() {
+  Widget _buildText(double gridHeight) {
     if (text.isEmpty) {
       return const SizedBox.shrink();
     }
 
     if (markVowels) {
-      return _buildWithVowelMarking();
+      return _buildWithVowelMarking(gridHeight);
     } else {
-      return _buildSimple();
+      return _buildSimple(gridHeight);
     }
   }
 
   /// Build text with vowel marking.
-  Widget _buildWithVowelMarking() {
+  Widget _buildWithVowelMarking(double gridHeight) {
     final result = VowelMarker.markVowels(text);
 
-    return Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: result.segments.map((segment) {
-          if (segment.text == ' ') {
-            return SizedBox(width: fontSize * 0.4);
-          }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: result.segments.expand((segment) {
+        if (segment.text == ' ') {
+          return [SizedBox(width: fontSize * 0.35)];
+        }
 
-          return Text(
-            segment.text,
-            style: GoogleFonts.quicksand(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w600,
-              color: segment.isVowel ? const Color(0xFFFF5252) : fontColor,
-              height: 1.0,
-              letterSpacing: 0,
-            ),
-          );
-        }).toList(),
-      ),
+        return segment.text
+            .split('')
+            .map((letter) => _buildLetter(letter, segment.isVowel, gridHeight));
+      }).toList(),
     );
   }
 
   /// Build text without vowel marking.
-  Widget _buildSimple() {
-    return Center(
-      child: Text(
-        text,
-        style: GoogleFonts.quicksand(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w600,
-          color: fontColor,
-          height: 1.0,
-          letterSpacing: 0,
+  Widget _buildSimple(double gridHeight) {
+    final letters = text.split('');
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: letters.map((letter) {
+        if (letter == ' ') {
+          return SizedBox(width: fontSize * 0.35);
+        }
+        return _buildLetter(letter, false, gridHeight);
+      }).toList(),
+    );
+  }
+
+  Widget _buildLetter(String letter, bool isVowel, double gridHeight) {
+    final baselineY = gridHeight * (2.0 / 3.0);
+    final letterHeightRatio = LetterPosition.getLetterHeight(letter);
+    final isDescender = LetterPosition.hasDescender(letter);
+    final isTall = LetterPosition.isTall(letter);
+    final isUppercase = letter.isNotEmpty &&
+        letter[0] == letter[0].toUpperCase() &&
+        letter[0] != letter[0].toLowerCase();
+
+    // 基于四线三格规则：
+    // - 高字母/大写：line1~line3
+    // - 常规字母：line2~line3
+    // - 下行字母：line2~line4
+    final effectiveFontSize = letterHeightRatio >= (2.0 / 3.0)
+        ? (isUppercase
+            ? gridHeight * 0.58
+            : (isTall ? gridHeight * 0.60 : gridHeight * 0.56))
+        : (isDescender ? gridHeight * 0.58 : gridHeight * 0.52);
+
+    return SizedBox(
+      height: gridHeight,
+      child: Baseline(
+        baseline: baselineY,
+        baselineType: TextBaseline.alphabetic,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0.5),
+          child: Text(
+            letter,
+            style: GoogleFonts.quicksand(
+              fontSize: effectiveFontSize,
+              fontWeight: FontWeight.w600,
+              color: isVowel ? const Color(0xFFFF5252) : fontColor,
+              height: 1.0,
+              letterSpacing: 0,
+            ),
+          ),
         ),
       ),
     );

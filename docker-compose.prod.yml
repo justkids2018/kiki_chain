@@ -30,7 +30,7 @@ services:
     networks:
       - hikiki-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d hikiki_db"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d hikiki_db" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -55,7 +55,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8001/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:8001/health || exit 1" ]
       interval: 30s
       timeout: 10s
       start_period: 60s
@@ -69,7 +69,7 @@ services:
     container_name: hikiki_admin
     restart: always
     environment:
-      VITE_API_BASE_URL: https://mtrain.xyz/api
+      VITE_API_BASE_URL: https://kiki.keepthinking.me/api
     networks:
       - hikiki-network
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../widgets/profile_tab.dart';
 import 'interactive_image_home/interactive_image_home_page.dart';
@@ -19,49 +18,86 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-
-  // Tab 页面列表
-  final List<Widget> _pages = [
-    const InteractiveImageHomePage(),
-    const ProfileTab(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final media = MediaQuery.of(context);
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF00C37D),
-        unselectedItemColor: const Color(0xFF6B7280),
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        elevation: 8,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.explore_outlined),
-            activeIcon: const Icon(Icons.explore),
-            label: localizations.home,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_outline),
-            activeIcon: const Icon(Icons.person),
-            label: localizations.profile,
+      body: Stack(
+        children: [
+          const InteractiveImageHomePage(),
+          Positioned(
+            top: media.padding.top + 12,
+            right: 20,
+            child: _buildProfileEntryButton(context, localizations),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProfileEntryButton(
+    BuildContext context,
+    AppLocalizations localizations,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => Scaffold(
+                appBar: AppBar(
+                  title: Text(localizations.profile),
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF27273F),
+                  elevation: 0,
+                ),
+                backgroundColor: const Color(0xFFF8FAFC),
+                body: const ProfileTab(),
+              ),
+            ),
+          );
+        },
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.82),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.92),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.person_outline_rounded,
+                size: 18,
+                color: Color(0xFF4B5563),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                localizations.profile,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF4B5563),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

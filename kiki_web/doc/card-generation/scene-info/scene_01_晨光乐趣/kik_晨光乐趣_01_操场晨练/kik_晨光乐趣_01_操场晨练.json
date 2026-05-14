@@ -1,0 +1,426 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "跳绳",
+    "text_pinyin": "tiào shéng",
+    "text_english": "Jump Rope",
+    "text_phonetic": "/dʒʌmp roʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 78,
+            "y": 202
+          },
+          {
+            "x": 211,
+            "y": 202
+          },
+          {
+            "x": 78,
+            "y": 350
+          },
+          {
+            "x": 211,
+            "y": 350
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 105,
+            "y": 447
+          },
+          {
+            "x": 300,
+            "y": 447
+          },
+          {
+            "x": 105,
+            "y": 572
+          },
+          {
+            "x": 300,
+            "y": 572
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "皮球",
+    "text_pinyin": "pí qiú",
+    "text_english": "Ball",
+    "text_phonetic": "/bɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 305,
+            "y": 201
+          },
+          {
+            "x": 433,
+            "y": 201
+          },
+          {
+            "x": 305,
+            "y": 345
+          },
+          {
+            "x": 433,
+            "y": 345
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 301,
+            "y": 397
+          },
+          {
+            "x": 449,
+            "y": 397
+          },
+          {
+            "x": 301,
+            "y": 572
+          },
+          {
+            "x": 449,
+            "y": 572
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "呼啦圈",
+    "text_pinyin": "hū lā quān",
+    "text_english": "Hula Hoop",
+    "text_phonetic": "/ˈhuːlə huːp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 534,
+            "y": 120
+          },
+          {
+            "x": 676,
+            "y": 120
+          },
+          {
+            "x": 534,
+            "y": 234
+          },
+          {
+            "x": 676,
+            "y": 234
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 471,
+            "y": 280
+          },
+          {
+            "x": 648,
+            "y": 280
+          },
+          {
+            "x": 471,
+            "y": 501
+          },
+          {
+            "x": 648,
+            "y": 501
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "跑道",
+    "text_pinyin": "pǎo dào",
+    "text_english": "Track",
+    "text_phonetic": "/træk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 50,
+            "y": 614
+          },
+          {
+            "x": 182,
+            "y": 614
+          },
+          {
+            "x": 50,
+            "y": 761
+          },
+          {
+            "x": 182,
+            "y": 761
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 180,
+            "y": 603
+          },
+          {
+            "x": 360,
+            "y": 603
+          },
+          {
+            "x": 180,
+            "y": 762
+          },
+          {
+            "x": 360,
+            "y": 762
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "哨子",
+    "text_pinyin": "shào zi",
+    "text_english": "Whistle",
+    "text_phonetic": "/ˈwɪsl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 166,
+            "y": 878
+          },
+          {
+            "x": 375,
+            "y": 878
+          },
+          {
+            "x": 166,
+            "y": 1001
+          },
+          {
+            "x": 375,
+            "y": 1001
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 91,
+            "y": 804
+          },
+          {
+            "x": 285,
+            "y": 804
+          },
+          {
+            "x": 91,
+            "y": 933
+          },
+          {
+            "x": 285,
+            "y": 933
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "操场",
+    "text_pinyin": "cāo chǎng",
+    "text_english": "Playground",
+    "text_phonetic": "/ˈpleɪɡraʊnd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 821,
+            "y": 173
+          },
+          {
+            "x": 968,
+            "y": 173
+          },
+          {
+            "x": 821,
+            "y": 351
+          },
+          {
+            "x": 968,
+            "y": 351
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 682,
+            "y": 286
+          },
+          {
+            "x": 986,
+            "y": 286
+          },
+          {
+            "x": 682,
+            "y": 627
+          },
+          {
+            "x": 986,
+            "y": 627
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "毽子",
+    "text_pinyin": "jiàn zi",
+    "text_english": "Shuttlecock",
+    "text_phonetic": "/ˈʃʌtlkɑːk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 501,
+            "y": 799
+          },
+          {
+            "x": 679,
+            "y": 799
+          },
+          {
+            "x": 501,
+            "y": 924
+          },
+          {
+            "x": 679,
+            "y": 924
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 572,
+            "y": 618
+          },
+          {
+            "x": 777,
+            "y": 618
+          },
+          {
+            "x": 572,
+            "y": 774
+          },
+          {
+            "x": 777,
+            "y": 774
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "沙包",
+    "text_pinyin": "shā bāo",
+    "text_english": "Sandbag",
+    "text_phonetic": "/ˈsændbæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 812,
+            "y": 844
+          },
+          {
+            "x": 955,
+            "y": 844
+          },
+          {
+            "x": 812,
+            "y": 992
+          },
+          {
+            "x": 955,
+            "y": 992
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 723,
+            "y": 661
+          },
+          {
+            "x": 908,
+            "y": 661
+          },
+          {
+            "x": 723,
+            "y": 853
+          },
+          {
+            "x": 908,
+            "y": 853
+          }
+        ]
+      }
+    ]
+  }
+]

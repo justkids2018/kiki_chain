@@ -2,6 +2,11 @@ name: Android Release Build
 
 on:
   workflow_dispatch:
+    inputs:
+      base_version:
+        description: "Base version (first 3 parts), e.g. 1.0.0 or 0.001.00"
+        required: false
+        type: string
   schedule:
     # Daily 08:00 Asia/Shanghai (UTC+8) -> 00:00 UTC
     - cron: "0 0 * * *"
@@ -14,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BASE_VERSION: "1.0.0"
+      BASE_VERSION_DEFAULT: ${{ vars.ANDROID_BASE_VERSION || '1.0.0' }}
 
     defaults:
       run:
@@ -30,13 +35,23 @@ jobs:
         id: meta
         run: |
           set -euo pipefail
+          INPUT_BASE_VERSION="${{ github.event.inputs.base_version || '' }}"
+          if [[ -n "${INPUT_BASE_VERSION}" ]]; then
+            BASE_VERSION="${INPUT_BASE_VERSION}"
+          else
+            BASE_VERSION="${BASE_VERSION_DEFAULT}"
+          fi
+
           BUILD_NUM_DEC="${{ github.run_number }}"
           BUILD_SEQ=$(printf "%03d" "${BUILD_NUM_DEC}")
+          FULL_VERSION="${BASE_VERSION}.${BUILD_SEQ}"
           BRANCH_NAME="${GITHUB_REF_NAME}"
           BRANCH_SAFE=$(echo "${BRANCH_NAME}" | sed 's#[^A-Za-z0-9._/-]#-#g')
-          TAG_NAME="android/${BRANCH_SAFE}/v${BASE_VERSION}.${BUILD_SEQ}"
+          TAG_NAME="android/${BRANCH_SAFE}/v${FULL_VERSION}"
           ARTIFACT_PREFIX="android-${BASE_VERSION}-${BUILD_SEQ}"
 
+          echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "full_version=${FULL_VERSION}" >> "$GITHUB_OUTPUT"
           echo "build_num_dec=${BUILD_NUM_DEC}" >> "$GITHUB_OUTPUT"
           echo "build_seq=${BUILD_SEQ}" >> "$GITHUB_OUTPUT"
           echo "branch_name=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
@@ -87,14 +102,14 @@ jobs:
         working-directory: kiki_web
         run: |
           flutter build apk --release \
-            --build-name "${BASE_VERSION}" \
+            --build-name "${{ steps.meta.outputs.full_version }}" \
             --build-number "${{ steps.meta.outputs.build_num_dec }}"
 
       - name: Build Android App Bundle (release)
         working-directory: kiki_web
         run: |
           flutter build appbundle --release \
-            --build-name "${BASE_VERSION}" \
+            --build-name "${{ steps.meta.outputs.full_version }}" \
             --build-number "${{ steps.meta.outputs.build_num_dec }}"
 
       - name: Create and push build tag
@@ -103,7 +118,7 @@ jobs:
           TAG_NAME="${{ steps.meta.outputs.tag_name }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${TAG_NAME}" -m "Android release ${BASE_VERSION}.${{ steps.meta.outputs.build_seq }}"
+          git tag -a "${TAG_NAME}" -m "Android release ${{ steps.meta.outputs.full_version }}"
           git push origin "${TAG_NAME}"
 
       - name: Generate build summary
@@ -112,9 +127,10 @@ jobs:
           cat > build-summary.md <<EOF
           # Android Build Summary
 
-          - Base version: ${BASE_VERSION}
+          - Base version: ${{ steps.meta.outputs.base_version }}
           - Build sequence: ${{ steps.meta.outputs.build_seq }}
-          - Android versionName: ${BASE_VERSION}
+          - Full version (X.Y.Z.AUTO): ${{ steps.meta.outputs.full_version }}
+          - Android versionName: ${{ steps.meta.outputs.full_version }}
           - Android versionCode: ${{ steps.meta.outputs.build_num_dec }}
           - Branch: ${{ steps.meta.outputs.branch_name }}
           - Tag: ${{ steps.meta.outputs.tag_name }}

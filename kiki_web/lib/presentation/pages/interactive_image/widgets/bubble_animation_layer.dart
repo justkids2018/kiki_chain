@@ -1,208 +1,280 @@
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/// 气泡粒子数据类
-class _BubbleParticle {
-  final double startX;
-  final double startY;
-  final double endX;
-  final double endY;
-  final Color color;
-  final double baseSize;
-  final double peakSize;
+class _BubbleSeed {
+  final double angle;
+  final double distanceFactor;
+  final double size;
   final double delay;
+  final double swayAmplitude;
+  final double swaySpeed;
+  final double phase;
+  final Color color;
+  final double alpha;
+  final double peakScale;
 
-  _BubbleParticle({
-    required this.startX,
-    required this.startY,
-    required this.endX,
-    required this.endY,
-    required this.color,
-    required this.baseSize,
-    required this.peakSize,
+  _BubbleSeed({
+    required this.angle,
+    required this.distanceFactor,
+    required this.size,
     required this.delay,
+    required this.swayAmplitude,
+    required this.swaySpeed,
+    required this.phase,
+    required this.color,
+    required this.alpha,
+    required this.peakScale,
   });
 }
 
-/// 气泡动画绘制器
-class _BubblePainter extends CustomPainter {
-  final List<_BubbleParticle> bubbles;
-  final double progress;
+class _BubbleBurst {
+  final Offset origin;
+  final int startedAtMs;
+  final List<_BubbleSeed> bubbles;
 
-  _BubblePainter({
+  _BubbleBurst({
+    required this.origin,
+    required this.startedAtMs,
     required this.bubbles,
-    required this.progress,
+  });
+}
+
+/// 页面级扩散动画触发器。
+class ScreenDiffusionController extends ChangeNotifier {
+  Offset? _origin;
+  int _tick = 0;
+
+  Offset? get origin => _origin;
+  int get tick => _tick;
+
+  void trigger(Offset localPosition) {
+    _origin = localPosition;
+    _tick += 1;
+    notifyListeners();
+  }
+}
+
+class _ScreenDiffusionPainter extends CustomPainter {
+  final int nowMs;
+  final int durationMs;
+  final List<_BubbleBurst> bursts;
+
+  _ScreenDiffusionPainter({
+    required this.nowMs,
+    required this.durationMs,
+    required this.bursts,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (bubbles.isEmpty) return;
+    if (bursts.isEmpty) return;
 
-    for (final bubble in bubbles) {
-      // 考虑延迟时间，计算有效进度
-      final adjustedProgress =
-          ((progress - bubble.delay) / (1.0 - bubble.delay)).clamp(0.0, 1.0);
+    final maxRadius =
+        math.sqrt(size.width * size.width + size.height * size.height);
+    final maxTravel = size.shortestSide * 0.46 + size.longestSide * 0.16;
 
-      if (adjustedProgress == 0.0) continue;
+    for (final burst in bursts) {
+      final burstProgress =
+          ((nowMs - burst.startedAtMs) / durationMs).clamp(0.0, 1.0);
+      if (burstProgress <= 0 || burstProgress >= 1) continue;
 
-      // 计算当前位置
-      final currentX =
-          bubble.startX + (bubble.endX - bubble.startX) * adjustedProgress;
-      final currentY =
-          bubble.startY + (bubble.endY - bubble.startY) * adjustedProgress;
+      final center = burst.origin;
 
-      // 弹性缩放效果
-      final sizeProgress = adjustedProgress < 0.5
-          ? 1.0 + (adjustedProgress * 2.0) * 0.3
-          : 1.3 - ((adjustedProgress - 0.5) * 2.0) * 1.3;
-
-      final currentSize = bubble.baseSize * sizeProgress;
-
-      // 透明度淡出效果
-      final opacity = 1.0 - adjustedProgress;
-
-      // 绘制气泡
-      final paint = Paint()
-        ..color = bubble.color.withOpacity(opacity * 0.7)
-        ..style = PaintingStyle.fill;
-
-      canvas.drawCircle(
-        Offset(currentX, currentY),
-        currentSize,
-        paint,
-      );
-
-      // 添加外光晕
+      final glowPulse = Curves.easeOut.transform(burstProgress);
+      final glowRadius = 18 + (maxRadius * 0.085 * glowPulse);
       final glowPaint = Paint()
-        ..color = bubble.color.withOpacity(opacity * 0.3)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5;
+        ..shader = RadialGradient(
+          colors: [
+            const Color(0xFF9DFFEF).withValues(
+              alpha: 0.20 * math.pow(1 - burstProgress, 1.35).toDouble(),
+            ),
+            const Color(0xFF00C37D).withValues(alpha: 0.0),
+          ],
+        ).createShader(Rect.fromCircle(center: center, radius: glowRadius));
+      canvas.drawCircle(center, glowRadius, glowPaint);
 
-      canvas.drawCircle(
-        Offset(currentX, currentY),
-        currentSize + 2,
-        glowPaint,
-      );
+      for (final bubble in burst.bubbles) {
+        final t = ((burstProgress - bubble.delay) / (1 - bubble.delay))
+            .clamp(0.0, 1.0);
+        if (t <= 0) continue;
+
+        // 先慢后快：越往外扩散速度越快。
+        final spread = Curves.easeInCubic.transform(t);
+        final distance = maxTravel * bubble.distanceFactor * spread;
+
+        final x = center.dx +
+            math.cos(bubble.angle) * distance +
+            math.sin(bubble.phase + t * bubble.swaySpeed) *
+                bubble.swayAmplitude *
+                (1 - 0.4 * t);
+
+        final y = center.dy +
+            math.sin(bubble.angle) * distance +
+            math.cos(bubble.phase + t * bubble.swaySpeed * 0.8) *
+                bubble.swayAmplitude *
+                0.7 *
+                (1 - 0.4 * t);
+
+        final growThenShrink = t < 0.38
+            ? (0.56 + (bubble.peakScale - 0.56) * (t / 0.38))
+            : t < 0.66
+                ? bubble.peakScale
+                : (bubble.peakScale -
+                    (bubble.peakScale - 0.42) * ((t - 0.66) / 0.34));
+
+        // 点击后立马可见，慢慢消失。
+        final fadeIn = (t / 0.06).clamp(0.0, 1.0);
+        final fadeOut = math.pow(1 - t, 0.65).toDouble();
+        final alpha = bubble.alpha * fadeIn * fadeOut;
+        if (alpha <= 0.001) continue;
+
+        final radius = bubble.size * growThenShrink;
+
+        final fillPaint = Paint()
+          ..style = PaintingStyle.fill
+          ..color = bubble.color.withValues(alpha: alpha);
+        canvas.drawCircle(Offset(x, y), radius, fillPaint);
+
+        final edgePaint = Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.9
+          ..color = Colors.white.withValues(alpha: alpha * 0.30);
+        canvas.drawCircle(Offset(x, y), radius + 0.7, edgePaint);
+      }
     }
   }
 
   @override
-  bool shouldRepaint(covariant _BubblePainter oldDelegate) => true;
+  bool shouldRepaint(covariant _ScreenDiffusionPainter oldDelegate) {
+    return oldDelegate.nowMs != nowMs || oldDelegate.bursts != bursts;
+  }
 }
 
-/// 气泡动画图层 Widget
-class BubbleAnimationLayer extends StatefulWidget {
+/// 全屏扩散动画层（不拦截点击事件）。
+class ScreenDiffusionLayer extends StatefulWidget {
   final Widget child;
   final Duration animationDuration;
+  final ScreenDiffusionController controller;
 
-  const BubbleAnimationLayer({
+  const ScreenDiffusionLayer({
     Key? key,
     required this.child,
-    this.animationDuration = const Duration(milliseconds: 1500),
+    required this.controller,
+    this.animationDuration = const Duration(milliseconds: 1400),
   }) : super(key: key);
 
   @override
-  State<BubbleAnimationLayer> createState() => _BubbleAnimationLayerState();
+  State<ScreenDiffusionLayer> createState() => _ScreenDiffusionLayerState();
 }
 
-class _BubbleAnimationLayerState extends State<BubbleAnimationLayer>
-    with TickerProviderStateMixin {
-  late AnimationController _bubbleController;
-  final List<_BubbleParticle> _bubbles = [];
+class _ScreenDiffusionLayerState extends State<ScreenDiffusionLayer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _tickerController;
+  final List<_BubbleBurst> _bursts = [];
 
   @override
   void initState() {
     super.initState();
-    _bubbleController = AnimationController(
-      duration: widget.animationDuration,
+    _tickerController = AnimationController(
+      duration: const Duration(milliseconds: 16),
       vsync: this,
-    );
+    )..addListener(_onTick);
+    widget.controller.addListener(_onTrigger);
+  }
+
+  @override
+  void didUpdateWidget(covariant ScreenDiffusionLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onTrigger);
+      widget.controller.addListener(_onTrigger);
+    }
   }
 
   @override
   void dispose() {
-    _bubbleController.dispose();
+    widget.controller.removeListener(_onTrigger);
+    _tickerController.dispose();
     super.dispose();
   }
 
-  void _createBubbles(Offset position) {
-    _bubbles.clear();
+  void _onTick() {
+    if (!mounted || _bursts.isEmpty) return;
 
-    final colors = [
-      Colors.red,
-      Colors.orange,
-      Colors.yellow,
-      Colors.green,
-      Colors.blue,
-      Colors.purple,
-      Colors.pink,
-      Colors.cyan,
+    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    final durationMs = widget.animationDuration.inMilliseconds;
+
+    _bursts.removeWhere((burst) => nowMs - burst.startedAtMs >= durationMs);
+
+    if (_bursts.isEmpty) {
+      _tickerController.stop();
+    }
+  }
+
+  void _onTrigger() {
+    if (!mounted || widget.controller.origin == null) return;
+
+    final random = math.Random(widget.controller.tick * 7919);
+    final palette = [
+      const Color(0xFF6EE7FF),
+      const Color(0xFF7FFFB8),
+      const Color(0xFFFFE16A),
+      const Color(0xFFFFB27D),
+      const Color(0xFFFF8FCB),
+      const Color(0xFFB59CFF),
     ];
 
-    // 创建 12-16 个彩色气泡
-    final bubbleCount = Random().nextInt(5) + 12;
-    for (int i = 0; i < bubbleCount; i++) {
-      final angle = (i / bubbleCount) * 2 * pi;
-
-      // 随机距离
-      final distance = 60.0 + Random().nextDouble() * 80;
-      final endX = position.dx + cos(angle) * distance;
-      final endY =
-          position.dy + sin(angle) * distance - (80 + Random().nextDouble() * 60);
-
-      // 随机大小
-      final baseSize = 4.0 + Random().nextDouble() * 12;
-      final peakSize = baseSize * (1.2 + Random().nextDouble() * 0.8);
-
-      // 延迟时间（波浪效果）
-      final delay = (i % 4) * 0.15;
-
-      _bubbles.add(
-        _BubbleParticle(
-          startX: position.dx,
-          startY: position.dy,
-          endX: endX,
-          endY: endY,
-          color: colors[i % colors.length],
-          baseSize: baseSize,
-          peakSize: peakSize,
-          delay: delay,
-        ),
+    final bubbles = List.generate(24, (index) {
+      final immediateDelay = random.nextDouble() * 0.03;
+      return _BubbleSeed(
+        angle: random.nextDouble() * math.pi * 2,
+        distanceFactor: 0.52 + random.nextDouble() * 0.45,
+        size: 7.0 + random.nextDouble() * 7.0,
+        delay: immediateDelay,
+        swayAmplitude: 2 + random.nextDouble() * 6,
+        swaySpeed: 3.2 + random.nextDouble() * 2.8,
+        phase: random.nextDouble() * math.pi * 2,
+        color: palette[index % palette.length],
+        alpha: 0.45 + random.nextDouble() * 0.25,
+        peakScale: 1.08 + random.nextDouble() * 0.22,
       );
-    }
+    });
 
-    _bubbleController.forward(from: 0.0);
+    _bursts.add(
+      _BubbleBurst(
+        origin: widget.controller.origin!,
+        startedAtMs: DateTime.now().millisecondsSinceEpoch,
+        bubbles: bubbles,
+      ),
+    );
+
+    if (!_tickerController.isAnimating) {
+      _tickerController.repeat();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (details) {
-        _createBubbles(details.localPosition);
-      },
-      child: Stack(
-        children: [
-          // 子 widget
-          widget.child,
-
-          // 气泡动画层
-          Positioned.fill(
-            child: IgnorePointer(
-              child: AnimatedBuilder(
-                animation: _bubbleController,
-                builder: (context, child) {
-                  return CustomPaint(
-                    painter: _BubblePainter(
-                      bubbles: _bubbles,
-                      progress: _bubbleController.value,
-                    ),
-                  );
-                },
-              ),
+    return Stack(
+      children: [
+        RepaintBoundary(child: widget.child),
+        Positioned.fill(
+          child: IgnorePointer(
+            child: AnimatedBuilder(
+              animation: _tickerController,
+              builder: (_, __) {
+                return CustomPaint(
+                  painter: _ScreenDiffusionPainter(
+                    nowMs: DateTime.now().millisecondsSinceEpoch,
+                    durationMs: widget.animationDuration.inMilliseconds,
+                    bursts: _bursts,
+                  ),
+                );
+              },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

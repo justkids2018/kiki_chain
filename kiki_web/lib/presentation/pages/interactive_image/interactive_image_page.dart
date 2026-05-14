@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
+import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
@@ -364,16 +365,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (region.textEnglish.isNotEmpty)
-                          EnglishFourLineGrid(
-                            text: region.textEnglish,
-                            fontSize: _englishFontSizeTablet,
-                            fontColor: Colors.black87,
-                            height: _englishGridHeight,
-                            markVowels: true,
-                          ),
-                        if (region.textEnglish.isNotEmpty)
-                          const SizedBox(height: 10),
+                        _buildLearningInfoSection(
+                          controller,
+                          region,
+                          false,
+                        ),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(child: Divider(color: Colors.grey[200])),
@@ -393,7 +390,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        _buildCharacterGrid(controller, region.text),
+                        _buildCharacterGrid(controller, region),
                       ],
                     ),
                   );
@@ -526,19 +523,32 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // English four-line grid
-                    if (region.textEnglish.isNotEmpty)
-                      EnglishFourLineGrid(
-                        text: region.textEnglish,
-                        fontSize: _englishFontSizePhone,
-                        fontColor: Colors.black87,
-                        height: _englishGridHeight,
-                        markVowels: true,
-                      ),
-                    if (region.textEnglish.isNotEmpty)
-                      const SizedBox(height: 16),
+                    _buildLearningInfoSection(
+                      controller,
+                      region,
+                      true,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.grey[200])),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            '笔顺练习',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[400],
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: Colors.grey[200])),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     // Character stroke grid
-                    _buildCharacterGrid(controller, region.text),
+                    _buildCharacterGrid(controller, region),
                   ],
                 ),
               ),
@@ -652,14 +662,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   Widget _buildCharacterGrid(
     InteractiveImageController controller,
-    String text,
+    InteractiveRegion region,
   ) {
-    final characters = text
+    final characters = region.text
         .split('')
         .where((char) => char.trim().isNotEmpty)
         .toList(growable: false);
 
-    controller.initializeCharacterProgress(text);
+    controller.initializeCharacterProgress(region.text);
     final visibleCount = controller.visibleCharCount.value;
     final activeIndex = controller.currentCharIndex.value;
     final int total = characters.length;
@@ -691,6 +701,95 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         cells: cells,
         cellSize: _chineseCellSize,
         onCharacterComplete: controller.onCharacterAnimationComplete,
+        onCharacterTap: (index, character) {
+          controller.speakChineseChar(region, index, character);
+        },
+      ),
+    );
+  }
+
+  Widget _buildLearningInfoSection(
+    InteractiveImageController controller,
+    InteractiveRegion region,
+    bool isPhone,
+  ) {
+    final english = region.textEnglish.trim();
+    final phonetic = region.textPhonetic.trim();
+    final pinyin = region.textPinyin.trim();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (english.isNotEmpty) ...[
+          GestureDetector(
+            onTap: () => controller.speakEnglishWord(region),
+            child: EnglishFourLineGrid(
+              text: english,
+              fontSize:
+                  isPhone ? _englishFontSizePhone : _englishFontSizeTablet,
+              fontColor: Colors.black87,
+              height: _englishGridHeight,
+              markVowels: true,
+            ),
+          ),
+          const SizedBox(height: 6),
+        ],
+        if (phonetic.isNotEmpty) ...[
+          _buildPronunciationChip(
+            label: '音标',
+            value: phonetic,
+            onTap: () => controller.speakEnglishWord(region),
+          ),
+          const SizedBox(height: 8),
+        ],
+        if (pinyin.isNotEmpty)
+          _buildPronunciationChip(
+            label: '拼音',
+            value: pinyin,
+            onTap: () => controller.speakPinyin(region),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildPronunciationChip({
+    required String label,
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF2F4F6),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: const Color(0xFFE6EBEF), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '$label  ',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF5A6B7B),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.volume_up_rounded,
+                size: 15, color: Color(0xFF66A9D9)),
+          ],
+        ),
       ),
     );
   }

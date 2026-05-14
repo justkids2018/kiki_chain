@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { AxiosInstance, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081'
+const baseURL = import.meta.env.VITE_API_BASE_URL || ''
 
 const instance: AxiosInstance = axios.create({
   baseURL,
@@ -30,12 +30,12 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
-    
+
     if (data.success === false) {
       ElMessage.error(data.message || '请求失败')
       return Promise.reject(new Error(data.message))
     }
-    
+
     return data
   },
   (error) => {

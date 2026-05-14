@@ -34,7 +34,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.just.kiki.chain.kikichain"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -57,7 +57,7 @@ android {
 
     defaultConfig {
         applicationId = "com.just.kiki.chain"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName

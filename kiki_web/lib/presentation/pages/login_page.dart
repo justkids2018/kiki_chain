@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../controllers/auth_controller.dart';
 
 /// 登录页面 - Liquid Glass Edition (Refined)
-/// 
+///
 /// 遵循Refined设计原则：普通页面稳重简洁，优先可读性
 /// 使用Light Base纯色背景，突出Liquid Green主色调
-/// 
+///
 /// 创建时间: 2025年8月9日
 /// 最后修改: 2025年9月15日
 class LoginPage extends StatelessWidget {
@@ -21,33 +22,68 @@ class LoginPage extends StatelessWidget {
     final isCompact = size.width < 600; // phone vs iPad
 
     return Scaffold(
-      backgroundColor: Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF3F7FB),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: isCompact ? 20 : 24),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 400),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                SizedBox(height: isCompact ? 28 : 50),
-
-                _buildLoginCard(authController, localizations, isCompact),
-
-                SizedBox(height: isCompact ? 20 : 30),
-
-                _buildRegisterPrompt(),
-
-                SizedBox(height: isCompact ? 12 : 16),
-
-                _buildGuestModeButton(),
-
-                SizedBox(height: isCompact ? 24 : 40),
-                ],
+        child: Stack(
+          children: [
+            Positioned(
+              top: -120,
+              left: -80,
+              child: _buildGlowBlob(
+                size: 280,
+                color: const Color(0xFF9EDBFF),
               ),
             ),
+            Positioned(
+              bottom: -140,
+              right: -100,
+              child: _buildGlowBlob(
+                size: 320,
+                color: const Color(0xFFB8F0D4),
+              ),
+            ),
+            Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: isCompact ? 20 : 24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: isCompact ? 24 : 40),
+                      _buildHeader(localizations, isCompact),
+                      SizedBox(height: isCompact ? 18 : 24),
+                      _buildLoginCard(authController, localizations, isCompact),
+                      SizedBox(height: isCompact ? 18 : 24),
+                      _buildRegisterPrompt(),
+                      SizedBox(height: isCompact ? 12 : 16),
+                      _buildGuestModeButton(),
+                      SizedBox(height: isCompact ? 20 : 30),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlowBlob({required double size, required Color color}) {
+    return IgnorePointer(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            colors: [
+              color.withValues(alpha: 0.35),
+              color.withValues(alpha: 0.04),
+              Colors.transparent,
+            ],
+            stops: const [0.0, 0.6, 1.0],
           ),
         ),
       ),
@@ -86,9 +122,7 @@ class LoginPage extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-
         SizedBox(height: isCompact ? 20 : 32),
-
         Text(
           localizations.welcomeBack,
           style: TextStyle(
@@ -99,9 +133,7 @@ class LoginPage extends StatelessWidget {
             height: 1.2,
           ),
         ),
-
         SizedBox(height: isCompact ? 8 : 12),
-
         Text(
           localizations.pleaseLoginToAccount,
           style: TextStyle(
@@ -115,69 +147,76 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginCard(AuthController controller, AppLocalizations localizations, bool isCompact) {
-    return Container(
-      width: double.infinity,
-      padding: isCompact
-          ? EdgeInsets.symmetric(horizontal: 20, vertical: 24)
-          : EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFFE2E8F0), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Form(
-        key: controller.loginFormKey,
-        child: Column(
-          children: [
-            // 用户名输入框
-            _buildGlassTextField(
-              controller: controller.loginIdentifierController,
-              labelText: localizations.phoneNumber,
-              prefixIcon: Icons.person_outline_rounded,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              validator: controller.validateLoginIdentifier,
+  Widget _buildLoginCard(AuthController controller,
+      AppLocalizations localizations, bool isCompact) {
+    final edgePadding = isCompact
+        ? const EdgeInsets.symmetric(horizontal: 20, vertical: 24)
+        : const EdgeInsets.all(28);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(22),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+        child: Container(
+          width: double.infinity,
+          padding: edgePadding,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.72),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.65),
+              width: 1,
             ),
-            
-            SizedBox(height: 16),
-            
-            // 密码输入框
-            Obx(() => _buildGlassTextField(
-              controller: controller.loginPasswordController,
-              labelText: localizations.password,
-              prefixIcon: Icons.lock_outline_rounded,
-              obscureText: !controller.loginPasswordVisible,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  controller.loginPasswordVisible 
-                      ? Icons.visibility_off_rounded 
-                      : Icons.visibility_rounded,
-                  color: Color(0xFF27273F).withValues(alpha: 0.6),
-                  size: 22,
-                ),
-                onPressed: controller.toggleLoginPasswordVisibility,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
-              textInputAction: TextInputAction.done,
-              validator: controller.validatePassword,
-              onFieldSubmitted: (_) => controller.login(),
-            )),
-            
-            SizedBox(height: 24),
-            
-            // 登录按钮
-            _buildGlassButton(
-              text: localizations.login,
-              onPressed: controller.login,
+            ],
+          ),
+          child: Form(
+            key: controller.loginFormKey,
+            child: Column(
+              children: [
+                _buildGlassTextField(
+                  controller: controller.loginIdentifierController,
+                  labelText: localizations.phoneNumber,
+                  prefixIcon: Icons.person_outline_rounded,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  validator: controller.validateLoginIdentifier,
+                ),
+                const SizedBox(height: 16),
+                Obx(
+                  () => _buildGlassTextField(
+                    controller: controller.loginPasswordController,
+                    labelText: localizations.password,
+                    prefixIcon: Icons.lock_outline_rounded,
+                    obscureText: !controller.loginPasswordVisible,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.loginPasswordVisible
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded,
+                        color: const Color(0xFF27273F).withValues(alpha: 0.6),
+                        size: 22,
+                      ),
+                      onPressed: controller.toggleLoginPasswordVisibility,
+                    ),
+                    textInputAction: TextInputAction.done,
+                    validator: controller.validatePassword,
+                    onFieldSubmitted: (_) => controller.login(),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _buildGlassButton(
+                  text: localizations.login,
+                  onPressed: controller.login,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -197,14 +236,13 @@ class LoginPage extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // 白色背景
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Color(0xFFE2E8F0), // 标准边框色
+          color: const Color(0xFFE2E8F0),
           width: 1,
         ),
         boxShadow: [
-          // 极轻阴影
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 4,
@@ -220,29 +258,28 @@ class LoginPage extends StatelessWidget {
         validator: validator,
         onFieldSubmitted: onFieldSubmitted,
         style: TextStyle(
-          color: Color(0xFF27273F), // 主文字色
+          color: const Color(0xFF27273F),
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(
-            color: Color(0xFF6B7280), // 次要文字色
+            color: const Color(0xFF6B7280),
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
           prefixIcon: Icon(
             prefixIcon,
-            color: Color(0xFF00C37D), // Liquid Green主色调
+            color: const Color(0xFF00C37D),
             size: 22,
           ),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          // 聚焦态：边框高亮，轻微外阴影
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color(0xFF00C37D),
               width: 2,
             ),
@@ -263,9 +300,9 @@ class LoginPage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF00C37D), // 主按钮：实心Liquid Green
+          backgroundColor: const Color(0xFF00C37D),
           foregroundColor: Colors.white,
-          elevation: 0, // 无阴影，符合简洁设计
+          elevation: 0,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -275,8 +312,8 @@ class LoginPage extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.w600, // Semibold
-            letterSpacing: -0.01, // 字间距收紧
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.01,
           ),
         ),
       ),
@@ -326,7 +363,8 @@ class LoginPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.person_outline_rounded, color: Color(0xFF9CA3AF), size: 16),
+              Icon(Icons.person_outline_rounded,
+                  color: Color(0xFF9CA3AF), size: 16),
               SizedBox(width: 6),
               Text(
                 localizations.continueAsGuest,

@@ -23,7 +23,7 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
 
   InteractiveImageRepositoryImpl({
     String dataJsonPath = 'assets/data/kiki_zhiwuyuan.json',
-  })  : _dataJsonPath = dataJsonPath;
+  }) : _dataJsonPath = dataJsonPath;
 
   @override
   Future<List<InteractiveRegion>> loadRegions({String? jsonPath}) async {
@@ -31,17 +31,20 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
       // 使用提供的路径，否则使用默认路径
       final pathToLoad = jsonPath ?? _dataJsonPath;
       AppLogger.debug('Loading regions from: $pathToLoad');
-      
+
       late String response;
-      
+
       // 判断是远程 URL 还是本地资源
-      if (pathToLoad.startsWith('http://') || pathToLoad.startsWith('https://')) {
+      if (pathToLoad.startsWith('http://') ||
+          pathToLoad.startsWith('https://')) {
         // 从网络加载
         AppLogger.debug('Loading JSON from network: $pathToLoad');
         try {
           final httpResponse = await _dio.get(pathToLoad);
           if (httpResponse.statusCode == 200) {
-            response = httpResponse.data is String ? httpResponse.data : jsonEncode(httpResponse.data);
+            response = httpResponse.data is String
+                ? httpResponse.data
+                : jsonEncode(httpResponse.data);
           } else {
             throw Exception('HTTP ${httpResponse.statusCode}');
           }
@@ -54,13 +57,11 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
         AppLogger.debug('Loading JSON from assets: $pathToLoad');
         response = await rootBundle.loadString(pathToLoad);
       }
-      
+
       final List<dynamic> data = json.decode(response);
-      
-      final regions = data
-          .map((e) => InteractiveRegion.fromJson(e as Map<String, dynamic>))
-          .toList();
-      
+
+      final regions = InteractiveRegion.parseItemsData(data);
+
       AppLogger.info('Successfully loaded ${regions.length} regions');
       return regions;
     } catch (e) {
@@ -79,11 +80,12 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
 
     try {
       late ui.Image image;
-      
+
       // 判断是远程 URL 还是本地资源
       if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
         // 从网络加载图片
-        AppLogger.debug('Loading image dimensions from network URL: $imagePath');
+        AppLogger.debug(
+            'Loading image dimensions from network URL: $imagePath');
         final imageProvider = NetworkImage(imagePath);
         final stream = imageProvider.resolve(ImageConfiguration.empty);
         final Completer<ui.Image> completer = Completer<ui.Image>();
@@ -98,7 +100,7 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
         });
 
         stream.addListener(listener);
-        
+
         image = await completer.future.timeout(
           const Duration(seconds: 10),
           onTimeout: () {
@@ -122,7 +124,7 @@ class InteractiveImageRepositoryImpl implements IInteractiveImageRepository {
         });
 
         stream.addListener(listener);
-        
+
         image = await completer.future.timeout(
           const Duration(seconds: 10),
           onTimeout: () {

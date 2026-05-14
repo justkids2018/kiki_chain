@@ -1,0 +1,44 @@
+name: CI Validate
+
+on:
+  push:
+    branches:
+      - main
+      - kiki
+  pull_request:
+
+jobs:
+  validate-flutter:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        working-directory: kiki_web
+        run: flutter pub get
+
+      - name: Flutter analyze
+        working-directory: kiki_web
+        run: flutter analyze
+
+      - name: Flutter test
+        working-directory: kiki_web
+        run: flutter test

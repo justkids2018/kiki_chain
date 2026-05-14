@@ -5,11 +5,12 @@ import '../../../data/models/image_item.dart';
 import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
-import 'services/text_to_speech_service.dart';
+import '../../../core/speech/local_speech_service.dart';
+import '../../../core/speech/speech_service.dart';
 
 class InteractiveImageController extends GetxController {
   late final IInteractiveImageRepository _repository;
-  late final TextToSpeechService _ttsService;
+  late final SpeechService _ttsService;
 
   final regions = <InteractiveRegion>[].obs;
   final imageWidth = 1.0.obs;
@@ -40,10 +41,10 @@ class InteractiveImageController extends GetxController {
 
   InteractiveImageController({
     IInteractiveImageRepository? repository,
-    TextToSpeechService? ttsService,
+    SpeechService? ttsService,
   }) {
     _repository = repository ?? InteractiveImageRepositoryImpl();
-    _ttsService = ttsService ?? TextToSpeechService();
+    _ttsService = ttsService ?? LocalSpeechService();
 
     // 从导航参数获取文件路径和图片路径
     _getParametersFromRoute();

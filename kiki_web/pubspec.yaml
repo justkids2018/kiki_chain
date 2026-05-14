@@ -85,7 +85,7 @@ dependencies:
   # ai
   # dify_flutter: ^1.0.3
   just_audio: ^0.9.39
-  flutter_tts: ^3.8.3
+  sherpa_onnx: ^1.13.2
   stroke_order_animator: ^3.3.1
   cached_network_image: ^3.3.1
   crypto: ^3.0.3

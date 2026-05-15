@@ -50,14 +50,10 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: isCompact ? 24 : 40),
-                      _buildHeader(localizations, isCompact),
                       SizedBox(height: isCompact ? 18 : 24),
                       _buildLoginCard(authController, localizations, isCompact),
                       SizedBox(height: isCompact ? 18 : 24),
                       _buildRegisterPrompt(),
-                      SizedBox(height: isCompact ? 12 : 16),
-                      _buildGuestModeButton(),
                       SizedBox(height: isCompact ? 20 : 30),
                     ],
                   ),
@@ -87,63 +83,6 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(AppLocalizations localizations, bool isCompact) {
-    final logoSize = isCompact ? 56.0 : 72.0;
-    final iconSize = isCompact ? 28.0 : 36.0;
-    final titleSize = isCompact ? 24.0 : 28.0;
-    final subtitleSize = isCompact ? 14.0 : 16.0;
-
-    return Column(
-      children: [
-        Container(
-          width: logoSize,
-          height: logoSize,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF00C37D), Color(0xFF3FD280)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(isCompact ? 14 : 18),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.school_rounded,
-            size: iconSize,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: isCompact ? 20 : 32),
-        Text(
-          localizations.welcomeBack,
-          style: TextStyle(
-            fontSize: titleSize,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF27273F),
-            letterSpacing: -0.01,
-            height: 1.2,
-          ),
-        ),
-        SizedBox(height: isCompact ? 8 : 12),
-        Text(
-          localizations.pleaseLoginToAccount,
-          style: TextStyle(
-            fontSize: subtitleSize,
-            fontWeight: FontWeight.w400,
-            color: Color(0xFF6B7280),
-            height: 1.4,
-          ),
-        ),
-      ],
     );
   }
 
@@ -353,31 +292,4 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGuestModeButton() {
-    final AuthController authController = Get.find<AuthController>();
-    return Builder(
-      builder: (context) {
-        final localizations = AppLocalizations.of(context)!;
-        return GestureDetector(
-          onTap: authController.enterGuestMode,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.person_outline_rounded,
-                  color: Color(0xFF9CA3AF), size: 16),
-              SizedBox(width: 6),
-              Text(
-                localizations.continueAsGuest,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF9CA3AF),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }

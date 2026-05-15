@@ -24,7 +24,7 @@ class RegisterPage extends StatelessWidget {
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 500),
+              constraints: BoxConstraints(maxWidth: 460),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -121,7 +121,7 @@ class RegisterPage extends StatelessWidget {
         final localizations = AppLocalizations.of(context)!;
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.all(32),
+          padding: EdgeInsets.all(26),
           decoration: BoxDecoration(
             color: Colors.white, // 纯色背景，符合普通页面规范
             borderRadius: BorderRadius.circular(16),
@@ -152,7 +152,7 @@ class RegisterPage extends StatelessWidget {
                   validator: controller.validatePhone,
                 ),
 
-                SizedBox(height: 16),
+                SizedBox(height: 12),
 
                 // 昵称输入框（可选）
                 _buildGlassTextField(
@@ -165,7 +165,7 @@ class RegisterPage extends StatelessWidget {
 
 
 
-                SizedBox(height: 16),
+                SizedBox(height: 12),
 
                 // 密码输入框
                 Obx(() => _buildGlassTextField(
@@ -187,7 +187,7 @@ class RegisterPage extends StatelessWidget {
                   validator: controller.validateRegisterPassword,
                 )),
 
-                SizedBox(height: 16),
+                SizedBox(height: 12),
 
                 // 确认密码输入框
                 Obx(() => _buildGlassTextField(
@@ -210,7 +210,7 @@ class RegisterPage extends StatelessWidget {
                   onFieldSubmitted: (_) => controller.register(),
                 )),
 
-                SizedBox(height: 24),
+                SizedBox(height: 18),
 
                 // 注册按钮
                 _buildGlassButton(
@@ -276,11 +276,11 @@ class RegisterPage extends StatelessWidget {
           prefixIcon: Icon(
             prefixIcon,
             color: Color(0xFF00C37D),
-            size: 22,
+            size: 20,
           ),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         ),
       ),
     );
@@ -293,7 +293,7 @@ class RegisterPage extends StatelessWidget {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 48,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -323,7 +323,7 @@ class RegisterPage extends StatelessWidget {
       builder: (context) {
         final localizations = AppLocalizations.of(context)!;
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
             color: Colors.white, // 纯色背景
             borderRadius: BorderRadius.circular(12),

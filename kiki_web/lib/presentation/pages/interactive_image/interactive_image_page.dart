@@ -405,9 +405,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             child: Obx(() {
               final region = controller.activeRegion.value;
               final isActive = region != null;
+              final isSpeaking = controller.isSpeaking.value;
               return Center(
                 child: GestureDetector(
-                  onTap: isActive ? () => controller.speakRegion(region) : null,
+                  onTap: isActive
+                      ? () => controller.speakChinesePhrase(region)
+                      : null,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -431,14 +434,29 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                               : [],
                         ),
                         child: Icon(
-                          Icons.volume_up_rounded,
+                          isSpeaking
+                              ? Icons.graphic_eq_rounded
+                              : Icons.volume_up_rounded,
                           color: isActive ? Colors.white : Colors.grey[400],
                           size: 20,
                         ),
                       ),
+                      if (isActive && isSpeaking) ...[
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: 24,
+                          child: LinearProgressIndicator(
+                            minHeight: 2,
+                            borderRadius: BorderRadius.circular(999),
+                            backgroundColor:
+                                const Color(0xFF00C37D).withValues(alpha: 0.15),
+                            color: const Color(0xFF00C37D),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 4),
                       Text(
-                        '点击朗读',
+                        '朗读中文',
                         style: TextStyle(
                           fontSize: 10,
                           color: isActive
@@ -462,6 +480,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   Widget _buildFloatingCharacterPanel(InteractiveImageController controller) {
     return Obx(() {
       final region = controller.activeRegion.value;
+      final isSpeaking = controller.isSpeaking.value;
 
       if (region == null) {
         // Minimal state: hint pill
@@ -563,7 +582,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 ),
               ),
               child: GestureDetector(
-                onTap: () => controller.speakRegion(region),
+                onTap: () => controller.speakChinesePhrase(region),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -582,16 +601,33 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.volume_up_rounded,
-                        color: Colors.white,
-                        size: 22,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          if (isSpeaking)
+                            const SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                          Icon(
+                            isSpeaking
+                                ? Icons.graphic_eq_rounded
+                                : Icons.volume_up_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      '点击朗读',
-                      style: TextStyle(
+                    Text(
+                      isSpeaking ? '播放中' : '朗读中文',
+                      style: const TextStyle(
                         fontSize: 10,
                         color: Color(0xFF00C37D),
                         fontWeight: FontWeight.w500,
@@ -715,7 +751,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   ) {
     final english = region.textEnglish.trim();
     final phonetic = region.textPhonetic.trim();
-    final pinyin = region.textPinyin.trim();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -742,12 +777,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           ),
           const SizedBox(height: 8),
         ],
-        if (pinyin.isNotEmpty)
-          _buildPronunciationChip(
-            label: '拼音',
-            value: pinyin,
-            onTap: () => controller.speakPinyin(region),
-          ),
       ],
     );
   }

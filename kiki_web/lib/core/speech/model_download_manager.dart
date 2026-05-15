@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import '../logging/app_logger.dart';
 import 'speech_service.dart';
@@ -35,10 +35,7 @@ class TtsModelConfig {
 /// 管理 sherpa-onnx 模型文件的下载与本地缓存
 class ModelDownloadManager {
   static const String _baseDirName = 'sherpa_onnx';
-
-  final Dio _dio = Dio()
-    ..options.connectTimeout = const Duration(seconds: 30)
-    ..options.receiveTimeout = const Duration(minutes: 10);
+  static const String _bundledModelsDir = 'assets/tts_models';
 
   Directory? _baseDir;
 
@@ -56,6 +53,113 @@ class ModelDownloadManager {
     return _baseDir!;
   }
 
+  Future<bool> _filesExist(TtsModelConfig config) async {
+    final dir = await modelDirPath(config);
+    for (final spec in config.files) {
+      final f = File('$dir/${spec.localPath}');
+      if (!await f.exists()) return false;
+    }
+    return true;
+  }
+
+  Future<bool> _tryCopyBundledFiles(TtsModelConfig config) async {
+    final dir = await modelDirPath(config);
+    await Directory(dir).create(recursive: true);
+
+    var copiedAny = false;
+    for (final spec in config.files) {
+      final target = File('$dir/${spec.localPath}');
+      if (await target.exists()) continue;
+
+      final assetPath =
+          '$_bundledModelsDir/${config.dirName}/${spec.localPath}';
+      try {
+        final data = await rootBundle.load(assetPath);
+        await target.parent.create(recursive: true);
+        await target.writeAsBytes(
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+        );
+        copiedAny = true;
+        AppLogger.info('[ModelManager] Copied bundled model file: $assetPath');
+      } catch (e) {
+        AppLogger.warning(
+            '[ModelManager] Bundled asset not found: $assetPath ($e)');
+      }
+    }
+
+    final nestedDirs = config.files
+        .map((f) => f.localPath)
+        .where((p) => p.contains('/'))
+        .map((p) => p.split('/').first)
+        .toSet();
+
+    for (final nestedDir in nestedDirs) {
+      final copied = await _tryCopyBundledDirectory(
+        config: config,
+        modelRootDir: dir,
+        nestedDir: nestedDir,
+      );
+      if (copied > 0) {
+        copiedAny = true;
+        AppLogger.info(
+          '[ModelManager] Copied bundled directory $nestedDir: $copied files',
+        );
+      }
+    }
+
+    if (copiedAny && await _filesExist(config)) {
+      AppLogger.info(
+          '[ModelManager] Bundled model is ready: ${config.dirName}');
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<int> _tryCopyBundledDirectory({
+    required TtsModelConfig config,
+    required String modelRootDir,
+    required String nestedDir,
+  }) async {
+    final prefix = '$_bundledModelsDir/${config.dirName}/$nestedDir/';
+
+    List<String> assets;
+    try {
+      final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+      assets = manifest.listAssets();
+    } catch (e) {
+      AppLogger.warning('[ModelManager] Unable to read asset manifest: $e');
+      return 0;
+    }
+
+    final keys = assets.where((k) => k.startsWith(prefix)).toList();
+    if (keys.isEmpty) {
+      return 0;
+    }
+
+    var copied = 0;
+    for (final assetPath in keys) {
+      final relative =
+          assetPath.substring('$_bundledModelsDir/${config.dirName}/'.length);
+      final target = File('$modelRootDir/$relative');
+      if (await target.exists()) continue;
+
+      try {
+        final data = await rootBundle.load(assetPath);
+        await target.parent.create(recursive: true);
+        await target.writeAsBytes(
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+        );
+        copied++;
+      } catch (e) {
+        AppLogger.warning(
+            '[ModelManager] Failed to copy bundled directory asset: $assetPath ($e)');
+      }
+    }
+
+    return copied;
+  }
+
   /// 返回指定模型配置的本地根目录路径
   Future<String> modelDirPath(TtsModelConfig config) async {
     final base = await _getBaseDir();
@@ -64,12 +168,12 @@ class ModelDownloadManager {
 
   /// 检查模型所有文件是否已存在
   Future<bool> isReady(TtsModelConfig config) async {
-    final dir = await modelDirPath(config);
-    for (final spec in config.files) {
-      final f = File('$dir/${spec.localPath}');
-      if (!await f.exists()) return false;
-    }
-    return true;
+    if (await _filesExist(config)) return true;
+
+    // 优先尝试从打包的 assets 复制模型到本地磁盘。
+    if (await _tryCopyBundledFiles(config)) return true;
+
+    return false;
   }
 
   /// 获取当前模型状态
@@ -80,56 +184,11 @@ class ModelDownloadManager {
 
   /// 下载模型所有文件，通过 [progressStream] 广播进度
   Future<bool> download(TtsModelConfig config) async {
-    final dir = await modelDirPath(config);
-    await Directory(dir).create(recursive: true);
-
-    final total = config.files.length;
-    for (var i = 0; i < total; i++) {
-      final spec = config.files[i];
-      final dest = File('$dir/${spec.localPath}');
-
-      // 父目录可能需要创建（例如子目录文件）
-      await dest.parent.create(recursive: true);
-
-      if (await dest.exists()) {
-        AppLogger.info('[ModelManager] Skip (cached): ${spec.localPath}');
-        _progressController.add(ModelDownloadProgress(
-          language: config.language,
-          fileIndex: i,
-          fileCount: total,
-          fileName: spec.localPath,
-          receivedBytes: -1,
-          totalBytes: -1,
-        ));
-        continue;
-      }
-
-      AppLogger.info('[ModelManager] Downloading: ${spec.url}');
-      try {
-        await _dio.download(
-          spec.url,
-          dest.path,
-          onReceiveProgress: (received, totalBytes) {
-            _progressController.add(ModelDownloadProgress(
-              language: config.language,
-              fileIndex: i,
-              fileCount: total,
-              fileName: spec.localPath,
-              receivedBytes: received,
-              totalBytes: totalBytes,
-            ));
-          },
-          options: Options(responseType: ResponseType.stream),
-        );
-        AppLogger.info('[ModelManager] Done: ${spec.localPath}');
-      } catch (e) {
-        AppLogger.error('[ModelManager] Failed: ${spec.localPath}', e);
-        // 删除不完整文件
-        if (await dest.exists()) await dest.delete();
-        return false;
-      }
-    }
-    return true;
+    AppLogger.warning(
+      '[ModelManager] Runtime model download is disabled. '
+      'Please bundle models under assets/tts_models and reinstall the app.',
+    );
+    return false;
   }
 
   /// 删除指定模型的所有本地文件（可用于重置）
@@ -143,7 +202,6 @@ class ModelDownloadManager {
 
   void dispose() {
     _progressController.close();
-    _dio.close();
   }
 }
 

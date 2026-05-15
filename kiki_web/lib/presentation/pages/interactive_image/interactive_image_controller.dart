@@ -312,6 +312,7 @@ class InteractiveImageController extends GetxController {
   }
 
   bool _isSpeaking = false;
+  final isSpeaking = false.obs;
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
@@ -343,6 +344,18 @@ class InteractiveImageController extends GetxController {
     activeRegion.value = region;
     await _interruptAndSpeak(() async {
       await _ttsService.speak(english, language: 'en-US');
+    });
+  }
+
+  /// Speak Chinese phrase only (used by the "点击朗读" button).
+  Future<void> speakChinesePhrase(InteractiveRegion region) async {
+    final chinese = region.text.trim();
+    if (chinese.isEmpty) return;
+
+    activeRegion.value = region;
+    _restartCharacterAnimation(region.text);
+    await _interruptAndSpeak(() async {
+      await _ttsService.speak(chinese, language: 'zh-CN');
     });
   }
 
@@ -437,10 +450,19 @@ Interactive Image Diagnostics:
       await _ttsService.stop();
     }
     _isSpeaking = true;
+    isSpeaking.value = true;
     try {
       await action();
+      if (errorMessage.value?.startsWith('语音播放失败') == true) {
+        errorMessage.value = null;
+      }
+    } catch (e) {
+      final message = '语音播放失败，请检查模型文件与音频输出设备。\n$e';
+      errorMessage.value = message;
+      AppLogger.error('TTS action failed', e);
     } finally {
       _isSpeaking = false;
+      isSpeaking.value = false;
     }
   }
 

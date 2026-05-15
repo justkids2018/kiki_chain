@@ -33,13 +33,29 @@ class SherpaOnnxTtsEngine {
 
   sherpa_onnx.OfflineTts _buildTts() {
     final dir = modelDir;
+    final modelPath = _filePath(dir, config.modelFile);
+    final tokensPath = _filePath(dir, config.tokensFile);
+    final lexiconPath =
+        config.lexiconFile != null ? _filePath(dir, config.lexiconFile!) : '';
+    final dataDirPath =
+        config.dataDir != null ? _filePath(dir, config.dataDir!) : '';
+    final dictDirPath =
+        config.dictDir != null ? _filePath(dir, config.dictDir!) : '';
+
+    _verifyPaths(
+      modelPath: modelPath,
+      tokensPath: tokensPath,
+      lexiconPath: lexiconPath,
+      dataDirPath: dataDirPath,
+      dictDirPath: dictDirPath,
+    );
+
     final vits = sherpa_onnx.OfflineTtsVitsModelConfig(
-      model: _filePath(dir, config.modelFile),
-      lexicon:
-          config.lexiconFile != null ? _filePath(dir, config.lexiconFile!) : '',
-      tokens: _filePath(dir, config.tokensFile),
-      dataDir: config.dataDir != null ? _filePath(dir, config.dataDir!) : '',
-      dictDir: config.dictDir != null ? _filePath(dir, config.dictDir!) : '',
+      model: modelPath,
+      lexicon: lexiconPath,
+      tokens: tokensPath,
+      dataDir: dataDirPath,
+      dictDir: dictDirPath,
     );
 
     final modelConfig = sherpa_onnx.OfflineTtsModelConfig(
@@ -56,6 +72,68 @@ class SherpaOnnxTtsEngine {
     );
 
     return sherpa_onnx.OfflineTts(ttsConfig);
+  }
+
+  void _verifyPaths({
+    required String modelPath,
+    required String tokensPath,
+    required String lexiconPath,
+    required String dataDirPath,
+    required String dictDirPath,
+  }) {
+    final missing = <String>[];
+
+    if (!File(modelPath).existsSync()) {
+      missing.add(modelPath);
+    }
+    if (!File(tokensPath).existsSync()) {
+      missing.add(tokensPath);
+    }
+    if (lexiconPath.isNotEmpty && !File(lexiconPath).existsSync()) {
+      missing.add(lexiconPath);
+    }
+    if (dataDirPath.isNotEmpty) {
+      final dataDir = Directory(dataDirPath);
+      if (!dataDir.existsSync()) {
+        missing.add(dataDirPath);
+      }
+    }
+    if (dictDirPath.isNotEmpty) {
+      final dictDir = Directory(dictDirPath);
+      if (!dictDir.existsSync()) {
+        missing.add(dictDirPath);
+      }
+    }
+
+    if (config.dirName == 'vits-piper-en_US-amy-low' &&
+        dataDirPath.isNotEmpty) {
+      final requiredPiperFiles = <String>[
+        '$dataDirPath/en_dict',
+        '$dataDirPath/phontab',
+        '$dataDirPath/phonindex',
+        '$dataDirPath/phondata',
+        '$dataDirPath/phondata-manifest',
+        '$dataDirPath/lang/gmw/en-US',
+        '$dataDirPath/voices/!v/Annie',
+      ];
+      for (final path in requiredPiperFiles) {
+        if (!File(path).existsSync()) {
+          missing.add(path);
+        }
+      }
+    }
+
+    if (missing.isNotEmpty) {
+      throw StateError(
+        'Missing TTS model files for ${config.dirName}: ${missing.join(', ')}',
+      );
+    }
+
+    AppLogger.debug(
+      '[SherpaEngine] init paths -> model=$modelPath, tokens=$tokensPath, '
+      'lexicon=${lexiconPath.isEmpty ? '(none)' : lexiconPath}, '
+      'dataDir=${dataDirPath.isEmpty ? '(none)' : dataDirPath}',
+    );
   }
 
   String _filePath(String dir, String filename) => '$dir/$filename';
@@ -127,12 +205,13 @@ TtsModelConfig zhAishell3Config() {
   const base =
       'https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models';
 
-  final config = TtsModelConfig(
+  const config = TtsModelConfig(
     language: lang,
     dirName: dir,
-    files: const [
+    files: [
       ModelFileSpec(
-          url: '$base/vits-zh-aishell3/model.onnx', localPath: 'model.onnx'),
+          url: '$base/vits-zh-aishell3/vits-aishell3.onnx',
+          localPath: 'vits-aishell3.onnx'),
       ModelFileSpec(
           url: '$base/vits-zh-aishell3/lexicon.txt', localPath: 'lexicon.txt'),
       ModelFileSpec(
@@ -141,7 +220,7 @@ TtsModelConfig zhAishell3Config() {
   );
 
   TtsModelConfigFiles._register(config, const {
-    'modelFile': 'model.onnx',
+    'modelFile': 'vits-aishell3.onnx',
     'tokensFile': 'tokens.txt',
     'lexiconFile': 'lexicon.txt',
   });
@@ -149,32 +228,60 @@ TtsModelConfig zhAishell3Config() {
   return config;
 }
 
-/// 预定义的英文 VITS 模型（vits-piper-en_US-lessac-medium）
+/// 预定义的英文 VITS 模型（vits-piper-en_US-amy-low）
 TtsModelConfig enLessacConfig() {
   const lang = 'en-US';
-  const dir = 'vits-piper-en_US-lessac-medium';
+  const dir = 'vits-piper-en_US-amy-low';
   const base =
       'https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models';
 
-  final config = TtsModelConfig(
+  const config = TtsModelConfig(
     language: lang,
     dirName: dir,
-    files: const [
+    files: [
       ModelFileSpec(
-        url:
-            '$base/vits-piper-en_US-lessac-medium.tar.bz2/en_US-lessac-medium.onnx',
-        localPath: 'en_US-lessac-medium.onnx',
+        url: '$base/vits-piper-en_US-amy-low/en_US-amy-low.onnx',
+        localPath: 'en_US-amy-low.onnx',
       ),
       ModelFileSpec(
-        url: '$base/vits-piper-en_US-lessac-medium.tar.bz2/tokens.txt',
+        url: '$base/vits-piper-en_US-amy-low/tokens.txt',
         localPath: 'tokens.txt',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/en_dict',
+        localPath: 'espeak-ng-data/en_dict',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/phontab',
+        localPath: 'espeak-ng-data/phontab',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/phonindex',
+        localPath: 'espeak-ng-data/phonindex',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/phondata',
+        localPath: 'espeak-ng-data/phondata',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/phondata-manifest',
+        localPath: 'espeak-ng-data/phondata-manifest',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/lang/gmw/en-US',
+        localPath: 'espeak-ng-data/lang/gmw/en-US',
+      ),
+      ModelFileSpec(
+        url: '$base/vits-piper-en_US-amy-low/espeak-ng-data/voices/!v/Annie',
+        localPath: 'espeak-ng-data/voices/!v/Annie',
       ),
     ],
   );
 
   TtsModelConfigFiles._register(config, const {
-    'modelFile': 'en_US-lessac-medium.onnx',
+    'modelFile': 'en_US-amy-low.onnx',
     'tokensFile': 'tokens.txt',
+    'dataDir': 'espeak-ng-data',
   });
 
   return config;

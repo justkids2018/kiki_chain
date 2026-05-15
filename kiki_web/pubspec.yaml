@@ -125,6 +125,57 @@ flutter:
     - assets/images/
     - assets/images/categories/
     - assets/images/toy/
+    - assets/icon/
+    - assets/tts_models/
+    - assets/tts_models/vits-zh-aishell3/
+    - assets/tts_models/vits-piper-en_US-amy-low/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/aav/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/art/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/azc/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/bat/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/bnt/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/ccs/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/cel/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/cus/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/dra/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/esx/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/gmq/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/gmw/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/grk/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/inc/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/ine/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/ira/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/iro/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/itc/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/jpx/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/map/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/miz/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/myn/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/poz/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/roa/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/sai/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/sem/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/sit/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/tai/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/trk/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/urj/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/zle/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/zls/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/lang/zlw/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/voices/
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/voices/!v/
+    - assets/tts_models/vits-zh-aishell3/vits-aishell3.onnx
+    - assets/tts_models/vits-zh-aishell3/tokens.txt
+    - assets/tts_models/vits-zh-aishell3/lexicon.txt
+    - assets/tts_models/vits-piper-en_US-amy-low/en_US-amy-low.onnx
+    - assets/tts_models/vits-piper-en_US-amy-low/tokens.txt
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/en_dict
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/phontab
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/phonindex
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/phondata
+    - assets/tts_models/vits-piper-en_US-amy-low/espeak-ng-data/phondata-manifest
     - assets/data/
     - assets/data/toy/
     - assets/data/stroke_order/
@@ -160,6 +211,18 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    background_color: "#E0F2F7"
+    theme_color: "#E0F2F7"
+  windows:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
   image_path: "assets/icon/app_icon.png"
   # 可选：为不同平台使用不同图标
   # image_path_android: "assets/icon/icon_android.png"

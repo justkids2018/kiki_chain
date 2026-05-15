@@ -146,14 +146,14 @@ class AuthController extends GetxController {
       _currentUser.value = user;
       _isLoggedIn.value = true;
 
-      EasyLoading.showSuccess(_l10n.loginSuccess);
+      await EasyLoading.showSuccess(_l10n.loginSuccess);
       AppLogger.info('Login successful for user: ${user.nickname}');
 
       // 清空表单
       _clearLoginForm();
 
       // 导航到首页
-      Get.offAllNamed('/home');
+      await _replaceRouteSafely('/home');
       return true;
 
     } on ApiResponseException catch (e) {
@@ -176,9 +176,6 @@ class AuthController extends GetxController {
       EasyLoading.showError(errorMessage);
       AppLogger.error('Login failed with unknown error', e);
       return false;
-
-    } finally {
-      EasyLoading.dismiss();
     }
   }
   
@@ -215,14 +212,14 @@ class AuthController extends GetxController {
       _currentUser.value = user;
       _isLoggedIn.value = true;
 
-      EasyLoading.showSuccess(_l10n.registerSuccess);
+      await EasyLoading.showSuccess(_l10n.registerSuccess);
       AppLogger.info('Registration successful for user: ${user.nickname}');
 
       // 清空表单
       _clearRegisterForm();
 
       // 导航到首页
-      Get.offAllNamed('/home');
+      await _replaceRouteSafely('/home');
       return true;
 
     } on ApiResponseException catch (e) {
@@ -241,9 +238,6 @@ class AuthController extends GetxController {
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed with unknown error', e);
       return false;
-
-    } finally {
-      EasyLoading.dismiss();
     }
   }
   
@@ -265,16 +259,14 @@ class AuthController extends GetxController {
       // 清空表单
       _clearAllForms();
 
-      EasyLoading.showSuccess(_l10n.loggedOut);
+      await EasyLoading.showSuccess(_l10n.loggedOut);
       AppLogger.info('User logged out successfully');
 
       // 导航到欢迎页
-      Get.offAllNamed('/welcome');
+      await _replaceRouteSafely('/welcome');
     } catch (e) {
       EasyLoading.showError(_l10n.logoutFailed);
       AppLogger.error('Logout failed', e);
-    } finally {
-      EasyLoading.dismiss();
     }
   }
   
@@ -452,6 +444,26 @@ class AuthController extends GetxController {
     _clearRegisterForm();
   }
 
+  /// 安全替换路由：先关闭 EasyLoading，再切换页面，避免 Navigator 锁定异常。
+  Future<void> _replaceRouteSafely(String route) async {
+    if (EasyLoading.isShow) {
+      await EasyLoading.dismiss(animation: false);
+    }
+
+    await Future<void>.delayed(Duration.zero);
+
+    if (Get.context == null) {
+      Get.offAllNamed(route);
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.context != null) {
+        Get.offAllNamed(route);
+      }
+    });
+  }
+
   /// 进入游客模式
   ///
   /// 生成临时游客ID，允许用户在不登录的情况下使用应用
@@ -468,7 +480,7 @@ class AuthController extends GetxController {
       AppLogger.info('进入游客模式: $guestId');
 
       // 导航到首页
-      Get.offAllNamed('/home');
+      await _replaceRouteSafely('/home');
     } catch (e) {
       EasyLoading.showError(_l10n.guestModeFailed);
       AppLogger.error('Enter guest mode failed', e);

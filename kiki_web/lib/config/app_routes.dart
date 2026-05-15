@@ -14,12 +14,17 @@ import '../core/constants/app_constants.dart';
 class AppRoutes {
   /// 路由列表
   static final routes = [
-    // 欢迎页面（应用入口，自动检查登录状态）
+    // 启动欢迎页（应用入口，展示后自动检查登录状态）
     GetPage(
       name: '/',
+      page: () => const SplashPage(),
+    ),
+    // 欢迎页面（登录/注册选择页）
+    GetPage(
+      name: AppConstants.routeWelcome,
       page: () => const WelcomePage(),
     ),
-    // 启动页面（已废弃，保留用于兼容）
+    // 启动页兼容路由
     GetPage(
       name: '/splash',
       page: () => const SplashPage(),

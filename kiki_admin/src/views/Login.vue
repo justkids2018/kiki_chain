@@ -49,9 +49,14 @@ const router = useRouter()
 const formRef = ref<FormInstance>()
 const loading = ref(false)
 
+const defaultTestCreds = {
+  identifier: '13900139002',
+  password: 'admin123'
+}
+
 const form = reactive({
-  identifier: '',
-  password: ''
+  identifier: import.meta.env.DEV ? defaultTestCreds.identifier : '',
+  password: import.meta.env.DEV ? defaultTestCreds.password : ''
 })
 
 const rules: FormRules = {

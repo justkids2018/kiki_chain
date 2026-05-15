@@ -15,6 +15,11 @@ import 'speech_service.dart';
 /// 使用 sherpa-onnx VITS 模型推理，just_audio 播放。
 /// 模型首次使用时自动下载并缓存到 App Documents 目录。
 class LocalSpeechService implements SpeechService {
+  // Aishell3 is a multi-speaker model. Keep this as a single knob for voice style.
+  static const int _zhChildLikeSid = 41;
+  // en_US-amy-low is single-speaker; keep sid explicit for future model swaps.
+  static const int _enDefaultSid = 0;
+
   late final TtsModelConfig _zhConfig;
   late final TtsModelConfig _enConfig;
 
@@ -40,7 +45,14 @@ class LocalSpeechService implements SpeechService {
       : null;
 
   Map<String, double> get _rates =>
-      _settings?.getSpeedRates() ?? {'chinese': 0.6, 'english': 0.7};
+      _settings?.getSpeedRates() ?? {'chinese': 0.82, 'english': 0.9};
+
+  int _speakerIdForLanguage(String language) {
+    if (language.startsWith('zh')) {
+      return _zhChildLikeSid;
+    }
+    return _enDefaultSid;
+  }
 
   @override
   Future<void> initialize() async {
@@ -69,13 +81,12 @@ class LocalSpeechService implements SpeechService {
     // 1. 下载模型（如已存在则跳过）
     final ready = await _downloader.isReady(config);
     if (!ready) {
-      AppLogger.info('[LocalSpeech] Downloading model: ${config.dirName}');
-      final ok = await _downloader.download(config);
-      if (!ok) {
-        AppLogger.error(
-            '[LocalSpeech] Model download failed: ${config.dirName}');
-        return null;
-      }
+      AppLogger.error(
+        '[LocalSpeech] Local model not ready: ${config.dirName}. '
+        'Please ensure assets/tts_models/${config.dirName}/ is bundled and '
+        'reinstall the app (hot reload does not refresh bundled assets).',
+      );
+      return null;
     }
 
     // 2. 加载模型
@@ -142,25 +153,33 @@ class LocalSpeechService implements SpeechService {
     _ensureBindings();
     final engine = await _ensureEngine(language);
     if (engine == null) {
-      AppLogger.warning(
-          '[LocalSpeech] Engine unavailable for $language, skipping: "$trimmed"');
-      return;
+      final err = StateError(
+          'TTS engine unavailable for $language. Model may be missing or failed to initialize.');
+      AppLogger.warning('[LocalSpeech] $err');
+      throw err;
     }
 
     try {
       final tmp = _tmpDir ?? await getTemporaryDirectory();
       final wavPath =
           await buildWavTempPath(tmp, language.replaceAll('-', '_'));
+      final sid = _speakerIdForLanguage(language);
 
       // speed = 1.0 / rate 将语速系数转为 sherpa lengthScale 等效值
       // sherpa speed >1 = 更快，与 flutter_tts rate 语义相同
-      await engine.generate(text: trimmed, wavPath: wavPath, speed: rate);
+      await engine.generate(
+        text: trimmed,
+        wavPath: wavPath,
+        sid: sid,
+        speed: rate,
+      );
       await _playback.playWav(wavPath);
 
       // 播放后异步清理临时文件
       File(wavPath).delete().catchError((_) => File(wavPath));
     } catch (e) {
       AppLogger.error('[LocalSpeech] speak failed: "$trimmed" [$language]', e);
+      rethrow;
     }
   }
 

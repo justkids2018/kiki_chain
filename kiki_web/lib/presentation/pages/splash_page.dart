@@ -14,6 +14,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  static const Duration _minimumSplashDuration = Duration(seconds: 2);
+
   @override
   void initState() {
     super.initState();
@@ -21,21 +23,25 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _checkLoginStatus() async {
-    // 等待AuthController初始化完成
     final authController = Get.find<AuthController>();
 
-    // 等待初始化完成
-    while (!authController.isInitialized) {
-      await Future.delayed(const Duration(milliseconds: 100));
-    }
+    // 保证欢迎页至少展示一段时间，同时等待认证状态初始化完成。
+    await Future.wait([
+      Future.delayed(_minimumSplashDuration),
+      _waitAuthInitialization(authController),
+    ]);
 
     // 根据登录状态导航
     if (authController.isLoggedIn || authController.isGuestMode) {
-      // 已登录或游客模式，进入主页
-      Get.offAllNamed(AppConstants.routeInteractiveImageHome);
+      Get.offAllNamed(AppConstants.routeHome);
     } else {
-      // 未登录，显示欢迎页
       Get.offAllNamed(AppConstants.routeWelcome);
+    }
+  }
+
+  Future<void> _waitAuthInitialization(AuthController authController) async {
+    while (!authController.isInitialized) {
+      await Future.delayed(const Duration(milliseconds: 100));
     }
   }
 

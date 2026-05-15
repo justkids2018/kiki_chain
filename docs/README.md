@@ -4,11 +4,21 @@
 
 ```
 docs/
+├── tts/               # TTS 与 sherpa_onnx 文档
+│   ├── README.md      # TTS 文档索引
+│   ├── flutter_sherpa_onnx_integration.md
+│   ├── tts_local_model_usage.md
+│   ├── tts_implementation_report.md
+│   └── tts_sherpa_onnx_optimization_plan.md
 └── database/          # 数据库设计与迁移
     ├── init.sql       # 完整数据库初始化脚本
     ├── schema.md      # 表结构设计文档
     └── migrations/    # SQL 迁移文件
 ```
+
+## TTS 文档
+
+- **[TTS 文档索引](./tts/README.md)** — 统一查看 sherpa_onnx 与 TTS 相关文档
 
 ## 部署相关
 

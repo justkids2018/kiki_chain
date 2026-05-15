@@ -58,8 +58,25 @@ class ModelDownloadManager {
     for (final spec in config.files) {
       final f = File('$dir/${spec.localPath}');
       if (!await f.exists()) return false;
+      if (spec.localPath.endsWith('.onnx') && _isGitLfsPointerFile(f)) {
+        AppLogger.warning(
+          '[ModelManager] Invalid model file (Git LFS pointer): ${f.path}',
+        );
+        return false;
+      }
     }
     return true;
+  }
+
+  bool _isGitLfsPointerFile(File f) {
+    try {
+      final len = f.lengthSync();
+      if (len <= 0 || len > 1024) return false;
+      final header = f.readAsStringSync();
+      return header.startsWith('version https://git-lfs.github.com/spec/v1');
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<bool> _tryCopyBundledFiles(TtsModelConfig config) async {
@@ -69,7 +86,16 @@ class ModelDownloadManager {
     var copiedAny = false;
     for (final spec in config.files) {
       final target = File('$dir/${spec.localPath}');
-      if (await target.exists()) continue;
+      if (await target.exists()) {
+        if (spec.localPath.endsWith('.onnx') && _isGitLfsPointerFile(target)) {
+          await target.delete();
+          AppLogger.warning(
+            '[ModelManager] Removed invalid pointer file before recopy: ${target.path}',
+          );
+        } else {
+          continue;
+        }
+      }
 
       final assetPath =
           '$_bundledModelsDir/${config.dirName}/${spec.localPath}';

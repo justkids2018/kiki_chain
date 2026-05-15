@@ -89,14 +89,31 @@ class LocalSpeechService implements SpeechService {
       return null;
     }
 
-    // 2. 加载模型
-    final modelDir = await _downloader.modelDirPath(config);
-    final engine = SherpaOnnxTtsEngine(config: config, modelDir: modelDir);
+    // 2. 加载模型（失败时自动清理缓存并重试一次）
+    var modelDir = await _downloader.modelDirPath(config);
+    var engine = SherpaOnnxTtsEngine(config: config, modelDir: modelDir);
     try {
       await engine.initialize();
     } catch (e) {
-      AppLogger.error('[LocalSpeech] Engine init failed', e);
-      return null;
+      AppLogger.warning(
+        '[LocalSpeech] Engine init failed once, try recopy from bundled assets: ${config.dirName}',
+      );
+      await _downloader.deleteModel(config);
+      final copied = await _downloader.isReady(config);
+      if (!copied) {
+        AppLogger.error(
+            '[LocalSpeech] Engine init retry failed: model not ready', e);
+        return null;
+      }
+
+      modelDir = await _downloader.modelDirPath(config);
+      engine = SherpaOnnxTtsEngine(config: config, modelDir: modelDir);
+      try {
+        await engine.initialize();
+      } catch (e2) {
+        AppLogger.error('[LocalSpeech] Engine init failed after retry', e2);
+        return null;
+      }
     }
 
     if (isChinese) {

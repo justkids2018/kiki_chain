@@ -15,3 +15,6 @@ kiki_admin/dist/
 
 # Environment secrets (keep templates)
 .env.local
+
+# Local TTS backup artifacts (do not commit large generated packages)
+docs/tts/model_data_backup/

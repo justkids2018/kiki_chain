@@ -167,15 +167,21 @@ class InteractiveImageController extends GetxController {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
 
-      // TTS 初始化在后台运行，不阻塞 UI 显示
-      _ttsService.initialize().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          AppLogger.warning('⏱️ TTS initialization timed out after 5 seconds');
-        },
-      ).catchError((e) {
-        AppLogger.error('❌ TTS initialization failed', e);
-      });
+      // 优先预热中文 TTS，减少首次点击中文时的卡顿。
+      // 超时后继续加载数据，TTS 会在后台继续初始化（首次播放可能略有延迟）
+      loadingProgress.value = 0.25;
+      try {
+        await _ttsService.initialize().timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            AppLogger.warning(
+                '⏱️ TTS warmup timed out after 5s, will continue in background');
+            // TTS 会在首次播放时自动完成初始化
+          },
+        );
+      } catch (e) {
+        AppLogger.error('❌ TTS warmup failed, continue with data loading', e);
+      }
 
       // 只等待数据加载（最多 15 秒）
       await Future.wait([
@@ -313,6 +319,8 @@ class InteractiveImageController extends GetxController {
 
   bool _isSpeaking = false;
   final isSpeaking = false.obs;
+  Timer? _strokeStartTimer;
+  static const Duration _strokeStartDelay = Duration(milliseconds: 140);
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
@@ -321,7 +329,7 @@ class InteractiveImageController extends GetxController {
 
     // Update UI immediately for instant visual feedback
     activeRegion.value = region;
-    _restartCharacterAnimation(region.text);
+    _scheduleCharacterAnimation(region.text);
 
     await _interruptAndSpeak(() async {
       await _ttsService.speakRegion(region);
@@ -348,12 +356,12 @@ class InteractiveImageController extends GetxController {
   }
 
   /// Speak Chinese phrase only (used by the "点击朗读" button).
+  /// Note: Does not restart character animation to avoid interrupting user's current progress.
   Future<void> speakChinesePhrase(InteractiveRegion region) async {
     final chinese = region.text.trim();
     if (chinese.isEmpty) return;
 
     activeRegion.value = region;
-    _restartCharacterAnimation(region.text);
     await _interruptAndSpeak(() async {
       await _ttsService.speak(chinese, language: 'zh-CN');
     });
@@ -390,6 +398,7 @@ Interactive Image Diagnostics:
 
   @override
   void onClose() {
+    _strokeStartTimer?.cancel();
     _ttsService.dispose();
     super.onClose();
   }
@@ -446,6 +455,7 @@ Interactive Image Diagnostics:
   }
 
   Future<void> _interruptAndSpeak(Future<void> Function() action) async {
+    _strokeStartTimer?.cancel();
     if (_isSpeaking) {
       await _ttsService.stop();
     }
@@ -488,5 +498,13 @@ Interactive Image Diagnostics:
 
   int _countCharacters(String text) {
     return text.split('').where((char) => char.trim().isNotEmpty).length;
+  }
+
+  void _scheduleCharacterAnimation(String text) {
+    _strokeStartTimer?.cancel();
+    _strokeStartTimer = Timer(_strokeStartDelay, () {
+      if (isClosed) return;
+      _restartCharacterAnimation(text);
+    });
   }
 }

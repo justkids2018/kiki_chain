@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,8 +16,11 @@ import 'speech_service.dart';
 /// 使用 sherpa-onnx VITS 模型推理，just_audio 播放。
 /// 模型首次使用时自动下载并缓存到 App Documents 目录。
 class LocalSpeechService implements SpeechService {
-  // Aishell3 is a multi-speaker model. Keep this as a single knob for voice style.
-  static const int _zhChildLikeSid = 41;
+  // Aishell3 is a multi-speaker model. Use sid=0 for standard Mandarin.
+  // Rationale: sid=0 provides neutral, clear pronunciation suitable for learning scenarios.
+  // Alternative child-friendly voices: sid=21 (softer), sid=33 (clearer).
+  // See docs/tts/tts_chinese_voice_recommendations.md for full comparison.
+  static const int _zhChildLikeSid = 0;
   // en_US-amy-low is single-speaker; keep sid explicit for future model swaps.
   static const int _enDefaultSid = 0;
 
@@ -32,6 +36,7 @@ class LocalSpeechService implements SpeechService {
   Directory? _tmpDir;
   bool _disposed = false;
   bool _bindingsInitialized = false;
+  Future<void>? _initializeFuture;
 
   LocalSpeechService() {
     _zhConfig = zhAishell3Config();
@@ -57,9 +62,61 @@ class LocalSpeechService implements SpeechService {
   @override
   Future<void> initialize() async {
     if (_disposed) return;
+    _initializeFuture ??= _doInitialize();
+    await _initializeFuture;
+  }
+
+  Future<void> _doInitialize() async {
+    if (_disposed) return;
     _ensureBindings();
     _tmpDir = await getTemporaryDirectory();
-    // Engines are loaded lazily on first speak to avoid blocking page load
+
+    // Prioritize Chinese warmup to smooth first interaction in learning cards.
+    final zhEngine = await _ensureEngine('zh-CN');
+    if (zhEngine != null) {
+      await _primeSynthesis(zhEngine, language: 'zh-CN', text: '好');
+    }
+
+    // English warmup can continue in background.
+    unawaited(_prewarmEnglishEngine());
+  }
+
+  Future<void> _prewarmEnglishEngine() async {
+    try {
+      if (_disposed) return;
+      await Future.delayed(const Duration(milliseconds: 200));
+      final enEngine = await _ensureEngine('en-US');
+      if (enEngine != null) {
+        await _primeSynthesis(enEngine, language: 'en-US', text: 'ok');
+      }
+      AppLogger.info('[LocalSpeech] Engine prewarm completed');
+    } catch (e) {
+      AppLogger.warning('[LocalSpeech] Engine prewarm failed: $e');
+    }
+  }
+
+  Future<void> _primeSynthesis(
+    SherpaOnnxTtsEngine engine, {
+    required String language,
+    required String text,
+  }) async {
+    if (_disposed) return;
+    try {
+      final tmp = _tmpDir ?? await getTemporaryDirectory();
+      final wavPath = await buildWavTempPath(
+        tmp,
+        '${language.replaceAll('-', '_')}_prime',
+      );
+      await engine.generate(
+        text: text,
+        wavPath: wavPath,
+        sid: _speakerIdForLanguage(language),
+        speed: _rates[language.startsWith('zh') ? 'chinese' : 'english']!,
+      );
+      File(wavPath).delete().catchError((_) => File(wavPath));
+    } catch (e) {
+      AppLogger.warning('[LocalSpeech] Prime synthesis skipped: $e');
+    }
   }
 
   void _ensureBindings() {

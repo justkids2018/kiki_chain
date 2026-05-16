@@ -10,7 +10,6 @@ import 'models/character_cell.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
 import 'widgets/bubble_animation_layer.dart';
-import '../../widgets/settings_dialog.dart';
 import '../../widgets/glass_back_button.dart';
 import '../../widgets/app_loading_widget.dart';
 
@@ -348,7 +347,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            '开始互动学习',
+                            '开始学习',
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.grey[400],
@@ -389,7 +388,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                             Expanded(child: Divider(color: Colors.grey[200])),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 20),
                         _buildCharacterGrid(controller, region),
                       ],
                     ),
@@ -408,64 +407,71 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               final isSpeaking = controller.isSpeaking.value;
               return Center(
                 child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: isActive
                       ? () => controller.speakChinesePhrase(region)
                       : null,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: isActive
-                              ? const Color(0xFF00C37D)
-                              : Colors.grey[200],
-                          shape: BoxShape.circle,
-                          boxShadow: isActive
-                              ? [
-                                  BoxShadow(
-                                    color: const Color(0xFF00C37D)
-                                        .withValues(alpha: 0.32),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ]
-                              : [],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: isActive
+                                ? const Color(0xFF00C37D)
+                                : Colors.grey[200],
+                            shape: BoxShape.circle,
+                            boxShadow: isActive
+                                ? [
+                                    BoxShadow(
+                                      color: const Color(0xFF00C37D)
+                                          .withValues(alpha: 0.32),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ]
+                                : [],
+                          ),
+                          child: Icon(
+                            isSpeaking
+                                ? Icons.graphic_eq_rounded
+                                : Icons.volume_up_rounded,
+                            color: isActive ? Colors.white : Colors.grey[400],
+                            size: 20,
+                          ),
                         ),
-                        child: Icon(
-                          isSpeaking
-                              ? Icons.graphic_eq_rounded
-                              : Icons.volume_up_rounded,
-                          color: isActive ? Colors.white : Colors.grey[400],
-                          size: 20,
-                        ),
-                      ),
-                      if (isActive && isSpeaking) ...[
+                        if (isActive && isSpeaking) ...[
+                          const SizedBox(height: 4),
+                          SizedBox(
+                            width: 24,
+                            child: LinearProgressIndicator(
+                              minHeight: 2,
+                              borderRadius: BorderRadius.circular(999),
+                              backgroundColor: const Color(0xFF00C37D)
+                                  .withValues(alpha: 0.15),
+                              color: const Color(0xFF00C37D),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 4),
-                        SizedBox(
-                          width: 24,
-                          child: LinearProgressIndicator(
-                            minHeight: 2,
-                            borderRadius: BorderRadius.circular(999),
-                            backgroundColor:
-                                const Color(0xFF00C37D).withValues(alpha: 0.15),
-                            color: const Color(0xFF00C37D),
+                        Text(
+                          '朗读中文',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: isActive
+                                ? const Color(0xFF00C37D)
+                                : Colors.grey[400],
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
-                      const SizedBox(height: 4),
-                      Text(
-                        '朗读中文',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: isActive
-                              ? const Color(0xFF00C37D)
-                              : Colors.grey[400],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               );
@@ -565,7 +571,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         Expanded(child: Divider(color: Colors.grey[200])),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 20),
                     // Character stroke grid
                     _buildCharacterGrid(controller, region),
                   ],
@@ -582,58 +588,66 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 ),
               ),
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => controller.speakChinesePhrase(region),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF00C37D),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                const Color(0xFF00C37D).withValues(alpha: 0.35),
-                            blurRadius: 12,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          if (isSpeaking)
-                            const SizedBox(
-                              width: 28,
-                              height: 28,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 6,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00C37D),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF00C37D)
+                                  .withValues(alpha: 0.35),
+                              blurRadius: 12,
+                              offset: const Offset(0, 5),
                             ),
-                          Icon(
-                            isSpeaking
-                                ? Icons.graphic_eq_rounded
-                                : Icons.volume_up_rounded,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            if (isSpeaking)
+                              const SizedBox(
+                                width: 28,
+                                height: 28,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
+                                ),
+                              ),
+                            Icon(
+                              isSpeaking
+                                  ? Icons.graphic_eq_rounded
+                                  : Icons.volume_up_rounded,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      isSpeaking ? '播放中' : '朗读中文',
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Color(0xFF00C37D),
-                        fontWeight: FontWeight.w500,
+                      const SizedBox(height: 4),
+                      Text(
+                        isSpeaking ? '播放中' : '朗读中文',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF00C37D),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -665,32 +679,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         children: [
           // Back Button
           const GlassBackButton(),
-
-          const Spacer(),
-
-          // Settings Button
-          GestureDetector(
-            onTap: () => Get.dialog(const SettingsDialog()),
-            child: ClipOval(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.45),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child:
-                      const Icon(Icons.settings, color: Colors.white, size: 20),
-                ),
-              ),
-            ),
-          ),
+          // TODO: Settings button temporarily removed to simplify UI.
+          // Speed adjustment is low-frequency feature. Consider adding to main page or dedicated settings.
         ],
       ),
     );
@@ -718,6 +708,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         status = CharacterCellStatus.pending;
       } else if (activeIndex < 0) {
         status = CharacterCellStatus.completed;
+      } else if (unlocked == total) {
+        status = index == activeIndex
+            ? CharacterCellStatus.active
+            : CharacterCellStatus.completed;
       } else if (index < activeIndex) {
         status = CharacterCellStatus.completed;
       } else if (index == activeIndex) {
@@ -736,6 +730,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       child: CharacterStrokeGrid(
         cells: cells,
         cellSize: _chineseCellSize,
+        animationSpeed: 1.35,
         onCharacterComplete: controller.onCharacterAnimationComplete,
         onCharacterTap: (index, character) {
           controller.speakChineseChar(region, index, character);
@@ -771,53 +766,52 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ],
         if (phonetic.isNotEmpty) ...[
           _buildPronunciationChip(
-            label: '音标',
             value: phonetic,
             onTap: () => controller.speakEnglishWord(region),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
         ],
       ],
     );
   }
 
   Widget _buildPronunciationChip({
-    required String label,
     required String value,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF2F4F6),
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: const Color(0xFFE6EBEF), width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '$label  ',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onTap,
+        splashColor: const Color(0xFF66A9D9).withValues(alpha: 0.14),
+        highlightColor: const Color(0xFF66A9D9).withValues(alpha: 0.08),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF2F4F6),
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: const Color(0xFFE6EBEF), width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF5A6B7B),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF5A6B7B),
-                fontWeight: FontWeight.w600,
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.volume_up_rounded,
+                size: 15,
+                color: Color(0xFF66A9D9),
               ),
-            ),
-            const SizedBox(width: 4),
-            const Icon(Icons.volume_up_rounded,
-                size: 15, color: Color(0xFF66A9D9)),
-          ],
+            ],
+          ),
         ),
       ),
     );

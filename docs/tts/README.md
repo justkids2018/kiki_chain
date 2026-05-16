@@ -9,6 +9,7 @@
 3. [TTS 优化实现报告](./tts_implementation_report.md)
 4. [Sherpa-ONNX 体积与架构优化方案](./tts_sherpa_onnx_optimization_plan.md)
 5. [模型备份与 S1 精简执行记录](./tts_model_backup_and_s1_execution.md)
+6. [中文音色推荐清单（Sherpa-ONNX / Aishell3）](./tts_chinese_voice_recommendations.md)
 
 ## 维护约定
 

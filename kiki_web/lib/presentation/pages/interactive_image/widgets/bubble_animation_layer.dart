@@ -71,7 +71,7 @@ class _ScreenDiffusionPainter extends CustomPainter {
 
     final maxRadius =
         math.sqrt(size.width * size.width + size.height * size.height);
-    final maxTravel = size.shortestSide * 0.46 + size.longestSide * 0.16;
+    final maxTravel = size.shortestSide * 0.32 + size.longestSide * 0.10;
 
     for (final burst in bursts) {
       final burstProgress =
@@ -81,12 +81,12 @@ class _ScreenDiffusionPainter extends CustomPainter {
       final center = burst.origin;
 
       final glowPulse = Curves.easeOut.transform(burstProgress);
-      final glowRadius = 18 + (maxRadius * 0.085 * glowPulse);
+      final glowRadius = 14 + (maxRadius * 0.06 * glowPulse);
       final glowPaint = Paint()
         ..shader = RadialGradient(
           colors: [
             const Color(0xFF9DFFEF).withValues(
-              alpha: 0.20 * math.pow(1 - burstProgress, 1.35).toDouble(),
+              alpha: 0.14 * math.pow(1 - burstProgress, 1.4).toDouble(),
             ),
             const Color(0xFF00C37D).withValues(alpha: 0.0),
           ],
@@ -160,7 +160,7 @@ class ScreenDiffusionLayer extends StatefulWidget {
     Key? key,
     required this.child,
     required this.controller,
-    this.animationDuration = const Duration(milliseconds: 1400),
+    this.animationDuration = const Duration(milliseconds: 900),
   }) : super(key: key);
 
   @override
@@ -224,19 +224,19 @@ class _ScreenDiffusionLayerState extends State<ScreenDiffusionLayer>
       const Color(0xFFB59CFF),
     ];
 
-    final bubbles = List.generate(24, (index) {
+    final bubbles = List.generate(14, (index) {
       final immediateDelay = random.nextDouble() * 0.03;
       return _BubbleSeed(
         angle: random.nextDouble() * math.pi * 2,
-        distanceFactor: 0.52 + random.nextDouble() * 0.45,
-        size: 7.0 + random.nextDouble() * 7.0,
+        distanceFactor: 0.50 + random.nextDouble() * 0.30,
+        size: 5.0 + random.nextDouble() * 4.0,
         delay: immediateDelay,
-        swayAmplitude: 2 + random.nextDouble() * 6,
+        swayAmplitude: 1.5 + random.nextDouble() * 3.0,
         swaySpeed: 3.2 + random.nextDouble() * 2.8,
         phase: random.nextDouble() * math.pi * 2,
         color: palette[index % palette.length],
-        alpha: 0.45 + random.nextDouble() * 0.25,
-        peakScale: 1.08 + random.nextDouble() * 0.22,
+        alpha: 0.30 + random.nextDouble() * 0.18,
+        peakScale: 1.00 + random.nextDouble() * 0.12,
       );
     });
 
@@ -247,6 +247,11 @@ class _ScreenDiffusionLayerState extends State<ScreenDiffusionLayer>
         bubbles: bubbles,
       ),
     );
+
+    // Keep only a small number of active bursts to avoid repaint overload.
+    if (_bursts.length > 2) {
+      _bursts.removeRange(0, _bursts.length - 2);
+    }
 
     if (!_tickerController.isAnimating) {
       _tickerController.repeat();

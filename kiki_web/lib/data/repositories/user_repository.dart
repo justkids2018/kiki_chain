@@ -1,6 +1,7 @@
 import 'package:kikichain/core/network/request_manager.dart';
 
 class UserRepository {
+  // ignore: unused_field
   final RequestManager _http = RequestManager.instance;
 
   /// 获取教师列表，按 role_id 过滤

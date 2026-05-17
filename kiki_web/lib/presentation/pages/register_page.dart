@@ -51,6 +51,7 @@ class RegisterPage extends StatelessWidget {
   }
 
   /// 构建页面头部 - Refined设计
+  // ignore: unused_element
   Widget _buildHeader() {
     return Builder(
       builder: (context) {

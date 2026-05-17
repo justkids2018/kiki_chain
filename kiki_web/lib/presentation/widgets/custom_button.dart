@@ -126,7 +126,8 @@ class CustomButton extends StatelessWidget {
       ),
     );
   }
-  
+
+  // ignore: unused_element
   Widget _buildButton(
     BuildContext context,
     bool isDisabled,

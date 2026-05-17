@@ -175,7 +175,7 @@ class _SceneListPageState extends State<SceneListPage> {
         final availableHeight = constraints.maxHeight;
         final availableWidth = constraints.maxWidth;
         // 为标题预留空间（标题高度约 60px）
-        final titleHeight = 60.0;
+        const titleHeight = 60.0;
         final maxCardHeight =
             ((availableHeight - titleHeight) * 0.68).clamp(280.0, 520.0);
         // Card is intentionally wider so neighboring cards overlap each other.

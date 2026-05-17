@@ -77,7 +77,7 @@ class LoggingInterceptor extends Interceptor {
       }
 
       // 打印堆栈跟踪以便调试
-      if (err.stackTrace != null) {
+      if (err.stackTrace.toString().isNotEmpty) {
         AppLogger.error('Stack Trace: ${err.stackTrace}');
       }
     }

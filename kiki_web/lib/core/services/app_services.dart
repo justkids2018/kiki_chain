@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../logging/app_logger.dart';
 import '../config/env_config.dart';
 import '../network/api_config.dart';
 import '../network/network_client.dart';

@@ -1,8 +1,4 @@
-import 'package:kikichain/core/constants/api_endpoints.dart';
 import 'package:kikichain/core/network/request_manager.dart';
-import 'package:kikichain/domain/entities/user_entity.dart';
-import 'package:kikichain/core/exceptions/app_exceptions.dart';
-import 'package:kikichain/core/utils/api_response_handler.dart';
 
 class UserRepository {
   final RequestManager _http = RequestManager.instance;

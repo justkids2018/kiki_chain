@@ -70,7 +70,7 @@ class PlatformConfigManager {
       } else if (Platform.isIOS) {
         platform = 'ios';
         final iosInfo = await _deviceInfo.iosInfo;
-        deviceModel = iosInfo.model ?? 'unknown';
+        deviceModel = iosInfo.model;
         deviceId = iosInfo.identifierForVendor ?? 'unknown';
         osVersion = '${iosInfo.systemName} ${iosInfo.systemVersion}';
         isPhysicalDevice = iosInfo.isPhysicalDevice;

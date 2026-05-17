@@ -35,12 +35,6 @@ class FourLineGridPainter extends CustomPainter {
       ..strokeWidth = lineWidth
       ..style = PaintingStyle.stroke;
 
-    // Baseline paint (line 3 - slightly thicker)
-    final baselinePaint = Paint()
-      ..color = baselineColor
-      ..strokeWidth = baselineWidth
-      ..style = PaintingStyle.stroke;
-
     final width = size.width;
     final height = size.height;
 

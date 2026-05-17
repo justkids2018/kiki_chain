@@ -1,7 +1,5 @@
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/http_client.dart';
-import '../../mock/mock_categories.dart';
-import '../../mock/mock_scenes.dart';
 
 /// 场景 API 服务
 ///

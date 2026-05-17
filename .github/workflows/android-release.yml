@@ -28,6 +28,7 @@ jobs:
 
     env:
       BASE_VERSION_DEFAULT: ${{ vars.ANDROID_BASE_VERSION || '1.0.0' }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     defaults:
       run:

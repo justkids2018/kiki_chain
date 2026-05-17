@@ -44,7 +44,7 @@ class LiquidConfirmDialog extends StatelessWidget {
             child: Dialog(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              child: Container(
+              child: SizedBox(
                 width: 400,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),

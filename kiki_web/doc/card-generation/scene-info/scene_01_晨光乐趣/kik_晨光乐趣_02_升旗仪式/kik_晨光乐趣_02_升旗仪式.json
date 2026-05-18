@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "国旗",
+    "text_pinyin": "guó qí",
+    "text_english": "National Flag",
+    "text_phonetic": "/ˈnæʃənəl flæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 120,
+            "y": 70
+          },
+          {
+            "x": 290,
+            "y": 70
+          },
+          {
+            "x": 120,
+            "y": 185
+          },
+          {
+            "x": 290,
+            "y": 185
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 310,
+            "y": 70
+          },
+          {
+            "x": 500,
+            "y": 70
+          },
+          {
+            "x": 310,
+            "y": 210
+          },
+          {
+            "x": 500,
+            "y": 210
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "旗杆",
+    "text_pinyin": "qí gān",
+    "text_english": "Flagpole",
+    "text_phonetic": "/ˈflæɡpoʊl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 535,
+            "y": 95
+          },
+          {
+            "x": 650,
+            "y": 95
+          },
+          {
+            "x": 535,
+            "y": 220
+          },
+          {
+            "x": 650,
+            "y": 220
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 470,
+            "y": 80
+          },
+          {
+            "x": 575,
+            "y": 80
+          },
+          {
+            "x": 470,
+            "y": 700
+          },
+          {
+            "x": 575,
+            "y": 700
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "红领巾",
+    "text_pinyin": "hóng lǐng jīn",
+    "text_english": "Red Scarf",
+    "text_phonetic": "/rɛd skɑːrf/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 120,
+            "y": 290
+          },
+          {
+            "x": 275,
+            "y": 290
+          },
+          {
+            "x": 120,
+            "y": 390
+          },
+          {
+            "x": 275,
+            "y": 390
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 350,
+            "y": 430
+          },
+          {
+            "x": 530,
+            "y": 430
+          },
+          {
+            "x": 350,
+            "y": 620
+          },
+          {
+            "x": 530,
+            "y": 620
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "鼓",
+    "text_pinyin": "gǔ",
+    "text_english": "Drum",
+    "text_phonetic": "/drʌm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 430
+          },
+          {
+            "x": 125,
+            "y": 430
+          },
+          {
+            "x": 20,
+            "y": 520
+          },
+          {
+            "x": 125,
+            "y": 520
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 120,
+            "y": 520
+          },
+          {
+            "x": 290,
+            "y": 520
+          },
+          {
+            "x": 120,
+            "y": 760
+          },
+          {
+            "x": 290,
+            "y": 760
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "校徽",
+    "text_pinyin": "xiào huī",
+    "text_english": "School Badge",
+    "text_phonetic": "/skuːl bædʒ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 590,
+            "y": 300
+          },
+          {
+            "x": 705,
+            "y": 300
+          },
+          {
+            "x": 590,
+            "y": 400
+          },
+          {
+            "x": 705,
+            "y": 400
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 500,
+            "y": 360
+          },
+          {
+            "x": 620,
+            "y": 360
+          },
+          {
+            "x": 500,
+            "y": 500
+          },
+          {
+            "x": 620,
+            "y": 500
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "话筒",
+    "text_pinyin": "huà tǒng",
+    "text_english": "Microphone",
+    "text_phonetic": "/ˈmaɪkrəfoʊn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 600,
+            "y": 455
+          },
+          {
+            "x": 735,
+            "y": 455
+          },
+          {
+            "x": 600,
+            "y": 560
+          },
+          {
+            "x": 735,
+            "y": 560
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 700,
+            "y": 560
+          },
+          {
+            "x": 810,
+            "y": 560
+          },
+          {
+            "x": 700,
+            "y": 780
+          },
+          {
+            "x": 810,
+            "y": 780
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "喇叭",
+    "text_pinyin": "lǎ bā",
+    "text_english": "Loudspeaker",
+    "text_phonetic": "/ˈlaʊdspiːkər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 835,
+            "y": 190
+          },
+          {
+            "x": 940,
+            "y": 190
+          },
+          {
+            "x": 835,
+            "y": 310
+          },
+          {
+            "x": 940,
+            "y": 310
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 640,
+            "y": 90
+          },
+          {
+            "x": 810,
+            "y": 90
+          },
+          {
+            "x": 640,
+            "y": 250
+          },
+          {
+            "x": 810,
+            "y": 250
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "奖状",
+    "text_pinyin": "jiǎng zhuàng",
+    "text_english": "Certificate",
+    "text_phonetic": "/sərˈtɪfɪkɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 845,
+            "y": 685
+          },
+          {
+            "x": 965,
+            "y": 685
+          },
+          {
+            "x": 845,
+            "y": 810
+          },
+          {
+            "x": 965,
+            "y": 810
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 760,
+            "y": 780
+          },
+          {
+            "x": 930,
+            "y": 780
+          },
+          {
+            "x": 760,
+            "y": 910
+          },
+          {
+            "x": 930,
+            "y": 910
+          }
+        ]
+      }
+    ]
+  }
+]

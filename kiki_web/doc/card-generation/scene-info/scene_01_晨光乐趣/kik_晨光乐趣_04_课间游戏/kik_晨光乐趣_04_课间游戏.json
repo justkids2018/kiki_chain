@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "弹珠",
+    "text_pinyin": "dàn zhū",
+    "text_english": "Marble",
+    "text_phonetic": "/ˈmɑːrbl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 25,
+            "y": 285
+          },
+          {
+            "x": 175,
+            "y": 285
+          },
+          {
+            "x": 25,
+            "y": 390
+          },
+          {
+            "x": 175,
+            "y": 390
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 150,
+            "y": 500
+          },
+          {
+            "x": 360,
+            "y": 500
+          },
+          {
+            "x": 150,
+            "y": 700
+          },
+          {
+            "x": 360,
+            "y": 700
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "纸飞机",
+    "text_pinyin": "zhǐ fēi jī",
+    "text_english": "Paper Plane",
+    "text_phonetic": "/ˈpeɪpər pleɪn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 235,
+            "y": 70
+          },
+          {
+            "x": 405,
+            "y": 70
+          },
+          {
+            "x": 235,
+            "y": 175
+          },
+          {
+            "x": 405,
+            "y": 175
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 330,
+            "y": 250
+          },
+          {
+            "x": 440,
+            "y": 250
+          },
+          {
+            "x": 330,
+            "y": 340
+          },
+          {
+            "x": 440,
+            "y": 340
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "花绳",
+    "text_pinyin": "huā shéng",
+    "text_english": "String Game",
+    "text_phonetic": "/strɪŋ ɡeɪm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 645,
+            "y": 160
+          },
+          {
+            "x": 820,
+            "y": 160
+          },
+          {
+            "x": 645,
+            "y": 270
+          },
+          {
+            "x": 820,
+            "y": 270
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 730,
+            "y": 360
+          },
+          {
+            "x": 860,
+            "y": 360
+          },
+          {
+            "x": 730,
+            "y": 520
+          },
+          {
+            "x": 860,
+            "y": 520
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "格子",
+    "text_pinyin": "gé zi",
+    "text_english": "Hopscotch Grid",
+    "text_phonetic": "/ˈhɑːpskɑːtʃ ɡrɪd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 575,
+            "y": 355
+          },
+          {
+            "x": 760,
+            "y": 355
+          },
+          {
+            "x": 575,
+            "y": 470
+          },
+          {
+            "x": 760,
+            "y": 470
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 380,
+            "y": 430
+          },
+          {
+            "x": 680,
+            "y": 430
+          },
+          {
+            "x": 380,
+            "y": 860
+          },
+          {
+            "x": 680,
+            "y": 860
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "石头",
+    "text_pinyin": "shí tou",
+    "text_english": "Rock",
+    "text_phonetic": "/rɑːk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 855,
+            "y": 615
+          },
+          {
+            "x": 985,
+            "y": 615
+          },
+          {
+            "x": 855,
+            "y": 730
+          },
+          {
+            "x": 985,
+            "y": 730
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 760,
+            "y": 620
+          },
+          {
+            "x": 920,
+            "y": 620
+          },
+          {
+            "x": 760,
+            "y": 730
+          },
+          {
+            "x": 920,
+            "y": 730
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "陀螺",
+    "text_pinyin": "tuó luó",
+    "text_english": "Spinning Top",
+    "text_phonetic": "/ˈspɪnɪŋ tɑːp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 850
+          },
+          {
+            "x": 180,
+            "y": 850
+          },
+          {
+            "x": 20,
+            "y": 980
+          },
+          {
+            "x": 180,
+            "y": 980
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 120,
+            "y": 760
+          },
+          {
+            "x": 270,
+            "y": 760
+          },
+          {
+            "x": 120,
+            "y": 930
+          },
+          {
+            "x": 270,
+            "y": 930
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "布",
+    "text_pinyin": "bù",
+    "text_english": "Cloth",
+    "text_phonetic": "/klɔːθ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 500,
+            "y": 850
+          },
+          {
+            "x": 650,
+            "y": 850
+          },
+          {
+            "x": 500,
+            "y": 980
+          },
+          {
+            "x": 650,
+            "y": 980
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 300,
+            "y": 860
+          },
+          {
+            "x": 550,
+            "y": 860
+          },
+          {
+            "x": 300,
+            "y": 980
+          },
+          {
+            "x": 550,
+            "y": 980
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "橡皮筋",
+    "text_pinyin": "xiàng pí jīn",
+    "text_english": "Rubber Band",
+    "text_phonetic": "/ˈrʌbər bænd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 845,
+            "y": 875
+          },
+          {
+            "x": 1000,
+            "y": 875
+          },
+          {
+            "x": 845,
+            "y": 1005
+          },
+          {
+            "x": 1000,
+            "y": 1005
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 720,
+            "y": 760
+          },
+          {
+            "x": 950,
+            "y": 760
+          },
+          {
+            "x": 720,
+            "y": 930
+          },
+          {
+            "x": 950,
+            "y": 930
+          }
+        ]
+      }
+    ]
+  }
+]

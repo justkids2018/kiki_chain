@@ -14,7 +14,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  static const Duration _minimumSplashDuration = Duration(seconds: 2);
+  static const Duration _minimumSplashDuration = Duration(milliseconds: 300);
 
   @override
   void initState() {
@@ -25,16 +25,14 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _checkLoginStatus() async {
     final authController = Get.find<AuthController>();
 
-    // 保证欢迎页至少展示一段时间，同时等待认证状态初始化完成。
-    await Future.wait([
-      Future.delayed(_minimumSplashDuration),
-      _waitAuthInitialization(authController),
-    ]);
+    // 等待认证状态初始化完成
+    await _waitAuthInitialization(authController);
 
-    // 根据登录状态导航
+    // 已登录用户直接进入首页，未登录用户稍作延迟后进入欢迎页
     if (authController.isLoggedIn || authController.isGuestMode) {
       Get.offAllNamed(AppConstants.routeHome);
     } else {
+      await Future.delayed(_minimumSplashDuration);
       Get.offAllNamed(AppConstants.routeWelcome);
     }
   }
@@ -47,11 +45,14 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFFF8FAFC),
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00C37D)),
+        child: Image.asset(
+          'assets/images/kiki_welcom.png',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
         ),
       ),
     );

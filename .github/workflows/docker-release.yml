@@ -33,7 +33,7 @@ jobs:
           if [[ -n "${{ github.event.inputs.image_tag }}" ]]; then
             TAG="${{ github.event.inputs.image_tag }}"
           else
-            TAG="sha-${GITHUB_SHA::12}"
+            TAG="sha-${GITHUB_SHA::8}"
           fi
           echo "IMAGE_TAG=$TAG" >> "$GITHUB_ENV"
 

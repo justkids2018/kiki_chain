@@ -13,7 +13,8 @@ port = 8001
 # 生产环境CORS配置：仅允许正式域名，严格控制安全
 cors_origins = [
     "https://kiki.keepthinking.me",
-    "https://www.kiki.keepthinking.me"
+    "https://www.kiki.keepthinking.me",
+    "https://admin.keepthinking.me"
 ]
 
 # ==========================================

@@ -22,13 +22,21 @@ docs/
 
 ## 部署相关
 
-部署文档和脚本统一在 `scripts/deploy/` 目录：
+当前部署文档和脚本统一在 `scripts/deploy-release/` 与 `docs/deployment/`：
 
-- **[部署手册](../scripts/deploy/DEPLOY-GUIDE.md)** — 完整部署流程、架构图、运维命令
-- `deploy-all.sh` — 一键全量部署
-- `deploy-backend.sh` — 后端部署
-- `deploy-admin.sh` — 管理后台部署
-- `deploy-db.sh` — 数据库迁移/备份/恢复
+- **[发布流程手册](../scripts/deploy-release/README.md)** — 当前权威部署流程（镜像发布 + 两步部署）
+- **[运行手册（执行版）](./deployment/deploy-release-runbook.md)** — 运维执行最短路径
+- **[正式部署流程](./deployment/kiki_chain_正式部署流程.md)** — 团队执行版流程说明
+- **[统一配置方案](./deployment/docker_统一配置部署方案.md)** — 方案设计与演进记录
+
+常用脚本：
+
+- `step1-prepare.sh` — 生成部署产物（deploy.env / deploy-manifest.txt）
+- `step2-deploy.sh` — 同步最小部署资产并执行发布
+- `update-image-version.sh` — 更新本次发布镜像 tag 记录
+- `db-release.sh` — 数据库备份 + 增量迁移
+- `status.sh` — 运行状态检查
+- `check-remote-layout.sh` — 远端目录整洁度检查
 
 ## 各端项目
 

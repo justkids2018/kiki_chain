@@ -47,11 +47,11 @@
         <el-table-column prop="interactive_image" label="互动大图" width="100" align="center">
           <template #default="{ row }">
             <el-image
-              v-if="row.interactive_image"
-              :src="toCDNUrl(row.interactive_image)"
+              v-if="row.interactive_image || row.cover_image"
+              :src="toCDNUrl(row.interactive_image || row.cover_image)"
               fit="cover"
               style="width: 60px; height: 60px; border-radius: 4px"
-              :preview-src-list="[toCDNUrl(row.interactive_image)]"
+              :preview-src-list="[toCDNUrl(row.interactive_image || row.cover_image)]"
               preview-teleported
             />
           </template>
@@ -116,8 +116,26 @@
         <el-form-item label="封面图" prop="cover_image">
           <ImageUpload v-model="form.cover_image" folder="scenes" :fileName="form.name_en" />
         </el-form-item>
+        <el-form-item label="图片模式">
+          <el-switch
+            v-model="useCoverAsInteractive"
+            active-text="互动大图使用封面图"
+            inactive-text="封面图/互动图分别上传"
+          />
+        </el-form-item>
         <el-form-item label="互动大图" prop="interactive_image">
-          <ImageUpload v-model="form.interactive_image" folder="scenes" :fileName="form.name_en ? form.name_en + '_interactive' : ''" />
+          <el-input
+            v-if="useCoverAsInteractive"
+            :model-value="form.cover_image"
+            disabled
+            placeholder="将自动复用封面图链接"
+          />
+          <ImageUpload
+            v-else
+            v-model="form.interactive_image"
+            folder="scenes"
+            :fileName="form.name_en ? form.name_en + '_interactive' : ''"
+          />
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="form.description" type="textarea" :rows="2" />
@@ -175,7 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { sceneAPI, type Scene } from '../api/scenes'
@@ -212,6 +230,7 @@ const form = reactive({
 })
 
 const itemsDataText = ref('')
+const useCoverAsInteractive = ref(true)
 
 // JSON 查看对话框
 const jsonDialogVisible = ref(false)
@@ -292,6 +311,7 @@ const handleAdd = () => {
     is_visible: true
   })
   itemsDataText.value = ''
+  useCoverAsInteractive.value = true
   dialogVisible.value = true
 }
 
@@ -303,14 +323,18 @@ const handleEdit = (row: Scene) => {
     name: row.name,
     name_en: row.name_en,
     cover_image: row.cover_image,
-    interactive_image: row.interactive_image,
+    interactive_image: row.interactive_image || row.cover_image,
     data_file: row.data_file || '',
     description: row.description,
     context: row.context,
     order: row.order,
     is_new: row.is_new,
-    isVisible: row.is_visible !== undefined ? row.is_visible : true
+    is_visible: row.is_visible !== undefined ? row.is_visible : true
   })
+  useCoverAsInteractive.value = !row.interactive_image || row.interactive_image === row.cover_image
+  if (useCoverAsInteractive.value) {
+    form.interactive_image = form.cover_image
+  }
   // 如果有 items_data，格式化显示
   itemsDataText.value = row.items_data ? JSON.stringify(row.items_data, null, 2) : ''
   dialogVisible.value = true
@@ -338,6 +362,9 @@ const handleSubmit = async () => {
 
       const payload = {
         ...form,
+        interactive_image: useCoverAsInteractive.value
+          ? form.cover_image
+          : (form.interactive_image || form.cover_image),
         items_data: itemsData
       }
 
@@ -396,6 +423,18 @@ const copyJson = async () => {
 onMounted(() => {
   fetchCategories()
   fetchScenes()
+})
+
+watch(useCoverAsInteractive, (enabled) => {
+  if (enabled) {
+    form.interactive_image = form.cover_image
+  }
+})
+
+watch(() => form.cover_image, (value) => {
+  if (useCoverAsInteractive.value) {
+    form.interactive_image = value
+  }
 })
 </script>
 

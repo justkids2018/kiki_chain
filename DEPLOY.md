@@ -1,5 +1,14 @@
 # Hi Kiki 部署手册
 
+> 状态：历史文档（Legacy）
+>
+> 当前生产部署流程以 `scripts/deploy-release` 为准，请优先阅读：
+>
+> - `scripts/deploy-release/README.md`
+> - `docs/deployment/kiki_chain_正式部署流程.md`
+>
+> 本文档保留用于历史问题追踪，不再作为日常部署执行手册。
+
 ## 服务器信息
 
 | 项目 | 值 |

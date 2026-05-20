@@ -1,0 +1,13 @@
+artifact_id=20260519_194837_tencent
+generated_at=2026-05-19 19:48:37
+provider=tencent
+server=ubuntu@82.156.34.186
+remote_dir=~/kiki_chain
+stack=kiki_chain
+compose=scripts/deploy-release/compose/docker-compose.deploy.yml
+mobile_domain=kiki.keepthinking.me
+admin_domain=admin.keepthinking.me
+api_domain=kiki.keepthinking.me
+backend_local_port=18001
+admin_local_port=18080
+postgres_local_port=15432

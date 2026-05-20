@@ -55,3 +55,39 @@
 
 4. **音标标签简化**: 移除”音标”文字标签，仅保留音标符号和播放图标
    - 原因：减少视觉噪音，音标符号 + 播放图标已足够表意
+
+---
+
+## Failure Signature (2026-05-19)
+`https://keepthinking.me/` 无法打开，表现为 HTTPS 自重定向导致页面不可用。
+
+## Root Cause
+`keepthinking.me` 的宿主机 Nginx 反向代理目标是 `http://127.0.0.1:8081`。该上游容器（`qiqimanyou-frontend`）在 8081 上会强制重定向到 `https://$host`，因此外层 HTTPS 代理再次命中同一 URL，形成重定向环。
+
+## Evidence
+- 服务器上 `curl -I -H 'Host: keepthinking.me' http://127.0.0.1:8081` 返回 `301 Location: https://keepthinking.me/`。
+- 服务器上 `curl -k -I --resolve keepthinking.me:443:127.0.0.1 https://keepthinking.me` 返回 `301 Location: https://keepthinking.me/`（自环）。
+- 同一容器的 `8443` 端口可用：`curl -k -I -H 'Host: keepthinking.me' https://127.0.0.1:8443` 返回 `200`。
+
+## Affected Scope
+- 远端服务器：`/etc/nginx/conf.d/multi-site.conf`
+- 域名：`keepthinking.me`, `www.keepthinking.me`
+
+## Patch Plan
+1. 备份 `multi-site.conf`。
+2. 将 `keepthinking` 站点的 `proxy_pass` 从 `http://127.0.0.1:8081` 切换到 `https://127.0.0.1:8443`。
+3. `nginx -t` 校验并 reload。
+4. 进行公网回归验证。
+
+## Regression Risk
+低。仅调整该域名上游端口与协议，不影响 `kiki.keepthinking.me` 与 `admin.keepthinking.me` 站点。
+
+## Verification Plan
+1. `curl --resolve keepthinking.me:443:82.156.34.186 https://keepthinking.me`
+2. `curl --resolve www.keepthinking.me:443:82.156.34.186 https://www.keepthinking.me`
+3. 浏览器实测 `https://keepthinking.me/` 页面可打开。
+
+## Verification Results
+✅ `keepthinking.me`（强制解析到目标 IP）返回 `200`
+✅ `www.keepthinking.me`（强制解析到目标 IP）返回 `200`
+✅ Nginx 配置测试通过并已 reload

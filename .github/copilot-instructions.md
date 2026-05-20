@@ -21,6 +21,7 @@ Default behavior:
 Routing map:
 
 - End-to-end feature delivery -> just-dev-pipeline
+- Unified deployment + domain/TLS onboarding -> just-deploy-release
 - Generate requirement/logic/api docs from code -> just-feature-doc-generator
 - Generate hotspot JSON from image + MD -> just-hotspot-generator
 - Card production full chain (Prompt to Admin) -> just-card-to-json-workflow
@@ -37,6 +38,9 @@ Use these phrases as strong routing signals in addition to semantic intent.
 
 - `just-dev-pipeline`
 	- Trigger words: 新增功能, 增加功能, 开发功能, 实现需求, 做一个功能, 功能迭代, 从需求到上线
+
+- `just-deploy-release`
+	- Trigger words: 部署到服务器, 统一部署, 一键部署, 先step1再step2, 域名接入, HTTPS接入, nginx接入, admin+server+db部署, 腾讯云部署, 阿里云部署, 自动发布, release发布, tag发布, GitHub workflow部署
 - `just-feature-doc-generator`
 	- Trigger words: 根据代码出文档, 反向生成功能文档, 梳理功能逻辑, 生成接口文档, 需求文档整理
 - `just-hotspot-generator`

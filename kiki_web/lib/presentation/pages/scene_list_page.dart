@@ -23,10 +23,10 @@ class SceneListPage extends StatefulWidget {
 }
 
 class _SceneListPageState extends State<SceneListPage> {
-  static const double _viewportFraction = 0.52;
-  // Keep face overlap around 10-20dp. Slightly increase inter-card distance by
-  // reducing overlap 10dp from previous 14dp to 4dp.
-  static const double _targetCardOverlap = 4.0;
+  // Narrower page slots to get a true stacked/overlapped deck feel.
+  static const double _viewportFraction = 0.58;
+  // Larger overlap so neighboring cards visually sit on top of each other.
+  static const double _targetCardOverlap = 56.0;
   static const int _virtualLoopMultiplier = 500;
   late PageController _pageController;
   double _currentPage = 0.0;
@@ -178,8 +178,8 @@ class _SceneListPageState extends State<SceneListPage> {
         const titleHeight = 60.0;
         final maxCardHeight =
             ((availableHeight - titleHeight) * 0.68).clamp(280.0, 520.0);
-        // Card is intentionally wider so neighboring cards overlap each other.
-        final maxCardWidth = (availableWidth * 0.66).clamp(240.0, 440.0);
+        // Slightly wider cards plus stronger overlap for layered deck style.
+        final maxCardWidth = (availableWidth * 0.70).clamp(250.0, 460.0);
         final cardWidth = maxCardWidth;
         final cardHeight = (cardWidth / (7 / 9)).clamp(280.0, maxCardHeight);
         final pageSpacing = availableWidth * _viewportFraction;
@@ -248,29 +248,52 @@ class _SceneListPageState extends State<SceneListPage> {
   }) {
     final difference = index - _currentPage;
     final absDifference = difference.abs();
-    final scale = 1.0 - (absDifference * 0.10).clamp(0.0, 0.22);
-    final opacity = 1.0 - (absDifference * 0.16).clamp(0.0, 0.38);
-    final verticalOffset = absDifference * 14.0;
+    final distance = absDifference.clamp(0.0, 2.0);
+    final scale = 1.0 - (distance * 0.12);
+    final opacity = 1.0 - (distance * 0.18).clamp(0.0, 0.42);
+
+    // 中间卡片往上移，左右卡片往下移
+    final isCenterCard = absDifference < 0.5;
+    final verticalOffset = isCenterCard
+        ? -22.0 // 中间卡片略上移，保持视觉焦点
+        : 10.0 + (distance * 12.0); // 两侧卡片微下沉
+
     // PageView already moves each page by pageSpacing. We apply an extra
     // correction so adjacent card faces overlap by about _targetCardOverlap.
     final targetCenterDistance = cardWidth - _targetCardOverlap;
     final horizontalOffset = difference * (targetCenterDistance - pageSpacing);
-    final rotateZ = (difference * 0.10).clamp(-0.14, 0.14);
+    final rotateY = (-difference * 0.22).clamp(-0.22, 0.22);
+    final rotateZ = (difference * 0.06).clamp(-0.08, 0.08);
 
     return Center(
       child: Transform(
         transform: Matrix4.identity()
-          ..setEntry(3, 2, 0.001)
+          ..setEntry(3, 2, 0.0012)
+          ..translate(horizontalOffset, verticalOffset, 0.0)
+          ..rotateY(rotateY)
           ..rotateZ(rotateZ)
-          ..scale(scale)
-          ..translate(horizontalOffset, verticalOffset, 0.0),
+          ..scale(scale),
         alignment: Alignment.center,
         child: Opacity(
           opacity: opacity,
           child: SizedBox(
             width: cardWidth,
             height: cardHeight,
-            child: SceneCard(scene: scene, onTap: onTap),
+            child: Stack(
+              children: [
+                SceneCard(scene: scene, onTap: onTap),
+                // 左右卡片添加暗色遮罩
+                if (!isCenterCard)
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        color: Colors.black.withOpacity(0.32),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

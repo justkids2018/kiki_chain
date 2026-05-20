@@ -1,0 +1,28 @@
+# Managed by scripts/deploy-release/install-host-nginx.sh
+# Purpose: route public domains to unified stack localhost ports.
+
+server {
+    listen 80;
+    server_name ${DEPLOY_MOBILE_DOMAIN} ${DEPLOY_PRIMARY_DOMAIN};
+
+    location / {
+        proxy_pass http://127.0.0.1:${DEPLOY_ADMIN_HOST_PORT};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 80;
+    server_name ${DEPLOY_ADMIN_DOMAIN};
+
+    location / {
+        proxy_pass http://127.0.0.1:${DEPLOY_ADMIN_HOST_PORT};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

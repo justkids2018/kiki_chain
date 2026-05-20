@@ -3,6 +3,7 @@ import * as qiniu from 'qiniu-js'
 
 /** CDN 原始域名 */
 const CDN_ORIGIN = 'http://img.mtrain.xyz/'
+const CDN_HOST = 'img.mtrain.xyz'
 
 /**
  * 将 CDN 绝对 HTTP URL 转换为相对代理路径 /cdn/...
@@ -12,9 +13,33 @@ const CDN_ORIGIN = 'http://img.mtrain.xyz/'
  */
 export function toCDNUrl(url: string | null | undefined): string {
   if (!url) return ''
-  return url.startsWith(CDN_ORIGIN)
-    ? '/cdn/' + url.slice(CDN_ORIGIN.length)
-    : url
+  const raw = url.trim()
+
+  // 已是代理路径时直接返回
+  if (raw.startsWith('/cdn/')) return raw
+
+  // 兼容存量相对路径：/kiki/scenes/... 或 kiki/scenes/...
+  if (raw.startsWith('/kiki/')) return '/cdn' + raw
+  if (raw.startsWith('kiki/')) return '/cdn/' + raw
+
+  // 兼容异常存量：仅文件名（如 play_xxx.jpg）
+  // 默认归入 scenes 目录，避免请求落到站点根路径触发 SPA 回退 HTML。
+  if (/^[^/]+\.(jpg|jpeg|png|webp|gif|bmp|svg)(\?.*)?$/i.test(raw)) {
+    return '/cdn/kiki/scenes/' + raw
+  }
+
+  // 兼容不同协议、大小写、query/hash 等 URL 形式
+  try {
+    const parsed = new URL(raw)
+    if (parsed.hostname.toLowerCase() === CDN_HOST) {
+      return `/cdn${parsed.pathname}${parsed.search}${parsed.hash}`
+    }
+  } catch {
+    // 非法 URL 保持原值，避免吞掉真实问题
+  }
+
+  // 兜底：保留原先精确前缀匹配行为
+  return raw.startsWith(CDN_ORIGIN) ? '/cdn/' + raw.slice(CDN_ORIGIN.length) : raw
 }
 
 /**

@@ -50,7 +50,8 @@ android {
         release {
             keyAlias = keyProperties["keyAlias"]
             keyPassword = keyProperties["keyPassword"]
-            storeFile = keyProperties["storeFile"] ? file(keyProperties["storeFile"]) : null
+            def storeFilePath = keyProperties["storeFile"]?.toString()?.trim()
+            storeFile = storeFilePath ? rootProject.file(storeFilePath) : null
             storePassword = keyProperties["storePassword"]
         }
     }

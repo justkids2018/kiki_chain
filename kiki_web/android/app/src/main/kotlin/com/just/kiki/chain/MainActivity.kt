@@ -1,4 +1,4 @@
-package com.just.kiki.chain.kikichain
+package com.just.kiki
 
 import io.flutter.embedding.android.FlutterActivity
 

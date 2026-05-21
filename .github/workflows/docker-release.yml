@@ -11,6 +11,11 @@ on:
         description: "Image tag override (default: sha-<commit>)"
         required: false
         type: string
+      skip_db_migration:
+        description: "Skip database migration (only update app)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -61,6 +66,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_BACKEND }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_BACKEND }}:latest
+          cache-from: type=registry,ref=${{ env.IMAGE_BACKEND }}:latest
+          cache-to: type=inline
 
       - name: Build and push admin
         uses: docker/build-push-action@v6
@@ -73,6 +80,20 @@ jobs:
           tags: |
             ${{ env.IMAGE_ADMIN }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_ADMIN }}:latest
+          cache-from: type=registry,ref=${{ env.IMAGE_ADMIN }}:latest
+          cache-to: type=inline
+
+      - name: Build summary
+        run: |
+          echo "### 🐳 Docker Images Built" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Image | Tag |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend | \`${{ env.IMAGE_BACKEND }}\` | \`${{ env.IMAGE_TAG }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Admin | \`${{ env.IMAGE_ADMIN }}\` | \`${{ env.IMAGE_TAG }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
 
   deploy-tencent:
     runs-on: ubuntu-latest
@@ -138,6 +159,23 @@ jobs:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
           DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
           DEPLOY_REMOTE_DIR: ${{ secrets.DEPLOY_REMOTE_DIR }}
+          SKIP_DB_MIGRATION: ${{ github.event.inputs.skip_db_migration == true && 'true' || 'false' }}
         run: |
           set -euo pipefail
           ./scripts/deploy-release/step2-deploy.sh tencent
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "### 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Server | \`${{ secrets.DEPLOY_SERVER_IP }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Image Tag | \`${{ needs.build-and-push.outputs.image_tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| DB Migration | ${{ github.event.inputs.skip_db_migration == true && '⏭️ Skipped' || '✅ Executed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URLs**:" >> $GITHUB_STEP_SUMMARY
+          echo "- Admin: https://kiki.keepthinking.me" >> $GITHUB_STEP_SUMMARY
+          echo "- API: https://kiki.keepthinking.me/api/" >> $GITHUB_STEP_SUMMARY

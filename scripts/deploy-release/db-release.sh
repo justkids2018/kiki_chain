@@ -11,6 +11,13 @@ load_profile "$PROFILE_NAME"
 
 print_header "DB 发布流程 (${DEPLOY_PROVIDER})"
 
+# 支持通过环境变量跳过数据库迁移（用于数据库已初始化的场景）
+if [[ "${SKIP_DB_MIGRATION:-}" == "true" ]]; then
+  echo -e "${YELLOW}⚠️ SKIP_DB_MIGRATION=true，跳过数据库迁移${NC}"
+  echo -e "${CYAN}提示：如果需要执行迁移，请设置 SKIP_DB_MIGRATION=false 或不设置该变量${NC}"
+  exit 0
+fi
+
 ensure_ssh
 
 echo -e "${YELLOW}1) 启动数据库容器...${NC}"
@@ -36,19 +43,27 @@ ssh "$SERVER" "set -o pipefail; cd $REMOTE_DIR && mkdir -p backups && docker com
   && echo -e "${GREEN}✅ 备份完成: ${BACKUP_FILE}${NC}" \
   || echo -e "${YELLOW}⚠️ 备份跳过（可能是首次部署或数据库尚未初始化）${NC}"
 
-echo -e "${YELLOW}3) 确保迁移表存在...${NC}"
+echo -e "${YELLOW}3) 检查数据库初始化状态...${NC}"
 db_exists=$(remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -tAc \"SELECT 1 FROM pg_database WHERE datname='${DEPLOY_DATABASE_NAME}'\"" | tr -d '[:space:]')
 if [[ "$db_exists" != "1" ]]; then
   echo -e "${YELLOW}  - 数据库 ${DEPLOY_DATABASE_NAME} 不存在，正在创建...${NC}"
   remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -c \"CREATE DATABASE ${DEPLOY_DATABASE_NAME};\""
+  echo -e "${GREEN}  ✅ 数据库已创建（首次部署）${NC}"
+  DB_IS_NEW=true
+else
+  echo -e "${GREEN}  ✅ 数据库已存在${NC}"
+  DB_IS_NEW=false
 fi
 
 remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME} -c \"CREATE TABLE IF NOT EXISTS schema_migrations (version VARCHAR(32) PRIMARY KEY, applied_at TIMESTAMPTZ DEFAULT NOW());\""
 
 core_users_exists=$(remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME} -tAc \"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='users'\"" | tr -d '[:space:]')
 if [[ "$core_users_exists" != "1" ]]; then
-  echo -e "${YELLOW}  - 检测到基础表缺失，先执行 scripts/deploy-release/db/init.sql${NC}"
+  echo -e "${YELLOW}  - 检测到基础表缺失，执行初始化脚本 (scripts/deploy-release/db/init.sql)${NC}"
   ssh "$SERVER" "cd $REMOTE_DIR && cat scripts/deploy-release/db/init.sql | docker compose -p $STACK_NAME -f $COMPOSE_FILE --env-file scripts/deploy-release/runtime/.env exec -T postgres psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME}"
+  echo -e "${GREEN}  ✅ 数据库初始化完成${NC}"
+else
+  echo -e "${GREEN}  ✅ 数据库已初始化，跳过 init.sql${NC}"
 fi
 
 echo -e "${YELLOW}4) 执行增量迁移...${NC}"

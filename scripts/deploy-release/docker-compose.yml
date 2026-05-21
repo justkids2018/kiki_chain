@@ -44,7 +44,7 @@ services:
     ports:
       - "127.0.0.1:${DEPLOY_BACKEND_HOST_PORT}:8001"
     healthcheck:
-      test: [ "CMD-SHELL", "wget -qO- http://localhost:8001/health >/dev/null 2>&1 || exit 1" ]
+      test: ["CMD-SHELL", "timeout 5 sh -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8001' || exit 1"]
       interval: 30s
       timeout: 10s
       start_period: 60s

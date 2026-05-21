@@ -3,6 +3,7 @@ name: Docker Build On Push
 on:
   push:
     branches:
+      - "main"
       - "kiki"
   workflow_dispatch:
     inputs:
@@ -23,11 +24,14 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.resolve_tag.outputs.image_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Resolve image tag
+        id: resolve_tag
         shell: bash
         run: |
           if [[ -n "${{ github.event.inputs.image_tag }}" ]]; then
@@ -36,6 +40,7 @@ jobs:
             TAG="sha-${GITHUB_SHA::8}"
           fi
           echo "IMAGE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "image_tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -68,3 +73,61 @@ jobs:
           tags: |
             ${{ env.IMAGE_ADMIN }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_ADMIN }}:latest
+
+  deploy-tencent:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: ${{ github.event_name != 'pull_request' }}
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate deploy secrets
+        env:
+          TENCENT_SSH_PRIVATE_KEY: ${{ secrets.TENCENT_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${TENCENT_SSH_PRIVATE_KEY}" ]]; then
+            echo "Missing required secret: TENCENT_SSH_PRIVATE_KEY"
+            echo "Please add your Tencent server SSH private key to repository secrets."
+            exit 1
+          fi
+
+      - name: Setup SSH
+        env:
+          TENCENT_SSH_PRIVATE_KEY: ${{ secrets.TENCENT_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf "%s\n" "${TENCENT_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 82.156.34.186 >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Remote login to GHCR (optional)
+        env:
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${GHCR_USERNAME}" && -n "${GHCR_READ_TOKEN}" ]]; then
+            ssh ubuntu@82.156.34.186 "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin"
+            echo "Remote GHCR login done."
+          else
+            echo "GHCR_USERNAME/GHCR_READ_TOKEN not set; skip remote GHCR login."
+          fi
+
+      - name: Generate deploy artifacts (step1)
+        env:
+          DEPLOY_IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
+        run: |
+          set -euo pipefail
+          ./scripts/deploy-release/step1-prepare.sh tencent
+
+      - name: Deploy to Tencent server (step2)
+        run: |
+          set -euo pipefail
+          ./scripts/deploy-release/step2-deploy.sh tencent

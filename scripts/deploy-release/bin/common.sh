@@ -34,6 +34,11 @@ load_profile() {
   # shellcheck disable=SC1090
   source "$PROFILE_FILE"
 
+  # 清理可能的空格和换行符
+  DEPLOY_SERVER_IP=$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')
+  DEPLOY_SSH_USER=$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')
+  DEPLOY_REMOTE_DIR=$(echo "${DEPLOY_REMOTE_DIR}" | tr -d '[:space:]')
+
   SERVER="${DEPLOY_SSH_USER}@${DEPLOY_SERVER_IP}"
   REMOTE_DIR="$DEPLOY_REMOTE_DIR"
   STACK_NAME="$DEPLOY_STACK_NAME"

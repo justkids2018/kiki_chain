@@ -122,11 +122,13 @@ jobs:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
         run: |
           set -euo pipefail
+          # 清理可能的空格和换行符
+          SERVER_IP=$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           printf "%s\n" "${TENCENT_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${DEPLOY_SERVER_IP}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${SERVER_IP}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: Remote login to GHCR (optional)
@@ -137,8 +139,11 @@ jobs:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
         run: |
           set -euo pipefail
+          # 清理可能的空格和换行符
+          SERVER_IP=$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')
+          SSH_USER=$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')
           if [[ -n "${GHCR_USERNAME}" && -n "${GHCR_READ_TOKEN}" ]]; then
-            ssh "${DEPLOY_SSH_USER}@${DEPLOY_SERVER_IP}" "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin"
+            ssh "${SSH_USER}@${SERVER_IP}" "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin"
             echo "Remote GHCR login done."
           else
             echo "GHCR_USERNAME/GHCR_READ_TOKEN not set; skip remote GHCR login."

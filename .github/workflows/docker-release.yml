@@ -143,8 +143,12 @@ jobs:
           SERVER_IP=$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')
           SSH_USER=$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')
           if [[ -n "${GHCR_USERNAME}" && -n "${GHCR_READ_TOKEN}" ]]; then
-            ssh "${SSH_USER}@${SERVER_IP}" "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin"
-            echo "Remote GHCR login done."
+            echo "Attempting remote GHCR login..."
+            if ssh "${SSH_USER}@${SERVER_IP}" "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin" 2>&1; then
+              echo "✅ Remote GHCR login successful."
+            else
+              echo "⚠️ Remote GHCR login failed. Images are public, continuing anyway..."
+            fi
           else
             echo "GHCR_USERNAME/GHCR_READ_TOKEN not set; skip remote GHCR login."
           fi

@@ -2,8 +2,10 @@
 kiki_server/target/
 kiki_web/.dart_tool/
 kiki_web/build/
+kiki_web/android/build/
 kiki_admin/node_modules/
 kiki_admin/dist/
+kiki_admin/.vite/
 
 # OS files
 .DS_Store

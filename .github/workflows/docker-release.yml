@@ -186,5 +186,6 @@ jobs:
           echo "| Status | ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**URLs**:" >> $GITHUB_STEP_SUMMARY
-          echo "- Admin: https://kiki.keepthinking.me" >> $GITHUB_STEP_SUMMARY
+          echo "- Admin: https://admin.keepthinking.me" >> $GITHUB_STEP_SUMMARY
           echo "- API: https://kiki.keepthinking.me/api/" >> $GITHUB_STEP_SUMMARY
+          echo "- Main: https://kiki.keepthinking.me" >> $GITHUB_STEP_SUMMARY

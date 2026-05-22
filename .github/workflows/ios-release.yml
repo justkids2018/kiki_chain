@@ -2,8 +2,8 @@ name: iOS Release Build
 
 on:
   schedule:
-    # Daily 08:30 Asia/Shanghai (UTC+8) -> 00:30 UTC
-    - cron: "30 0 * * *"
+    # Monday, Wednesday, Friday at 08:30 Asia/Shanghai (UTC+8) -> 00:30 UTC
+    - cron: "30 0 * * 1,3,5"
   workflow_dispatch:
     inputs:
       base_version:

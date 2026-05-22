@@ -12,6 +12,7 @@ import 'core/app_initializer.dart';
 import 'core/settings/app_settings_service.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/language_controller.dart';
+import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,26 +105,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 GlobalCupertinoLocalizations.delegate,
               ],
 
-              theme: ThemeData(
-                primarySwatch: Colors.green,
-                primaryColor: const Color(0xFF4CAF50),
-                fontFamily: 'PingFang SC',
-                appBarTheme: const AppBarTheme(
-                  backgroundColor: Color(0xFF4CAF50),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  centerTitle: true,
-                ),
-                elevatedButtonTheme: ElevatedButtonThemeData(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CAF50),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
+              theme: AppTheme.lightTheme,
               // 设置路由 - 使用默认初始路由 '/' (SplashPage)
               getPages: AppRoutes.routes,
               // EasyLoading配置

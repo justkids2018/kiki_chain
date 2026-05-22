@@ -1,64 +1,392 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
+import '../../theme/app_colors.dart';
 import '../controllers/auth_controller.dart';
 
-/// 登录页面 - Liquid Glass Edition (Refined)
-///
-/// 遵循Refined设计原则：普通页面稳重简洁，优先可读性
-/// 使用Light Base纯色背景，突出Liquid Green主色调
-///
-/// 创建时间: 2025年8月9日
-/// 最后修改: 2025年9月15日
-class LoginPage extends StatelessWidget {
+/// 登录/注册页面 - Hi Kiki 风格
+/// 横屏设计，带有 Tab 切换
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
     final localizations = AppLocalizations.of(context)!;
-    final size = MediaQuery.of(context).size;
-    final isCompact = size.width < 600; // phone vs iPad
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F7FB),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: -120,
-              left: -80,
-              child: _buildGlowBlob(
-                size: 280,
-                color: const Color(0xFF9EDBFF),
-              ),
-            ),
-            Positioned(
-              bottom: -140,
-              right: -100,
-              child: _buildGlowBlob(
-                size: 320,
-                color: const Color(0xFFB8F0D4),
-              ),
-            ),
-            Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: isCompact ? 20 : 24),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: AppColors.backgroundCream,
+      body: Stack(
+        children: [
+          // 底部装饰
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildBottomDecoration(),
+          ),
+
+          // 主内容
+          SafeArea(
+            child: Column(
+              children: [
+                // 顶部返回按钮
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                     children: [
-                      SizedBox(height: isCompact ? 18 : 24),
-                      _buildLoginCard(authController, localizations, isCompact),
-                      SizedBox(height: isCompact ? 18 : 24),
-                      _buildRegisterPrompt(),
-                      SizedBox(height: isCompact ? 20 : 30),
+                      IconButton(
+                        icon: Icon(Icons.arrow_back, color: AppColors.textDarkBrown),
+                        onPressed: () => Get.back(),
+                      ),
                     ],
                   ),
                 ),
+
+                // 登录表单区域
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 450),
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.all(40),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardCream,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.shadowLight,
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // 标题
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '登录 / 注册',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textDarkBrown,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(Icons.eco, color: AppColors.primaryGreen, size: 24),
+                              ],
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            // 副标题
+                            Text(
+                              '欢迎来到 Hi Kiki',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textGray,
+                              ),
+                            ),
+
+                            const SizedBox(height: 32),
+
+                            // Tab 切换
+                            _buildTabBar(),
+
+                            const SizedBox(height: 24),
+
+                            // Tab 内容
+                            SizedBox(
+                              height: 320,
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  _buildLoginForm(authController, localizations),
+                                  _buildRegisterForm(authController, localizations),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.borderLight,
+            width: 1,
+          ),
+        ),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        labelColor: AppColors.primaryGreen,
+        unselectedLabelColor: AppColors.textGray,
+        labelStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+        ),
+        indicatorColor: AppColors.primaryGreen,
+        indicatorWeight: 3,
+        tabs: const [
+          Tab(text: '登录'),
+          Tab(text: '注册'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoginForm(AuthController controller, AppLocalizations localizations) {
+    return Form(
+      key: controller.loginFormKey,
+      child: Column(
+        children: [
+          // 手机号输入框
+          _buildTextField(
+            controller: controller.loginIdentifierController,
+            hintText: '请输入手机号',
+            prefixIcon: Icons.phone_android,
+            keyboardType: TextInputType.phone,
+            validator: controller.validateLoginIdentifier,
+          ),
+
+          const SizedBox(height: 16),
+
+          // 密码输入框
+          Obx(
+            () => _buildTextField(
+              controller: controller.loginPasswordController,
+              hintText: '请输入密码',
+              prefixIcon: Icons.lock_outline,
+              obscureText: !controller.loginPasswordVisible,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  controller.loginPasswordVisible
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                  color: AppColors.textGray,
+                  size: 20,
+                ),
+                onPressed: controller.toggleLoginPasswordVisibility,
               ),
+              validator: controller.validatePassword,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // 忘记密码
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                // TODO: 实现忘记密码功能
+                Get.snackbar('提示', '忘记密码功能开发中');
+              },
+              child: Text(
+                '忘记密码？',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.primaryGreen,
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // 登录按钮
+          _buildPrimaryButton(
+            text: '登录',
+            onPressed: controller.login,
+          ),
+
+          const SizedBox(height: 16),
+
+          // 分割线
+          Row(
+            children: [
+              Expanded(child: Divider(color: AppColors.borderLight)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  '或',
+                  style: TextStyle(fontSize: 14, color: AppColors.textGray),
+                ),
+              ),
+              Expanded(child: Divider(color: AppColors.borderLight)),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // 微信登录按钮
+          _buildWechatButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRegisterForm(AuthController controller, AppLocalizations localizations) {
+    return SingleChildScrollView(
+      child: Form(
+        key: controller.registerFormKey,
+        child: Column(
+          children: [
+            // 手机号输入框
+            _buildTextField(
+              controller: controller.registerPhoneController,
+              hintText: '请输入手机号',
+              prefixIcon: Icons.phone_android,
+              keyboardType: TextInputType.phone,
+              validator: controller.validatePhone,
+            ),
+
+            const SizedBox(height: 16),
+
+            // 密码输入框
+            Obx(
+              () => _buildTextField(
+                controller: controller.registerPasswordController,
+                hintText: '请输入密码',
+                prefixIcon: Icons.lock_outline,
+                obscureText: !controller.registerPasswordVisible,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    controller.registerPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: AppColors.textGray,
+                    size: 20,
+                  ),
+                  onPressed: controller.toggleRegisterPasswordVisibility,
+                ),
+                validator: controller.validatePassword,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // 确认密码输入框
+            Obx(
+              () => _buildTextField(
+                controller: controller.registerConfirmPasswordController,
+                hintText: '请再次输入密码',
+                prefixIcon: Icons.lock_outline,
+                obscureText: !controller.registerConfirmPasswordVisible,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    controller.registerConfirmPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: AppColors.textGray,
+                    size: 20,
+                  ),
+                  onPressed: controller.toggleRegisterConfirmPasswordVisibility,
+                ),
+                validator: controller.validateConfirmPassword,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // 用户协议
+            Row(
+              children: [
+                Obx(
+                  () => Checkbox(
+                    value: controller.agreeToTerms,
+                    onChanged: (value) => controller.setAgreeToTerms(value ?? false),
+                    activeColor: AppColors.primaryGreen,
+                  ),
+                ),
+                Expanded(
+                  child: Wrap(
+                    children: [
+                      Text(
+                        '我已阅读并同意',
+                        style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // TODO: 显示用户协议
+                        },
+                        child: Text(
+                          '《用户协议》',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primaryGreen,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '和',
+                        style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // TODO: 显示隐私政策
+                        },
+                        child: Text(
+                          '《隐私政策》',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primaryGreen,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // 注册按钮
+            _buildPrimaryButton(
+              text: '注册',
+              onPressed: controller.register,
             ),
           ],
         ),
@@ -66,230 +394,171 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGlowBlob({required double size, required Color color}) {
-    return IgnorePointer(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [
-              color.withValues(alpha: 0.35),
-              color.withValues(alpha: 0.04),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.6, 1.0],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoginCard(AuthController controller,
-      AppLocalizations localizations, bool isCompact) {
-    final edgePadding = isCompact
-        ? const EdgeInsets.symmetric(horizontal: 20, vertical: 24)
-        : const EdgeInsets.all(28);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-        child: Container(
-          width: double.infinity,
-          padding: edgePadding,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.72),
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.65),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Form(
-            key: controller.loginFormKey,
-            child: Column(
-              children: [
-                _buildGlassTextField(
-                  controller: controller.loginIdentifierController,
-                  labelText: localizations.phoneNumber,
-                  prefixIcon: Icons.person_outline_rounded,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  validator: controller.validateLoginIdentifier,
-                ),
-                const SizedBox(height: 16),
-                Obx(
-                  () => _buildGlassTextField(
-                    controller: controller.loginPasswordController,
-                    labelText: localizations.password,
-                    prefixIcon: Icons.lock_outline_rounded,
-                    obscureText: !controller.loginPasswordVisible,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        controller.loginPasswordVisible
-                            ? Icons.visibility_off_rounded
-                            : Icons.visibility_rounded,
-                        color: const Color(0xFF27273F).withValues(alpha: 0.6),
-                        size: 22,
-                      ),
-                      onPressed: controller.toggleLoginPasswordVisibility,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    validator: controller.validatePassword,
-                    onFieldSubmitted: (_) => controller.login(),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                _buildGlassButton(
-                  text: localizations.login,
-                  onPressed: controller.login,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 构建简洁输入框 - 符合普通页面规范
-  Widget _buildGlassTextField({
+  Widget _buildTextField({
     required TextEditingController controller,
-    required String labelText,
+    required String hintText,
     required IconData prefixIcon,
     bool obscureText = false,
     Widget? suffixIcon,
     TextInputType? keyboardType,
-    TextInputAction? textInputAction,
     String? Function(String?)? validator,
-    Function(String)? onFieldSubmitted,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 4,
-            offset: Offset(0, 1),
-          ),
-        ],
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      style: TextStyle(
+        fontSize: 16,
+        color: AppColors.textBrown,
       ),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        textInputAction: textInputAction,
-        validator: validator,
-        onFieldSubmitted: onFieldSubmitted,
-        style: TextStyle(
-          color: const Color(0xFF27273F),
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: AppColors.textLightGray,
         ),
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(
-            color: const Color(0xFF6B7280),
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-          ),
-          prefixIcon: Icon(
-            prefixIcon,
-            color: const Color(0xFF00C37D),
-            size: 22,
-          ),
-          suffixIcon: suffixIcon,
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Color(0xFF00C37D),
-              width: 2,
-            ),
-          ),
+        prefixIcon: Icon(
+          prefixIcon,
+          color: AppColors.textGray,
+          size: 20,
+        ),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: AppColors.white,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.borderLight, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.borderLight, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.primaryGreen, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.red, width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.red, width: 2),
         ),
       ),
     );
   }
 
-  /// 构建主按钮 - 符合普通页面规范
-  Widget _buildGlassButton({
+  Widget _buildPrimaryButton({
     required String text,
     required VoidCallback onPressed,
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 50, // 标准按钮高度
+      height: 50,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF00C37D),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shadowColor: Colors.transparent,
+          backgroundColor: AppColors.primaryGreen,
+          foregroundColor: AppColors.white,
+          elevation: 2,
+          shadowColor: AppColors.shadowMedium,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(25),
           ),
         ),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 16,
+          style: const TextStyle(
+            fontSize: 18,
             fontWeight: FontWeight.w600,
-            letterSpacing: -0.01,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildRegisterPrompt() {
-    return Builder(
-      builder: (context) {
-        final localizations = AppLocalizations.of(context)!;
-        return Row(
+  Widget _buildWechatButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: OutlinedButton(
+        onPressed: () {
+          // TODO: 实现微信登录
+          Get.snackbar('提示', '微信登录功能开发中');
+        },
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.wechatGreen,
+          side: BorderSide(color: AppColors.wechatGreen, width: 1.5),
+          backgroundColor: AppColors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(Icons.wechat, size: 22),
+            const SizedBox(width: 8),
             Text(
-              localizations.noAccountYet,
+              '微信登录',
               style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF6B7280),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            SizedBox(width: 6),
-            GestureDetector(
-              onTap: () => Get.toNamed('/register'),
-              child: Text(
-                localizations.register,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF00C37D),
-                  fontWeight: FontWeight.w600,
-                ),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
+  Widget _buildBottomDecoration() {
+    return Container(
+      height: 100,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.primaryGreen.withOpacity(0.0),
+            AppColors.primaryGreen.withOpacity(0.15),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            left: 60,
+            bottom: 0,
+            child: Icon(
+              Icons.grass,
+              size: 50,
+              color: AppColors.darkGreen.withOpacity(0.5),
+            ),
+          ),
+          Positioned(
+            right: 60,
+            bottom: 0,
+            child: Icon(
+              Icons.local_florist,
+              size: 40,
+              color: AppColors.primaryGreen.withOpacity(0.5),
+            ),
+          ),
+          Positioned(
+            left: MediaQuery.of(context).size.width / 2 - 15,
+            bottom: 10,
+            child: Icon(
+              Icons.filter_vintage,
+              size: 30,
+              color: Colors.white.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

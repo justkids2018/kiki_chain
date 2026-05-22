@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../../core/constants/app_constants.dart';
+import '../../theme/app_colors.dart';
 
 /// 启动页面
 ///
@@ -46,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundCream,
       body: Center(
         child: Image.asset(
           'assets/images/kiki_welcom.png',

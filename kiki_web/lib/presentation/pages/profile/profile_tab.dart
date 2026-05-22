@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../theme/app_colors.dart';
 import '../../controllers/auth_controller.dart';
 import 'widgets/guest_profile.dart';
 import 'widgets/logged_in_profile.dart';
@@ -17,7 +18,7 @@ class ProfileTab extends StatelessWidget {
     final AuthController authController = Get.find<AuthController>();
 
     return Scaffold(
-      backgroundColor: Color(0xFFF8FAFC),
+      backgroundColor: AppColors.backgroundCream,
       body: SafeArea(
         child: Obx(() {
           if (authController.isLoggedIn && authController.currentUser != null) {

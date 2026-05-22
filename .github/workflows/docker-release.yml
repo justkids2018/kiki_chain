@@ -1,10 +1,9 @@
-name: Docker Build On Push
+name: Docker Build and Deploy
 
 on:
   push:
     branches:
       - "main"
-      - "kiki"
   workflow_dispatch:
     inputs:
       image_tag:

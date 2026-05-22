@@ -1,22 +1,15 @@
 name: Android Release Build
 
 on:
-  workflow_run:
-    workflows: ["CI Validate"]
-    branches:
-      - main
-      - kiki
-    types:
-      - completed
+  schedule:
+    # Daily 08:00 Asia/Shanghai (UTC+8) -> 00:00 UTC
+    - cron: "0 0 * * *"
   workflow_dispatch:
     inputs:
       base_version:
         description: "Base version (first 3 parts), e.g. 1.0.0 or 0.001.00"
         required: false
         type: string
-  schedule:
-    # Daily 08:00 Asia/Shanghai (UTC+8) -> 00:00 UTC
-    - cron: "0 0 * * *"
 
 permissions:
   contents: write
@@ -24,7 +17,6 @@ permissions:
 jobs:
   build-android-release:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
 
     env:
       BASE_VERSION_DEFAULT: ${{ vars.ANDROID_BASE_VERSION || '1.0.0' }}

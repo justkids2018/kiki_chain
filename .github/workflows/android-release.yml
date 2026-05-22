@@ -1,13 +1,9 @@
 name: Android Release Build
 
 on:
-  workflow_run:
-    workflows: ["CI Validate"]
-    branches:
-      - main
-      - kiki
-    types:
-      - completed
+  schedule:
+    # Monday, Wednesday, Friday at 08:00 Asia/Shanghai (UTC+8) -> 00:00 UTC
+    - cron: "0 0 * * 1,3,5"
   workflow_dispatch:
     inputs:
       base_version:
@@ -21,7 +17,8 @@ permissions:
 jobs:
   build-android-release:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    # Only run on main branch for scheduled builds
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
 
     env:
       BASE_VERSION_DEFAULT: ${{ vars.ANDROID_BASE_VERSION || '1.0.0' }}

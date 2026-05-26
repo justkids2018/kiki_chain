@@ -34,58 +34,40 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-      body: Stack(
-        children: [
-          // 底部装饰 - 绿色植物
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomDecoration(),
-          ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenHeight * 0.1),
 
-          // 主内容
-          SafeArea(
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 500),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo 和标语
-                    _buildBranding(),
+                  // Logo 和标语
+                  _buildBranding(),
 
-                    const SizedBox(height: 40),
+                  SizedBox(height: screenHeight * 0.18),
 
-                    // 插画区域（占位）
-                    _buildIllustration(),
+                  // 手机号登录按钮
+                  _buildPhoneLoginButton(localizations),
 
-                    const Spacer(),
+                  const SizedBox(height: 16),
 
-                    // 微信登录按钮
-                    _buildWechatLoginButton(localizations),
+                  // 注册提示
+                  _buildRegisterPrompt(localizations),
 
-                    const SizedBox(height: 16),
-
-                    // 手机号登录按钮
-                    _buildPhoneLoginButton(localizations),
-
-                    const SizedBox(height: 24),
-
-                    // 注册提示
-                    _buildRegisterPrompt(localizations),
-
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                  SizedBox(height: screenHeight * 0.1),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -93,118 +75,53 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _buildBranding() {
     return Column(
       children: [
-        // Hi Kiki Logo
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Hi Kiki',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDarkBrown,
-                height: 1.0,
+        // Hi Kiki Logo with animation-ready structure
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primaryGreen.withOpacity(0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
               ),
-            ),
-            const SizedBox(width: 8),
-            // 绿叶装饰
-            Icon(
-              Icons.eco,
-              color: AppColors.primaryGreen,
-              size: 32,
-            ),
-          ],
+            ],
+          ),
+          child: Icon(
+            Icons.eco,
+            color: AppColors.primaryGreen,
+            size: 64,
+          ),
+        ),
+
+        const SizedBox(height: 24),
+
+        Text(
+          'Hi Kiki',
+          style: TextStyle(
+            fontSize: 56,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textDarkBrown,
+            height: 1.0,
+            letterSpacing: -1,
+          ),
         ),
 
         const SizedBox(height: 12),
 
         // 标语
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.auto_stories, color: AppColors.primaryGreen, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              '快乐学习 每天进步',
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.primaryGreen,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(Icons.auto_stories, color: AppColors.primaryGreen, size: 20),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildIllustration() {
-    // 插画占位区域
-    // TODO: 添加实际的插画图片
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: AppColors.cardCream,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.menu_book_rounded,
-              size: 80,
-              color: AppColors.primaryGreen.withOpacity(0.3),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '两个可爱的卡通角色在看书',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textGray,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWechatLoginButton(AppLocalizations localizations) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: () {
-          // TODO: 实现微信登录
-          Get.snackbar('提示', '微信登录功能开发中');
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.wechatGreen,
-          foregroundColor: Colors.white,
-          elevation: 2,
-          shadowColor: AppColors.shadowMedium,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
+        Text(
+          '快乐学习 · 每天进步',
+          style: TextStyle(
+            fontSize: 18,
+            color: AppColors.textGray,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 2,
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wechat, size: 24),
-            const SizedBox(width: 12),
-            Text(
-              '微信登录',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 
@@ -212,120 +129,68 @@ class _WelcomePageState extends State<WelcomePage> {
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: OutlinedButton(
+      child: ElevatedButton(
         onPressed: () => Get.toNamed('/login'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primaryGreen,
-          side: BorderSide(color: AppColors.primaryGreen, width: 2),
-          backgroundColor: AppColors.white,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryGreen,
+          foregroundColor: Colors.white,
+          elevation: 4,
+          shadowColor: AppColors.primaryGreen.withOpacity(0.4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.phone_android, size: 24),
-            const SizedBox(width: 12),
-            Text(
-              '手机号登录',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+        child: const Text(
+          '立即登录',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildRegisterPrompt(AppLocalizations localizations) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          '没有账号？',
-          style: TextStyle(
-            fontSize: 14,
-            color: AppColors.textGray,
-          ),
-        ),
-        const SizedBox(width: 4),
-        GestureDetector(
-          onTap: () => Get.toNamed('/register'),
-          child: Text(
-            '立即注册',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.primaryGreen,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        const SizedBox(width: 4),
-        Icon(
-          Icons.arrow_forward,
-          size: 16,
-          color: AppColors.primaryGreen,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottomDecoration() {
     return Container(
-      height: 120,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.primaryGreen.withOpacity(0.0),
-            AppColors.primaryGreen.withOpacity(0.1),
-            AppColors.primaryGreen.withOpacity(0.2),
-          ],
-        ),
-      ),
-      child: Stack(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 左侧植物
-          Positioned(
-            left: 40,
-            bottom: 0,
-            child: Icon(
-              Icons.grass,
-              size: 60,
-              color: AppColors.darkGreen.withOpacity(0.6),
+          Text(
+            '还没有账号？',
+            style: TextStyle(
+              fontSize: 15,
+              color: AppColors.textGray,
             ),
           ),
-          // 右侧植物
-          Positioned(
-            right: 40,
-            bottom: 0,
-            child: Icon(
-              Icons.local_florist,
-              size: 50,
-              color: AppColors.primaryGreen.withOpacity(0.6),
-            ),
-          ),
-          // 中间小花
-          Positioned(
-            left: 200,
-            bottom: 20,
-            child: Icon(
-              Icons.filter_vintage,
-              size: 30,
-              color: Colors.white.withOpacity(0.8),
-            ),
-          ),
-          Positioned(
-            right: 180,
-            bottom: 15,
-            child: Icon(
-              Icons.filter_vintage,
-              size: 25,
-              color: Colors.white.withOpacity(0.7),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => Get.toNamed('/register'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.primaryGreen.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    '立即注册',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.primaryGreen,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16,
+                    color: AppColors.primaryGreen,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -35,20 +35,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
-      body: Stack(
-        children: [
-          // 底部装饰
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildBottomDecoration(),
-          ),
-
-          // 主内容
-          SafeArea(
-            child: Column(
-              children: [
+      body: SafeArea(
+        child: Column(
+          children: [
                 // 顶部返回按钮
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -121,7 +110,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
                             // Tab 内容
                             SizedBox(
-                              height: 320,
+                              height: 280,
                               child: TabBarView(
                                 controller: _tabController,
                                 children: [
@@ -137,9 +126,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -233,35 +220,13 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
           // 登录按钮
           _buildPrimaryButton(
             text: '登录',
             onPressed: controller.login,
           ),
-
-          const SizedBox(height: 16),
-
-          // 分割线
-          Row(
-            children: [
-              Expanded(child: Divider(color: AppColors.borderLight)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  '或',
-                  style: TextStyle(fontSize: 14, color: AppColors.textGray),
-                ),
-              ),
-              Expanded(child: Divider(color: AppColors.borderLight)),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // 微信登录按钮
-          _buildWechatButton(),
         ],
       ),
     );
@@ -476,88 +441,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             fontWeight: FontWeight.w600,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildWechatButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: OutlinedButton(
-        onPressed: () {
-          // TODO: 实现微信登录
-          Get.snackbar('提示', '微信登录功能开发中');
-        },
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.wechatGreen,
-          side: BorderSide(color: AppColors.wechatGreen, width: 1.5),
-          backgroundColor: AppColors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wechat, size: 22),
-            const SizedBox(width: 8),
-            Text(
-              '微信登录',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomDecoration() {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.primaryGreen.withOpacity(0.0),
-            AppColors.primaryGreen.withOpacity(0.15),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 60,
-            bottom: 0,
-            child: Icon(
-              Icons.grass,
-              size: 50,
-              color: AppColors.darkGreen.withOpacity(0.5),
-            ),
-          ),
-          Positioned(
-            right: 60,
-            bottom: 0,
-            child: Icon(
-              Icons.local_florist,
-              size: 40,
-              color: AppColors.primaryGreen.withOpacity(0.5),
-            ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 - 15,
-            bottom: 10,
-            child: Icon(
-              Icons.filter_vintage,
-              size: 30,
-              color: Colors.white.withOpacity(0.7),
-            ),
-          ),
-        ],
       ),
     );
   }

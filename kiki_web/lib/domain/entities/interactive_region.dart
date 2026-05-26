@@ -6,6 +6,11 @@ class InteractiveRegion {
   final String textPinyin;
   final String textEnglish;
   final String textPhonetic;
+  final String audioCnKey;
+  final String audioCnUrl;
+  final String audioEnKey;
+  final String audioEnUrl;
+  final String audioSourceType;
   final List<RegionCoordinate> coordinates;
 
   InteractiveRegion({
@@ -16,6 +21,11 @@ class InteractiveRegion {
     required this.textPinyin,
     required this.textEnglish,
     required this.textPhonetic,
+    required this.audioCnKey,
+    required this.audioCnUrl,
+    required this.audioEnKey,
+    required this.audioEnUrl,
+    required this.audioSourceType,
     required this.coordinates,
   });
 
@@ -28,11 +38,32 @@ class InteractiveRegion {
       textPinyin: json['text_pinyin'] ?? '',
       textEnglish: json['text_english'] ?? '',
       textPhonetic: json['text_phonetic'] ?? '',
+      audioCnKey: json['audio_cn_key'] ?? '',
+      audioCnUrl: json['audio_cn_url'] ?? '',
+      audioEnKey: json['audio_en_key'] ?? '',
+      audioEnUrl: json['audio_en_url'] ?? '',
+      audioSourceType: (json['audio_source_type'] ??
+              json['playback_type'] ??
+              json['audio_mode'] ??
+              '')
+          .toString()
+          .trim()
+          .toLowerCase(),
       coordinates: (json['coordinate'] as List?)
               ?.map((e) => RegionCoordinate.fromJson(e))
               .toList() ??
           [],
     );
+  }
+
+  String get normalizedAudioSourceType {
+    if (audioSourceType.isNotEmpty) {
+      return audioSourceType;
+    }
+    if (audioCnUrl.isNotEmpty || audioEnUrl.isNotEmpty) {
+      return 'url';
+    }
+    return 'tts';
   }
 
   /// Parse items_data from either:

@@ -20,9 +20,9 @@
 ## 🎯 核心职责
 
 - **Page**: 页面框架、加载状态、缩放平移、错误处理、重试
-- **Controller**: 数据加载、TTS 初始化、业务编排、诊断信息
+- **Controller**: 数据加载、音频播放预热、业务编排、诊断信息
 - **Widget**: 图片渲染、区域绘制、点击交互、错误显示
-- **Service**: TTS 引擎管理、多语言发音
+- **Service**: 统一音频播放入口，URL 缓存播放 + TTS 回退
 
 ---
 
@@ -40,7 +40,7 @@ Get.toNamed(AppConstants.routeInteractiveImage);
 // 自定义 Repository
 final controller = InteractiveImageController(
   repository: CustomRepository(),
-  ttsService: CustomTtsService(),
+  audioPlayback: CustomAudioPlaybackComponent(),
 );
 ```
 
@@ -53,7 +53,7 @@ final controller = InteractiveImageController(
   ↓
 Controller.onInit() 调用
   ↓
-TTS 初始化 (失败不阻塞)
+音频播放预热 (URL 缓存 + TTS 初始化，失败不阻塞)
   ↓
 并行加载:
   ├─ JSON 区域数据
@@ -85,9 +85,13 @@ UI 显示图片和交互区域
    - 检查 "Loaded XX regions" 是否显示有数据
    - 验证 JSON 文件格式正确
 
-3. **TTS 不工作**
+3. **音频不工作**
    - 这是可选的，不影响图片显示
-   - 检查 Console 中的 "TTS initialization" 信息
+  - 检查 Console 中的 "audio warmup" / "RemoteAudio" 信息
+
+4. **URL 音频首次播放较慢**
+  - 首次会下载并缓存到本地
+  - 第二次播放会直接走本地缓存
 
 详见 `DEBUG.md`
 

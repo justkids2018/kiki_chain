@@ -25,6 +25,7 @@ Routing map:
 - Generate requirement/logic/api docs from code -> just-feature-doc-generator
 - Generate hotspot JSON from image + MD -> just-hotspot-generator
 - Card production full chain (Prompt to Admin) -> just-card-to-json-workflow
+- Card JSON text to audio + Qiniu upload -> just-card-audio-qiniu-workflow
 - Design review before coding -> just-plan-eng-review
 - QA and verification -> just-qa
 - Pre-commit review -> just-review
@@ -39,6 +40,9 @@ Use these phrases as strong routing signals in addition to semantic intent.
 - `just-dev-pipeline`
 	- Trigger words: 新增功能, 增加功能, 开发功能, 实现需求, 做一个功能, 功能迭代, 从需求到上线
 
+- `just-github-workflows`
+	- Trigger words: 配GitHub Actions, 配CI/CD, workflow移到新项目, 复制workflow, 配安卓打包, 配iOS打包, 配Docker自动构建, APK自动打包, 签名secrets配置, 镜像自动构建部署, 新项目配workflow, CI workflow迁移
+
 - `just-deploy-release`
 	- Trigger words: 部署到服务器, 统一部署, 一键部署, 先step1再step2, 域名接入, HTTPS接入, nginx接入, admin+server+db部署, 腾讯云部署, 阿里云部署, 自动发布, release发布, tag发布, GitHub workflow部署
 - `just-feature-doc-generator`
@@ -47,6 +51,8 @@ Use these phrases as strong routing signals in addition to semantic intent.
 	- Trigger words: 图片生成热区, 自动标注热区, 根据图片生成JSON, 生成items_data, 1024x1024坐标, card/object热区
 - `just-card-to-json-workflow`
 	- Trigger words: 卡片全流程, 从prompt到admin, 图片+md生成json, 图片转json再校验, 只给目录跑流程, 目录到json校验, 89分门槛, 学习卡片workflow, 学习卡片生产流程, 学习法卡片workflow, 卡片生成并上传, 一张卡从出图到提交
+- `just-card-audio-qiniu-workflow`
+	- Trigger words: 卡片JSON转语音, 中文英文转语音, JSON词条生成音频, 上传七牛audio, Edge TTS批量音频, 卡片音频上传
 - `just-plan-eng-review`
 	- Trigger words: 先评审方案, 技术方案评审, 架构评审, 开发前评审, 风险评审
 - `just-qa`

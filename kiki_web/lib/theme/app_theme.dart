@@ -188,7 +188,7 @@ class AppTheme {
       ),
 
       // 卡片主题
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.cardCream,
         elevation: 2,
         shadowColor: AppColors.shadowLight,

@@ -26,7 +26,7 @@ class AppServices {
   ISceneRepository? _sceneRepository;
 
   bool _initialized = false;
-  
+
   /// 初始化所有服务
   Future<void> initialize() async {
     if (_initialized) {
@@ -39,13 +39,17 @@ class AppServices {
     try {
       // 1. 初始化环境配置（release 模式自动使用生产环境）
       print('📝 开始加载环境配置...');
-      await EnvConfig.load(kReleaseMode ? 'production' : null);
+      await EnvConfig.load(kReleaseMode ? 'prod' : null);
+      if (EnvConfig.apiBaseUrl.isEmpty) {
+        throw StateError(
+            'API_BASE_URL 未配置，请检查 config/${EnvConfig.currentEnv}.env');
+      }
       print('✅ 环境配置初始化完成: ${EnvConfig.apiBaseUrl}');
 
       // 2. 初始化网络层（使用 env 配置）
       print('🌐 开始初始化网络层...');
       ApiConfig.init(
-        baseUrl: EnvConfig.apiBaseUrl, // 例如 http://127.0.0.1:8080
+        baseUrl: EnvConfig.apiBaseUrl,
         connectTimeout: EnvConfig.connectTimeout,
         receiveTimeout: EnvConfig.receiveTimeout,
         headers: {
@@ -76,30 +80,30 @@ class AppServices {
 
       _initialized = true;
       print('🎉 应用服务初始化完成');
-
     } catch (e, stackTrace) {
       print('❌ 应用服务初始化失败: $e');
       print('堆栈跟踪: $stackTrace');
       rethrow;
     }
   }
-  
+
   // ==================== 服务访问器 ====================
-  
+
   /// 本地存储服务
   LocalStorageService get localStorage {
     if (_localStorage == null) {
-      throw Exception('LocalStorageService not initialized. Call AppServices.instance.initialize() first.');
+      throw Exception(
+          'LocalStorageService not initialized. Call AppServices.instance.initialize() first.');
     }
     return _localStorage!;
   }
-  
+
   /// 用户服务
   UserService get userService {
     _userService ??= UserService();
     return _userService!;
   }
-  
+
   /// 认证仓库
   IAuthRepository get authRepository {
     _authRepository ??= ServiceLocator.instance.authRepository;
@@ -136,7 +140,7 @@ class AppServices {
 
   /// 检查初始化状态
   bool get isInitialized => _initialized;
-  
+
   /// 重置所有服务（主要用于测试）
   void reset() {
     _localStorage = null;

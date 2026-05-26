@@ -53,15 +53,10 @@ class EnvConfig {
       return '';
     }
 
-    // 根据环境返回对应的 API 地址
-    switch (_currentEnv) {
-      case AppEnvironment.development:
-        return 'http://127.0.0.1:8080/api';
-      case AppEnvironment.testing:
-        return 'https://test-api.hikiki.com/api';
-      case AppEnvironment.production:
-        return 'https://api.hikiki.com/api';
-    }
+    // 旧配置类仅兼容保留；不再内置写死地址
+    // 如果业务仍在使用该类，请改为使用 core/config/env_config.dart 从 config/*.env 加载
+    const apiBaseUrlFromDefine = String.fromEnvironment('API_BASE_URL');
+    return apiBaseUrlFromDefine;
   }
 
   /// 环境配置说明

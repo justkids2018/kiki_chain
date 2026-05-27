@@ -52,6 +52,7 @@ pub fn create_routes(app_state: AppState) -> Router {
     info!("   ├── POST /api/v1/auth/logout");
     info!("   ├── GET  /api/v1/mobile/user/profile");
     info!("   ├── PUT  /api/v1/mobile/user/profile");
+    info!("   ├── POST /api/v1/mobile/feedback");
     info!("   ├── GET  /api/v1/mobile/scene/categories");
     info!("   ├── GET  /api/v1/mobile/scene/categories/:id/scenes");
     info!("   ├── GET  /api/v1/mobile/scene/:id");
@@ -60,6 +61,8 @@ pub fn create_routes(app_state: AppState) -> Router {
     info!("   ├── GET/POST   /api/v1/admin/scene/categories");
     info!("   ├── PUT/DELETE /api/v1/admin/scene/categories/:id");
     info!("   ├── GET/POST   /api/v1/admin/scene/scenes");
+    info!("   ├── GET  /api/v1/admin/feedback");
+    info!("   ├── PATCH /api/v1/admin/feedback/:id/status");
     info!("   └── GET/PUT/DELETE /api/v1/admin/scene/scenes/:id");
 
     app_router

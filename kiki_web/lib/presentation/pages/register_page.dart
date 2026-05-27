@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../theme/app_colors.dart';
+import '../widgets/app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
 
 /// 注册页面 - Hi Kiki 风格
@@ -34,7 +35,8 @@ class RegisterPage extends StatelessWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: AppColors.textDarkBrown),
+                        icon: Icon(Icons.arrow_back,
+                            color: AppColors.textDarkBrown),
                         onPressed: () => Get.back(),
                       ),
                     ],
@@ -78,7 +80,8 @@ class RegisterPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Icon(Icons.eco, color: AppColors.primaryGreen, size: 24),
+                                  Icon(Icons.eco,
+                                      color: AppColors.primaryGreen, size: 24),
                                 ],
                               ),
 
@@ -97,7 +100,8 @@ class RegisterPage extends StatelessWidget {
 
                               // 手机号输入框
                               _buildTextField(
-                                controller: authController.registerPhoneController,
+                                controller:
+                                    authController.registerPhoneController,
                                 hintText: '请输入手机号',
                                 prefixIcon: Icons.phone_android,
                                 keyboardType: TextInputType.phone,
@@ -108,7 +112,8 @@ class RegisterPage extends StatelessWidget {
 
                               // 昵称输入框
                               _buildTextField(
-                                controller: authController.registerNicknameController,
+                                controller:
+                                    authController.registerNicknameController,
                                 hintText: '请输入昵称（可选）',
                                 prefixIcon: Icons.person_outline,
                                 validator: authController.validateNickname,
@@ -119,10 +124,12 @@ class RegisterPage extends StatelessWidget {
                               // 密码输入框
                               Obx(
                                 () => _buildTextField(
-                                  controller: authController.registerPasswordController,
+                                  controller:
+                                      authController.registerPasswordController,
                                   hintText: '请输入密码（6位以上）',
                                   prefixIcon: Icons.lock_outline,
-                                  obscureText: !authController.registerPasswordVisible,
+                                  obscureText:
+                                      !authController.registerPasswordVisible,
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       authController.registerPasswordVisible
@@ -131,7 +138,8 @@ class RegisterPage extends StatelessWidget {
                                       color: AppColors.textGray,
                                       size: 20,
                                     ),
-                                    onPressed: authController.toggleRegisterPasswordVisibility,
+                                    onPressed: authController
+                                        .toggleRegisterPasswordVisibility,
                                   ),
                                   validator: authController.validatePassword,
                                 ),
@@ -142,21 +150,26 @@ class RegisterPage extends StatelessWidget {
                               // 确认密码输入框
                               Obx(
                                 () => _buildTextField(
-                                  controller: authController.registerConfirmPasswordController,
+                                  controller: authController
+                                      .registerConfirmPasswordController,
                                   hintText: '请再次输入密码',
                                   prefixIcon: Icons.lock_outline,
-                                  obscureText: !authController.registerConfirmPasswordVisible,
+                                  obscureText: !authController
+                                      .registerConfirmPasswordVisible,
                                   suffixIcon: IconButton(
                                     icon: Icon(
-                                      authController.registerConfirmPasswordVisible
+                                      authController
+                                              .registerConfirmPasswordVisible
                                           ? Icons.visibility_off
                                           : Icons.visibility,
                                       color: AppColors.textGray,
                                       size: 20,
                                     ),
-                                    onPressed: authController.toggleRegisterConfirmPasswordVisibility,
+                                    onPressed: authController
+                                        .toggleRegisterConfirmPasswordVisibility,
                                   ),
-                                  validator: (value) => authController.validateConfirmPassword(value),
+                                  validator: (value) => authController
+                                      .validateConfirmPassword(value),
                                 ),
                               ),
 
@@ -168,7 +181,8 @@ class RegisterPage extends StatelessWidget {
                                   Obx(
                                     () => Checkbox(
                                       value: authController.agreeToTerms,
-                                      onChanged: (value) => authController.setAgreeToTerms(value ?? false),
+                                      onChanged: (value) => authController
+                                          .setAgreeToTerms(value ?? false),
                                       activeColor: AppColors.primaryGreen,
                                     ),
                                   ),
@@ -177,7 +191,9 @@ class RegisterPage extends StatelessWidget {
                                       children: [
                                         Text(
                                           '我已阅读并同意',
-                                          style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.textGray),
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -193,7 +209,9 @@ class RegisterPage extends StatelessWidget {
                                         ),
                                         Text(
                                           '和',
-                                          style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: AppColors.textGray),
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -277,14 +295,19 @@ class RegisterPage extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
+      textAlignVertical: TextAlignVertical.center,
+      strutStyle: const StrutStyle(height: 1.25, forceStrutHeight: true),
       style: TextStyle(
         fontSize: 16,
+        height: 1.25,
         color: AppColors.textBrown,
       ),
       decoration: InputDecoration(
+        isDense: true,
         hintText: hintText,
         hintStyle: TextStyle(
           fontSize: 14,
+          height: 1.25,
           color: AppColors.textLightGray,
         ),
         prefixIcon: Icon(
@@ -295,7 +318,8 @@ class RegisterPage extends StatelessWidget {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.borderLight, width: 1),
@@ -324,28 +348,12 @@ class RegisterPage extends StatelessWidget {
     required String text,
     required VoidCallback onPressed,
   }) {
-    return SizedBox(
-      width: double.infinity,
+    return AppGradientButton(
+      text: text,
+      onPressed: onPressed,
       height: 50,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryGreen,
-          foregroundColor: AppColors.white,
-          elevation: 2,
-          shadowColor: AppColors.shadowMedium,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      borderRadius: 25,
+      fontWeight: FontWeight.w600,
     );
   }
 

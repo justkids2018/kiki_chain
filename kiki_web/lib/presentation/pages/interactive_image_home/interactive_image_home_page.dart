@@ -6,6 +6,7 @@ import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/app_loading_widget.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../design_ui/kiki_ui_kit.dart';
 
 /// 互动图片首页 - 显示场景分类
 class InteractiveImageHomePage extends StatelessWidget {
@@ -17,22 +18,22 @@ class InteractiveImageHomePage extends StatelessWidget {
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: const Color(0xFFF8F8F8), // 更浅的灰色背景（从EEEEEE改成F8F8F8）
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Title 左对齐
-            children: [
-              // 悬浮标题
-              SafeArea(
-                child: _buildFloatingHeader(context),
-              ),
-              // 卡片区域 - 自动占据剩余空间并居中
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 25),
-                  child: _buildCategoryList(controller),
+          body: Container(
+            decoration: KikiUiDecor.pageBackgroundDecor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SafeArea(
+                  child: _buildFloatingHeader(context),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 25),
+                    child: _buildCategoryList(controller),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -44,26 +45,19 @@ class InteractiveImageHomePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3), // 增加不透明度（从0.25改成0.3）
-              borderRadius: BorderRadius.circular(16),
+              color: KikiUiColors.panel.withValues(alpha: 0.76),
+              borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.5), // 增强边框（从0.3改成0.5）
-                width: 1.5, // 边框加粗（从1改成1.5）
+                color: Colors.white.withValues(alpha: 0.85),
+                width: 1.2,
               ),
-              boxShadow: [
-                // 添加阴影增强边缘效果
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              boxShadow: KikiUiShadows.floating,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -72,8 +66,8 @@ class InteractiveImageHomePage extends StatelessWidget {
                   'Hi Kiki',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF00C37D), // 主题绿色
+                    fontWeight: FontWeight.w800,
+                    color: KikiUiColors.brandGreen,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -83,7 +77,7 @@ class InteractiveImageHomePage extends StatelessWidget {
                     loc.chooseSceneToStart,
                     style: const TextStyle(
                       fontSize: 13,
-                      color: Color(0xFF6B7280), // 深灰色
+                      color: KikiUiColors.textSecondary,
                     ),
                   );
                 }),
@@ -208,13 +202,16 @@ class InteractiveImageHomePage extends StatelessWidget {
               height: cardHeight,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 25), // 左右边距 25dp
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25), // 左右边距 25dp
                 itemCount: controller.categories.length,
                 itemBuilder: (context, index) {
                   final category = controller.categories[index];
                   return Padding(
                     padding: EdgeInsets.only(
-                      right: index < controller.categories.length - 1 ? 30 : 0, // 卡片间距 30dp
+                      right: index < controller.categories.length - 1
+                          ? 30
+                          : 0, // 卡片间距 30dp
                     ),
                     child: SizedBox(
                       width: cardWidth,

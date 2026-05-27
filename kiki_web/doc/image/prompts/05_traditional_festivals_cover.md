@@ -58,6 +58,7 @@ Visual direction:
 - Cute premium diorama style
 
 Prohibitions:
+- No [cite:x], [ref:x], [source:x] annotation artifacts
 - No giant text title
 - No [cite:x] / [ref:x] / [source:x] or any annotation marks
 - No replacing required sister+kitten baseline

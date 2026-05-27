@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../domain/entities/user.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../widgets/app_gradient_button.dart';
 import '../../../controllers/auth_controller.dart';
 
 /// 已登录状态的Profile界面 - Hi Kiki 风格
@@ -56,7 +57,9 @@ class LoggedInProfile extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: user.avatar != null ? null : AppColors.primaryGreen.withOpacity(0.2),
+              color: user.avatar != null
+                  ? null
+                  : AppColors.primaryGreen.withOpacity(0.2),
               shape: BoxShape.circle,
               border: Border.all(
                 color: AppColors.primaryGreen,
@@ -271,23 +274,33 @@ class LoggedInProfile extends StatelessWidget {
                     style: TextStyle(color: AppColors.textBrown),
                   ),
                   actions: [
-                    TextButton(
-                      onPressed: () => Get.back(result: false),
-                      child: Text(
-                        '取消',
-                        style: TextStyle(color: AppColors.textGray),
+                    SizedBox(
+                      width: 88,
+                      child: AppGradientButton(
+                        text: '取消',
+                        onPressed: () => Get.back(result: false),
+                        height: 40,
+                        borderRadius: 12,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFEAF5D9), Color(0xFFD9EFB8)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        textColor: AppColors.primaryGreen,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => Get.back(result: true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.red,
-                        foregroundColor: AppColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    SizedBox(
+                      width: 88,
+                      child: AppGradientButton(
+                        text: '退出',
+                        onPressed: () => Get.back(result: true),
+                        height: 40,
+                        borderRadius: 12,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      child: const Text('退出'),
                     ),
                   ],
                 ),

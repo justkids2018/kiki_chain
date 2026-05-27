@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../config/app_color.dart';
 import '../presentation/widgets/app_loading_indicator.dart';
 import 'services/app_services.dart';
+import '../theme/app_colors.dart' as theme_colors;
 
 /// 应用程序初始化器
 class AppInitializer {
@@ -12,35 +13,35 @@ class AppInitializer {
   static Future<void> initialize() async {
     // 确保Flutter绑定已初始化
     WidgetsFlutterBinding.ensureInitialized();
-    
+
     // 设置系统UI样式
     _setSystemUIOverlayStyle();
-    
+
     // 初始化应用服务（包含网络层、本地存储、配置等）
     await AppServices.instance.initialize();
-    
+
     // 初始化UI组件
     _initializeUI();
   }
-  
+
   /// 设置系统UI样式
   static void _setSystemUIOverlayStyle() {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.white,
+        systemNavigationBarColor: theme_colors.AppColors.backgroundCream,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
   }
-  
+
   /// 初始化UI组件
   static void _initializeUI() {
     // 配置EasyLoading
     _configureEasyLoading();
   }
-  
+
   /// 配置EasyLoading
   static void _configureEasyLoading() {
     EasyLoading.instance
@@ -50,7 +51,7 @@ class AppInitializer {
       ..indicatorSize = 42.0
       ..radius = 14.0
       ..progressColor = AppColors.buttonColorBg
-      ..backgroundColor = Colors.white
+      ..backgroundColor = theme_colors.AppColors.backgroundCream
       ..indicatorColor = AppColors.buttonColorBg
       ..textColor = const Color(0xFF1F2937)
       ..successWidget = _buildStatusIcon(

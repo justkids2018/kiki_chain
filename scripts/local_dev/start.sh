@@ -22,6 +22,7 @@ NC='\033[0m' # No Color
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVER_DIR="$PROJECT_ROOT/kiki_server"
 ADMIN_DIR="$PROJECT_ROOT/kiki_admin"
+MIGRATE_SCRIPT="$PROJECT_ROOT/scripts/local_dev/migrate.sh"
 
 # 日志函数
 log_info() {
@@ -237,6 +238,17 @@ main() {
 
     # 启动各个服务
     start_postgres || log_warning "PostgreSQL 启动失败，继续尝试启动其他服务..."
+
+    # PostgreSQL 可用时自动执行本地增量迁移（与线上迁移目录保持一致）
+    if check_port 5432; then
+        if [ -x "$MIGRATE_SCRIPT" ]; then
+            log_info "执行本地数据库增量迁移..."
+            "$MIGRATE_SCRIPT" || log_warning "本地数据库迁移失败，请检查迁移脚本输出"
+        else
+            log_warning "未找到可执行迁移脚本: $MIGRATE_SCRIPT"
+        fi
+    fi
+
     start_backend || log_warning "Rust 后端启动失败，继续尝试启动其他服务..."
     start_frontend || log_warning "Vue 前端启动失败"
 

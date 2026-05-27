@@ -19,8 +19,20 @@ class AppColors {
   /// 米黄色 - 主背景
   static const Color backgroundCream = Color(0xFFF5E6D3);
 
+  /// 浅灰色 - 护眼主背景
+  static const Color backgroundSoftGray = Color(0xFFF3F4F6);
+
   /// 浅米色 - 卡片背景
   static const Color cardCream = Color(0xFFFFF8E7);
+
+  /// 个人中心页背景（比主背景更浅，减少压迫感）
+  static const Color profilePageBackground = Color(0xFFFFF8E7);
+
+  /// 个人中心用户信息卡背景
+  static const Color profileHeaderCardBackground = Color(0xFFF7F1E1);
+
+  /// 个人中心卡片边框
+  static const Color profileCardBorder = Color(0xFFE8E1D7);
 
   /// 白色 - 输入框背景
   static const Color white = Color(0xFFFFFFFF);

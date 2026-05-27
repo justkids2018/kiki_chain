@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../widgets/app_gradient_button.dart';
 
 /// 未登录状态的Profile界面 - Hi Kiki 风格
 class GuestProfile extends StatelessWidget {
@@ -80,31 +81,13 @@ class GuestProfile extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 54,
-                child: ElevatedButton(
+                child: AppGradientButton(
+                  text: '登录',
                   onPressed: () => Get.toNamed('/login'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryGreen,
-                    foregroundColor: AppColors.white,
-                    elevation: 2,
-                    shadowColor: AppColors.shadowMedium,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(27),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '登录',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.arrow_forward, size: 20),
-                    ],
-                  ),
+                  height: 54,
+                  borderRadius: 27,
+                  fontWeight: FontWeight.w600,
+                  trailingIcon: Icons.arrow_forward,
                 ),
               ),
 
@@ -114,23 +97,18 @@ class GuestProfile extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 54,
-                child: OutlinedButton(
+                child: AppGradientButton(
+                  text: '注册新账号',
                   onPressed: () => Get.toNamed('/login'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryGreen,
-                    side: BorderSide(color: AppColors.primaryGreen, width: 2),
-                    backgroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(27),
-                    ),
+                  height: 54,
+                  borderRadius: 27,
+                  fontWeight: FontWeight.w600,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFEAF5D9), Color(0xFFD9EFB8)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  child: const Text(
-                    '注册新账号',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  textColor: AppColors.primaryGreen,
                 ),
               ),
 
@@ -140,11 +118,14 @@ class GuestProfile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.grass, color: AppColors.darkGreen.withOpacity(0.3), size: 30),
+                  Icon(Icons.grass,
+                      color: AppColors.darkGreen.withOpacity(0.3), size: 30),
                   const SizedBox(width: 16),
-                  Icon(Icons.local_florist, color: AppColors.primaryGreen.withOpacity(0.3), size: 24),
+                  Icon(Icons.local_florist,
+                      color: AppColors.primaryGreen.withOpacity(0.3), size: 24),
                   const SizedBox(width: 16),
-                  Icon(Icons.filter_vintage, color: AppColors.orange.withOpacity(0.3), size: 28),
+                  Icon(Icons.filter_vintage,
+                      color: AppColors.orange.withOpacity(0.3), size: 28),
                 ],
               ),
             ],

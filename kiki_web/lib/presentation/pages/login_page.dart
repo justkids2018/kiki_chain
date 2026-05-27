@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
-import '../../theme/app_colors.dart';
+import '../../design_ui/kiki_ui_kit.dart';
+import '../widgets/app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
 
 /// 登录/注册页面 - Hi Kiki 风格
@@ -13,7 +14,9 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
+  static const bool _showForgotPasswordEntry = false;
   late TabController _tabController;
 
   @override
@@ -34,98 +37,72 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundCream,
-      body: SafeArea(
-        child: Column(
-          children: [
-                // 顶部返回按钮
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: AppColors.textDarkBrown),
-                        onPressed: () => Get.back(),
-                      ),
-                    ],
-                  ),
-                ),
+      body: Container(
+        decoration: KikiUiDecor.pageBackgroundDecor,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final panelMinHeight = 500.0;
+            final hasRoomForStaticLayout =
+                constraints.maxHeight >= panelMinHeight + 32;
 
-                // 登录表单区域
-                Expanded(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        constraints: const BoxConstraints(maxWidth: 450),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        padding: const EdgeInsets.all(40),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardCream,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.shadowLight,
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // 标题
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '登录 / 注册',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textDarkBrown,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Icon(Icons.eco, color: AppColors.primaryGreen, size: 24),
-                              ],
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            // 副标题
-                            Text(
-                              '欢迎来到 Hi Kiki',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: AppColors.textGray,
-                              ),
-                            ),
-
-                            const SizedBox(height: 32),
-
-                            // Tab 切换
-                            _buildTabBar(),
-
-                            const SizedBox(height: 24),
-
-                            // Tab 内容
-                            SizedBox(
-                              height: 280,
-                              child: TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  _buildLoginForm(authController, localizations),
-                                  _buildRegisterForm(authController, localizations),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+            final panel = Align(
+              alignment: Alignment.center,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 460),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 24),
+                decoration: KikiUiDecor.panelDecor,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 标题
+                    const Text(
+                      '欢迎来到 Hi Kiki',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: KikiUiColors.textPrimary,
+                        letterSpacing: 0,
                       ),
                     ),
-                  ),
+
+                    const SizedBox(height: 16),
+
+                    // Tab 切换
+                    _buildTabBar(),
+
+                    const SizedBox(height: 14),
+
+                    // Tab 内容
+                    SizedBox(
+                      height: 360,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildLoginForm(authController, localizations),
+                          _buildRegisterForm(authController, localizations),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            );
+
+            if (hasRoomForStaticLayout) {
+              return panel;
+            }
+
+            // 小屏设备兜底：允许滚动，避免内容被遮挡
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: panel,
+              ),
+            );
+          },
         ),
       ),
     );
@@ -136,15 +113,15 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.borderLight,
+            color: KikiUiColors.line,
             width: 1,
           ),
         ),
       ),
       child: TabBar(
         controller: _tabController,
-        labelColor: AppColors.primaryGreen,
-        unselectedLabelColor: AppColors.textGray,
+        labelColor: KikiUiColors.brandGreen,
+        unselectedLabelColor: KikiUiColors.textSecondary,
         labelStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
@@ -153,7 +130,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           fontSize: 16,
           fontWeight: FontWeight.normal,
         ),
-        indicatorColor: AppColors.primaryGreen,
+        indicatorColor: KikiUiColors.brandGreen,
         indicatorWeight: 3,
         tabs: const [
           Tab(text: '登录'),
@@ -163,10 +140,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildLoginForm(AuthController controller, AppLocalizations localizations) {
+  Widget _buildLoginForm(
+      AuthController controller, AppLocalizations localizations) {
     return Form(
       key: controller.loginFormKey,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // 手机号输入框
           _buildTextField(
@@ -191,7 +170,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   controller.loginPasswordVisible
                       ? Icons.visibility_off
                       : Icons.visibility,
-                  color: AppColors.textGray,
+                  color: KikiUiColors.textSecondary,
                   size: 20,
                 ),
                 onPressed: controller.toggleLoginPasswordVisibility,
@@ -200,27 +179,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             ),
           ),
 
-          const SizedBox(height: 12),
-
-          // 忘记密码
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                // TODO: 实现忘记密码功能
-                Get.snackbar('提示', '忘记密码功能开发中');
-              },
-              child: Text(
-                '忘记密码？',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.primaryGreen,
+          if (_showForgotPasswordEntry) ...[
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => _showForgotPasswordDialog(controller),
+                child: const Text(
+                  '忘记密码？',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: KikiUiColors.brandGreen,
+                  ),
                 ),
               ),
             ),
-          ),
-
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
+          ] else ...[
+            const SizedBox(height: 20),
+          ],
 
           // 登录按钮
           _buildPrimaryButton(
@@ -232,129 +209,145 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildRegisterForm(AuthController controller, AppLocalizations localizations) {
-    return SingleChildScrollView(
-      child: Form(
-        key: controller.registerFormKey,
-        child: Column(
-          children: [
-            // 手机号输入框
-            _buildTextField(
-              controller: controller.registerPhoneController,
-              hintText: '请输入手机号',
-              prefixIcon: Icons.phone_android,
-              keyboardType: TextInputType.phone,
-              validator: controller.validatePhone,
-            ),
-
-            const SizedBox(height: 16),
-
-            // 密码输入框
-            Obx(
-              () => _buildTextField(
-                controller: controller.registerPasswordController,
-                hintText: '请输入密码',
-                prefixIcon: Icons.lock_outline,
-                obscureText: !controller.registerPasswordVisible,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    controller.registerPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: AppColors.textGray,
-                    size: 20,
+  Widget _buildRegisterForm(
+      AuthController controller, AppLocalizations localizations) {
+    return Form(
+      key: controller.registerFormKey,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 手机号输入框
+                  _buildTextField(
+                    controller: controller.registerPhoneController,
+                    hintText: '请输入手机号',
+                    prefixIcon: Icons.phone_android,
+                    keyboardType: TextInputType.phone,
+                    validator: controller.validatePhone,
                   ),
-                  onPressed: controller.toggleRegisterPasswordVisibility,
-                ),
-                validator: controller.validatePassword,
-              ),
-            ),
 
-            const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-            // 确认密码输入框
-            Obx(
-              () => _buildTextField(
-                controller: controller.registerConfirmPasswordController,
-                hintText: '请再次输入密码',
-                prefixIcon: Icons.lock_outline,
-                obscureText: !controller.registerConfirmPasswordVisible,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    controller.registerConfirmPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    color: AppColors.textGray,
-                    size: 20,
-                  ),
-                  onPressed: controller.toggleRegisterConfirmPasswordVisibility,
-                ),
-                validator: controller.validateConfirmPassword,
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // 用户协议
-            Row(
-              children: [
-                Obx(
-                  () => Checkbox(
-                    value: controller.agreeToTerms,
-                    onChanged: (value) => controller.setAgreeToTerms(value ?? false),
-                    activeColor: AppColors.primaryGreen,
-                  ),
-                ),
-                Expanded(
-                  child: Wrap(
-                    children: [
-                      Text(
-                        '我已阅读并同意',
-                        style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                  // 密码输入框
+                  Obx(
+                    () => _buildTextField(
+                      controller: controller.registerPasswordController,
+                      hintText: '请输入密码',
+                      prefixIcon: Icons.lock_outline,
+                      obscureText: !controller.registerPasswordVisible,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.registerPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: KikiUiColors.textSecondary,
+                          size: 20,
+                        ),
+                        onPressed: controller.toggleRegisterPasswordVisibility,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: 显示用户协议
-                        },
-                        child: Text(
-                          '《用户协议》',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.primaryGreen,
-                          ),
+                      validator: controller.validatePassword,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 确认密码输入框
+                  Obx(
+                    () => _buildTextField(
+                      controller: controller.registerConfirmPasswordController,
+                      hintText: '请再次输入密码',
+                      prefixIcon: Icons.lock_outline,
+                      obscureText: !controller.registerConfirmPasswordVisible,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          controller.registerConfirmPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: KikiUiColors.textSecondary,
+                          size: 20,
+                        ),
+                        onPressed:
+                            controller.toggleRegisterConfirmPasswordVisibility,
+                      ),
+                      validator: controller.validateConfirmPassword,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 用户协议
+                  Row(
+                    children: [
+                      Obx(
+                        () => Checkbox(
+                          value: controller.agreeToTerms,
+                          onChanged: (value) =>
+                              controller.setAgreeToTerms(value ?? false),
+                          activeColor: KikiUiColors.brandGreen,
                         ),
                       ),
-                      Text(
-                        '和',
-                        style: TextStyle(fontSize: 12, color: AppColors.textGray),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: 显示隐私政策
-                        },
-                        child: Text(
-                          '《隐私政策》',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.primaryGreen,
-                          ),
+                      Expanded(
+                        child: Wrap(
+                          children: [
+                            Text(
+                              '我已阅读并同意',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: KikiUiColors.textSecondary),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // TODO: 显示用户协议
+                              },
+                              child: Text(
+                                '《用户协议》',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: KikiUiColors.brandGreen,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '和',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: KikiUiColors.textSecondary),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // TODO: 显示隐私政策
+                              },
+                              child: Text(
+                                '《隐私政策》',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: KikiUiColors.brandGreen,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
-            // 注册按钮
-            _buildPrimaryButton(
-              text: '注册',
-              onPressed: controller.register,
+                  // 注册按钮
+                  _buildPrimaryButton(
+                    text: '注册',
+                    onPressed: controller.register,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -373,45 +366,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
-      style: TextStyle(
+      textAlignVertical: TextAlignVertical.center,
+      strutStyle: const StrutStyle(height: 1.25, forceStrutHeight: true),
+      style: const TextStyle(
         fontSize: 16,
-        color: AppColors.textBrown,
+        height: 1.25,
+        color: KikiUiColors.textPrimary,
       ),
-      decoration: InputDecoration(
+      decoration: KikiUiDecor.inputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(
-          fontSize: 14,
-          color: AppColors.textLightGray,
-        ),
-        prefixIcon: Icon(
-          prefixIcon,
-          color: AppColors.textGray,
-          size: 20,
-        ),
+        prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.borderLight, width: 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.borderLight, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primaryGreen, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.red, width: 1),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.red, width: 2),
-        ),
       ),
     );
   }
@@ -420,28 +385,38 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     required String text,
     required VoidCallback onPressed,
   }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryGreen,
-          foregroundColor: AppColors.white,
-          elevation: 2,
-          shadowColor: AppColors.shadowMedium,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+    return AppGradientButton(
+      text: text,
+      onPressed: onPressed,
+      height: 54,
+      borderRadius: KikiUiRadii.button,
     );
+  }
+
+  Future<void> _showForgotPasswordDialog(AuthController controller) async {
+    final shouldClear = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('提示'),
+          content: const Text('暂未开放找回密码，请清空后重新输入账号和密码。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('清空重填'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldClear == true) {
+      controller.loginIdentifierController.clear();
+      controller.loginPasswordController.clear();
+    }
   }
 }

@@ -152,7 +152,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.borderLight, width: 1),
@@ -179,6 +180,7 @@ class AppTheme {
         ),
         hintStyle: const TextStyle(
           fontSize: 14,
+          height: 1.25,
           color: AppColors.textLightGray,
         ),
         errorStyle: const TextStyle(

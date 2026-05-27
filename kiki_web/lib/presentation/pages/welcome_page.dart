@@ -4,6 +4,7 @@ import 'package:kikichain/generated/app_localizations.dart';
 import '../../theme/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../controllers/auth_controller.dart';
+import '../widgets/app_gradient_button.dart';
 
 /// 欢迎页面 - Hi Kiki 风格
 /// 横屏设计，带有可爱的插画和登录选项
@@ -126,28 +127,12 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _buildPhoneLoginButton(AppLocalizations localizations) {
-    return SizedBox(
-      width: double.infinity,
+    return AppGradientButton(
+      text: '立即登录',
+      onPressed: () => Get.toNamed('/login'),
       height: 56,
-      child: ElevatedButton(
-        onPressed: () => Get.toNamed('/login'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryGreen,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          shadowColor: AppColors.primaryGreen.withOpacity(0.4),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-          ),
-        ),
-        child: const Text(
-          '立即登录',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      borderRadius: 28,
+      fontWeight: FontWeight.w600,
     );
   }
 

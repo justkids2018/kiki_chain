@@ -60,6 +60,15 @@ pub fn create_admin_routes(app_state: AppState) -> Router {
             ApiPaths::ADMIN_USER_UPDATE,
             patch(admin_update_user_handler).with_state(app_state.clone()),
         )
+        // ===== 反馈管理 =====
+        .route(
+            ApiPaths::ADMIN_FEEDBACK,
+            get(admin_get_feedback_list_handler).with_state(app_state.clone()),
+        )
+        .route(
+            ApiPaths::ADMIN_FEEDBACK_UPDATE,
+            patch(admin_update_feedback_status_handler).with_state(app_state.clone()),
+        )
         // ===== 场景分类管理 =====
         .route(
             ApiPaths::ADMIN_SCENE_CATEGORIES,
@@ -164,6 +173,16 @@ struct UpdateUserRequest {
     is_vip: Option<bool>,
 }
 
+#[derive(Debug, serde::Deserialize)]
+struct FeedbackQuery {
+    status: Option<String>,
+}
+
+#[derive(Debug, serde::Deserialize)]
+struct UpdateFeedbackStatusRequest {
+    status: String,
+}
+
 /// 更新用户信息处理器
 async fn admin_update_user_handler(
     State(app_state): State<AppState>,
@@ -232,6 +251,111 @@ async fn admin_update_user_handler(
                     StatusCode::OK,
                     Json(ApiResponse::success(
                         serde_json::json!({"uid": id}),
+                        "更新成功",
+                    )),
+                )
+                    .into_response()
+            }
+        }
+        Err(e) => {
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("更新失败: {}", e));
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
+        }
+    }
+}
+
+async fn admin_get_feedback_list_handler(
+    State(app_state): State<AppState>,
+    axum::extract::Query(query): axum::extract::Query<FeedbackQuery>,
+) -> Response {
+    info!("🔧 [管理端] 获取反馈列表");
+
+    let rows_result = if let Some(status) = query.status {
+        sqlx::query(
+            r#"
+            SELECT id, user_id, feedback_type, content, contact, page, status, created_at, updated_at
+            FROM user_feedback
+            WHERE status = $1
+            ORDER BY created_at DESC
+            "#,
+        )
+        .bind(status)
+        .fetch_all(&app_state.pool)
+        .await
+    } else {
+        sqlx::query(
+            r#"
+            SELECT id, user_id, feedback_type, content, contact, page, status, created_at, updated_at
+            FROM user_feedback
+            ORDER BY created_at DESC
+            "#,
+        )
+        .fetch_all(&app_state.pool)
+        .await
+    };
+
+    match rows_result {
+        Ok(rows) => {
+            let data: Vec<serde_json::Value> = rows
+                .iter()
+                .map(|row| {
+                    serde_json::json!({
+                        "id": row.get::<i64, _>("id"),
+                        "user_id": row.get::<String, _>("user_id"),
+                        "feedback_type": row.get::<String, _>("feedback_type"),
+                        "content": row.get::<String, _>("content"),
+                        "contact": row.get::<Option<String>, _>("contact"),
+                        "page": row.get::<Option<String>, _>("page"),
+                        "status": row.get::<String, _>("status"),
+                        "created_at": row.get::<chrono::NaiveDateTime, _>("created_at").and_utc().to_rfc3339(),
+                        "updated_at": row.get::<chrono::NaiveDateTime, _>("updated_at").and_utc().to_rfc3339()
+                    })
+                })
+                .collect();
+            (StatusCode::OK, Json(ApiResponse::success(data, "获取成功"))).into_response()
+        }
+        Err(e) => {
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("获取反馈失败: {}", e));
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
+        }
+    }
+}
+
+async fn admin_update_feedback_status_handler(
+    State(app_state): State<AppState>,
+    Path(id): Path<i64>,
+    Json(payload): Json<UpdateFeedbackStatusRequest>,
+) -> Response {
+    let status = payload.status.trim().to_lowercase();
+    if !matches!(status.as_str(), "pending" | "processing" | "resolved" | "ignored") {
+        let r = ApiResponse::<serde_json::Value>::error(
+            400,
+            "状态非法，仅支持 pending / processing / resolved / ignored",
+        );
+        return (StatusCode::BAD_REQUEST, Json(r)).into_response();
+    }
+
+    match sqlx::query(
+        r#"
+        UPDATE user_feedback
+        SET status = $1, updated_at = NOW()
+        WHERE id = $2
+        "#,
+    )
+    .bind(&status)
+    .bind(id)
+    .execute(&app_state.pool)
+    .await
+    {
+        Ok(result) => {
+            if result.rows_affected() == 0 {
+                let r = ApiResponse::<serde_json::Value>::error(404, "反馈不存在");
+                (StatusCode::NOT_FOUND, Json(r)).into_response()
+            } else {
+                (
+                    StatusCode::OK,
+                    Json(ApiResponse::success(
+                        serde_json::json!({ "id": id, "status": status }),
                         "更新成功",
                     )),
                 )

@@ -58,6 +58,7 @@ Visual direction:
 - Soft daylight and contact shadows
 
 Prohibitions:
+- No [cite:x], [ref:x], [source:x] annotation artifacts
 - No giant title text
 - No citation-like markers [cite:x] / [ref:x] / [source:x]
 - No replacing required sister+kitten baseline

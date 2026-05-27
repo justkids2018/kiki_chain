@@ -58,6 +58,7 @@ Visual direction:
 - Gentle natural light + soft contact shadows
 
 Prohibitions:
+- No [cite:x], [ref:x], [source:x] annotation artifacts
 - No big text title
 - No citation-like marks such as [cite:x], [ref:x], [source:x]
 - No dark horror mood or messy clutter

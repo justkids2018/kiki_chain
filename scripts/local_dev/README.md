@@ -5,6 +5,7 @@
 ## 📁 文件说明
 
 - `start.sh` - 启动本地开发环境（PostgreSQL + Rust 后端 + Vue 前端）
+- `migrate.sh` - 执行本地数据库增量迁移（读取 `scripts/deploy-release/db/migrations`）
 - `stop.sh` - 停止本地开发环境
 - `status.sh` - 查看服务运行状态
 - `logs.sh` - 查看服务日志
@@ -20,8 +21,15 @@
 脚本会自动：
 1. 检测服务是否已运行（避免重复启动）
 2. 启动 PostgreSQL 数据库（Docker）
-3. 启动 Rust 后端服务（cargo run）
-4. 启动 Vue 前端服务（npm run dev）
+3. 自动执行本地数据库增量迁移（与线上迁移目录一致）
+4. 启动 Rust 后端服务（cargo run）
+5. 启动 Vue 前端服务（npm run dev）
+
+### 仅执行数据库迁移
+
+```bash
+./scripts/local_dev/migrate.sh
+```
 
 ### 停止所有服务
 

@@ -4,6 +4,7 @@
 use axum::{middleware, routing::get, Router};
 use tracing::info;
 
+use crate::adapters::http::feedback::submit_feedback_handler;
 use crate::adapters::http::middleware::mobile_auth_middleware;
 use crate::adapters::http::scene::{
     get_categories_handler, get_recommendations_handler, get_scene_detail_handler,
@@ -48,6 +49,10 @@ pub fn create_mobile_routes(app_state: AppState) -> Router {
             get(get_profile_handler)
                 .put(update_profile_handler)
                 .with_state(app_state.user_repository.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_FEEDBACK,
+            axum::routing::post(submit_feedback_handler).with_state(app_state.clone()),
         )
         .layer(middleware::from_fn(mobile_auth_middleware));
 

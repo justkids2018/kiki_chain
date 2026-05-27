@@ -5,52 +5,59 @@ import '../../generated/app_localizations.dart';
 
 /// 场景卡片组件
 ///
-/// 尺寸: 350x450px (7:9 宽高比)
+/// 尺寸: 场景列表页按容器给定（当前为正方形）
 /// 用于场景列表页展示单个场景
 class SceneCard extends StatelessWidget {
   final Scene scene;
   final VoidCallback? onTap;
+  final bool isActive;
 
   const SceneCard({
     Key? key,
     required this.scene,
     this.onTap,
+    this.isActive = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AspectRatio(
-        aspectRatio: 7 / 9, // 保持 7:9 宽高比
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isActive
+                ? Colors.white.withValues(alpha: 0.35)
+                : Colors.white.withValues(alpha: 0.12),
+            width: isActive ? 1.4 : 1.0,
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              children: [
-                // 背景图片
-                _buildCoverImage(),
-
-                // 渐变遮罩
-                _buildGradientOverlay(),
-
-                // 内容区域
-                _buildContent(),
-
-                // NEW 标签
-                if (scene.isNew) _buildNewBadge(),
-              ],
+          boxShadow: [
+            BoxShadow(
+              color: isActive
+                  ? Colors.black.withValues(alpha: 0.24)
+                  : Colors.black.withValues(alpha: 0.12),
+              blurRadius: isActive ? 18 : 10,
+              offset: isActive ? const Offset(0, 10) : const Offset(0, 4),
             ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              // 背景图片
+              _buildCoverImage(),
+
+              // 渐变遮罩
+              _buildGradientOverlay(),
+
+              // 内容区域
+              _buildContent(),
+
+              // NEW 标签
+              if (scene.isNew) _buildNewBadge(),
+            ],
           ),
         ),
       ),
@@ -61,7 +68,7 @@ class SceneCard extends StatelessWidget {
   Widget _buildCoverImage() {
     if (scene.coverImage.isEmpty ||
         (!scene.coverImage.startsWith('http://') &&
-         !scene.coverImage.startsWith('https://'))) {
+            !scene.coverImage.startsWith('https://'))) {
       return Container(
         color: _getSceneColor(),
         child: const Center(
@@ -75,7 +82,8 @@ class SceneCard extends StatelessWidget {
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           color: _getSceneColor().withValues(alpha: 0.3),
-          child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+          child: const Center(
+              child: CircularProgressIndicator(color: Colors.white)),
         ),
         errorWidget: (context, url, error) => Container(
           color: _getSceneColor(),
@@ -113,36 +121,36 @@ class SceneCard extends StatelessWidget {
       right: 12,
       bottom: 12,
       child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 场景名称
-              Text(
-                scene.name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1.2,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
-
-              // 英文名称
-              Text(
-                scene.nameEn,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white.withValues(alpha: 0.8),
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 场景名称
+          Text(
+            scene.name,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              height: 1.2,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-        );
+          const SizedBox(height: 2),
+
+          // 英文名称
+          Text(
+            scene.nameEn,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.white.withValues(alpha: 0.8),
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
   }
 
   /// 构建 NEW 标签

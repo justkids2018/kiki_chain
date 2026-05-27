@@ -2,58 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 自定义文本输入框组件
-/// 
+///
 /// 提供统一的输入框样式，支持各种配置选项
 /// 包含验证、图标、密码可见性等功能
-/// 
+///
 /// 创建时间: 2025年8月9日
 /// 最后修改: 2025年8月9日
 class CustomTextField extends StatelessWidget {
   /// 文本控制器
   final TextEditingController controller;
-  
+
   /// 标签文字
   final String labelText;
-  
+
   /// 提示文字
   final String hintText;
-  
+
   /// 前置图标
   final IconData? prefixIcon;
-  
+
   /// 后置组件
   final Widget? suffixIcon;
-  
+
   /// 是否隐藏文本（密码输入）
   final bool obscureText;
-  
+
   /// 键盘类型
   final TextInputType keyboardType;
-  
+
   /// 文本输入动作
   final TextInputAction textInputAction;
-  
+
   /// 验证器
   final String? Function(String?)? validator;
-  
+
   /// 提交时的回调
   final void Function(String)? onFieldSubmitted;
-  
+
   /// 是否启用
   final bool enabled;
-  
+
   /// 最大行数
   final int maxLines;
-  
+
   /// 最小行数
   final int? minLines;
-  
+
   /// 最大长度
   final int? maxLength;
-  
+
   /// 焦点节点
   final FocusNode? focusNode;
-  
+
   /// 文本变化回调
   final void Function(String)? onChanged;
 
@@ -94,7 +94,7 @@ class CustomTextField extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
         ],
-        
+
         // 输入框
         TextFormField(
           controller: controller,
@@ -109,14 +109,18 @@ class CustomTextField extends StatelessWidget {
           maxLength: maxLength,
           focusNode: focusNode,
           onChanged: onChanged,
+          textAlignVertical: TextAlignVertical.center,
+          strutStyle: const StrutStyle(height: 1.25, forceStrutHeight: true),
           style: TextStyle(
             fontSize: 16.sp,
+            height: 1.25,
             color: Colors.black87,
           ),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(
               fontSize: 14.sp,
+              height: 1.25,
               color: Colors.grey[500],
             ),
             prefixIcon: prefixIcon != null
@@ -173,7 +177,7 @@ class CustomTextField extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
-              vertical: 16.h,
+              vertical: 18.h,
             ),
             counterText: maxLength != null ? null : '',
           ),

@@ -48,6 +48,9 @@ class AuthController extends GetxController {
   final _loginPasswordVisible = false.obs;
   final _registerPasswordVisible = false.obs;
   final _registerConfirmPasswordVisible = false.obs;
+
+  // 用户协议同意状态
+  final _agreeToTerms = false.obs;
   
   // Getters
   User? get currentUser => _currentUser.value;
@@ -56,6 +59,7 @@ class AuthController extends GetxController {
   bool get loginPasswordVisible => _loginPasswordVisible.value;
   bool get registerPasswordVisible => _registerPasswordVisible.value;
   bool get registerConfirmPasswordVisible => _registerConfirmPasswordVisible.value;
+  bool get agreeToTerms => _agreeToTerms.value;
 
   // Helper to get localizations
   AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;
@@ -283,6 +287,11 @@ class AuthController extends GetxController {
   /// 切换确认密码可见性
   void toggleRegisterConfirmPasswordVisibility() {
     _registerConfirmPasswordVisible.value = !_registerConfirmPasswordVisible.value;
+  }
+
+  /// 设置用户协议同意状态
+  void setAgreeToTerms(bool value) {
+    _agreeToTerms.value = value;
   }
 
   /// 验证登录手机号

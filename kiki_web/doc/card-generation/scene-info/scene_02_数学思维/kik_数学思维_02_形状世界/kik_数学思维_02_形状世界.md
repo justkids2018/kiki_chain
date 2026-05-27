@@ -53,6 +53,11 @@ Depth distribution:
 - Place some in background (still identifiable)
 - Avoid clustering all objects on one surface
 
+Character baseline:
+- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
+- The scene must include exactly one cute white kitten
+- The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
+
 ### III. 8 Target Vocabulary Objects
 - [yuán xíng] / 圆形 / Circle (/ˈsɜːrkl/)
 - [zhèng fāng xíng] / 正方形 / Square (/skwɛr/)
@@ -152,6 +157,7 @@ Arrow precision map:
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
 - The scene must feel like a real environment, not a product display board
+- Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
 ### VIII. Pre-Final Self-Check
 Before final output, verify all checks:

@@ -1,10 +1,10 @@
 /// 简洁的 API 配置类
-/// 
+///
 /// 负责管理全局网络配置，支持环境切换
 /// 采用单例模式，确保配置的一致性
 class ApiConfig {
   static ApiConfig? _instance;
-  
+
   final String baseUrl;
   final int connectTimeout;
   final int receiveTimeout;
@@ -14,7 +14,7 @@ class ApiConfig {
   final bool enableRetry;
   final bool enableCache;
   final bool enableNetworkStatusCheck;
-  
+
   /// 私有构造函数
   ApiConfig._({
     required this.baseUrl,
@@ -27,9 +27,9 @@ class ApiConfig {
     required this.enableCache,
     required this.enableNetworkStatusCheck,
   });
-  
+
   /// 初始化配置
-  /// 
+  ///
   /// [baseUrl] API基础URL
   /// [connectTimeout] 连接超时时间(毫秒)
   /// [receiveTimeout] 接收超时时间(毫秒)
@@ -54,10 +54,11 @@ class ApiConfig {
       baseUrl: baseUrl,
       connectTimeout: connectTimeout,
       receiveTimeout: receiveTimeout,
-      headers: headers ?? {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers: headers ??
+          {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
       enableLogging: enableLogging,
       enableAuth: enableAuth,
       enableRetry: enableRetry,
@@ -65,28 +66,28 @@ class ApiConfig {
       enableNetworkStatusCheck: enableNetworkStatusCheck,
     );
   }
-  
+
   /// 快速环境配置 - 开发环境
   static void initDev() => init(
-    baseUrl: 'http://192.168.3.101:8081',
-    enableLogging: true,
-    enableCache: true,
-  );
+        baseUrl: '',
+        enableLogging: true,
+        enableCache: true,
+      );
 
   /// 快速环境配置 - 生产环境
   static void initProd() => init(
-    baseUrl: 'https://mtrain.xyz',
-    enableLogging: false,
-    enableCache: true,
-  );
+        baseUrl: '',
+        enableLogging: false,
+        enableCache: true,
+      );
 
   /// 快速环境配置 - 测试环境
   static void initTest() => init(
-    baseUrl: 'https://mtrain.xyz',
-    enableLogging: true,
-    enableCache: false,
-  );
-  
+        baseUrl: '',
+        enableLogging: true,
+        enableCache: false,
+      );
+
   /// 获取实例
   static ApiConfig get instance {
     if (_instance == null) {
@@ -94,10 +95,10 @@ class ApiConfig {
     }
     return _instance!;
   }
-  
+
   /// 检查是否已初始化
   static bool get isInitialized => _instance != null;
-  
+
   /// 重置配置（主要用于测试）
   static void reset() {
     _instance = null;

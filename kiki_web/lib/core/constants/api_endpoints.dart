@@ -13,17 +13,18 @@ class ApiEndpoints {
 
   // 移动端 - 用户
   static const String userProfile = '/api/v1/mobile/user/profile';
+  static const String userFeedback = '/api/v1/mobile/feedback';
 
   // 移动端 - 场景
   static const String sceneCategories = '/api/v1/mobile/scene/categories';
   static const String sceneSearch = '/api/v1/mobile/scene/search';
-  static const String sceneRecommendations = '/api/v1/mobile/scene/recommendations';
+  static const String sceneRecommendations =
+      '/api/v1/mobile/scene/recommendations';
 
   // 工具方法
   static String sceneByCategoryId(String categoryId) =>
       '/api/v1/mobile/scene/categories/$categoryId/scenes';
-  static String sceneDetail(String sceneId) =>
-      '/api/v1/mobile/scene/$sceneId';
+  static String sceneDetail(String sceneId) => '/api/v1/mobile/scene/$sceneId';
 
   // 管理端 - 场景分类
   static const String adminSceneCategories = '/api/v1/admin/scene/categories';

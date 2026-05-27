@@ -5,12 +5,11 @@ import '../../../data/models/image_item.dart';
 import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
-import '../../../core/speech/local_speech_service.dart';
-import '../../../core/speech/speech_service.dart';
+import '../../../core/speech/audio_playback_component.dart';
 
 class InteractiveImageController extends GetxController {
   late final IInteractiveImageRepository _repository;
-  late final SpeechService _ttsService;
+  late final AudioPlaybackComponent _audioPlayback;
 
   final regions = <InteractiveRegion>[].obs;
   final imageWidth = 1.0.obs;
@@ -41,10 +40,10 @@ class InteractiveImageController extends GetxController {
 
   InteractiveImageController({
     IInteractiveImageRepository? repository,
-    SpeechService? ttsService,
+    AudioPlaybackComponent? audioPlayback,
   }) {
     _repository = repository ?? InteractiveImageRepositoryImpl();
-    _ttsService = ttsService ?? LocalSpeechService();
+    _audioPlayback = audioPlayback ?? AudioPlaybackComponent();
 
     // 从导航参数获取文件路径和图片路径
     _getParametersFromRoute();
@@ -166,22 +165,6 @@ class InteractiveImageController extends GetxController {
       AppLogger.debug('Initialization started');
       errorMessage.value = null;
       loadingProgress.value = 0.1;
-
-      // 优先预热中文 TTS，减少首次点击中文时的卡顿。
-      // 超时后继续加载数据，TTS 会在后台继续初始化（首次播放可能略有延迟）
-      loadingProgress.value = 0.25;
-      try {
-        await _ttsService.initialize().timeout(
-          const Duration(seconds: 5),
-          onTimeout: () {
-            AppLogger.warning(
-                '⏱️ TTS warmup timed out after 5s, will continue in background');
-            // TTS 会在首次播放时自动完成初始化
-          },
-        );
-      } catch (e) {
-        AppLogger.error('❌ TTS warmup failed, continue with data loading', e);
-      }
 
       // 只等待数据加载（最多 15 秒）
       await Future.wait([
@@ -332,7 +315,7 @@ class InteractiveImageController extends GetxController {
     _scheduleCharacterAnimation(region.text);
 
     await _interruptAndSpeak(() async {
-      await _ttsService.speakRegion(region);
+      await _audioPlayback.playRegion(region);
     });
   }
 
@@ -340,7 +323,7 @@ class InteractiveImageController extends GetxController {
   Future<void> speakPinyin(InteractiveRegion region) async {
     activeRegion.value = region;
     await _interruptAndSpeak(() async {
-      await _ttsService.speakPinyin(region);
+      await _audioPlayback.playPinyin(region);
     });
   }
 
@@ -351,7 +334,7 @@ class InteractiveImageController extends GetxController {
 
     activeRegion.value = region;
     await _interruptAndSpeak(() async {
-      await _ttsService.speak(english, language: 'en-US');
+      await _audioPlayback.playEnglishWord(region);
     });
   }
 
@@ -363,7 +346,7 @@ class InteractiveImageController extends GetxController {
 
     activeRegion.value = region;
     await _interruptAndSpeak(() async {
-      await _ttsService.speak(chinese, language: 'zh-CN');
+      await _audioPlayback.playChinesePhrase(region);
     });
   }
 
@@ -379,7 +362,7 @@ class InteractiveImageController extends GetxController {
     activeRegion.value = region;
     _focusCharacter(region.text, charIndex);
     await _interruptAndSpeak(() async {
-      await _ttsService.speak(trimmed, language: 'zh-CN');
+      await _audioPlayback.playChineseChar(trimmed);
     });
   }
 
@@ -399,7 +382,7 @@ Interactive Image Diagnostics:
   @override
   void onClose() {
     _strokeStartTimer?.cancel();
-    _ttsService.dispose();
+    _audioPlayback.dispose();
     super.onClose();
   }
 
@@ -457,7 +440,7 @@ Interactive Image Diagnostics:
   Future<void> _interruptAndSpeak(Future<void> Function() action) async {
     _strokeStartTimer?.cancel();
     if (_isSpeaking) {
-      await _ttsService.stop();
+      await _audioPlayback.stop();
     }
     _isSpeaking = true;
     isSpeaking.value = true;

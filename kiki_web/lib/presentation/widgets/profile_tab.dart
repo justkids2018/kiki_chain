@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
+import '../../design_ui/kiki_ui_kit.dart';
+import '../../theme/app_colors.dart';
+import 'app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
+import '../pages/profile_feature/about_page.dart';
+import '../pages/profile_feature/help_feedback_page.dart';
+import '../pages/profile_feature/my_info_page.dart';
 
 /// Profile Tab（我的页面）
 ///
@@ -16,7 +22,7 @@ class ProfileTab extends StatelessWidget {
     final AuthController authController = Get.find<AuthController>();
 
     return Container(
-      color: Color(0xFFF8FAFC),
+      color: AppColors.profilePageBackground,
       child: SafeArea(
         child: Obx(() {
           if (authController.isLoggedIn) {
@@ -47,13 +53,15 @@ class ProfileTab extends StatelessWidget {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Color(0xFFE2E8F0),
+                    color: const Color(0xFFFFF8E7),
                     shape: BoxShape.circle,
+                    border:
+                        Border.all(color: const Color(0xFFDDE8B9), width: 2),
                   ),
                   child: Icon(
                     Icons.person_outline_rounded,
                     size: 50,
-                    color: Color(0xFF6B7280),
+                    color: const Color(0xFF7CB342),
                   ),
                 ),
 
@@ -65,7 +73,7 @@ class ProfileTab extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF27273F),
+                    color: const Color(0xFF4E342E),
                   ),
                 ),
 
@@ -75,7 +83,7 @@ class ProfileTab extends StatelessWidget {
                   localizations.loginToViewRecords,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Color(0xFF6B7280),
+                    color: const Color(0xFF9E9E9E),
                   ),
                 ),
 
@@ -90,9 +98,7 @@ class ProfileTab extends StatelessWidget {
                       onPressed: () => Get.toNamed('/login'),
                       isPrimary: true,
                     ),
-
                     SizedBox(width: 16),
-
                     _buildActionButton(
                       text: localizations.register,
                       onPressed: () => Get.toNamed('/register'),
@@ -119,25 +125,25 @@ class ProfileTab extends StatelessWidget {
         : phone;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 用户信息卡片
           Container(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.profileHeaderCardBackground,
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(
-                color: Color(0xFFE2E8F0),
+                color: AppColors.profileCardBorder,
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
@@ -145,15 +151,15 @@ class ProfileTab extends StatelessWidget {
               children: [
                 // 用户头像
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF00C37D), Color(0xFF3FD280)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: const Color(0xFFFFFCF4),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFFD6E7AA),
+                      width: 3,
+                    ),
                   ),
                   child: Center(
                     child: Text(
@@ -161,49 +167,52 @@ class ProfileTab extends StatelessWidget {
                           ? user!.nickname[0].toUpperCase()
                           : 'U',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 34,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: const Color(0xFF7CB342),
                       ),
                     ),
                   ),
                 ),
 
-                SizedBox(width: 16),
+                const SizedBox(width: 14),
 
                 // 用户信息
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      final localizations = AppLocalizations.of(context)!;
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            user?.nickname ?? localizations.defaultUser,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF27273F),
-                            ),
-                          ),
-                          SizedBox(height: 6),
                           Row(
                             children: [
-                              Icon(
-                                Icons.phone_outlined,
-                                size: 14,
-                                color: Color(0xFF6B7280),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '${localizations.phoneLabel}$maskedPhone',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xFF6B7280),
+                              Expanded(
+                                child: Text(
+                                  user?.nickname ?? 'Kiki 小朋友',
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF2E2A27),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                              const SizedBox(width: 6),
+                              const Icon(
+                                Icons.edit_outlined,
+                                size: 16,
+                                color: Color(0xFF9B8F84),
+                              ),
                             ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'ID: ${user?.id ?? maskedPhone}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF9B8F84),
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       );
@@ -214,106 +223,52 @@ class ProfileTab extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 18),
 
-          // 功能菜单
-          Builder(
-            builder: (context) => Column(
-              children: [
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.history_rounded,
-                  title: AppLocalizations.of(context)!.learningRecords,
-                  onTap: () {
-                    // TODO: 导航到学习记录页面
-                  },
-                ),
-
-                SizedBox(height: 12),
-
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.star_outline_rounded,
-                  title: AppLocalizations.of(context)!.myFavorites,
-                  onTap: () {
-                    // TODO: 导航到我的收藏页面
-                  },
-                ),
-
-                SizedBox(height: 12),
-
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.settings_outlined,
-                  title: AppLocalizations.of(context)!.settings,
-                  onTap: () {
-                    // TODO: 导航到设置页面
-                  },
-                ),
-              ],
-            ),
+          _buildMenuCard(
+            items: [
+              _ProfileMenuData(
+                icon: Icons.person,
+                color: const Color(0xFF7CB342),
+                title: '我的信息',
+                onTap: () => Get.to(() => const MyInfoPage()),
+              ),
+              _ProfileMenuData(
+                icon: Icons.shield,
+                color: const Color(0xFFF6B722),
+                title: '账号与安全',
+                onTap: () {
+                  Get.snackbar('提示', '账号与安全功能开发中');
+                },
+              ),
+              _ProfileMenuData(
+                icon: Icons.notifications,
+                color: const Color(0xFF5DB2FF),
+                title: '消息通知',
+                onTap: () {
+                  Get.snackbar('提示', '消息通知功能开发中');
+                },
+              ),
+              _ProfileMenuData(
+                icon: Icons.help,
+                color: const Color(0xFF9C6ADE),
+                title: '帮助与反馈',
+                onTap: () => Get.to(() => const HelpFeedbackPage()),
+              ),
+              _ProfileMenuData(
+                icon: Icons.favorite,
+                color: const Color(0xFFFF6F9C),
+                title: '关于我们',
+                onTap: () => Get.to(() => const AboutPage()),
+              ),
+            ],
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 18),
 
           // 退出登录按钮
           _buildLogoutButton(authController),
         ],
-      ),
-    );
-  }
-
-  /// 构建功能菜单项
-  Widget _buildMenuItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Color(0xFFE2E8F0),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 4,
-              offset: Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: Color(0xFF00C37D),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF27273F),
-                ),
-              ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 20,
-              color: Color(0xFF6B7280),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -328,17 +283,17 @@ class ProfileTab extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFFFFFCF7),
+              borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: Color(0xFFE2E8F0),
+                color: const Color(0xFFE7DFD4),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 4,
-                  offset: Offset(0, 1),
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -347,16 +302,16 @@ class ProfileTab extends StatelessWidget {
               children: [
                 Icon(
                   Icons.logout_rounded,
-                  size: 20,
-                  color: Color(0xFFEF4444),
+                  size: 18,
+                  color: const Color(0xFFEF6C63),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   localizations.logOut,
-                  style: TextStyle(
-                    fontSize: 16,
+                  style: const TextStyle(
+                    fontSize: 17,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFFEF4444),
+                    color: Color(0xFFEF6C63),
                   ),
                 ),
               ],
@@ -374,51 +329,57 @@ class ProfileTab extends StatelessWidget {
 
     Get.dialog(
       AlertDialog(
+        backgroundColor: KikiUiColors.panel,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
         ),
         title: Text(
-          localizations.logOut,
-          style: TextStyle(
+          localizations.confirmExit,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF27273F),
+            color: KikiUiColors.textPrimary,
           ),
         ),
         content: Text(
           localizations.confirmLogoutMessage,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 15,
-            color: Color(0xFF6B7280),
+            color: KikiUiColors.textSecondary,
+            height: 1.5,
           ),
         ),
+        actionsAlignment: MainAxisAlignment.center,
+        actionsPadding: const EdgeInsets.fromLTRB(18, 4, 18, 18),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(
-              localizations.cancel,
-              style: TextStyle(
-                color: Color(0xFF6B7280),
-                fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 118,
+            child: AppGradientButton(
+              text: localizations.cancel,
+              onPressed: () => Get.back(),
+              height: 44,
+              borderRadius: 14,
+              fontSize: 15,
+              gradient: const LinearGradient(
+                colors: [Color(0xFFEAF5D9), Color(0xFFD9EFB8)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
+              textColor: AppColors.primaryGreen,
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              authController.logout();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFEF4444),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              localizations.exit,
-              style: TextStyle(fontWeight: FontWeight.w600),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 118,
+            child: AppGradientButton(
+              text: localizations.logOut,
+              onPressed: () {
+                Get.back();
+                authController.logout();
+              },
+              height: 44,
+              borderRadius: 14,
+              fontSize: 15,
             ),
           ),
         ],
@@ -426,38 +387,108 @@ class ProfileTab extends StatelessWidget {
     );
   }
 
-  /// 构建操作按钮（登录/注册）
   Widget _buildActionButton({
     required String text,
     required VoidCallback onPressed,
     required bool isPrimary,
   }) {
+    if (isPrimary) {
+      return SizedBox(
+        width: 120,
+        child: AppGradientButton(
+          text: text,
+          onPressed: onPressed,
+          height: 48,
+          borderRadius: 12,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    }
+
     return SizedBox(
       width: 120,
-      height: 48,
-      child: ElevatedButton(
+      child: AppGradientButton(
+        text: text,
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary ? Color(0xFF00C37D) : Colors.white,
-          foregroundColor: isPrimary ? Colors.white : Color(0xFF00C37D),
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          side: BorderSide(
-            color: isPrimary ? Colors.transparent : Color(0xFF00C37D),
-            width: 1,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+        height: 48,
+        borderRadius: 12,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        gradient: const LinearGradient(
+          colors: [Color(0xFFEAF5D9), Color(0xFFD9EFB8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        textColor: AppColors.primaryGreen,
       ),
     );
   }
+
+  Widget _buildMenuCard({required List<_ProfileMenuData> items}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: AppColors.profileCardBorder, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.025),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            _buildNewProfileMenuRow(items[i]),
+            if (i != items.length - 1)
+              const Divider(height: 1, indent: 16, endIndent: 16),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewProfileMenuRow(_ProfileMenuData item) {
+    return ListTile(
+      leading: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: item.color.withOpacity(0.14),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(item.icon, color: item.color, size: 20),
+      ),
+      title: Text(
+        item.title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF2E2A27),
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded,
+          color: Color(0xFFB9B1AA), size: 26),
+      onTap: item.onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      dense: false,
+    );
+  }
+}
+
+class _ProfileMenuData {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final VoidCallback onTap;
+
+  const _ProfileMenuData({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.onTap,
+  });
 }

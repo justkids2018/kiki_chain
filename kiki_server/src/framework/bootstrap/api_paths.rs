@@ -16,6 +16,7 @@ impl ApiPaths {
 
     // 移动端 - 用户
     pub const MOBILE_USER_PROFILE: &'static str = "/api/v1/mobile/user/profile";
+    pub const MOBILE_FEEDBACK: &'static str = "/api/v1/mobile/feedback";
 
     // 移动端 - 场景
     pub const MOBILE_SCENE_CATEGORIES: &'static str = "/api/v1/mobile/scene/categories";
@@ -34,6 +35,10 @@ impl ApiPaths {
     pub const ADMIN_USERS: &'static str = "/api/v1/admin/users";
     pub const ADMIN_USER_DETAIL: &'static str = "/api/v1/admin/users/{id}";
     pub const ADMIN_USER_UPDATE: &'static str = "/api/v1/admin/users/{id}/update";
+
+    // 管理端 - 反馈
+    pub const ADMIN_FEEDBACK: &'static str = "/api/v1/admin/feedback";
+    pub const ADMIN_FEEDBACK_UPDATE: &'static str = "/api/v1/admin/feedback/{id}/status";
 
     // 管理端 - 场景分类
     pub const ADMIN_SCENE_CATEGORIES: &'static str = "/api/v1/admin/scene/categories";

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
-import '../../config/app_color.dart';
+import '../../theme/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../controllers/auth_controller.dart';
+import '../widgets/app_gradient_button.dart';
 
-/// Welcome Page — Mobile-first fixed layout (no scroll)
+/// 欢迎页面 - Hi Kiki 风格
+/// 横屏设计，带有可爱的插画和登录选项
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
 
@@ -33,113 +35,151 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final size = MediaQuery.of(context).size;
-    final isCompact = size.width < 600;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.backgroundCream,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isCompact ? 28.0 : 64.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(flex: 5),
-              _buildBranding(isCompact),
-              const Spacer(flex: 8),
-              _buildLoginButton(localizations),
-              const SizedBox(height: 14),
-              _buildRegisterButton(localizations),
-              SizedBox(height: isCompact ? 36.0 : 48.0),
-            ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenHeight * 0.1),
+
+                  // Logo 和标语
+                  _buildBranding(),
+
+                  SizedBox(height: screenHeight * 0.18),
+
+                  // 手机号登录按钮
+                  _buildPhoneLoginButton(localizations),
+
+                  const SizedBox(height: 16),
+
+                  // 注册提示
+                  _buildRegisterPrompt(localizations),
+
+                  SizedBox(height: screenHeight * 0.1),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBranding(bool isCompact) {
-    final logoSize = isCompact ? 64.0 : 80.0;
-
+  Widget _buildBranding() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Hi Kiki Logo with animation-ready structure
         Container(
-          width: logoSize,
-          height: logoSize,
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(isCompact ? 16.0 : 20.0),
+            color: AppColors.white,
+            shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF00C37D).withValues(alpha: 0.18),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
+                color: AppColors.primaryGreen.withOpacity(0.2),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
-          clipBehavior: Clip.antiAlias,
-          child: Image.asset(
-            'assets/icon/app_icon.png',
-            fit: BoxFit.cover,
+          child: Icon(
+            Icons.eco,
+            color: AppColors.primaryGreen,
+            size: 64,
           ),
         ),
-        SizedBox(height: isCompact ? 28.0 : 36.0),
+
+        const SizedBox(height: 24),
+
         Text(
           'Hi Kiki',
-          textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: isCompact ? 42.0 : 52.0,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF27273F),
-            height: 1.1,
-            letterSpacing: -0.5,
+            fontSize: 56,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textDarkBrown,
+            height: 1.0,
+            letterSpacing: -1,
           ),
         ),
+
         const SizedBox(height: 12),
+
+        // 标语
+        Text(
+          '快乐学习 · 每天进步',
+          style: TextStyle(
+            fontSize: 18,
+            color: AppColors.textGray,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 2,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildLoginButton(AppLocalizations localizations) {
-    return SizedBox(
-      height: 52,
-      child: ElevatedButton(
-        onPressed: () => Get.toNamed('/login'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.buttonColorBg,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-        child: Text(
-          localizations.login,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
+  Widget _buildPhoneLoginButton(AppLocalizations localizations) {
+    return AppGradientButton(
+      text: '立即登录',
+      onPressed: () => Get.toNamed('/login'),
+      height: 56,
+      borderRadius: 28,
+      fontWeight: FontWeight.w600,
     );
   }
 
-  Widget _buildRegisterButton(AppLocalizations localizations) {
-    return SizedBox(
-      height: 52,
-      child: OutlinedButton(
-        onPressed: () => Get.toNamed('/register'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.buttonColorBg,
-          side: BorderSide(color: AppColors.buttonColorBg, width: 1.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+  Widget _buildRegisterPrompt(AppLocalizations localizations) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '还没有账号？',
+            style: TextStyle(
+              fontSize: 15,
+              color: AppColors.textGray,
+            ),
           ),
-        ),
-        child: Text(
-          localizations.register,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => Get.toNamed('/register'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.primaryGreen.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    '立即注册',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.primaryGreen,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16,
+                    color: AppColors.primaryGreen,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-
 }

@@ -44,6 +44,12 @@ const routes: RouteRecordRaw[] = [
         name: 'Users',
         component: () => import('../views/Users.vue'),
         meta: { title: '用户管理' }
+      },
+      {
+        path: 'feedback',
+        name: 'Feedback',
+        component: () => import('../views/Feedback.vue'),
+        meta: { title: '帮助与反馈' }
       }
     ]
   }
@@ -57,7 +63,7 @@ const router = createRouter({
 // Navigation guard - 修复 next() 警告
 router.beforeEach((to) => {
   const token = localStorage.getItem('admin_token')
-  
+
   if (to.meta.requiresAuth && !token) {
     return '/login'
   } else if (to.path === '/login' && token) {

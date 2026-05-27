@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kikichain/generated/app_localizations.dart';
+import '../../theme/app_colors.dart';
+import '../../design_ui/kiki_ui_kit.dart';
 import '../widgets/profile_tab.dart';
 import 'interactive_image_home/interactive_image_home_page.dart';
 
@@ -20,7 +21,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final media = MediaQuery.of(context);
 
     return Scaffold(
@@ -30,17 +30,14 @@ class _HomePageState extends State<HomePage> {
           Positioned(
             top: media.padding.top + 12,
             right: 20,
-            child: _buildProfileEntryButton(context, localizations),
+            child: _buildProfileEntryButton(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildProfileEntryButton(
-    BuildContext context,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildProfileEntryButton(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -50,52 +47,32 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(
               builder: (_) => Scaffold(
                 appBar: AppBar(
-                  title: Text(localizations.profile),
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF27273F),
+                  title: const Text('个人中心'),
+                  backgroundColor: AppColors.backgroundCream,
+                  foregroundColor: AppColors.textDarkBrown,
                   elevation: 0,
                 ),
-                backgroundColor: const Color(0xFFF8FAFC),
+                backgroundColor: AppColors.profilePageBackground,
                 body: const ProfileTab(),
               ),
             ),
           );
         },
         child: Ink(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.82),
-            borderRadius: BorderRadius.circular(14),
+            color: Colors.white.withValues(alpha: 0.88),
+            borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.92),
+              color: Colors.white.withValues(alpha: 0.95),
               width: 1,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.person_outline_rounded,
-                size: 18,
-                color: Color(0xFF4B5563),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                localizations.profile,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF4B5563),
-                ),
-              ),
-            ],
+          child: const Icon(
+            Icons.person_outline_rounded,
+            size: 20,
+            color: KikiUiColors.textSecondary,
           ),
         ),
       ),

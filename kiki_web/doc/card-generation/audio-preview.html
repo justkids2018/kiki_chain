@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio JSON Preview</title>
+    <style>
+        :root {
+            --bg: #f7f6f2;
+            --card: #ffffff;
+            --text: #222;
+            --muted: #666;
+            --line: #e6e2d9;
+            --ok: #1f9d55;
+            --bad: #d93025;
+            --btn: #1f9d55;
+            --btnText: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 16px 40px;
+        }
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 10px;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            background: #fff;
+            color: #222;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            margin-top: 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #ece8dc;
+            color: #333;
+        }
+
+        button.primary {
+            background: var(--btn);
+            color: var(--btnText);
+        }
+
+        button.small {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #eef8f1;
+            color: #1f9d55;
+        }
+
+        .error {
+            color: var(--bad);
+            font-size: 13px;
+            margin-top: 8px;
+            white-space: pre-wrap;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 980px;
+            background: #fff;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid var(--line);
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 13px;
+        }
+
+        th {
+            background: #fbfaf6;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .url {
+            max-width: 320px;
+            word-break: break-all;
+            color: #4a4a4a;
+            font-size: 12px;
+        }
+
+        .ok {
+            color: var(--ok);
+        }
+
+        .bad {
+            color: var(--bad);
+        }
+
+        .now {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #264;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="panel">
+            <h1>JSON 音频播放校验</h1>
+            <div class="muted">
+                支持两种输入：
+                1) 卡片 JSON（数组，含 audio_cn_url/audio_en_url）
+                2) audio-manifest.json（对象，含 results[]）
+            </div>
+            <div class="row">
+                <input id="jsonUrl" type="text" placeholder="可选：输入可访问的 JSON URL，然后点“从 URL 加载”" />
+            </div>
+            <div class="row">
+                <button id="loadUrlBtn">从 URL 加载</button>
+                <input id="fileInput" type="file" accept="application/json,.json" />
+                <button id="parseTextBtn">解析下方 JSON 文本</button>
+                <button id="clearBtn">清空</button>
+            </div>
+            <textarea id="jsonText" placeholder="也可以直接把 JSON 粘贴到这里"></textarea>
+            <div id="meta" class="row" style="margin-top:8px"></div>
+            <div id="error" class="error"></div>
+            <div id="nowPlaying" class="now"></div>
+        </div>
+
+        <div class="panel">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>item_id</th>
+                            <th>中文</th>
+                            <th>英文</th>
+                            <th>CN 播放</th>
+                            <th>EN 播放</th>
+                            <th>audio_stem</th>
+                            <th>CN URL</th>
+                            <th>EN URL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const rowsEl = document.getElementById('rows');
+        const errorEl = document.getElementById('error');
+        const metaEl = document.getElementById('meta');
+        const nowPlayingEl = document.getElementById('nowPlaying');
+        const textEl = document.getElementById('jsonText');
+        const urlEl = document.getElementById('jsonUrl');
+        const fileInput = document.getElementById('fileInput');
+
+        const player = new Audio();
+        player.preload = 'none';
+        let playQueue = [];
+        let currentLabel = '';
+
+        const MEDIA_ERROR_MAP = {
+            1: 'MEDIA_ERR_ABORTED（播放被中止）',
+            2: 'MEDIA_ERR_NETWORK（网络错误）',
+            3: 'MEDIA_ERR_DECODE（解码失败，可能非有效 MP3）',
+            4: 'MEDIA_ERR_SRC_NOT_SUPPORTED（地址不可用或协议受限）',
+        };
+
+        function setError(msg) {
+            errorEl.textContent = msg || '';
+        }
+
+        function clearTable() {
+            rowsEl.innerHTML = '';
+            metaEl.innerHTML = '';
+            nowPlayingEl.textContent = '';
+            setError('');
+        }
+
+        function normalizeFromCardJson(arr) {
+            return arr.map((x, idx) => ({
+                index: idx + 1,
+                item_id: x.id || '',
+                cn_text: x.text || '',
+                en_text: x.text_english || '',
+                audio_stem: x.audio_stem || '',
+                cn_url: x.audio_cn_url || '',
+                en_url: x.audio_en_url || '',
+            }));
+        }
+
+        function normalizeFromManifest(obj) {
+            const results = Array.isArray(obj.results) ? obj.results : [];
+            return results.map((x, idx) => ({
+                index: idx + 1,
+                item_id: x.item_id || '',
+                cn_text: x.cn_text || '',
+                en_text: x.en_text || '',
+                audio_stem: x.audio_stem || '',
+                cn_url: x.audio_cn_url || '',
+                en_url: x.audio_en_url || '',
+            }));
+        }
+
+        function parseInput(payload) {
+            if (Array.isArray(payload)) {
+                return {
+                    sourceType: 'card_json',
+                    items: normalizeFromCardJson(payload),
+                };
+            }
+            if (payload && typeof payload === 'object' && Array.isArray(payload.results)) {
+                return {
+                    sourceType: 'manifest_json',
+                    items: normalizeFromManifest(payload),
+                };
+            }
+            throw new Error('JSON 格式不支持：需要数组（卡片 JSON）或包含 results 数组（manifest）');
+        }
+
+        function safeText(v) {
+            return String(v == null ? '' : v)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function normalizeUrl(raw) {
+            const s = String(raw || '').trim();
+            if (!s) return '';
+            try {
+                const u = new URL(s, window.location.href);
+                // Ensure non-ASCII path is safely encoded.
+                u.pathname = u.pathname
+                    .split('/')
+                    .map(seg => encodeURIComponent(decodeURIComponent(seg || '')))
+                    .join('/');
+                return u.toString();
+            } catch {
+                return s;
+            }
+        }
+
+        function buildPlayCandidates(url) {
+            const primary = normalizeUrl(url);
+            if (!primary) return [];
+
+            const out = [primary];
+            try {
+                const u = new URL(primary);
+                // In secure page context, plain HTTP media is often blocked as mixed content.
+                if (window.location.protocol === 'https:' && u.protocol === 'http:') {
+                    const httpsTry = new URL(primary);
+                    httpsTry.protocol = 'https:';
+                    out.push(httpsTry.toString());
+                }
+            } catch {
+                // ignore
+            }
+            return [...new Set(out)];
+        }
+
+        function showMixedContentHint(url) {
+            try {
+                const u = new URL(url);
+                if (window.location.protocol === 'https:' && u.protocol === 'http:') {
+                    setError(
+                        '检测到混合内容：页面是 HTTPS，但音频是 HTTP，浏览器可能拦截。\n'
+                        + '建议：用 http://127.0.0.1:9090 打开此页面，或把音频 URL 改成可用的 HTTPS。'
+                    );
+                }
+            } catch {
+                // ignore
+            }
+        }
+
+        function tryPlayNextCandidate() {
+            if (!playQueue.length) {
+                setError('播放失败：所有候选地址都不可用。');
+                return;
+            }
+            const next = playQueue.shift();
+            player.src = next;
+            nowPlayingEl.textContent = '正在播放: ' + currentLabel + ' -> ' + next;
+            player.play().catch((err) => {
+                if (playQueue.length) {
+                    tryPlayNextCandidate();
+                    return;
+                }
+                setError('播放失败: ' + (err && err.message ? err.message : String(err)));
+            });
+        }
+
+        function play(url, label) {
+            if (!url) {
+                setError(label + ' 没有 URL');
+                return;
+            }
+            setError('');
+            currentLabel = label;
+            showMixedContentHint(url);
+            playQueue = buildPlayCandidates(url);
+            tryPlayNextCandidate();
+        }
+
+        player.addEventListener('error', () => {
+            const code = player.error && player.error.code;
+            const reason = MEDIA_ERROR_MAP[code] || ('未知错误 code=' + (code || 'N/A'));
+            if (playQueue.length) {
+                tryPlayNextCandidate();
+                return;
+            }
+            setError('播放失败: ' + reason + '\nURL: ' + (player.currentSrc || player.src || ''));
+        });
+
+        function render(parsed) {
+            clearTable();
+            const items = parsed.items;
+
+            metaEl.innerHTML = `
+        <span class="badge">source: ${safeText(parsed.sourceType)}</span>
+        <span class="badge">items: ${items.length}</span>
+      `;
+
+            rowsEl.innerHTML = items.map((x) => {
+                const cnBtn = x.cn_url
+                    ? `<button class="small primary" data-play="${safeText(x.cn_url)}" data-label="${safeText(x.item_id)} CN">播放中文</button>`
+                    : `<span class="bad">无</span>`;
+                const enBtn = x.en_url
+                    ? `<button class="small primary" data-play="${safeText(x.en_url)}" data-label="${safeText(x.item_id)} EN">播放英文</button>`
+                    : `<span class="bad">无</span>`;
+
+                return `
+          <tr>
+            <td>${x.index}</td>
+            <td>${safeText(x.item_id)}</td>
+            <td>${safeText(x.cn_text)}</td>
+            <td>${safeText(x.en_text)}</td>
+            <td>${cnBtn}</td>
+            <td>${enBtn}</td>
+            <td>${safeText(x.audio_stem)}</td>
+            <td class="url">${safeText(x.cn_url)}</td>
+            <td class="url">${safeText(x.en_url)}</td>
+          </tr>
+        `;
+            }).join('');
+
+            rowsEl.querySelectorAll('button[data-play]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    play(btn.getAttribute('data-play'), btn.getAttribute('data-label'));
+                });
+            });
+        }
+
+        async function loadFromUrl() {
+            setError('');
+            const url = urlEl.value.trim();
+            if (!url) {
+                setError('请先输入 JSON URL');
+                return;
+            }
+            try {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                const payload = await res.json();
+                textEl.value = JSON.stringify(payload, null, 2);
+                render(parseInput(payload));
+            } catch (err) {
+                setError('URL 加载失败: ' + (err && err.message ? err.message : String(err)));
+            }
+        }
+
+        function parseFromText() {
+            setError('');
+            try {
+                const payload = JSON.parse(textEl.value);
+                render(parseInput(payload));
+            } catch (err) {
+                setError('解析失败: ' + (err && err.message ? err.message : String(err)));
+            }
+        }
+
+        fileInput.addEventListener('change', async (e) => {
+            setError('');
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            try {
+                const text = await file.text();
+                textEl.value = text;
+                const payload = JSON.parse(text);
+                render(parseInput(payload));
+            } catch (err) {
+                setError('文件读取/解析失败: ' + (err && err.message ? err.message : String(err)));
+            }
+        });
+
+        document.getElementById('loadUrlBtn').addEventListener('click', loadFromUrl);
+        document.getElementById('parseTextBtn').addEventListener('click', parseFromText);
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            textEl.value = '';
+            urlEl.value = '';
+            clearTable();
+        });
+    </script>
+</body>
+
+</html>

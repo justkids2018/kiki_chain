@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage>
         decoration: KikiUiDecor.pageBackgroundDecor,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final panelMinHeight = 500.0;
+            const panelMinHeight = 500.0;
             final hasRoomForStaticLayout =
                 constraints.maxHeight >= panelMinHeight + 32;
 

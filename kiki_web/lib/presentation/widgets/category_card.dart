@@ -214,14 +214,14 @@ class CategoryCard extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 10, // 图标再小一些（从12改成10）
+                size: 12, // 符合最小尺寸要求
                 color: Colors.white,
               ),
-              const SizedBox(width: 3), // 从4改成3
+              const SizedBox(width: 4),
               Text(
                 text,
                 style: const TextStyle(
-                  fontSize: 10, // 字体再小一些（从11改成10）
+                  fontSize: 12, // 符合项目规范最小字号 12px
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),

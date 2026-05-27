@@ -41,9 +41,6 @@ class AppColors {
   /// 红色 - 退出按钮、错误提示
   static const Color red = Color(0xFFEF5350);
 
-  /// 微信绿 - 微信登录按钮
-  static const Color wechatGreen = Color(0xFF07C160);
-
   // ==================== 文字色 ====================
   /// 深棕色 - 主标题
   static const Color textDarkBrown = Color(0xFF4E342E);

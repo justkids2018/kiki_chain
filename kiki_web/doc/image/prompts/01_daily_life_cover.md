@@ -1,246 +1,80 @@
-# 日常生活场景 - 分类卡片封面图生成 Prompt
+# 日常生活场景 - 分类卡片封面图生成 Prompt（RULES 对齐版）
 
 ---
 
-## 📋 基础规格 (Basic Specifications)
+## 📋 基础规格
 
-* **用途**: 一级场景分类卡片封面图
-* **场景分类**: 日常生活 (Daily Life Scenes)
-* **图片格式**: PNG (支持透明通道)
-* **宽高比**: 7:9 (竖版)
-* **多分辨率支持**:
-  - **1x (基础)**: 350 x 450 像素 - 用于低分辨率设备
-  - **2x (Retina)**: 700 x 900 像素 - 用于 iPad/iPhone Retina 显示屏 (推荐)
-  - **3x (高清)**: 1050 x 1350 像素 - 用于 iPhone Plus/Pro 系列
-* **色深**: 24-bit RGB
-* **文件大小**:
-  - 1x: < 200KB
-  - 2x: < 500KB (推荐主要使用)
-  - 3x: < 800KB
-* **适用年龄**: 3-6 岁儿童
-* **优化建议**: 使用 PNG 压缩工具 (如 TinyPNG) 优化文件大小
+- 用途: 一级场景分类卡片封面图
+- 场景分类: 日常生活 (Daily Life Scenes)
+- 输出格式: PNG
+- 画幅: 7:9 竖版
+- 推荐分辨率: 700 x 900 (@2x)
+- 可选分辨率: 350 x 450 (@1x), 1050 x 1350 (@3x)
+- 色深: 24-bit RGB
+- 适用年龄: 3-6 岁
+
+---
+
+## 🔒 借鉴 RULES.md 的硬约束（封面版）
+
+- 必须是完整页面场景，不是物体陈列板。
+- 必须具备前景 / 中景 / 后景分层。
+- 必须固定出现 2 个可爱小女孩（10 岁姐姐 + 4 岁双马尾妹妹）。
+- 必须固定出现 1 只可爱白色小猫。
+- 三个角色必须分布在不同景深层，强化空间感。
+- 禁止大标题文字、引用标记、脚注标记。
+- 禁止画面裁切导致主体缺失或边缘留白。
 
 ---
 
 ## 🎨 完整生成 Prompt
 
-### **日常生活场景** - 分类卡片封面图
+```text
+Create a premium 3D rendered category cover for "Daily Life Scenes" for children aged 3-6.
 
----
+Output:
+- PNG, portrait 7:9
+- Preferred 700x900 px (@2x), keep safe margins
+- Full canvas usage, no inner frame, no blank border
 
-### I. 📌 核心配置与色调
+Scene goal:
+Build a complete warm home-life environment (not a display board), such as a cozy corner combining living room, kitchen hints, and child bedroom elements.
 
-* **[SCENE_CATEGORY]**: 日常生活 (Daily Life Scenes)
-* **[IMAGE_FORMAT]**: PNG, Portrait 7:9 Aspect Ratio
-* **[OUTPUT_RESOLUTION]**:
-  - 推荐生成: 700 x 900 像素 (@2x, Retina)
-  - 备选: 1050 x 1350 像素 (@3x, 高清)
-* **🎨 风格基调**: 精致 3D 渲染 (Detailed 3D Rendering)。色彩温暖、明亮、居家感强。
-* **➡️ [COLOR_PALETTE]**: 让色彩自然呈现温暖居家氛围
-* **💡 视角与灯光**: 正面视角或微俯视角。灯光温暖、柔和，营造家的温馨感。
+Mandatory character baseline:
+- Exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
+- Exactly one cute white kitten
+- Place the older sister, younger sister, and kitten in different depth layers (foreground / midground / background)
 
----
+Depth and composition:
+- Foreground: one large readable daily-life object (for example pillow basket, toy cup, or slippers)
+- Midground: core home scene objects (small table, lamp, storage box, soft sofa edge)
+- Background: light interior anchors (window, curtain, shelf silhouette)
+- Keep center readable, edges softly simplified
 
-### II. 🖼️ 画面整体与风格
+Visual direction:
+- Warm, bright, homey palette (cream, light wood, warm yellow, soft coral)
+- Rounded, solid, child-safe forms
+- Premium miniature toy diorama feeling
+- Gentle natural light + soft contact shadows
 
-#### 1. 核心视觉风格
-* **主体风格**: 精致、温馨的 3D 场景渲染。物体边缘干净，具有家居质感。
-* **背景**: 温暖的渐变背景（米色到浅黄色），或模糊的室内环境。
-* **清晰度**: 主体清晰锐利，背景可适当虚化。
+Prohibitions:
+- No big text title
+- No citation-like marks such as [cite:x], [ref:x], [source:x]
+- No dark horror mood or messy clutter
+- No replacing required sister+kitten baseline
 
-#### 2. 场景与构图
-* **画面主体**: 展示典型的日常生活场景元素（如客厅一角、厨房用品、卧室场景等）
-* **构图**: 居中构图，主体占画面 60-70%
-* **元素**: 3-5 个代表性物品，体现日常生活主题
-* **氛围**: 温馨、舒适、居家
-
----
-
-### III. 🎯 内容要求
-
-#### 必须包含的元素
-1. **代表性物品**: 选择 3-5 个最能代表日常生活的物品
-   - 客厅: 沙发、茶几、台灯
-   - 厨房: 冰箱、炉灶、餐具
-   - 卧室: 床、枕头、闹钟
-   - 浴室: 浴缸、洗手池、毛巾
-
-2. **场景氛围**: 温馨的家居环境
-
-3. **色彩搭配**: 温暖色调为主，米色、奶白色、浅木色
-
-#### 禁止出现的元素
-* ❌ 人物角色
-* ❌ 文字标题
-* ❌ 复杂的背景
-* ❌ 过于写实的风格
-
----
-
-### IV. ⭐ 完整 Prompt 模板
-
-```
-Create a detailed 3D rendered cover image for "Daily Life Scenes" category card, designed for children aged 3-6.
-
-Technical Specifications:
-- Format: PNG with transparency support
-- Resolution: 700 x 900 pixels (7:9 portrait aspect ratio, @2x Retina)
-  * Alternative: 1050 x 1350 pixels (@3x for high-end devices)
-- Style: Detailed 3D rendering with warm, cozy atmosphere
-- Rendering: Cinema 4D style, clean and polished
-- File size target: < 500KB (use PNG compression)
-
-Visual Style:
-- Warm, bright colors with homey feel - let colors emerge naturally from the daily life theme
-- Background: Warm gradient or blurred indoor environment
-- Clean, smooth surfaces with household texture
-- Main subject sharp and clear, background can be slightly blurred
-
-Scene Composition:
-- Center composition with main subject占 60-70% of frame
-- Front view or slight top-down angle
-- Showcase typical daily life scene elements
-- 3-5 representative objects that embody daily life theme
-- Atmosphere: Warm, comfortable, homey
-
-Representative Objects (select 3-5):
-- Living room: Sofa, coffee table, lamp
-- Kitchen: Refrigerator, stove, tableware
-- Bedroom: Bed, pillow, alarm clock
-- Bathroom: Bathtub, sink, towel
-
-Lighting:
-- Warm, soft lighting creating cozy home atmosphere
-- Natural light feel
-- Gentle shadows
-
-Style Requirements:
-- 3D rendered with depth and dimension, not flat illustration
-- Minimalist composition - clean and uncluttered layout
-- Full, rounded, plump shapes with smooth curves
-- Cute and child-friendly aesthetic with playful character
-- Light and airy feel - avoid heavy or dark elements
-- Clean edges and smooth surfaces
-- Moderate saturation, not too bright or dull
-- Warm and inviting atmosphere
-- Suitable for children aged 3-6
-- High resolution for Retina displays
-
-Prohibited Elements:
-- No human characters
-- No text or titles
-- No complex backgrounds
-- No overly realistic style
-
-Quality: Ultra high detail, Cinema 4D cute render, warm and inviting atmosphere, child-friendly aesthetic, optimized for Retina displays, suitable for category card cover.
+Quality target:
+Friendly, clean, warm, instantly recognizable as daily life category cover.
 ```
 
 ---
 
-## 📐 设计规格详细说明
+## ✅ 出图前检查
 
-### 画面尺寸 (多分辨率)
-
-#### @2x (Retina) - 推荐主要使用
-* **宽度**: 700 像素
-* **高度**: 900 像素
-* **宽高比**: 7:9 (竖版)
-* **安全区域**: 上下左右各留 40 像素
-* **显示尺寸**: 在设备上显示为 350x450 点
-* **适用设备**: iPad, iPhone Retina 显示屏
-
-#### @3x (高清) - 可选
-* **宽度**: 1050 像素
-* **高度**: 1350 像素
-* **宽高比**: 7:9 (竖版)
-* **安全区域**: 上下左右各留 60 像素
-* **显示尺寸**: 在设备上显示为 350x450 点
-* **适用设备**: iPhone Plus/Pro 系列
-
-#### @1x (基础) - 备用
-* **宽度**: 350 像素
-* **高度**: 450 像素
-* **宽高比**: 7:9 (竖版)
-* **安全区域**: 上下左右各留 20 像素
-* **适用设备**: 低分辨率设备
-
-### 主体物品规格
-* **物品数量**: 3-5 个
-* **物品大小**: 主物品占画面 40-50%，辅助物品占 15-25%
-* **物品风格**: 可爱卡通 3D，圆润饱满，边角柔和
-* **物品位置**: 居中或稍偏下，留出上方空间
-* **设计原则**: 简约不杂乱，轻盈温馨，富有童趣
-
-### Flutter 资源配置
-在 Flutter 项目中，图片应按以下结构组织：
-```
-assets/images/categories/
-  daily_life.png          # @1x (350x450)
-  2.0x/daily_life.png     # @2x (700x900) - 推荐
-  3.0x/daily_life.png     # @3x (1050x1350) - 可选
-```
-
-Flutter 会根据设备像素密度自动选择合适的图片资源。
-
----
-
-## ✅ 质量检查清单
-
-### @2x (Retina) 版本 - 推荐
-- [ ] 分辨率: 700 x 900 像素
-- [ ] 格式: PNG (24-bit RGB)
-- [ ] 宽高比: 7:9 (竖版)
-- [ ] 主体物品: 3-5 个
-- [ ] 色调: 温暖米色系
-- [ ] 清晰度: 主体锐利，适合 Retina 显示
-- [ ] 无人物角色
-- [ ] 无文字标题
-- [ ] 氛围: 温馨居家
-- [ ] 风格: 3D 渲染
-- [ ] 适合儿童: 可爱友好
-- [ ] 文件大小: < 500KB
-- [ ] 已使用 PNG 压缩工具优化
-
-### @3x (高清) 版本 - 可选
-- [ ] 分辨率: 1050 x 1350 像素
-- [ ] 文件大小: < 800KB
-- [ ] 其他要求同 @2x 版本
-
-### @1x (基础) 版本 - 备用
-- [ ] 分辨率: 350 x 450 像素
-- [ ] 文件大小: < 200KB
-- [ ] 其他要求同 @2x 版本
-
----
-
-## 🎨 参考示例描述
-
-### 示例 1: 客厅场景
-```
-画面中央: 一个可爱的 3D 沙发（米色），旁边有小茶几（浅木色），茶几上放着一个台灯（暖黄色灯光）。背景是温暖的米色到浅黄色渐变。整体氛围温馨舒适，适合儿童观看。
-```
-
-### 示例 2: 厨房场景
-```
-画面中央: 一个圆润的 3D 冰箱（奶白色），旁边有炉灶（浅灰色），前方有几个可爱的餐具（碗、筷子）。背景是柔和的米色渐变。整体风格干净整洁，充满生活气息。
-```
-
-### 示例 3: 卧室场景
-```
-画面中央: 一张温馨的 3D 小床（浅木色床架，米色被子），床头有枕头，旁边有闹钟。背景是温暖的渐变色。整体氛围宁静舒适，适合儿童学习场景。
-```
-
----
-
-**生成日期**: 2026-02-04
-**版本**: v2.0 (优化多分辨率支持)
-**适用场景**: 日常生活分类卡片封面图
-**推荐尺寸**: 700 x 900 px (@2x Retina)
-**备选尺寸**: 1050 x 1350 px (@3x 高清)
-**基础尺寸**: 350 x 450 px (@1x 备用)
-
-### 📱 设备适配说明
-- **iPad/iPhone Retina**: 自动使用 @2x (700x900) 版本
-- **iPhone Plus/Pro**: 自动使用 @3x (1050x1350) 版本
-- **低分辨率设备**: 自动使用 @1x (350x450) 版本
-- Flutter 会根据设备像素密度自动选择最佳图片资源
+- [ ] 7:9 竖版、分辨率正确
+- [ ] 完整场景而非陈列台
+- [ ] 有明确前中后景
+- [ ] 10 岁姐姐、4 岁双马尾妹妹、白色小猫全部出现
+- [ ] 三个角色在不同景深层
+- [ ] 无大标题与脏标记
+- [ ] 主体清晰、儿童友好

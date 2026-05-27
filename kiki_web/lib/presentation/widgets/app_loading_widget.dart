@@ -40,7 +40,8 @@ class AppLoadingWidget extends StatelessWidget {
                   height: 48,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00C37D)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF00C37D)),
                   ),
                 )
               else
@@ -50,7 +51,8 @@ class AppLoadingWidget extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 3,
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF00C37D)),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Color(0xFF00C37D)),
                     backgroundColor: Colors.grey[200],
                   ),
                 ),
@@ -65,17 +67,6 @@ class AppLoadingWidget extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
-                ),
-              ],
-
-              if (progress != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  '${(progress! * 100).toInt()}%',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[500],
-                  ),
                 ),
               ],
             ],

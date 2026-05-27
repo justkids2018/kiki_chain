@@ -47,13 +47,15 @@ class ProfileTab extends StatelessWidget {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Color(0xFFE2E8F0),
+                    color: const Color(0xFFFFF8E7),
                     shape: BoxShape.circle,
+                    border:
+                        Border.all(color: const Color(0xFFDDE8B9), width: 2),
                   ),
                   child: Icon(
                     Icons.person_outline_rounded,
                     size: 50,
-                    color: Color(0xFF6B7280),
+                    color: const Color(0xFF7CB342),
                   ),
                 ),
 
@@ -65,7 +67,7 @@ class ProfileTab extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF27273F),
+                    color: const Color(0xFF4E342E),
                   ),
                 ),
 
@@ -75,7 +77,7 @@ class ProfileTab extends StatelessWidget {
                   localizations.loginToViewRecords,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Color(0xFF6B7280),
+                    color: const Color(0xFF9E9E9E),
                   ),
                 ),
 
@@ -90,9 +92,7 @@ class ProfileTab extends StatelessWidget {
                       onPressed: () => Get.toNamed('/login'),
                       isPrimary: true,
                     ),
-
                     SizedBox(width: 16),
-
                     _buildActionButton(
                       text: localizations.register,
                       onPressed: () => Get.toNamed('/register'),
@@ -123,21 +123,32 @@ class ProfileTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            '个人中心',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF2E2A27),
+            ),
+          ),
+
+          SizedBox(height: 18),
+
           // 用户信息卡片
           Container(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              color: const Color(0xFFFFF8E7),
+              borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: Color(0xFFE2E8F0),
+                color: const Color(0xFFE8DFC6),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -145,15 +156,15 @@ class ProfileTab extends StatelessWidget {
               children: [
                 // 用户头像
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 86,
+                  height: 86,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF00C37D), Color(0xFF3FD280)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: Colors.white,
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFFD9E7A9),
+                      width: 4,
+                    ),
                   ),
                   child: Center(
                     child: Text(
@@ -161,9 +172,9 @@ class ProfileTab extends StatelessWidget {
                           ? user!.nickname[0].toUpperCase()
                           : 'U',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 36,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: const Color(0xFF7CB342),
                       ),
                     ),
                   ),
@@ -175,36 +186,41 @@ class ProfileTab extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      final localizations = AppLocalizations.of(context)!;
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            user?.nickname ?? localizations.defaultUser,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF27273F),
-                            ),
-                          ),
-                          SizedBox(height: 6),
                           Row(
                             children: [
-                              Icon(
-                                Icons.phone_outlined,
-                                size: 14,
-                                color: Color(0xFF6B7280),
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                '${localizations.phoneLabel}$maskedPhone',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xFF6B7280),
+                              Expanded(
+                                child: Text(
+                                  user?.nickname ?? 'Kiki 小朋友',
+                                  style: const TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF2E2A27),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.edit_outlined,
+                                size: 18,
+                                color: Color(0xFF9B8F84),
                               ),
                             ],
                           ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'ID: ${user?.id ?? maskedPhone}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Color(0xFF9B8F84),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          _buildLevelBadge(),
                         ],
                       );
                     },
@@ -216,42 +232,23 @@ class ProfileTab extends StatelessWidget {
 
           SizedBox(height: 24),
 
-          // 功能菜单
-          Builder(
-            builder: (context) => Column(
-              children: [
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.history_rounded,
-                  title: AppLocalizations.of(context)!.learningRecords,
-                  onTap: () {
-                    // TODO: 导航到学习记录页面
-                  },
-                ),
-
-                SizedBox(height: 12),
-
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.star_outline_rounded,
-                  title: AppLocalizations.of(context)!.myFavorites,
-                  onTap: () {
-                    // TODO: 导航到我的收藏页面
-                  },
-                ),
-
-                SizedBox(height: 12),
-
-                _buildMenuItem(
-                  context: context,
-                  icon: Icons.settings_outlined,
-                  title: AppLocalizations.of(context)!.settings,
-                  onTap: () {
-                    // TODO: 导航到设置页面
-                  },
-                ),
-              ],
-            ),
+          _buildMenuCard(
+            items: const [
+              _ProfileMenuData(
+                  icon: Icons.person, color: Color(0xFF7CB342), title: '我的信息'),
+              _ProfileMenuData(
+                  icon: Icons.shield, color: Color(0xFFF6B722), title: '账号与安全'),
+              _ProfileMenuData(
+                  icon: Icons.notifications,
+                  color: Color(0xFF5DB2FF),
+                  title: '消息通知'),
+              _ProfileMenuData(
+                  icon: Icons.help, color: Color(0xFF9C6ADE), title: '帮助与反馈'),
+              _ProfileMenuData(
+                  icon: Icons.favorite,
+                  color: Color(0xFFFF6F9C),
+                  title: '关于我们'),
+            ],
           ),
 
           SizedBox(height: 24),
@@ -259,61 +256,6 @@ class ProfileTab extends StatelessWidget {
           // 退出登录按钮
           _buildLogoutButton(authController),
         ],
-      ),
-    );
-  }
-
-  /// 构建功能菜单项
-  Widget _buildMenuItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Color(0xFFE2E8F0),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 4,
-              offset: Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: Color(0xFF00C37D),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF27273F),
-                ),
-              ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 20,
-              color: Color(0xFF6B7280),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -378,9 +320,9 @@ class ProfileTab extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
-          localizations.logOut,
+          localizations.confirmExit,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
             color: Color(0xFF27273F),
           ),
@@ -388,45 +330,33 @@ class ProfileTab extends StatelessWidget {
         content: Text(
           localizations.confirmLogoutMessage,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 16,
             color: Color(0xFF6B7280),
+            height: 1.5,
           ),
         ),
+        actionsAlignment: MainAxisAlignment.center,
+        actionsPadding: EdgeInsets.fromLTRB(24, 0, 24, 24),
         actions: [
-          TextButton(
+          _buildActionButton(
+            text: localizations.cancel,
             onPressed: () => Get.back(),
-            child: Text(
-              localizations.cancel,
-              style: TextStyle(
-                color: Color(0xFF6B7280),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            isPrimary: false,
           ),
-          ElevatedButton(
+          SizedBox(width: 12),
+          _buildActionButton(
+            text: localizations.logOut,
             onPressed: () {
               Get.back();
               authController.logout();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFEF4444),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              localizations.exit,
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            isPrimary: true,
           ),
         ],
       ),
     );
   }
 
-  /// 构建操作按钮（登录/注册）
   Widget _buildActionButton({
     required String text,
     required VoidCallback onPressed,
@@ -460,4 +390,111 @@ class ProfileTab extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildLevelBadge() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF2C7),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.star, color: Color(0xFFFFB300), size: 16),
+              SizedBox(width: 4),
+              Text(
+                'Lv.3',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFFB88900),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: 0.6,
+              minHeight: 10,
+              backgroundColor: const Color(0xFFECECEC),
+              color: const Color(0xFF8BC34A),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        const Text(
+          '60/100',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xFF8D847C),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMenuCard({required List<_ProfileMenuData> items}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE9E3DB), width: 1),
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            _buildNewProfileMenuRow(items[i]),
+            if (i != items.length - 1)
+              const Divider(height: 1, indent: 16, endIndent: 16),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewProfileMenuRow(_ProfileMenuData item) {
+    return ListTile(
+      leading: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: item.color.withOpacity(0.14),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(item.icon, color: item.color, size: 20),
+      ),
+      title: Text(
+        item.title,
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF2E2A27),
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded,
+          color: Color(0xFFB9B1AA), size: 30),
+      onTap: () {},
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+      dense: false,
+    );
+  }
+}
+
+class _ProfileMenuData {
+  final IconData icon;
+  final Color color;
+  final String title;
+
+  const _ProfileMenuData({
+    required this.icon,
+    required this.color,
+    required this.title,
+  });
 }

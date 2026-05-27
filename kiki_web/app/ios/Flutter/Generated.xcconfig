@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/Users/qisd/Documents/android/flutter_sdk
-FLUTTER_APPLICATION_PATH=/Users/qisd/Documents/development/chain/kiki_chain/app
+FLUTTER_APPLICATION_PATH=/Users/qisd/Documents/development/my_project/kiki_chain/kiki_web/app
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib/main.dart
 FLUTTER_BUILD_DIR=build

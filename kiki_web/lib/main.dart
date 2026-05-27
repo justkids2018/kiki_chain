@@ -9,7 +9,6 @@ import 'package:kikichain/core/constants/app_constants.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import 'config/app_routes.dart';
 import 'core/app_initializer.dart';
-import 'core/settings/app_settings_service.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/language_controller.dart';
 import 'theme/app_theme.dart';
@@ -39,9 +38,6 @@ void main() async {
   // 全局注册控制器
   Get.put(AuthController());
   Get.put(LanguageController());
-
-  // 初始化全局设置服务
-  Get.put(AppSettingsService());
 
   // 运行应用
   runApp(

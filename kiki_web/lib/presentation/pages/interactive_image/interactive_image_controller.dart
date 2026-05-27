@@ -166,22 +166,6 @@ class InteractiveImageController extends GetxController {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
 
-      // 优先预热统一音频播放入口，减少首次点击时的卡顿。
-      // 超时后继续加载数据，音频缓存和 TTS 会在后台继续初始化（首次播放可能略有延迟）
-      loadingProgress.value = 0.25;
-      try {
-        await _audioPlayback.initialize().timeout(
-          const Duration(seconds: 5),
-          onTimeout: () {
-            AppLogger.warning(
-                '⏱️ audio warmup timed out after 5s, will continue in background');
-            // 音频播放入口会在首次播放时自动完成剩余初始化
-          },
-        );
-      } catch (e) {
-        AppLogger.error('❌ audio warmup failed, continue with data loading', e);
-      }
-
       // 只等待数据加载（最多 15 秒）
       await Future.wait([
         _loadRegions(),

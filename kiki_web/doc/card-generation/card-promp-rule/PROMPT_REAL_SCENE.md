@@ -80,6 +80,9 @@ Rules:
 - The scene should feel lived-in and natural, not staged or empty
 - Apply a subtle depth-of-field effect — objects in the scene center are sharpest, edges and far background are slightly softer
 - No huge title text anywhere
+- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
+- The scene must include exactly one cute white kitten
+- The two girls and the white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
 
 #### B. Object Placement — 8 vocabulary objects in their real-world positions
 Place exactly 8 target objects in the scene at the positions where they would naturally exist in real life.
@@ -134,6 +137,7 @@ Place exactly 8 target objects in the scene at the positions where they would na
 - The scene must feel like a real environment, not a product display board
 - No sharp background competing with the key objects
 - No incorrect label-object matching
+- Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 - **CRITICAL — No citation markers anywhere in the image:** Every label card must contain ONLY three lines: `[pinyin]` / hanzi / english. Do NOT place `[cite:1]`, `[cite:2]`, `[cite:3]`, `[cite:4]`, `[cite:5]`, `[cite:6]`, or any reference artifact on any label card line, especially not in the pinyin line. If cite artifacts appear, the image fails and must be regenerated.
 
 ### VI. Pre-Final Check

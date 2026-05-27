@@ -86,9 +86,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             if (!controller.isLoaded.value) {
               return AppLoadingWidget(
                 message: '加载中...',
-                progress: controller.loadingProgress.value > 0
-                    ? controller.loadingProgress.value
-                    : null,
+                progress: null,
               );
             }
 

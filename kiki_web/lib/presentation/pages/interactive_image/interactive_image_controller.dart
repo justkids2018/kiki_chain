@@ -6,6 +6,7 @@ import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
 import '../../../core/speech/audio_playback_component.dart';
+import '../../widgets/stroke_animation/stroke_speed_config.dart';
 
 class InteractiveImageController extends GetxController {
   late final IInteractiveImageRepository _repository;
@@ -24,6 +25,7 @@ class InteractiveImageController extends GetxController {
   final currentCharIndex = (-1).obs; // -1 indicates no active animation
   final visibleCharCount = 0.obs;
   final totalCharCount = 0.obs;
+  final animationSpeed = 2.0.obs; // 动画速度：点击图片时更快(3.0)，点击单字时稍快(2.0)
   String? _lastInitializedText;
   bool _singleCharacterMode = false;
 
@@ -310,6 +312,11 @@ class InteractiveImageController extends GetxController {
     AppLogger.info(
         '🔊 Speaking region: ${region.text} / ${region.textEnglish}');
 
+    // 点击图片自动播放：使用 fast 速度
+    animationSpeed.value = StrokeSpeedConfig.getSpeedForMode(
+      StrokePlayMode.imageClick,
+    );
+
     // Update UI immediately for instant visual feedback
     activeRegion.value = region;
     _scheduleCharacterAnimation(region.text);
@@ -358,6 +365,11 @@ class InteractiveImageController extends GetxController {
   ) async {
     final trimmed = character.trim();
     if (trimmed.isEmpty) return;
+
+    // 点击单个字：使用 normal 速度
+    animationSpeed.value = StrokeSpeedConfig.getSpeedForMode(
+      StrokePlayMode.characterClick,
+    );
 
     activeRegion.value = region;
     _focusCharacter(region.text, charIndex);

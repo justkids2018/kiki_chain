@@ -61,24 +61,31 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ? Get.find<InteractiveImageController>()
         : Get.put(InteractiveImageController());
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          // Only allow back navigation via the back button, not gestures
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
         children: [
-          // 1. Permanent blurred background — starts loading immediately, eliminates black flash
+          // 1. Blurred background image
           Positioned.fill(
             child: ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Container(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: Colors.black.withValues(alpha: 0.3),
                 child: _buildBackgroundImage(controller.imagePath),
               ),
             ),
           ),
 
-          // 2. Dark overlay (always present)
+          // 2. Darker overlay
           Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.35)),
+            child: Container(color: Colors.black.withValues(alpha: 0.4)),
           ),
 
           // 3. Reactive content: loading spinner OR main layout
@@ -142,6 +149,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           }),
         ],
       ),
+      ),
     );
   }
 
@@ -154,31 +162,31 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     final screenSize = MediaQuery.of(context).size;
     final mediaPadding = MediaQuery.of(context).padding;
 
-    // 计算可用宽度（屏幕宽度 - 左右边距70dp）
-    final availableWidth = screenSize.width - 70;
+    // 计算可用宽度（屏幕宽度 - 左右边距80dp）
+    final availableWidth = screenSize.width - 80;
 
-    // 根据图片宽高比计算图片高度
-    // 图片区域占据约58%，右侧面板42%
-    final imageWidth = availableWidth * 0.58;
+    // 左边图片占60%，右边面板占40%，左边明显更大
+    final imageWidth = availableWidth * 0.60;
     final imageHeight = imageWidth / aspectRatio;
 
     // 上下各留35dp呼吸空间（SafeArea已处理状态栏）
     final maxLayoutHeight =
         (screenSize.height - mediaPadding.top - mediaPadding.bottom - 70)
-            .clamp(380.0, double.infinity);
+            .clamp(400.0, double.infinity);
     final layoutHeight = imageHeight.clamp(0.0, maxLayoutHeight);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35), // 左右边距35dp
+      padding: const EdgeInsets.symmetric(horizontal: 40), // 左右边距40dp
       child: SizedBox(
         height: layoutHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch, // 左右两侧拉伸到相同高度
+          crossAxisAlignment: CrossAxisAlignment.start, // 顶部对齐，不拉伸
           children: [
-            // Left: Square Interactive Image
-            Flexible(
-              flex: 58,
+            // Left: Square Interactive Image (larger, main focus)
+            SizedBox(
+              width: imageWidth,
+              height: layoutHeight,
               child: _buildLargeImageContainer(
                 controller: controller,
               ),
@@ -186,9 +194,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
             const SizedBox(width: 24), // 间距24
 
-            // Right: Character Panel (compact)
-            Flexible(
-              flex: 42,
+            // Right: Character Panel (fixed reasonable height, not stretched)
+            Expanded(
               child: _buildCompactCharacterPanel(controller),
             ),
           ],
@@ -228,40 +235,42 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       aspectRatio: 1.0,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
+            // Strong edge shadow for floating effect
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.5),
+              blurRadius: 60,
+              offset: const Offset(0, 30),
+              spreadRadius: -10,
+            ),
+            // Mid-range shadow
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
+              spreadRadius: -5,
+            ),
+            // Close shadow for depth
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey[50],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 4.0,
-                  child: InteractiveImageView(
-                    imagePath: controller.imagePath,
-                    originalWidth: controller.imageWidth.value,
-                    originalHeight: controller.imageHeight.value,
-                    regions: controller.regions,
-                    onRegionTap: controller.speakRegion,
-                    onRegionTapDown: _triggerScreenDiffusion,
-                  ),
-                ),
-              ),
+          borderRadius: BorderRadius.circular(20),
+          child: InteractiveViewer(
+            minScale: 0.5,
+            maxScale: 4.0,
+            child: InteractiveImageView(
+              imagePath: controller.imagePath,
+              originalWidth: controller.imageWidth.value,
+              originalHeight: controller.imageHeight.value,
+              regions: controller.regions,
+              onRegionTap: controller.speakRegion,
+              onRegionTapDown: _triggerScreenDiffusion,
             ),
           ),
         ),
@@ -274,12 +283,27 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
+          // Strong edge shadow for floating effect
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 60,
+            offset: const Offset(0, 30),
+            spreadRadius: -10,
+          ),
+          // Mid-range shadow
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+            spreadRadius: -5,
+          ),
+          // Close shadow for depth
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -305,7 +329,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.grey[600],
+                        color: const Color(0xFF00C37D),
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -694,47 +718,51 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         .toList(growable: false);
 
     controller.initializeCharacterProgress(region.text);
-    final visibleCount = controller.visibleCharCount.value;
-    final activeIndex = controller.currentCharIndex.value;
-    final int total = characters.length;
-    final int unlocked = visibleCount.clamp(0, total);
 
-    final cells = List<CharacterCell>.generate(total, (index) {
-      CharacterCellStatus status;
+    return Obx(() {
+      final visibleCount = controller.visibleCharCount.value;
+      final activeIndex = controller.currentCharIndex.value;
+      final speed = controller.animationSpeed.value; // 响应速度变化
+      final int total = characters.length;
+      final int unlocked = visibleCount.clamp(0, total);
 
-      if (index >= unlocked) {
-        status = CharacterCellStatus.pending;
-      } else if (activeIndex < 0) {
-        status = CharacterCellStatus.completed;
-      } else if (unlocked == total) {
-        status = index == activeIndex
-            ? CharacterCellStatus.active
-            : CharacterCellStatus.completed;
-      } else if (index < activeIndex) {
-        status = CharacterCellStatus.completed;
-      } else if (index == activeIndex) {
-        status = CharacterCellStatus.active;
-      } else {
-        status = CharacterCellStatus.pending;
-      }
+      final cells = List<CharacterCell>.generate(total, (index) {
+        CharacterCellStatus status;
 
-      return CharacterCell(
-        character: characters[index],
-        status: status,
+        if (index >= unlocked) {
+          status = CharacterCellStatus.pending;
+        } else if (activeIndex < 0) {
+          status = CharacterCellStatus.completed;
+        } else if (unlocked == total) {
+          status = index == activeIndex
+              ? CharacterCellStatus.active
+              : CharacterCellStatus.completed;
+        } else if (index < activeIndex) {
+          status = CharacterCellStatus.completed;
+        } else if (index == activeIndex) {
+          status = CharacterCellStatus.active;
+        } else {
+          status = CharacterCellStatus.pending;
+        }
+
+        return CharacterCell(
+          character: characters[index],
+          status: status,
+        );
+      });
+
+      return Center(
+        child: CharacterStrokeGrid(
+          cells: cells,
+          cellSize: _chineseCellSize,
+          animationSpeed: speed,
+          onCharacterComplete: controller.onCharacterAnimationComplete,
+          onCharacterTap: (index, character) {
+            controller.speakChineseChar(region, index, character);
+          },
+        ),
       );
     });
-
-    return Center(
-      child: CharacterStrokeGrid(
-        cells: cells,
-        cellSize: _chineseCellSize,
-        animationSpeed: 1.35,
-        onCharacterComplete: controller.onCharacterAnimationComplete,
-        onCharacterTap: (index, character) {
-          controller.speakChineseChar(region, index, character);
-        },
-      ),
-    );
   }
 
   Widget _buildLearningInfoSection(

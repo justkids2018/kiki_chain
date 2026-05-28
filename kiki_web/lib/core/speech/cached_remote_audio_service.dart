@@ -9,14 +9,17 @@ import 'package:path_provider/path_provider.dart';
 import '../logging/app_logger.dart';
 
 class CachedRemoteAudioService {
-  final AudioPlayer _player = AudioPlayer();
+  AudioPlayer? _player;
   final Map<String, Future<File>> _inFlightDownloads = {};
   Directory? _cacheDir;
   bool _disposed = false;
+  String? _currentPlayingUrl;
 
   Future<void> initialize() async {
     if (_disposed) return;
     _cacheDir ??= await _resolveCacheDir();
+    // Initialize player once
+    _player ??= AudioPlayer();
   }
 
   Future<void> playUrl(String url) async {
@@ -24,39 +27,67 @@ class CachedRemoteAudioService {
     final trimmed = url.trim();
     if (trimmed.isEmpty) return;
 
+    // If already playing the same URL, ignore
+    if (_currentPlayingUrl == trimmed) {
+      AppLogger.debug('[RemoteAudio] Same audio already playing, ignoring');
+      return;
+    }
+
     await initialize();
 
+    // If playing different audio, stop it first
+    if (_currentPlayingUrl != null) {
+      AppLogger.debug('[RemoteAudio] Stopping current playback');
+      try {
+        await _player!.stop();
+      } catch (e) {
+        AppLogger.debug('[RemoteAudio] Error stopping: $e');
+      }
+    }
+
+    _currentPlayingUrl = trimmed;
     final cachedFile = await _getCachedFile(trimmed);
+
     try {
-      await _player.stop();
-      await _player.setFilePath(cachedFile.path);
-      await _player.seek(Duration.zero);
-      await _player.play();
+      await _player!.setFilePath(cachedFile.path);
+      await _player!.play();
 
-      await _player.playerStateStream
+      // Wait for completion
+      await _player!.playerStateStream
           .firstWhere(
-            (state) => state.processingState == ProcessingState.completed,
+            (state) =>
+              state.processingState == ProcessingState.completed ||
+              state.processingState == ProcessingState.idle,
           )
-          .timeout(const Duration(seconds: 30));
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              AppLogger.warning('[RemoteAudio] Playback timeout');
+              return PlayerState(false, ProcessingState.idle);
+            },
+          );
 
-      await _player.stop();
       AppLogger.debug('[RemoteAudio] Finished: $trimmed');
     } catch (e) {
       AppLogger.error('[RemoteAudio] Error playing $trimmed', e);
-      rethrow;
+    } finally {
+      _currentPlayingUrl = null;
     }
   }
 
   Future<void> stop() async {
     if (_disposed) return;
     try {
-      await _player.stop();
+      await _player?.stop();
+      _currentPlayingUrl = null;
     } catch (_) {}
   }
 
   void dispose() {
     _disposed = true;
-    _player.dispose();
+    _currentPlayingUrl = null;
+    _player?.dispose();
+    _player = null;
   }
 
   Future<File> _getCachedFile(String url) async {

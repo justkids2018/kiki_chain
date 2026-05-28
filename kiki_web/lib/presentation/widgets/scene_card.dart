@@ -142,7 +142,7 @@ class SceneCard extends StatelessWidget {
           Text(
             scene.nameEn,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 12, // 符合项目规范最小字号 12px
               color: Colors.white.withValues(alpha: 0.8),
             ),
             maxLines: 1,
@@ -170,7 +170,7 @@ class SceneCard extends StatelessWidget {
             child: Text(
               localizations.newBadge,
               style: const TextStyle(
-                fontSize: 10,
+                fontSize: 12, // 符合项目规范最小字号 12px
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

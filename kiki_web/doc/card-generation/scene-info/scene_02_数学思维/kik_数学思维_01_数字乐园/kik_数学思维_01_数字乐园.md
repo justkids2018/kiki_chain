@@ -59,28 +59,28 @@ Character baseline:
 - The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
 
 ### III. 10 Target Vocabulary Objects
-- [shù zì yī] / 数字一 / Number One (/ˈnʌmbər wʌn/)
-- [shù zì èr] / 数字二 / Number Two (/ˈnʌmbər tuː/)
-- [shù zì sān] / 数字三 / Number Three (/ˈnʌmbər θriː/)
-- [shù zì sì] / 数字四 / Number Four (/ˈnʌmbər fɔːr/)
-- [shù zì wǔ] / 数字五 / Number Five (/ˈnʌmbər faɪv/)
-- [shù zì liù] / 数字六 / Number Six (/ˈnʌmbər sɪks/)
-- [shù zì qī] / 数字七 / Number Seven (/ˈnʌmbər ˈsɛvən/)
-- [shù zì bā] / 数字八 / Number Eight (/ˈnʌmbər eɪt/)
-- [shù zì jiǔ] / 数字九 / Number Nine (/ˈnʌmbər naɪn/)
-- [shù zì shí] / 数字十 / Number Ten (/ˈnʌmbər tɛn/)
+- [yī] / 一 / One (/wʌn/)
+- [èr] / 二 / Two (/tuː/)
+- [sān] / 三 / Three (/θriː/)
+- [sì] / 四 / Four (/fɔːr/)
+- [wǔ] / 五 / Five (/faɪv/)
+- [liù] / 六 / Six (/sɪks/)
+- [qī] / 七 / Seven (/ˈsɛvən/)
+- [bā] / 八 / Eight (/eɪt/)
+- [jiǔ] / 九 / Nine (/naɪn/)
+- [shí] / 十 / Ten (/tɛn/)
 
 Object placement map:
-1. 数字一 (shù zì yī / Number One) — place naturally at a real-world position in this scene.
-2. 数字二 (shù zì èr / Number Two) — place naturally at a real-world position in this scene.
-3. 数字三 (shù zì sān / Number Three) — place naturally at a real-world position in this scene.
-4. 数字四 (shù zì sì / Number Four) — place naturally at a real-world position in this scene.
-5. 数字五 (shù zì wǔ / Number Five) — place naturally at a real-world position in this scene.
-6. 数字六 (shù zì liù / Number Six) — place naturally at a real-world position in this scene.
-7. 数字七 (shù zì qī / Number Seven) — place naturally at a real-world position in this scene.
-8. 数字八 (shù zì bā / Number Eight) — place naturally at a real-world position in this scene.
-9. 数字九 (shù zì jiǔ / Number Nine) — place naturally at a real-world position in this scene.
-10. 数字十 (shù zì shí / Number Ten) — place naturally at a real-world position in this scene.
+1. 一 (yī / One) — place naturally at a real-world position in this scene.
+2. 二 (èr / Two) — place naturally at a real-world position in this scene.
+3. 三 (sān / Three) — place naturally at a real-world position in this scene.
+4. 四 (sì / Four) — place naturally at a real-world position in this scene.
+5. 五 (wǔ / Five) — place naturally at a real-world position in this scene.
+6. 六 (liù / Six) — place naturally at a real-world position in this scene.
+7. 七 (qī / Seven) — place naturally at a real-world position in this scene.
+8. 八 (bā / Eight) — place naturally at a real-world position in this scene.
+9. 九 (jiǔ / Nine) — place naturally at a real-world position in this scene.
+10. 十 (shí / Ten) — place naturally at a real-world position in this scene.
 
 Critical placement rules:
 - Exactly 10 target objects, 10 label cards, 10 arrows
@@ -105,16 +105,16 @@ Line 2: 汉字
 Line 3: english
 
 The 10 label cards must be:
-- [shù zì yī] / 数字一 / Number One
-- [shù zì èr] / 数字二 / Number Two
-- [shù zì sān] / 数字三 / Number Three
-- [shù zì sì] / 数字四 / Number Four
-- [shù zì wǔ] / 数字五 / Number Five
-- [shù zì liù] / 数字六 / Number Six
-- [shù zì qī] / 数字七 / Number Seven
-- [shù zì bā] / 数字八 / Number Eight
-- [shù zì jiǔ] / 数字九 / Number Nine
-- [shù zì shí] / 数字十 / Number Ten
+- [yī] / 一 / One
+- [èr] / 二 / Two
+- [sān] / 三 / Three
+- [sì] / 四 / Four
+- [wǔ] / 五 / Five
+- [liù] / 六 / Six
+- [qī] / 七 / Seven
+- [bā] / 八 / Eight
+- [jiǔ] / 九 / Nine
+- [shí] / 十 / Ten
 
 Text rules:
 - Hanzi largest and boldest
@@ -140,16 +140,16 @@ Arrow rules:
 - All arrows should share one consistent accent color family
 
 Arrow precision map:
-- 一 arrow -> lands on Number One object body (not nearby blank/background).
-- 二 arrow -> lands on Number Two object body (not nearby blank/background).
-- 三 arrow -> lands on Number Three object body (not nearby blank/background).
-- 四 arrow -> lands on Number Four object body (not nearby blank/background).
-- 五 arrow -> lands on Number Five object body (not nearby blank/background).
-- 六 arrow -> lands on Number Six object body (not nearby blank/background).
-- 七 arrow -> lands on Number Seven object body (not nearby blank/background).
-- 八 arrow -> lands on Number Eight object body (not nearby blank/background).
-- 九 arrow -> lands on Number Nine object body (not nearby blank/background).
-- 十 arrow -> lands on Number Ten object body (not nearby blank/background).
+- 一 arrow -> lands on One object body (not nearby blank/background).
+- 二 arrow -> lands on Two object body (not nearby blank/background).
+- 三 arrow -> lands on Three object body (not nearby blank/background).
+- 四 arrow -> lands on Four object body (not nearby blank/background).
+- 五 arrow -> lands on Five object body (not nearby blank/background).
+- 六 arrow -> lands on Six object body (not nearby blank/background).
+- 七 arrow -> lands on Seven object body (not nearby blank/background).
+- 八 arrow -> lands on Eight object body (not nearby blank/background).
+- 九 arrow -> lands on Nine object body (not nearby blank/background).
+- 十 arrow -> lands on Ten object body (not nearby blank/background).
 
 ### VI. Branding Badge
 - Top-right corner

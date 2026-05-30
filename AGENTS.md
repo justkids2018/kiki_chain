@@ -14,6 +14,9 @@ Read these files first:
 Keep project-specific operational details in project docs (for example `docs/project-ops.md`),
 not in this entry file.
 
+For `kiki_web` architecture generation, use project-owned docs in `docs/architecture/` as the baseline.
+For `kiki_web` implementation rules, follow `docs/architecture/kiki_web_flutter_simplified_ddd_architecture.md` and `docs/architecture/kiki_web_flutter_simplified_ddd_implementation_guide.md`.
+
 ## Execution Rule
 
 - Prefer skill-first routing.

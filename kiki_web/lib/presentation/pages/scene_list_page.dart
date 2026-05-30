@@ -261,16 +261,21 @@ class _SceneListPageState extends State<SceneListPage> {
       builder: (context, constraints) {
         final availableHeight = constraints.maxHeight;
         final availableWidth = constraints.maxWidth;
+        final isPhone = constraints.maxWidth < 700;
         // 为标题预留空间（标题高度约 60px）
-        const titleHeight = 60.0;
-        final cardSize = (availableWidth * 0.62).clamp(210.0, 400.0).toDouble();
+        final titleHeight = isPhone ? 48.0 : 60.0;
+        final cardSize = (availableWidth * (isPhone ? 0.78 : 0.62))
+            .clamp(isPhone ? 180.0 : 210.0, isPhone ? 320.0 : 400.0)
+            .toDouble();
         final maxAllowedByHeight = ((availableHeight - titleHeight) * 0.74)
-            .clamp(220.0, 520.0)
+            .clamp(isPhone ? 180.0 : 220.0, isPhone ? 380.0 : 520.0)
             .toDouble();
         final finalCardSize =
             cardSize > maxAllowedByHeight ? maxAllowedByHeight : cardSize;
         final cardWidth = finalCardSize;
         final cardHeight = finalCardSize;
+        final cardOverlap = isPhone ? 34.0 : _targetCardOverlap;
+        final deckRadius = isPhone ? 2 : 4;
 
         return Stack(
           children: [
@@ -312,6 +317,8 @@ class _SceneListPageState extends State<SceneListPage> {
                   controller: controller,
                   cardWidth: cardWidth,
                   cardHeight: cardHeight,
+                  cardOverlap: cardOverlap,
+                  radius: deckRadius,
                 ),
               ),
             ),
@@ -324,11 +331,13 @@ class _SceneListPageState extends State<SceneListPage> {
               child: Center(
                 child: Text(
                   widget.category.name,
-                  style: const TextStyle(
-                    fontSize: 24,
+                  style: TextStyle(
+                    fontSize: isPhone ? 20 : 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shadows: [Shadow(color: Colors.black45, blurRadius: 8)],
+                    shadows: const [
+                      Shadow(color: Colors.black45, blurRadius: 8),
+                    ],
                   ),
                 ),
               ),
@@ -349,6 +358,7 @@ class _SceneListPageState extends State<SceneListPage> {
     required int index,
     required double cardWidth,
     required double cardHeight,
+    required double cardOverlap,
   }) {
     final difference = index - _currentPage;
     final absDifference = difference.abs();
@@ -361,7 +371,7 @@ class _SceneListPageState extends State<SceneListPage> {
     final isCenterCard = absDifference < 0.5;
     const verticalOffset = 0.0;
 
-    final targetCenterDistance = cardWidth - _targetCardOverlap;
+    final targetCenterDistance = cardWidth - cardOverlap;
     final horizontalOffset = difference * targetCenterDistance;
 
     return Center(
@@ -399,6 +409,8 @@ class _SceneListPageState extends State<SceneListPage> {
     required SceneListController controller,
     required double cardWidth,
     required double cardHeight,
+    required double cardOverlap,
+    required int radius,
   }) {
     final scenes = controller.scenes;
     if (scenes.isEmpty) {
@@ -406,8 +418,6 @@ class _SceneListPageState extends State<SceneListPage> {
     }
 
     final base = _currentPage.round();
-    // 大屏下也保持 5-9 张的可见卡片量，避免看起来只有 3 张。
-    const radius = 4;
     final virtualIndices =
         List<int>.generate(radius * 2 + 1, (i) => base - radius + i);
 
@@ -427,6 +437,7 @@ class _SceneListPageState extends State<SceneListPage> {
             index: virtualIndex,
             cardWidth: cardWidth,
             cardHeight: cardHeight,
+            cardOverlap: cardOverlap,
           ),
       ],
     );

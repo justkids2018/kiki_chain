@@ -99,7 +99,7 @@ class GuestProfile extends StatelessWidget {
                 height: 54,
                 child: AppGradientButton(
                   text: '注册新账号',
-                  onPressed: () => Get.toNamed('/login'),
+                  onPressed: () => Get.toNamed('/register'),
                   height: 54,
                   borderRadius: 27,
                   fontWeight: FontWeight.w600,

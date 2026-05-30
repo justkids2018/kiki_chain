@@ -85,3 +85,18 @@ Fallback behavior:
 - Keep feature artifacts under `doc/features/<feature>/`.
 - Keep reverse docs under `doc/feature-docs/<feature>/`.
 - Keep docs aligned with delivered behavior.
+
+## Kiki Web Architecture Baseline (Mandatory)
+
+For `kiki_web` feature design and code generation, always apply this project-owned baseline:
+
+1. `docs/architecture/kiki_web_flutter_simplified_ddd_architecture.md`
+2. `docs/architecture/kiki_web_flutter_simplified_ddd_implementation_guide.md`
+3. New feature pages must follow the dedicated feature directory convention defined in implementation guide section `2.1 Feature Directory Convention` (co-locate `pages/controllers/widgets` under one feature directory).
+
+Execution requirements:
+
+- External architecture references are inspiration only; do not copy them verbatim.
+- Every generated feature should be independently structured and regenerable.
+- Keep one-way dependency flow: presentation -> domain -> data -> core/services.
+- Avoid cross-feature direct coupling; share only through neutral contracts or shared infrastructure.

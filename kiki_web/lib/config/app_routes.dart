@@ -2,7 +2,9 @@ import 'package:get/get.dart';
 import 'package:kikichain/presentation/pages/interactive_image_home/interactive_image_home_page.dart';
 import '../presentation/pages/home_page.dart';
 import '../presentation/pages/login_page.dart';
-import '../presentation/pages/register_page.dart';
+import '../presentation/pages/login_selector_page.dart';
+import '../presentation/pages/register/controllers/register_page_controller.dart';
+import '../presentation/pages/register/pages/register_page.dart';
 import '../presentation/pages/welcome_page.dart';
 import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
@@ -19,10 +21,15 @@ class AppRoutes {
       name: '/',
       page: () => const SplashPage(),
     ),
-    // 欢迎页面（登录/注册选择页）
+    // 欢迎页面（纯展示页）
     GetPage(
       name: AppConstants.routeWelcome,
       page: () => const WelcomePage(),
+    ),
+    // 登录选择页面（独立页）
+    GetPage(
+      name: AppConstants.routeLoginSelector,
+      page: () => const LoginSelectorPage(),
     ),
     // 启动页兼容路由
     GetPage(
@@ -46,6 +53,11 @@ class AppRoutes {
     GetPage(
       name: AppConstants.routeRegister,
       page: () => const RegisterPage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<RegisterPageController>(
+          () => RegisterPageController(),
+        );
+      }),
     ),
     // 互动图片页面
     GetPage(

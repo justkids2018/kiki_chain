@@ -25,6 +25,7 @@ class AppConstants {
   static const String routeProfile = '/profile';
   static const String routeWebView = '/webview';
   static const String routeWelcome = '/welcome';
+  static const String routeLoginSelector = '/login_selector';
   static const String routeOnboarding = '/onboarding';
   static const String routeChat = '/chat';
   static const String routeChatDify = '/chat/dify';

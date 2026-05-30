@@ -29,9 +29,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
 
   double get _englishFontSizeTablet => _isAndroid ? 14.0 : 24.0;
-  double get _englishFontSizePhone => _isAndroid ? 20.0 : 36.0;
   double get _englishGridHeight => _isAndroid ? 56.0 : 74.0;
-  double get _chineseCellSize => _isAndroid ? 80.0 : 120.0;
+  double get _chineseCellSizeTablet => _isAndroid ? 80.0 : 120.0;
+  double get _chineseCellSizePhone => _isAndroid ? 64.0 : 76.0;
 
   @override
   void initState() {
@@ -71,90 +71,82 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Stack(
-        children: [
-          // 1. Blurred background image
-          Positioned.fill(
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.3),
-                child: _buildBackgroundImage(controller.imagePath),
+          children: [
+            // 1. Blurred background image
+            Positioned.fill(
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  child: _buildBackgroundImage(controller.imagePath),
+                ),
               ),
             ),
-          ),
 
-          // 2. Darker overlay
-          Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.4)),
-          ),
+            // 2. Darker overlay
+            Positioned.fill(
+              child: Container(color: Colors.black.withValues(alpha: 0.4)),
+            ),
 
-          // 3. Reactive content: loading spinner OR main layout
-          Obx(() {
-            if (!controller.isLoaded.value) {
-              return AppLoadingWidget(
-                message: '加载中...',
-                progress: null,
-              );
-            }
+            // 3. Reactive content: loading spinner OR main layout
+            Obx(() {
+              if (!controller.isLoaded.value) {
+                return AppLoadingWidget(
+                  message: '加载中...',
+                  progress: null,
+                );
+              }
 
-            final imageWidth = controller.imageWidth.value;
-            final imageHeight = controller.imageHeight.value;
-            final aspectRatio = imageWidth > 0 && imageHeight > 0
-                ? imageWidth / imageHeight
-                : 1.0;
+              final imageWidth = controller.imageWidth.value;
+              final imageHeight = controller.imageHeight.value;
+              final aspectRatio = imageWidth > 0 && imageHeight > 0
+                  ? imageWidth / imageHeight
+                  : 1.0;
 
-            // Responsive design: default to tablet, only switch to phone if smaller
-            final size = MediaQuery.of(context).size;
-            final isPhone = size.width < 600;
-
-            return Stack(
-              children: [
-                // Main content — vertically centered below status bar
-                Positioned.fill(
-                  child: SafeArea(
-                    bottom: false,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 35),
-                      child: ScreenDiffusionLayer(
-                        controller: _diffusionController,
-                        child: Container(
-                          key: _effectLayerKey,
-                          alignment:
-                              isPhone ? Alignment.center : Alignment.center,
-                          child: isPhone
-                              ? _buildPhoneLayout(
-                                  context, controller, aspectRatio)
-                              : _buildTabletLayout(
-                                  context,
-                                  controller,
-                                  aspectRatio,
-                                ),
+              return Stack(
+                children: [
+                  // Main content — vertically centered below status bar
+                  Positioned.fill(
+                    child: SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 35),
+                        child: ScreenDiffusionLayer(
+                          controller: _diffusionController,
+                          child: Container(
+                            key: _effectLayerKey,
+                            alignment: Alignment.center,
+                            child: _buildUnifiedLandscapeLayout(
+                              context,
+                              controller,
+                              aspectRatio,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-                // Floating TopBar (always on top layer)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: SafeArea(
-                    child: _buildFloatingTopBar(context),
+                  // Floating TopBar (always on top layer)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      child: _buildFloatingTopBar(context),
+                    ),
                   ),
-                ),
-              ],
-            );
-          }),
-        ],
-      ),
+                ],
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
 
-  /// Tablet layout (iPad): Left image, right character panel side by side
-  Widget _buildTabletLayout(
+  /// Unified landscape layout: left image + right learning panel.
+  Widget _buildUnifiedLandscapeLayout(
     BuildContext context,
     InteractiveImageController controller,
     double aspectRatio,
@@ -201,29 +193,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           ],
         ),
       ),
-    );
-  }
-
-  /// Phone layout: Full screen image with floating character panel overlay
-  Widget _buildPhoneLayout(
-    BuildContext context,
-    InteractiveImageController controller,
-    double aspectRatio,
-  ) {
-    return Stack(
-      children: [
-        // Full screen image
-        _buildLargeImageContainer(
-          controller: controller,
-        ),
-
-        // Floating character panel overlay (bottom-right corner)
-        Positioned(
-          bottom: 24,
-          right: 24,
-          child: _buildFloatingCharacterPanel(controller),
-        ),
-      ],
     );
   }
 
@@ -389,7 +358,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         _buildLearningInfoSection(
                           controller,
                           region,
-                          false,
                         ),
                         const SizedBox(height: 10),
                         Row(
@@ -504,181 +472,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  /// Floating character panel for phone (bottom-right overlay, collapsible)
-  Widget _buildFloatingCharacterPanel(InteractiveImageController controller) {
-    return Obx(() {
-      final region = controller.activeRegion.value;
-      final isSpeaking = controller.isSpeaking.value;
-
-      if (region == null) {
-        // Minimal state: hint pill
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.touch_app_outlined,
-                  size: 18, color: Color(0xFF00C37D)),
-              const SizedBox(width: 6),
-              Text(
-                '点击物品',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[700],
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      // Expanded state: show character and play button
-      return Container(
-        width: 280,
-        constraints: const BoxConstraints(maxHeight: 400),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Character grid
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildLearningInfoSection(
-                      controller,
-                      region,
-                      true,
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(child: Divider(color: Colors.grey[200])),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            '笔顺练习',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey[400],
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey[200])),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Character stroke grid
-                    _buildCharacterGrid(controller, region),
-                  ],
-                ),
-              ),
-            ),
-
-            // Play button
-            Container(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey[100]!, width: 1),
-                ),
-              ),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => controller.speakChinesePhrase(region),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 6,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00C37D),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF00C37D)
-                                  .withValues(alpha: 0.35),
-                              blurRadius: 12,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            if (isSpeaking)
-                              const SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white,
-                                  ),
-                                ),
-                              ),
-                            Icon(
-                              isSpeaking
-                                  ? Icons.graphic_eq_rounded
-                                  : Icons.volume_up_rounded,
-                              color: Colors.white,
-                              size: 22,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        isSpeaking ? '播放中' : '朗读中文',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Color(0xFF00C37D),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
   Widget _buildBackgroundImage(String path) {
     if (path.startsWith('http')) {
       return Image.network(
@@ -754,7 +547,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       return Center(
         child: CharacterStrokeGrid(
           cells: cells,
-          cellSize: _chineseCellSize,
+          cellSize: MediaQuery.of(context).size.shortestSide < 600
+              ? _chineseCellSizePhone
+              : _chineseCellSizeTablet,
           animationSpeed: speed,
           onCharacterComplete: controller.onCharacterAnimationComplete,
           onCharacterTap: (index, character) {
@@ -768,7 +563,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   Widget _buildLearningInfoSection(
     InteractiveImageController controller,
     InteractiveRegion region,
-    bool isPhone,
   ) {
     final english = region.textEnglish.trim();
     final phonetic = region.textPhonetic.trim();
@@ -781,8 +575,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             onTap: () => controller.speakEnglishWord(region),
             child: EnglishFourLineGrid(
               text: english,
-              fontSize:
-                  isPhone ? _englishFontSizePhone : _englishFontSizeTablet,
+              fontSize: _englishFontSizeTablet,
               fontColor: Colors.black87,
               height: _englishGridHeight,
               markVowels: true,

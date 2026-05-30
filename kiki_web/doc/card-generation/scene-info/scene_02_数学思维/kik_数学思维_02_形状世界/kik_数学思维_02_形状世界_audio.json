@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "圆形",
+    "text_pinyin": "yuán xíng",
+    "text_english": "Circle",
+    "text_phonetic": "/ˈsɜːrkl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 155,
+            "y": 108
+          },
+          {
+            "x": 311,
+            "y": 108
+          },
+          {
+            "x": 155,
+            "y": 291
+          },
+          {
+            "x": 311,
+            "y": 291
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 231,
+            "y": 321
+          },
+          {
+            "x": 364,
+            "y": 321
+          },
+          {
+            "x": 231,
+            "y": 463
+          },
+          {
+            "x": 364,
+            "y": 463
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/圆形-455ea4_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/圆形-455ea4_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/circle-455ea4_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/circle-455ea4_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "正方形",
+    "text_pinyin": "zhèng fāng xíng",
+    "text_english": "Square",
+    "text_phonetic": "/skwɛr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 423,
+            "y": 103
+          },
+          {
+            "x": 612,
+            "y": 103
+          },
+          {
+            "x": 423,
+            "y": 283
+          },
+          {
+            "x": 612,
+            "y": 283
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 460,
+            "y": 295
+          },
+          {
+            "x": 565,
+            "y": 295
+          },
+          {
+            "x": 460,
+            "y": 405
+          },
+          {
+            "x": 565,
+            "y": 405
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/正方形-2b84f8_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/正方形-2b84f8_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/square-2b84f8_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/square-2b84f8_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "三角形",
+    "text_pinyin": "sān jiǎo xíng",
+    "text_english": "Triangle",
+    "text_phonetic": "/ˈtraɪæŋɡl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 765,
+            "y": 199
+          },
+          {
+            "x": 953,
+            "y": 199
+          },
+          {
+            "x": 765,
+            "y": 338
+          },
+          {
+            "x": 953,
+            "y": 338
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 725,
+            "y": 343
+          },
+          {
+            "x": 867,
+            "y": 343
+          },
+          {
+            "x": 725,
+            "y": 480
+          },
+          {
+            "x": 867,
+            "y": 480
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/三角形-a3392f_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/三角形-a3392f_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/triangle-a3392f_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/triangle-a3392f_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "长方形",
+    "text_pinyin": "cháng fāng xíng",
+    "text_english": "Rectangle",
+    "text_phonetic": "/ˈrɛktæŋɡl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 18,
+            "y": 419
+          },
+          {
+            "x": 186,
+            "y": 419
+          },
+          {
+            "x": 18,
+            "y": 554
+          },
+          {
+            "x": 186,
+            "y": 554
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 60,
+            "y": 538
+          },
+          {
+            "x": 278,
+            "y": 538
+          },
+          {
+            "x": 60,
+            "y": 646
+          },
+          {
+            "x": 278,
+            "y": 646
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/长方形-12d25e_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/长方形-12d25e_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/rectangle-12d25e_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/rectangle-12d25e_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "星形",
+    "text_pinyin": "xīng xíng",
+    "text_english": "Star",
+    "text_phonetic": "/stɑːr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 49,
+            "y": 665
+          },
+          {
+            "x": 231,
+            "y": 665
+          },
+          {
+            "x": 49,
+            "y": 805
+          },
+          {
+            "x": 231,
+            "y": 805
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 241,
+            "y": 632
+          },
+          {
+            "x": 407,
+            "y": 632
+          },
+          {
+            "x": 241,
+            "y": 797
+          },
+          {
+            "x": 407,
+            "y": 797
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/星形-039c3c_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/星形-039c3c_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/star-039c3c_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/star-039c3c_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "心形",
+    "text_pinyin": "xīn xíng",
+    "text_english": "Heart",
+    "text_phonetic": "/hɑːrt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 852,
+            "y": 441
+          },
+          {
+            "x": 1021,
+            "y": 441
+          },
+          {
+            "x": 852,
+            "y": 586
+          },
+          {
+            "x": 1021,
+            "y": 586
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 726,
+            "y": 563
+          },
+          {
+            "x": 878,
+            "y": 563
+          },
+          {
+            "x": 726,
+            "y": 682
+          },
+          {
+            "x": 878,
+            "y": 682
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/心形-421dad_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/心形-421dad_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/heart-421dad_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/heart-421dad_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "菱形",
+    "text_pinyin": "líng xíng",
+    "text_english": "Diamond",
+    "text_phonetic": "/ˈdaɪəmənd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 412,
+            "y": 808
+          },
+          {
+            "x": 566,
+            "y": 808
+          },
+          {
+            "x": 412,
+            "y": 941
+          },
+          {
+            "x": 566,
+            "y": 941
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 459,
+            "y": 624
+          },
+          {
+            "x": 602,
+            "y": 624
+          },
+          {
+            "x": 459,
+            "y": 791
+          },
+          {
+            "x": 602,
+            "y": 791
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/菱形-d5570e_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/菱形-d5570e_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/diamond-d5570e_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/diamond-d5570e_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "椭圆形",
+    "text_pinyin": "tuǒ yuán xíng",
+    "text_english": "Oval",
+    "text_phonetic": "/ˈoʊvəl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 827,
+            "y": 689
+          },
+          {
+            "x": 999,
+            "y": 689
+          },
+          {
+            "x": 827,
+            "y": 824
+          },
+          {
+            "x": 999,
+            "y": 824
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 646,
+            "y": 682
+          },
+          {
+            "x": 851,
+            "y": 682
+          },
+          {
+            "x": 646,
+            "y": 819
+          },
+          {
+            "x": 851,
+            "y": 819
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_02_形状世界/椭圆形-f9c185_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/椭圆形-f9c185_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_02_形状世界/oval-f9c185_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_02_形状世界/oval-f9c185_en.mp3"
+  }
+]

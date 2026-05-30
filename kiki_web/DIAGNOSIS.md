@@ -91,3 +91,37 @@
 ✅ `keepthinking.me`（强制解析到目标 IP）返回 `200`
 ✅ `www.keepthinking.me`（强制解析到目标 IP）返回 `200`
 ✅ Nginx 配置测试通过并已 reload
+
+---
+
+## Failure Signature (2026-05-29)
+1. 从首页进入场景列表时，多个分类入口偶发显示相同场景数据（本应为空的分类也出现数据）。
+2. 场景为空时页面背景为黑色，不符合主题视觉规范。
+
+## Root Cause
+场景列表页面使用 `GetBuilder` 的全局 controller 模式，分类切换时存在复用旧 controller 的风险；同时加载流程在请求完成前未清空旧列表，导致短暂或偶发显示上一分类数据。另一个问题是空列表背景兜底色使用了黑/深灰，未使用应用主题背景。
+
+## Evidence
+- `scene_list_page.dart` 原实现：`GetBuilder<SceneListController>(init: ...)` 未设置 `global: false` 和按分类 `tag`。
+- `scene_list_controller.dart` 原实现：`loadScenes()` 请求前未 `clear`，请求失败时也未清空，容易残留旧数据。
+- 线上接口验证：`/api/v1/mobile/scene/categories/cat_001/scenes` 与 `/api/v1/mobile/scene/categories/cat_002/scenes` 返回存在差异，说明“所有入口都有数据”不是必然的后端全量返回。
+- `scene_list_page.dart` 原实现空背景 `Colors.grey[900]` + 固定黑色遮罩。
+
+## Affected Scope
+- `kiki_web/lib/presentation/pages/scene_list_page.dart`
+- `kiki_web/lib/presentation/controllers/scene_list_controller.dart`
+- `kiki_web/lib/data/repositories/scene_repository_impl.dart`
+
+## Patch Plan
+1. 场景列表页 controller 按分类隔离：`tag=category.id` + `global=false` + `autoRemove=true`。
+2. 加载场景前清空旧数据，异常时也清空，避免残留。
+3. 仓储层增加防御式过滤，只保留 `scene.categoryId == categoryId` 数据。
+4. 空列表背景与图片加载失败兜底统一为主题背景，并在无数据时取消黑色遮罩。
+
+## Regression Risk
+低。改动集中在场景列表页面的数据管理与空态视觉，不影响登录、互动学习主链路。
+
+## Verification Plan
+1. 首页分别点击第 1/2/3 分类，确认每个分类只显示自身数据。
+2. 对空分类确认文案为“暂无场景”，背景为主题色而非黑色。
+3. 在弱网和接口失败场景下重试，确认不会残留上一分类数据。

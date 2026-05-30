@@ -62,6 +62,7 @@ class SceneRepositoryImpl implements ISceneRepository {
 
       final scenes = scenesJson
           .map((json) => Scene.fromJson(json as Map<String, dynamic>))
+          .where((scene) => scene.categoryId == categoryId)
           .toList();
 
       // Sort by order
@@ -78,9 +79,11 @@ class SceneRepositoryImpl implements ISceneRepository {
 
   /// 获取场景列表（包含原始数据）
   /// 返回 Map，包含 Scene 对象和原始 JSON 数据
-  Future<List<Map<String, dynamic>>> getScenesByCategoryWithRawData(String categoryId) async {
+  Future<List<Map<String, dynamic>>> getScenesByCategoryWithRawData(
+      String categoryId) async {
     try {
-      AppLogger.info('📦 Fetching scenes with raw data for category: $categoryId');
+      AppLogger.info(
+          '📦 Fetching scenes with raw data for category: $categoryId');
 
       final response = await _apiService.getScenesByCategory(categoryId);
 
@@ -102,9 +105,10 @@ class SceneRepositoryImpl implements ISceneRepository {
 
       // Sort by order
       scenesWithRawData.sort((a, b) =>
-        (a['scene'] as Scene).order.compareTo((b['scene'] as Scene).order));
+          (a['scene'] as Scene).order.compareTo((b['scene'] as Scene).order));
 
-      AppLogger.info('✅ Fetched ${scenesWithRawData.length} scenes with raw data');
+      AppLogger.info(
+          '✅ Fetched ${scenesWithRawData.length} scenes with raw data');
 
       return scenesWithRawData;
     } catch (e, stackTrace) {

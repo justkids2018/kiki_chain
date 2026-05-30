@@ -8,6 +8,7 @@ import '../widgets/glass_back_button.dart';
 import '../widgets/app_loading_widget.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../domain/entities/scene.dart';
+import '../../design_ui/kiki_ui_kit.dart';
 
 /// 场景列表页面 — 层叠式卡片布局 + 高斯模糊背景
 class SceneListPage extends StatefulWidget {
@@ -58,10 +59,13 @@ class _SceneListPageState extends State<SceneListPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SceneListController>(
+      tag: widget.category.id,
       init: SceneListController(category: widget.category),
+      global: false,
+      autoRemove: true,
       builder: (controller) {
         return Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: KikiUiColors.pageBackground,
           body: Stack(
             fit: StackFit.expand,
             children: [
@@ -69,7 +73,12 @@ class _SceneListPageState extends State<SceneListPage> {
               _buildBlurredBackground(controller),
 
               // 2. 深色遮罩
-              Container(color: Colors.black.withOpacity(0.35)),
+              Obx(() {
+                final hasScenes = controller.scenes.isNotEmpty;
+                return Container(
+                  color: Colors.black.withOpacity(hasScenes ? 0.35 : 0.0),
+                );
+              }),
 
               // 3. 主内容
               SafeArea(child: _buildBody(controller)),
@@ -87,7 +96,7 @@ class _SceneListPageState extends State<SceneListPage> {
   Widget _buildBlurredBackground(SceneListController controller) {
     return Obx(() {
       if (controller.scenes.isEmpty) {
-        return Container(color: Colors.grey[900]);
+        return Container(decoration: KikiUiDecor.pageBackgroundDecor);
       }
 
       final scenes = controller.scenes;
@@ -131,7 +140,7 @@ class _SceneListPageState extends State<SceneListPage> {
     if (!isValid) {
       return Opacity(
         opacity: opacity,
-        child: Container(color: Colors.grey[900]),
+        child: Container(decoration: KikiUiDecor.pageBackgroundDecor),
       );
     }
 
@@ -148,7 +157,8 @@ class _SceneListPageState extends State<SceneListPage> {
           fadeInDuration: Duration.zero,
           fadeOutDuration: Duration.zero,
           placeholder: (_, __) => const SizedBox.expand(),
-          errorWidget: (_, __, ___) => Container(color: Colors.grey[900]),
+          errorWidget: (_, __, ___) =>
+              Container(decoration: KikiUiDecor.pageBackgroundDecor),
         ),
       ),
     );
@@ -199,9 +209,15 @@ class _SceneListPageState extends State<SceneListPage> {
       }
 
       if (controller.scenes.isEmpty) {
-        return const Center(
-          child: Text('暂无场景',
-              style: TextStyle(fontSize: 16, color: Colors.white70)),
+        return Center(
+          child: Text(
+            '暂无场景',
+            style: TextStyle(
+              fontSize: 16,
+              color: KikiUiColors.textSecondary.withValues(alpha: 0.95),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         );
       }
 

@@ -35,17 +35,22 @@ class SceneListController extends GetxController {
     try {
       isLoadingScenes.value = true;
       errorMessage.value = '';
+      // 进入新分类时先清空旧列表，避免短暂展示上一个分类的数据。
+      scenes.clear();
 
       AppLogger.info('📦 Loading scenes for category: ${category.id}');
 
       final result = await _sceneRepository.getScenesByCategory(category.id);
 
-      scenes.value = result;
+      // 防御式过滤：即便后端异常返回了其他分类数据，也只显示当前分类。
+      scenes.value =
+          result.where((scene) => scene.categoryId == category.id).toList();
 
       AppLogger.info('✅ Loaded ${scenes.length} scenes');
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to load scenes', e, stackTrace);
       errorMessage.value = e.toString();
+      scenes.clear();
     } finally {
       isLoadingScenes.value = false;
     }

@@ -202,6 +202,8 @@
                             <th>英文</th>
                             <th>CN 播放</th>
                             <th>EN 播放</th>
+                            <th>CN 下载</th>
+                            <th>EN 下载</th>
                             <th>audio_stem</th>
                             <th>CN URL</th>
                             <th>EN URL</th>
@@ -221,6 +223,7 @@
         const textEl = document.getElementById('jsonText');
         const urlEl = document.getElementById('jsonUrl');
         const fileInput = document.getElementById('fileInput');
+        const DEFAULT_JSON_URL = 'file:///Users/qisd/Documents/development/my_project/kiki_chain/kiki_web/doc/card-generation/scene-info/scene_02_数学思维/kik_数学思维_06_比大小/kik_数学思维_06_比大小_audio.json';
 
         const player = new Audio();
         player.preload = 'none';
@@ -398,6 +401,12 @@
                 const enBtn = x.en_url
                     ? `<button class="small primary" data-play="${safeText(x.en_url)}" data-label="${safeText(x.item_id)} EN">播放英文</button>`
                     : `<span class="bad">无</span>`;
+                const cnDown = x.cn_url
+                    ? `<a class="small" href="${safeText(x.cn_url)}" download>下载中文</a>`
+                    : `<span class="bad">无</span>`;
+                const enDown = x.en_url
+                    ? `<a class="small" href="${safeText(x.en_url)}" download>下载英文</a>`
+                    : `<span class="bad">无</span>`;
 
                 return `
           <tr>
@@ -407,6 +416,8 @@
             <td>${safeText(x.en_text)}</td>
             <td>${cnBtn}</td>
             <td>${enBtn}</td>
+            <td>${cnDown}</td>
+            <td>${enDown}</td>
             <td>${safeText(x.audio_stem)}</td>
             <td class="url">${safeText(x.cn_url)}</td>
             <td class="url">${safeText(x.en_url)}</td>
@@ -472,6 +483,9 @@
             urlEl.value = '';
             clearTable();
         });
+
+        urlEl.value = DEFAULT_JSON_URL;
+        loadFromUrl();
     </script>
 </body>
 

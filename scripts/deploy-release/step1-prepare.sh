@@ -9,6 +9,43 @@ source "$SCRIPT_DIR/bin/common.sh"
 PROFILE_NAME="${1:-}"
 load_profile "$PROFILE_NAME"
 
+load_backend_qiniu_defaults() {
+	local backend_env_file="$ROOT_DIR/kiki_server/.env"
+
+	if [[ ! -f "$backend_env_file" ]]; then
+		return 0
+	fi
+
+	set -a
+	# shellcheck disable=SC1090
+	source "$backend_env_file"
+	set +a
+
+	DEPLOY_QINIU_ACCESS_KEY="${DEPLOY_QINIU_ACCESS_KEY:-${QINIU_ACCESS_KEY:-}}"
+	DEPLOY_QINIU_SECRET_KEY="${DEPLOY_QINIU_SECRET_KEY:-${QINIU_SECRET_KEY:-}}"
+	DEPLOY_QINIU_BUCKET="${DEPLOY_QINIU_BUCKET:-${QINIU_BUCKET:-}}"
+	DEPLOY_QINIU_DOMAIN="${DEPLOY_QINIU_DOMAIN:-${QINIU_DOMAIN:-}}"
+	DEPLOY_QINIU_UPLOAD_REGION="${DEPLOY_QINIU_UPLOAD_REGION:-${QINIU_UPLOAD_REGION:-z2}}"
+}
+
+require_qiniu_runtime() {
+	local missing=()
+
+	[[ -n "${DEPLOY_QINIU_ACCESS_KEY:-}" ]] || missing+=("QINIU_ACCESS_KEY")
+	[[ -n "${DEPLOY_QINIU_SECRET_KEY:-}" ]] || missing+=("QINIU_SECRET_KEY")
+	[[ -n "${DEPLOY_QINIU_BUCKET:-}" ]] || missing+=("QINIU_BUCKET")
+	[[ -n "${DEPLOY_QINIU_DOMAIN:-}" ]] || missing+=("QINIU_DOMAIN")
+
+	if (( ${#missing[@]} > 0 )); then
+		echo -e "${RED}❌ 缺少七牛运行时配置: ${missing[*]}${NC}"
+		echo "请在 kiki_server/.env 中补齐对应的 QINIU_* 配置。"
+		exit 1
+	fi
+}
+
+load_backend_qiniu_defaults
+require_qiniu_runtime
+
 # 优先使用项目内固定版本文件；显式传入 DEPLOY_IMAGE_TAG 时以显式值为准。
 VERSION_FILE="$SCRIPT_DIR/versions/current.env"
 if [[ -f "$VERSION_FILE" && ( -z "${DEPLOY_IMAGE_TAG:-}" || "${DEPLOY_IMAGE_TAG}" == "latest" ) ]]; then
@@ -35,6 +72,11 @@ DEPLOY_DATABASE_USER=${DEPLOY_DATABASE_USER}
 DEPLOY_DATABASE_PASSWORD=${DEPLOY_DATABASE_PASSWORD}
 DEPLOY_JWT_SECRET=${DEPLOY_JWT_SECRET}
 DEPLOY_LOG_LEVEL=${DEPLOY_LOG_LEVEL}
+DEPLOY_QINIU_ACCESS_KEY=${DEPLOY_QINIU_ACCESS_KEY}
+DEPLOY_QINIU_SECRET_KEY=${DEPLOY_QINIU_SECRET_KEY}
+DEPLOY_QINIU_BUCKET=${DEPLOY_QINIU_BUCKET}
+DEPLOY_QINIU_DOMAIN=${DEPLOY_QINIU_DOMAIN}
+DEPLOY_QINIU_UPLOAD_REGION=${DEPLOY_QINIU_UPLOAD_REGION}
 DEPLOY_ADMIN_API_BASE_URL=${DEPLOY_ADMIN_API_BASE_URL}
 DEPLOY_IMAGE_TAG=${DEPLOY_IMAGE_TAG}
 DEPLOY_BACKEND_IMAGE=${DEPLOY_BACKEND_IMAGE}

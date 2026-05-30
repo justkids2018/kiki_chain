@@ -125,3 +125,52 @@
 1. 首页分别点击第 1/2/3 分类，确认每个分类只显示自身数据。
 2. 对空分类确认文案为“暂无场景”，背景为主题色而非黑色。
 3. 在弱网和接口失败场景下重试，确认不会残留上一分类数据。
+
+---
+
+## Failure Signature (2026-05-30)
+1. 管理端上传图片前置接口 `GET /api/v1/admin/upload/token` 返回 `503 Service Unavailable`。
+2. 前端报“上传失败”，但请求已携带 Authorization。
+
+## Root Cause
+该 `503` 来自后端业务逻辑主动返回，不是鉴权失败。
+
+后端路由 `admin_get_upload_token_handler` 在 `qiniu_service` 未初始化时直接返回：
+`503: 七牛云服务未配置，请检查环境变量`。
+
+而 `qiniu_service` 的初始化依赖以下环境变量：
+- `QINIU_ACCESS_KEY`
+- `QINIU_SECRET_KEY`
+- `QINIU_BUCKET`
+- `QINIU_DOMAIN`
+
+生产 compose 原先未向 `backend` 注入这些变量，导致服务在启动时进入 `qiniu_service = None` 分支。
+
+## Evidence
+- `kiki_server/src/framework/bootstrap/routes/admin.rs`：`/api/v1/admin/upload/token` 在 `qiniu_service` 为空时返回 `StatusCode::SERVICE_UNAVAILABLE`。
+- `kiki_server/src/framework/bootstrap/container.rs`：`QiniuService::from_env()` 失败后记录“七牛云服务未配置”，并将 `qiniu_service` 置为 `None`。
+- `kiki_server/src/adapters/storage/qiniu_service.rs`：`from_env()` 强依赖上述 `QINIU_*` 环境变量。
+- `docker-compose.prod.yml`：已补充 `backend` 的 `QINIU_*` 环境变量注入口。
+
+## Affected Scope
+- `docker-compose.prod.yml`
+- 线上 `backend` 容器运行时环境
+- 管理端图片上传链路（token 获取阶段）
+
+## Patch Plan
+1. 在部署机上设置 `QINIU_*` 环境变量（或写入 compose 使用的 `.env` 文件）。
+2. 重建并重启 `backend` 容器使变量生效。
+3. 校验日志中七牛云初始化成功。
+4. 重新请求 token 接口并验证上传。
+
+## Verification Plan
+1. 在服务器执行环境检查：
+   `docker exec hikiki_backend env | grep '^QINIU_'`
+2. 查看后端启动日志：
+   `docker logs hikiki_backend --tail 200 | grep -E '七牛云服务|QINIU'`
+3. 接口回归：
+   `curl -i https://kiki.keepthinking.me/api/v1/admin/upload/token -H 'Authorization: Bearer <admin_token>'`
+4. 预期结果：HTTP 200，响应体包含 `token`、`upload_url`、`domain`。
+
+## Verification Results
+待线上执行上述步骤后回填。

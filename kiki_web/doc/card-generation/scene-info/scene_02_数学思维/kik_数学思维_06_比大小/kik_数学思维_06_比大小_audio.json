@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "大象",
+    "text_pinyin": "dà xiàng",
+    "text_english": "Elephant",
+    "text_phonetic": "/ˈɛlɪfənt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 21,
+            "y": 271
+          },
+          {
+            "x": 176,
+            "y": 271
+          },
+          {
+            "x": 21,
+            "y": 430
+          },
+          {
+            "x": 176,
+            "y": 430
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 26,
+            "y": 401
+          },
+          {
+            "x": 225,
+            "y": 401
+          },
+          {
+            "x": 26,
+            "y": 690
+          },
+          {
+            "x": 225,
+            "y": 690
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/大象-d496fd_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/大象-d496fd_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/elephant-d496fd_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/elephant-d496fd_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "蚂蚁",
+    "text_pinyin": "mǎ yǐ",
+    "text_english": "Ant",
+    "text_phonetic": "/ænt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 243,
+            "y": 481
+          },
+          {
+            "x": 394,
+            "y": 481
+          },
+          {
+            "x": 243,
+            "y": 625
+          },
+          {
+            "x": 394,
+            "y": 625
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 304,
+            "y": 606
+          },
+          {
+            "x": 388,
+            "y": 606
+          },
+          {
+            "x": 304,
+            "y": 696
+          },
+          {
+            "x": 388,
+            "y": 696
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/蚂蚁-e1758f_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/蚂蚁-e1758f_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/ant-e1758f_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/ant-e1758f_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "篮球",
+    "text_pinyin": "lán qiú",
+    "text_english": "Basketball",
+    "text_phonetic": "/ˈbæskɪtbɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 390,
+            "y": 321
+          },
+          {
+            "x": 562,
+            "y": 321
+          },
+          {
+            "x": 390,
+            "y": 468
+          },
+          {
+            "x": 562,
+            "y": 468
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 393,
+            "y": 471
+          },
+          {
+            "x": 585,
+            "y": 471
+          },
+          {
+            "x": 393,
+            "y": 644
+          },
+          {
+            "x": 585,
+            "y": 644
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/篮球-237ef0_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/篮球-237ef0_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/basketball-237ef0_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/basketball-237ef0_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "弹珠",
+    "text_pinyin": "dàn zhū",
+    "text_english": "Marble",
+    "text_phonetic": "/ˈmɑːrbl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 587,
+            "y": 469
+          },
+          {
+            "x": 742,
+            "y": 469
+          },
+          {
+            "x": 587,
+            "y": 615
+          },
+          {
+            "x": 742,
+            "y": 615
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 591,
+            "y": 593
+          },
+          {
+            "x": 691,
+            "y": 593
+          },
+          {
+            "x": 591,
+            "y": 702
+          },
+          {
+            "x": 691,
+            "y": 702
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/弹珠-566ea7_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/弹珠-566ea7_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/marble-566ea7_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/marble-566ea7_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "西瓜",
+    "text_pinyin": "xī guā",
+    "text_english": "Watermelon",
+    "text_phonetic": "/ˈwɔːtərˌmɛlən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 852,
+            "y": 336
+          },
+          {
+            "x": 1013,
+            "y": 336
+          },
+          {
+            "x": 852,
+            "y": 509
+          },
+          {
+            "x": 1013,
+            "y": 509
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 746,
+            "y": 389
+          },
+          {
+            "x": 903,
+            "y": 389
+          },
+          {
+            "x": 746,
+            "y": 606
+          },
+          {
+            "x": 903,
+            "y": 606
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/西瓜-ea3bbf_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/西瓜-ea3bbf_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/watermelon-ea3bbf_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/watermelon-ea3bbf_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "樱桃",
+    "text_pinyin": "yīng táo",
+    "text_english": "Cherry",
+    "text_phonetic": "/ˈtʃɛri/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 876,
+            "y": 597
+          },
+          {
+            "x": 1008,
+            "y": 597
+          },
+          {
+            "x": 876,
+            "y": 744
+          },
+          {
+            "x": 1008,
+            "y": 744
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 743,
+            "y": 616
+          },
+          {
+            "x": 890,
+            "y": 616
+          },
+          {
+            "x": 743,
+            "y": 728
+          },
+          {
+            "x": 890,
+            "y": 728
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/樱桃-926474_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/樱桃-926474_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/cherry-926474_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/cherry-926474_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "巴士",
+    "text_pinyin": "bā shì",
+    "text_english": "Bus",
+    "text_phonetic": "/bʌs/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 196,
+            "y": 840
+          },
+          {
+            "x": 370,
+            "y": 840
+          },
+          {
+            "x": 196,
+            "y": 1023
+          },
+          {
+            "x": 370,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 151,
+            "y": 699
+          },
+          {
+            "x": 508,
+            "y": 699
+          },
+          {
+            "x": 151,
+            "y": 949
+          },
+          {
+            "x": 508,
+            "y": 949
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/巴士-c03c98_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/巴士-c03c98_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/bus-c03c98_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/bus-c03c98_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "自行车",
+    "text_pinyin": "zì xíng chē",
+    "text_english": "Bicycle",
+    "text_phonetic": "/ˈbaɪsɪkl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 682,
+            "y": 875
+          },
+          {
+            "x": 882,
+            "y": 875
+          },
+          {
+            "x": 682,
+            "y": 1019
+          },
+          {
+            "x": 882,
+            "y": 1019
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 537,
+            "y": 709
+          },
+          {
+            "x": 848,
+            "y": 709
+          },
+          {
+            "x": 537,
+            "y": 875
+          },
+          {
+            "x": 848,
+            "y": 875
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_数学思维_06_比大小/自行车-46d85e_cn.mp3",
+    "audio_cn_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/自行车-46d85e_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_数学思维_06_比大小/bicycle-46d85e_en.mp3",
+    "audio_en_url": "http://img.mtrain.xyz/kiki/audio/kik_数学思维_06_比大小/bicycle-46d85e_en.mp3"
+  }
+]

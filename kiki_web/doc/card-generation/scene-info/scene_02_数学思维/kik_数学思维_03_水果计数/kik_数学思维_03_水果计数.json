@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "苹果",
+    "text_pinyin": "píng guǒ",
+    "text_english": "Apple",
+    "text_phonetic": "/ˈæpl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 78,
+            "y": 336
+          },
+          {
+            "x": 242,
+            "y": 336
+          },
+          {
+            "x": 78,
+            "y": 447
+          },
+          {
+            "x": 242,
+            "y": 447
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 220,
+            "y": 478
+          },
+          {
+            "x": 334,
+            "y": 478
+          },
+          {
+            "x": 220,
+            "y": 598
+          },
+          {
+            "x": 334,
+            "y": 598
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "香蕉",
+    "text_pinyin": "xiāng jiāo",
+    "text_english": "Banana",
+    "text_phonetic": "/bəˈnænə/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 486,
+            "y": 158
+          },
+          {
+            "x": 633,
+            "y": 158
+          },
+          {
+            "x": 486,
+            "y": 275
+          },
+          {
+            "x": 633,
+            "y": 275
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 456,
+            "y": 474
+          },
+          {
+            "x": 626,
+            "y": 474
+          },
+          {
+            "x": 456,
+            "y": 554
+          },
+          {
+            "x": 626,
+            "y": 554
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "橙子",
+    "text_pinyin": "chéng zi",
+    "text_english": "Orange",
+    "text_phonetic": "/ˈɔːrɪndʒ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 853,
+            "y": 528
+          },
+          {
+            "x": 989,
+            "y": 528
+          },
+          {
+            "x": 853,
+            "y": 646
+          },
+          {
+            "x": 989,
+            "y": 646
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 506,
+            "y": 560
+          },
+          {
+            "x": 618,
+            "y": 560
+          },
+          {
+            "x": 506,
+            "y": 648
+          },
+          {
+            "x": 618,
+            "y": 648
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "葡萄",
+    "text_pinyin": "pú tao",
+    "text_english": "Grape",
+    "text_phonetic": "/ɡreɪp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 810,
+            "y": 258
+          },
+          {
+            "x": 952,
+            "y": 258
+          },
+          {
+            "x": 810,
+            "y": 399
+          },
+          {
+            "x": 952,
+            "y": 399
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 660,
+            "y": 470
+          },
+          {
+            "x": 870,
+            "y": 470
+          },
+          {
+            "x": 660,
+            "y": 620
+          },
+          {
+            "x": 870,
+            "y": 620
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "草莓",
+    "text_pinyin": "cǎo méi",
+    "text_english": "Strawberry",
+    "text_phonetic": "/ˈstrɔːberi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 14,
+            "y": 527
+          },
+          {
+            "x": 156,
+            "y": 527
+          },
+          {
+            "x": 14,
+            "y": 654
+          },
+          {
+            "x": 156,
+            "y": 654
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 294,
+            "y": 578
+          },
+          {
+            "x": 448,
+            "y": 578
+          },
+          {
+            "x": 294,
+            "y": 675
+          },
+          {
+            "x": 448,
+            "y": 675
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "西瓜",
+    "text_pinyin": "xī guā",
+    "text_english": "Watermelon",
+    "text_phonetic": "/ˈwɔːtərˌmɛlən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 7,
+            "y": 709
+          },
+          {
+            "x": 142,
+            "y": 709
+          },
+          {
+            "x": 7,
+            "y": 837
+          },
+          {
+            "x": 142,
+            "y": 837
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 206,
+            "y": 666
+          },
+          {
+            "x": 382,
+            "y": 666
+          },
+          {
+            "x": 206,
+            "y": 794
+          },
+          {
+            "x": 382,
+            "y": 794
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "桃子",
+    "text_pinyin": "táo zi",
+    "text_english": "Peach",
+    "text_phonetic": "/piːtʃ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 434,
+            "y": 880
+          },
+          {
+            "x": 569,
+            "y": 880
+          },
+          {
+            "x": 434,
+            "y": 1019
+          },
+          {
+            "x": 569,
+            "y": 1019
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 438,
+            "y": 654
+          },
+          {
+            "x": 648,
+            "y": 654
+          },
+          {
+            "x": 438,
+            "y": 806
+          },
+          {
+            "x": 648,
+            "y": 806
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "梨",
+    "text_pinyin": "lí",
+    "text_english": "Pear",
+    "text_phonetic": "/pɛr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 736,
+            "y": 868
+          },
+          {
+            "x": 871,
+            "y": 868
+          },
+          {
+            "x": 736,
+            "y": 1023
+          },
+          {
+            "x": 871,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 676,
+            "y": 626
+          },
+          {
+            "x": 874,
+            "y": 626
+          },
+          {
+            "x": 676,
+            "y": 794
+          },
+          {
+            "x": 874,
+            "y": 794
+          }
+        ]
+      }
+    ]
+  }
+]

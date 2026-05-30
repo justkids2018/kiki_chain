@@ -8,6 +8,7 @@ import '../widgets/glass_back_button.dart';
 import '../widgets/app_loading_widget.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../domain/entities/scene.dart';
+import '../../design_ui/kiki_ui_kit.dart';
 
 /// 场景列表页面 — 层叠式卡片布局 + 高斯模糊背景
 class SceneListPage extends StatefulWidget {
@@ -30,6 +31,8 @@ class _SceneListPageState extends State<SceneListPage> {
   static const int _virtualLoopMultiplier = 500;
   late PageController _pageController;
   double _currentPage = 0.0;
+  bool _hasAppliedRestoredIndex = false;
+  bool _isApplyingRestoredIndex = false;
 
   @override
   void initState() {
@@ -58,10 +61,13 @@ class _SceneListPageState extends State<SceneListPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SceneListController>(
+      tag: widget.category.id,
       init: SceneListController(category: widget.category),
+      global: false,
+      autoRemove: true,
       builder: (controller) {
         return Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: KikiUiColors.pageBackground,
           body: Stack(
             fit: StackFit.expand,
             children: [
@@ -69,7 +75,12 @@ class _SceneListPageState extends State<SceneListPage> {
               _buildBlurredBackground(controller),
 
               // 2. 深色遮罩
-              Container(color: Colors.black.withOpacity(0.35)),
+              Obx(() {
+                final hasScenes = controller.scenes.isNotEmpty;
+                return Container(
+                  color: Colors.black.withOpacity(hasScenes ? 0.35 : 0.0),
+                );
+              }),
 
               // 3. 主内容
               SafeArea(child: _buildBody(controller)),
@@ -87,7 +98,7 @@ class _SceneListPageState extends State<SceneListPage> {
   Widget _buildBlurredBackground(SceneListController controller) {
     return Obx(() {
       if (controller.scenes.isEmpty) {
-        return Container(color: Colors.grey[900]);
+        return Container(decoration: KikiUiDecor.pageBackgroundDecor);
       }
 
       final scenes = controller.scenes;
@@ -131,7 +142,7 @@ class _SceneListPageState extends State<SceneListPage> {
     if (!isValid) {
       return Opacity(
         opacity: opacity,
-        child: Container(color: Colors.grey[900]),
+        child: Container(decoration: KikiUiDecor.pageBackgroundDecor),
       );
     }
 
@@ -148,7 +159,8 @@ class _SceneListPageState extends State<SceneListPage> {
           fadeInDuration: Duration.zero,
           fadeOutDuration: Duration.zero,
           placeholder: (_, __) => const SizedBox.expand(),
-          errorWidget: (_, __, ___) => Container(color: Colors.grey[900]),
+          errorWidget: (_, __, ___) =>
+              Container(decoration: KikiUiDecor.pageBackgroundDecor),
         ),
       ),
     );
@@ -199,13 +211,47 @@ class _SceneListPageState extends State<SceneListPage> {
       }
 
       if (controller.scenes.isEmpty) {
-        return const Center(
-          child: Text('暂无场景',
-              style: TextStyle(fontSize: 16, color: Colors.white70)),
+        return Center(
+          child: Text(
+            '暂无场景',
+            style: TextStyle(
+              fontSize: 16,
+              color: KikiUiColors.textSecondary.withValues(alpha: 0.95),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         );
       }
 
+      _applyRestoredSceneIndexIfNeeded(controller);
+
       return _buildStackedCardList(controller);
+    });
+  }
+
+  void _applyRestoredSceneIndexIfNeeded(SceneListController controller) {
+    if (_hasAppliedRestoredIndex ||
+        _isApplyingRestoredIndex ||
+        controller.scenes.isEmpty) {
+      return;
+    }
+
+    final restoredIndex = controller.restoredSceneIndex.value
+        .clamp(0, controller.scenes.length - 1);
+    final targetPage = (_virtualLoopMultiplier ~/ 2) + restoredIndex;
+
+    _isApplyingRestoredIndex = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_pageController.hasClients) {
+        _isApplyingRestoredIndex = false;
+        return;
+      }
+      _pageController.jumpToPage(targetPage);
+      setState(() {
+        _currentPage = targetPage.toDouble();
+        _hasAppliedRestoredIndex = true;
+        _isApplyingRestoredIndex = false;
+      });
     });
   }
 
@@ -236,10 +282,21 @@ class _SceneListPageState extends State<SceneListPage> {
                 onTap: () {
                   final idx = _toRealIndex(
                       _currentPage.round(), controller.scenes.length);
-                  controller.navigateToSceneDetail(controller.scenes[idx]);
+                  controller.navigateToSceneDetail(
+                    controller.scenes[idx],
+                    selectedIndex: idx,
+                  );
                 },
                 child: PageView.builder(
                   controller: _pageController,
+                  onPageChanged: (index) {
+                    if (controller.scenes.isEmpty) {
+                      return;
+                    }
+                    final selectedIndex =
+                        _toRealIndex(index, controller.scenes.length);
+                    controller.persistSelectedSceneIndex(selectedIndex);
+                  },
                   itemCount: controller.scenes.length <= 1
                       ? controller.scenes.length
                       : controller.scenes.length * _virtualLoopMultiplier,

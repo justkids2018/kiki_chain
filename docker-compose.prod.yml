@@ -48,6 +48,11 @@ services:
       JWT_SECRET: hikiki-prod-jwt-secret-2024
       LOG_LEVEL: info
       LOG_COLORS: "false"
+      QINIU_ACCESS_KEY: ${QINIU_ACCESS_KEY:-}
+      QINIU_SECRET_KEY: ${QINIU_SECRET_KEY:-}
+      QINIU_BUCKET: ${QINIU_BUCKET:-}
+      QINIU_DOMAIN: ${QINIU_DOMAIN:-}
+      QINIU_UPLOAD_REGION: ${QINIU_UPLOAD_REGION:-z2}
       TZ: Asia/Shanghai
     networks:
       - hikiki-network

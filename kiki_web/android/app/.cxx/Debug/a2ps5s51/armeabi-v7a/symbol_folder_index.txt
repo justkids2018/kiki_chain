@@ -1,0 +1,1 @@
+/Users/qisd/Documents/development/my_project/kiki_chain/kiki_web/build/app/intermediates/cxx/Debug/a2ps5s51/obj/armeabi-v7a

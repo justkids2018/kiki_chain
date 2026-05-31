@@ -28,7 +28,6 @@ class _SceneListPageState extends State<SceneListPage> {
   static const double _viewportFraction = 0.56;
   // Larger overlap so neighboring cards visually sit on top of each other.
   static const double _targetCardOverlap = 64.0;
-  static const int _virtualLoopMultiplier = 500;
   late PageController _pageController;
   double _currentPage = 0.0;
   bool _hasAppliedRestoredIndex = false;
@@ -37,14 +36,12 @@ class _SceneListPageState extends State<SceneListPage> {
   @override
   void initState() {
     super.initState();
-    // Start from the middle for smooth bi-direction infinite loop.
-    const initialPage = _virtualLoopMultiplier ~/ 2;
     _pageController = PageController(
       // Make each page slot narrower than card width to create overlap.
       viewportFraction: _viewportFraction,
-      initialPage: initialPage,
+      initialPage: 0,
     );
-    _currentPage = initialPage.toDouble();
+    _currentPage = 0.0;
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page ?? 0.0;
@@ -238,7 +235,7 @@ class _SceneListPageState extends State<SceneListPage> {
 
     final restoredIndex = controller.restoredSceneIndex.value
         .clamp(0, controller.scenes.length - 1);
-    final targetPage = (_virtualLoopMultiplier ~/ 2) + restoredIndex;
+    final targetPage = restoredIndex;
 
     _isApplyingRestoredIndex = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -264,11 +261,11 @@ class _SceneListPageState extends State<SceneListPage> {
         final isPhone = constraints.maxWidth < 700;
         // 为标题预留空间（标题高度约 60px）
         final titleHeight = isPhone ? 48.0 : 60.0;
-        final cardSize = (availableWidth * (isPhone ? 0.78 : 0.62))
-            .clamp(isPhone ? 180.0 : 210.0, isPhone ? 320.0 : 400.0)
+        final cardSize = (availableWidth * (isPhone ? 0.84 : 0.68))
+            .clamp(isPhone ? 210.0 : 240.0, isPhone ? 360.0 : 460.0)
             .toDouble();
-        final maxAllowedByHeight = ((availableHeight - titleHeight) * 0.74)
-            .clamp(isPhone ? 180.0 : 220.0, isPhone ? 380.0 : 520.0)
+        final maxAllowedByHeight = ((availableHeight - titleHeight) * 0.80)
+            .clamp(isPhone ? 210.0 : 240.0, isPhone ? 420.0 : 560.0)
             .toDouble();
         final finalCardSize =
             cardSize > maxAllowedByHeight ? maxAllowedByHeight : cardSize;
@@ -298,13 +295,9 @@ class _SceneListPageState extends State<SceneListPage> {
                     if (controller.scenes.isEmpty) {
                       return;
                     }
-                    final selectedIndex =
-                        _toRealIndex(index, controller.scenes.length);
-                    controller.persistSelectedSceneIndex(selectedIndex);
+                    controller.persistSelectedSceneIndex(index);
                   },
-                  itemCount: controller.scenes.length <= 1
-                      ? controller.scenes.length
-                      : controller.scenes.length * _virtualLoopMultiplier,
+                  itemCount: controller.scenes.length,
                   itemBuilder: (context, index) => const SizedBox.expand(),
                 ),
               ),
@@ -329,16 +322,30 @@ class _SceneListPageState extends State<SceneListPage> {
               right: 0,
               height: titleHeight,
               child: Center(
-                child: Text(
-                  widget.category.name,
-                  style: TextStyle(
-                    fontSize: isPhone ? 20 : 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: const [
-                      Shadow(color: Colors.black45, blurRadius: 8),
-                    ],
-                  ),
+                child: Builder(
+                  builder: (context) {
+                    final selectedIndex = controller.scenes.isEmpty
+                        ? 0
+                        : _toRealIndex(
+                            _currentPage.round(),
+                            controller.scenes.length,
+                          );
+                    final topTitle = controller.scenes.isEmpty
+                        ? widget.category.name
+                        : controller.scenes[selectedIndex].name;
+
+                    return Text(
+                      topTitle,
+                      style: TextStyle(
+                        fontSize: isPhone ? 20 : 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: const [
+                          Shadow(color: Colors.black45, blurRadius: 8),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -350,7 +357,9 @@ class _SceneListPageState extends State<SceneListPage> {
 
   int _toRealIndex(int index, int length) {
     if (length <= 0) return 0;
-    return index % length;
+    if (index < 0) return 0;
+    if (index >= length) return length - 1;
+    return index;
   }
 
   Widget _buildCardItem({
@@ -365,7 +374,7 @@ class _SceneListPageState extends State<SceneListPage> {
     final distance = absDifference.clamp(0.0, 4.0);
 
     final scale = (1.0 - (distance * 0.11)).clamp(0.60, 1.0);
-    final opacity = (1.0 - (distance * 0.14)).clamp(0.35, 1.0);
+    final opacity = (1.0 - (distance * 0.18)).clamp(0.26, 1.0);
 
     // 所有卡片保持同一水平基线，不做上下错位
     final isCenterCard = absDifference < 0.5;
@@ -393,7 +402,7 @@ class _SceneListPageState extends State<SceneListPage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        color: Colors.black.withOpacity(0.34),
+                        color: Colors.black.withOpacity(0.48),
                       ),
                     ),
                   ),
@@ -418,8 +427,10 @@ class _SceneListPageState extends State<SceneListPage> {
     }
 
     final base = _currentPage.round();
-    final virtualIndices =
-        List<int>.generate(radius * 2 + 1, (i) => base - radius + i);
+    final virtualIndices = List<int>.generate(
+      radius * 2 + 1,
+      (i) => base - radius + i,
+    ).where((i) => i >= 0 && i < scenes.length).toList();
 
     // 远处先画，近处后画；中间卡最后画，始终在最上层。
     virtualIndices.sort((a, b) {
@@ -433,7 +444,7 @@ class _SceneListPageState extends State<SceneListPage> {
       children: [
         for (final virtualIndex in virtualIndices)
           _buildCardItem(
-            scene: scenes[_toRealIndex(virtualIndex, scenes.length)],
+            scene: scenes[virtualIndex],
             index: virtualIndex,
             cardWidth: cardWidth,
             cardHeight: cardHeight,

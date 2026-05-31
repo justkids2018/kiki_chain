@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -25,6 +26,9 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
+  // 全局沉浸式：隐藏系统状态栏/通知栏
+  await _enableImmersiveMode();
+
   // 初始化应用程序
   print('💡 🚀 开始初始化应用服务...');
   try {
@@ -43,6 +47,11 @@ void main() async {
   runApp(
     const MyApp(),
   );
+}
+
+Future<void> _enableImmersiveMode() async {
+  if (kIsWeb) return;
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 }
 
 class MyApp extends StatefulWidget {
@@ -67,6 +76,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _enableImmersiveMode();
+    }
+
     // 应用恢复到前台时，如果在详情页，则返回首页
     if (state == AppLifecycleState.resumed) {
       if (Get.currentRoute == AppConstants.routeInteractiveImage) {

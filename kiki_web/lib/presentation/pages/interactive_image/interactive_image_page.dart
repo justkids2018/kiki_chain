@@ -30,8 +30,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   double get _englishFontSizeTablet => _isAndroid ? 14.0 : 24.0;
   double get _englishGridHeight => _isAndroid ? 56.0 : 74.0;
-  double get _chineseCellSizeTablet => _isAndroid ? 80.0 : 120.0;
-  double get _chineseCellSizePhone => _isAndroid ? 64.0 : 76.0;
+  double get _chineseCellSizeTablet => _isAndroid ? 74.0 : 110.0;
+  double get _chineseCellSizePhone => _isAndroid ? 58.0 : 68.0;
 
   @override
   void initState() {
@@ -107,20 +107,17 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 children: [
                   // Main content — vertically centered below status bar
                   Positioned.fill(
-                    child: SafeArea(
-                      bottom: false,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 35),
-                        child: ScreenDiffusionLayer(
-                          controller: _diffusionController,
-                          child: Container(
-                            key: _effectLayerKey,
-                            alignment: Alignment.center,
-                            child: _buildUnifiedLandscapeLayout(
-                              context,
-                              controller,
-                              aspectRatio,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: ScreenDiffusionLayer(
+                        controller: _diffusionController,
+                        child: Container(
+                          key: _effectLayerKey,
+                          alignment: Alignment.center,
+                          child: _buildUnifiedLandscapeLayout(
+                            context,
+                            controller,
+                            aspectRatio,
                           ),
                         ),
                       ),
@@ -129,12 +126,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
                   // Floating TopBar (always on top layer)
                   Positioned(
-                    top: 0,
+                    top: 10,
                     left: 0,
                     right: 0,
-                    child: SafeArea(
-                      child: _buildFloatingTopBar(context),
-                    ),
+                    child: _buildFloatingTopBar(context),
                   ),
                 ],
               );
@@ -154,43 +149,60 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     final screenSize = MediaQuery.of(context).size;
     final mediaPadding = MediaQuery.of(context).padding;
 
-    // 计算可用宽度（屏幕宽度 - 左右边距80dp）
-    final availableWidth = screenSize.width - 80;
+    final isCompactLandscape = screenSize.shortestSide < 700;
+    final horizontalPadding = isCompactLandscape ? 8.0 : 24.0;
+    final panelGap = isCompactLandscape ? 10.0 : 20.0;
 
-    // 左边图片占60%，右边面板占40%，左边明显更大
-    final imageWidth = availableWidth * 0.60;
-    final imageHeight = imageWidth / aspectRatio;
+    // 右侧固定尺寸：避免在移动端被拉成整宽，整体保持近似方形。
+    final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
+    final double panelHeight = isCompactLandscape ? 420.0 : 460.0;
 
-    // 上下各留35dp呼吸空间（SafeArea已处理状态栏）
+    final availableWidth = (screenSize.width - horizontalPadding * 2)
+        .clamp(360.0, double.infinity);
+
+    final panelMaxWidth = (availableWidth - panelGap - 160).clamp(240.0, 360.0);
+    final panelWidth = panelWidthPreset.clamp(240.0, panelMaxWidth);
+
+    final imageMaxWidth =
+        (availableWidth - panelGap - panelWidth).clamp(160.0, double.infinity);
+
     final maxLayoutHeight =
-        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 70)
-            .clamp(400.0, double.infinity);
-    final layoutHeight = imageHeight.clamp(0.0, maxLayoutHeight);
+        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 20)
+            .clamp(320.0, double.infinity);
+
+    // 左图优先放大，尽量吃满剩余区域；保持方形以保证视觉稳定。
+    final imageSize = imageMaxWidth.clamp(160.0, maxLayoutHeight);
+    final groupWidth = imageSize + panelGap + panelWidth;
+    final layoutHeight = imageSize > panelHeight ? imageSize : panelHeight;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40), // 左右边距40dp
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: SizedBox(
         height: layoutHeight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start, // 顶部对齐，不拉伸
-          children: [
-            // Left: Square Interactive Image (larger, main focus)
-            SizedBox(
-              width: imageWidth,
-              height: layoutHeight,
-              child: _buildLargeImageContainer(
-                controller: controller,
-              ),
+        width: double.infinity,
+        child: Center(
+          child: SizedBox(
+            width: groupWidth,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: imageSize,
+                  height: imageSize,
+                  child: _buildLargeImageContainer(
+                    controller: controller,
+                  ),
+                ),
+                SizedBox(width: panelGap),
+                // Right: fixed panel size in centered group.
+                SizedBox(
+                  width: panelWidth,
+                  height: panelHeight,
+                  child: _buildCompactCharacterPanel(controller),
+                ),
+              ],
             ),
-
-            const SizedBox(width: 24), // 间距24
-
-            // Right: Character Panel (fixed reasonable height, not stretched)
-            Expanded(
-              child: _buildCompactCharacterPanel(controller),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -253,216 +265,140 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.42),
+          width: 1,
+        ),
         boxShadow: [
-          // Strong edge shadow for floating effect
+          // Softer shadow to reduce heavy "solid card" feeling.
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 60,
-            offset: const Offset(0, 30),
-            spreadRadius: -10,
+            color: Colors.black.withValues(alpha: 0.14),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
+            spreadRadius: -8,
           ),
-          // Mid-range shadow
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
-            spreadRadius: -5,
-          ),
-          // Close shadow for depth
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Stack(
+      child: Column(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 12, 0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF00C37D),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '互动学习',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF00C37D),
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 12, 0),
+            child: Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00C37D),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Obx(() {
-                  final region = controller.activeRegion.value;
-                  if (region == null) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 72,
-                            height: 72,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00C37D)
-                                  .withValues(alpha: 0.08),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.touch_app_outlined,
-                              size: 36,
-                              color: Color(0xFF00C37D),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            '点击图中物品',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '开始学习',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 90),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildLearningInfoSection(
-                          controller,
-                          region,
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(child: Divider(color: Colors.grey[200])),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                '笔顺练习',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.grey[400],
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Divider(color: Colors.grey[200])),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        _buildCharacterGrid(controller, region),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  '互动学习',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF00C37D),
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
+            ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 12,
+          Expanded(
             child: Obx(() {
               final region = controller.activeRegion.value;
-              final isActive = region != null;
-              final isSpeaking = controller.isSpeaking.value;
-              return Center(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: isActive
-                      ? () => controller.speakChinesePhrase(region)
-                      : null,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 6,
+              if (region == null) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          color:
+                              const Color(0xFF00C37D).withValues(alpha: 0.08),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.touch_app_outlined,
+                          size: 36,
+                          color: Color(0xFF00C37D),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        '点击图中物品',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '开始学习',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildLearningInfoSection(
+                      controller,
+                      region,
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    const SizedBox(height: 10),
+                    Row(
                       children: [
-                        Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: isActive
-                                ? const Color(0xFF00C37D)
-                                : Colors.grey[200],
-                            shape: BoxShape.circle,
-                            boxShadow: isActive
-                                ? [
-                                    BoxShadow(
-                                      color: const Color(0xFF00C37D)
-                                          .withValues(alpha: 0.32),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ]
-                                : [],
-                          ),
-                          child: Icon(
-                            isSpeaking
-                                ? Icons.graphic_eq_rounded
-                                : Icons.volume_up_rounded,
-                            color: isActive ? Colors.white : Colors.grey[400],
-                            size: 20,
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.withValues(alpha: 0.35),
                           ),
                         ),
-                        if (isActive && isSpeaking) ...[
-                          const SizedBox(height: 4),
-                          SizedBox(
-                            width: 24,
-                            child: LinearProgressIndicator(
-                              minHeight: 2,
-                              borderRadius: BorderRadius.circular(999),
-                              backgroundColor: const Color(0xFF00C37D)
-                                  .withValues(alpha: 0.15),
-                              color: const Color(0xFF00C37D),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            '笔顺练习',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[500],
+                              letterSpacing: 1,
                             ),
                           ),
-                        ],
-                        const SizedBox(height: 4),
-                        Text(
-                          '朗读中文',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: isActive
-                                ? const Color(0xFF00C37D)
-                                : Colors.grey[400],
-                            fontWeight: FontWeight.w500,
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.grey.withValues(alpha: 0.35),
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 6),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: _buildReadChinesePlayButton(controller, region),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildCharacterGrid(controller, region),
+                  ],
                 ),
               );
             }),
@@ -470,6 +406,55 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ],
       ),
     );
+  }
+
+  Widget _buildReadChinesePlayButton(
+    InteractiveImageController controller,
+    InteractiveRegion region,
+  ) {
+    return Obx(() {
+      final isSpeaking = controller.isSpeaking.value;
+
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(999),
+          onTap: () => controller.speakChinesePhrase(region),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: const Color(0xFF00C37D).withValues(
+                alpha: isSpeaking ? 0.16 : 0.10,
+              ),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: const Color(0xFF00C37D).withValues(alpha: 0.28),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.volume_up_rounded,
+                  size: 14,
+                  color: Color(0xFF00C37D),
+                ),
+                const SizedBox(width: 4),
+                const Text(
+                  '播放',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF00C37D),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildBackgroundImage(String path) {

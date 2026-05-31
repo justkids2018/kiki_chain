@@ -101,13 +101,15 @@ class SceneCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
             colors: [
+              Colors.black.withValues(alpha: 0.74),
+              Colors.black.withValues(alpha: 0.48),
+              Colors.black.withValues(alpha: 0.20),
               Colors.transparent,
-              Colors.black.withValues(alpha: 0.6),
             ],
-            stops: const [0.6, 1.0],
+            stops: const [0.0, 0.32, 0.64, 1.0],
           ),
         ),
       ),
@@ -117,14 +119,14 @@ class SceneCard extends StatelessWidget {
   /// 构建内容区域
   Widget _buildContent() {
     return Positioned(
-      left: 12,
-      right: 12,
-      bottom: 12,
+      left: 14,
+      right: 14,
+      bottom: 14,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 场景名称
+          // 场景名称（直接贴合渐变，不再使用独立标题卡）
           Text(
             scene.name,
             style: const TextStyle(
@@ -132,6 +134,9 @@ class SceneCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.white,
               height: 1.2,
+              shadows: [
+                Shadow(color: Colors.black54, blurRadius: 6),
+              ],
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -142,8 +147,11 @@ class SceneCard extends StatelessWidget {
           Text(
             scene.nameEn,
             style: TextStyle(
-              fontSize: 12, // 符合项目规范最小字号 12px
-              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.9),
+              shadows: const [
+                Shadow(color: Colors.black45, blurRadius: 5),
+              ],
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

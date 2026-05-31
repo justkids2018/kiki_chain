@@ -74,55 +74,24 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _buildBranding() {
-    return Column(
-      children: [
-        // Hi Kiki Logo with animation-ready structure
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryGreen.withOpacity(0.2),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
+    return Container(
+      width: 108,
+      height: 108,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryGreen.withOpacity(0.18),
+            blurRadius: 26,
+            offset: const Offset(0, 10),
           ),
-          child: Icon(
-            Icons.eco,
-            color: AppColors.primaryGreen,
-            size: 64,
-          ),
-        ),
-
-        const SizedBox(height: 24),
-
-        Text(
-          'Hi Kiki',
-          style: TextStyle(
-            fontSize: 56,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textDarkBrown,
-            height: 1.0,
-            letterSpacing: -1,
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // 标语
-        Text(
-          '快乐学习 · 每天进步',
-          style: TextStyle(
-            fontSize: 18,
-            color: AppColors.textGray,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 2,
-          ),
-        ),
-      ],
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        'assets/icon/app_icon.png',
+        fit: BoxFit.cover,
+      ),
     );
   }
 

@@ -26,6 +26,7 @@ class LoginSelectorPage extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildAppIcon(),
                       SizedBox(height: isCompactHeight ? 70 : 76),

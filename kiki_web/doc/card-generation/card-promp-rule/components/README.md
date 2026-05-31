@@ -8,6 +8,7 @@
 - [TEXT_STYLE.md](./TEXT_STYLE.md)
 - [ARROWS.md](./ARROWS.md)
 - [BRANDING_BADGE.md](./BRANDING_BADGE.md)
+- [CHARACTER_CAST.md](./CHARACTER_CAST.md)
 
 ## 职责边界
 

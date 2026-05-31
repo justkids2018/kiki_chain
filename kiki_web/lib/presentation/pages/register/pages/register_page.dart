@@ -39,7 +39,16 @@ class RegisterPage extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 6),
+                          const Text(
+                            '创建账号',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: KikiUiColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           RegisterForm(controller: controller),
                           const SizedBox(height: 16),
                           Row(

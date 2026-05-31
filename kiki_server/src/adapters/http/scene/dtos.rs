@@ -84,6 +84,7 @@ pub struct CreateCategoryRequest {
     pub icon: Option<String>,
     pub cover_image: Option<String>,
     pub description: Option<String>,
+    #[serde(alias = "order")]
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
 }
@@ -94,6 +95,7 @@ pub struct UpdateCategoryRequest {
     pub icon: Option<String>,
     pub cover_image: Option<String>,
     pub description: Option<String>,
+    #[serde(alias = "order")]
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
     pub is_visible: Option<bool>,
@@ -109,6 +111,7 @@ pub struct CreateSceneRequest {
     pub interactive_image: Option<String>,
     pub description: Option<String>,
     pub context: Option<String>,
+    #[serde(alias = "order")]
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
     pub items_data: Option<serde_json::Value>, // JSON 数组
@@ -122,7 +125,7 @@ pub struct UpdateSceneRequest {
     pub interactive_image: Option<String>,
     pub description: Option<String>,
     pub context: Option<String>,
-    #[serde(rename = "order")]
+    #[serde(rename = "order", alias = "display_order")]
     pub display_order: Option<i32>,
     pub is_new: Option<bool>,
     pub is_visible: Option<bool>,

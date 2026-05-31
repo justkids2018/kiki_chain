@@ -225,8 +225,9 @@ const fetchCategories = async () => {
 const fetchScene = async () => {
   try {
     const res = await sceneAPI.get(sceneId.value)
-    sceneName.value = res.data.name
-    sceneDetail.value = res.data
+    const sceneData = (res.data as any)?.scene ?? res.data
+    sceneName.value = sceneData?.name || ''
+    sceneDetail.value = sceneData
   } catch (error) {
     console.error('Failed to fetch scene:', error)
   }

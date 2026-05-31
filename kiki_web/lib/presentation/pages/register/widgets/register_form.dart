@@ -27,44 +27,52 @@ class RegisterForm extends StatelessWidget {
             validator: controller.validatePhone,
           ),
           const SizedBox(height: 12),
-          Obx(
-            () => _buildTextField(
-              controller: controller.passwordController,
-              hintText: '请输入密码',
-              prefixIcon: Icons.lock_outline,
-              obscureText: !controller.passwordVisible,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  controller.passwordVisible
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                  color: KikiUiColors.textSecondary,
-                  size: 20,
+          Row(
+            children: [
+              Expanded(
+                child: Obx(
+                  () => _buildTextField(
+                    controller: controller.passwordController,
+                    hintText: '密码',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: !controller.passwordVisible,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.passwordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: KikiUiColors.textSecondary,
+                        size: 20,
+                      ),
+                      onPressed: controller.togglePasswordVisibility,
+                    ),
+                    validator: controller.validatePassword,
+                  ),
                 ),
-                onPressed: controller.togglePasswordVisibility,
               ),
-              validator: controller.validatePassword,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Obx(
-            () => _buildTextField(
-              controller: controller.confirmPasswordController,
-              hintText: '请再次输入密码',
-              prefixIcon: Icons.lock_outline,
-              obscureText: !controller.confirmPasswordVisible,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  controller.confirmPasswordVisible
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                  color: KikiUiColors.textSecondary,
-                  size: 20,
+              const SizedBox(width: 10),
+              Expanded(
+                child: Obx(
+                  () => _buildTextField(
+                    controller: controller.confirmPasswordController,
+                    hintText: '确认密码',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: !controller.confirmPasswordVisible,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.confirmPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: KikiUiColors.textSecondary,
+                        size: 20,
+                      ),
+                      onPressed: controller.toggleConfirmPasswordVisibility,
+                    ),
+                    validator: controller.validateConfirmPassword,
+                  ),
                 ),
-                onPressed: controller.toggleConfirmPasswordVisibility,
               ),
-              validator: controller.validateConfirmPassword,
-            ),
+            ],
           ),
           const SizedBox(height: 8),
           Row(

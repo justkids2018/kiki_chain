@@ -120,9 +120,9 @@ jobs:
 
       - name: Upload APK to Qiniu (2 fixed names)
         env:
-          QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
-          QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
-          QINIU_BUCKET: ${{ secrets.QINIU_BUCKET }}
+          QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY || secrets.DEPLOY_QINIU_ACCESS_KEY || secrets.KIKI_QINIU_ACCESS_KEY || vars.QINIU_ACCESS_KEY || vars.DEPLOY_QINIU_ACCESS_KEY || vars.KIKI_QINIU_ACCESS_KEY }}
+          QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY || secrets.DEPLOY_QINIU_SECRET_KEY || secrets.KIKI_QINIU_SECRET_KEY || vars.QINIU_SECRET_KEY || vars.DEPLOY_QINIU_SECRET_KEY || vars.KIKI_QINIU_SECRET_KEY }}
+          QINIU_BUCKET: ${{ secrets.QINIU_BUCKET || secrets.DEPLOY_QINIU_BUCKET || secrets.KIKI_QINIU_BUCKET || vars.QINIU_BUCKET || vars.DEPLOY_QINIU_BUCKET || vars.KIKI_QINIU_BUCKET }}
           QINIU_UPLOAD_URL: ${{ env.QINIU_UPLOAD_URL }}
           QINIU_DOMAIN: ${{ env.QINIU_DOMAIN }}
           QINIU_DOWNAPP_PREFIX: ${{ env.QINIU_DOWNAPP_PREFIX }}
@@ -130,8 +130,13 @@ jobs:
           set -euo pipefail
 
           if [[ -z "${QINIU_ACCESS_KEY}" || -z "${QINIU_SECRET_KEY}" || -z "${QINIU_BUCKET}" ]]; then
-          echo "Missing required Qiniu secrets: QINIU_ACCESS_KEY, QINIU_SECRET_KEY, QINIU_BUCKET"
-          exit 1
+            echo "Missing required Qiniu credentials for upload."
+            echo "Tried (in order):"
+            echo "- QINIU_ACCESS_KEY / DEPLOY_QINIU_ACCESS_KEY / KIKI_QINIU_ACCESS_KEY"
+            echo "- QINIU_SECRET_KEY / DEPLOY_QINIU_SECRET_KEY / KIKI_QINIU_SECRET_KEY"
+            echo "- QINIU_BUCKET / DEPLOY_QINIU_BUCKET / KIKI_QINIU_BUCKET"
+            echo "Please configure them in repository Secrets (preferred) or Variables."
+            exit 1
           fi
 
           python -m pip install --upgrade pip requests

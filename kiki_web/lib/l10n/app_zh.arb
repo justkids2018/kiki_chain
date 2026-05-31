@@ -24,7 +24,6 @@
   "ok": "确定",
   "error": "错误",
   "success": "成功",
-  "loading": "加载中...",
   "noData": "暂无数据",
   "retry": "重试",
   "search": "搜索",
@@ -62,7 +61,6 @@
   "confirmExit": "确认退出",
   "confirmLogoutMessage": "确定要退出登录吗？",
   "exit": "退出",
-  "darkMode": "深色模式",
   "pushNotifications": "推送通知",
   "quickSwitch": "快速切换",
   "featureDemo": "功能演示",
@@ -139,6 +137,61 @@
   "favoritesInDev": "收藏功能开发中",
   "settingsInDev": "设置功能开发中",
   "vocabularyInDev": "生词功能正在开发中",
+  "temporaryName": "临时",
+  "noneValue": "无",
+  "userId": "用户ID",
+  "myInfo": "我的信息",
+  "accountAndSecurity": "账号与安全",
+  "messageNotifications": "消息通知",
+  "languageSwitch": "语言切换",
+  "personalInfo": "个人信息",
+  "registeredAt": "注册时间",
+  "lastLogin": "最近登录",
+  "profileReadonlyHint": "说明：当前版本仅支持查看信息，编辑能力后续开放。",
+  "profileCenter": "个人中心",
+  "forgotPassword": "忘记密码？",
+  "forgotPasswordNotAvailable": "暂未开放找回密码，请清空后重新输入账号和密码。",
+  "clearAndRetry": "清空重填",
+  "termsAgreementText": "我已阅读并同意《用户协议》和《隐私政策》",
+  "aboutUs": "关于我们",
+  "versionPrefix": "版本",
+  "aboutDescription": "Hi Kiki 通过场景认词、规范笔画与书写练习，帮助孩子把词汇理解和写字能力一起练起来。",
+  "contactEmailHint": "有任何建议欢迎联系我们：{email}",
+  "@contactEmailHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "noMailClientDetected": "未检测到可用邮箱客户端",
+  "openMailFailed": "打开邮箱失败，请稍后重试",
+  "emailCopied": "邮箱已复制：{email}",
+  "@emailCopied": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackSubmitSuccess": "反馈提交成功，感谢你的建议",
+  "feedbackSubmitFailed": "提交失败，请稍后重试",
+  "feedbackHeadline": "我们重视你的每一条建议",
+  "feedbackDescription": "请选择类型并描述问题，提交后管理员会在后台查看处理。",
+  "feedbackTypeLabel": "反馈类型",
+  "feedbackTypeGeneral": "产品建议",
+  "feedbackTypeBug": "问题反馈",
+  "feedbackTypeContent": "内容纠错",
+  "feedbackTypeAccount": "账号问题",
+  "feedbackContentHint": "请详细描述你的问题或建议",
+  "feedbackContentRequired": "请填写反馈内容",
+  "feedbackContentTooShort": "反馈内容至少 2 个字符",
+  "feedbackContactHint": "联系方式（选填，例如手机号/邮箱）",
+  "submittingFeedback": "提交中...",
+  "submitFeedback": "提交反馈",
+  "interactiveLearning": "互动学习",
+  "startLearning": "开始学习",
+  "strokePractice": "笔顺练习",
   "simplifiedChinese": "简体中文",
   "traditionalChinese": "繁體中文"
 }

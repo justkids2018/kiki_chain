@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
@@ -57,6 +58,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final controller = Get.isRegistered<InteractiveImageController>()
         ? Get.find<InteractiveImageController>()
         : Get.put(InteractiveImageController());
@@ -92,7 +94,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             Obx(() {
               if (!controller.isLoaded.value) {
                 return AppLoadingWidget(
-                  message: '加载中...',
+                  message: localizations.loading,
                   progress: null,
                 );
               }
@@ -108,7 +110,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   // Main content — vertically centered below status bar
                   Positioned.fill(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: ScreenDiffusionLayer(
                         controller: _diffusionController,
                         child: Container(
@@ -155,7 +157,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     // 右侧固定尺寸：避免在移动端被拉成整宽，整体保持近似方形。
     final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
-    final double panelHeight = isCompactLandscape ? 420.0 : 460.0;
 
     final availableWidth = (screenSize.width - horizontalPadding * 2)
         .clamp(360.0, double.infinity);
@@ -167,13 +168,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         (availableWidth - panelGap - panelWidth).clamp(160.0, double.infinity);
 
     final maxLayoutHeight =
-        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 20)
+        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 30)
             .clamp(320.0, double.infinity);
 
     // 左图优先放大，尽量吃满剩余区域；保持方形以保证视觉稳定。
     final imageSize = imageMaxWidth.clamp(160.0, maxLayoutHeight);
+    final panelHeight = imageSize;
     final groupWidth = imageSize + panelGap + panelWidth;
-    final layoutHeight = imageSize > panelHeight ? imageSize : panelHeight;
+    final layoutHeight = imageSize;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -198,7 +200,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 SizedBox(
                   width: panelWidth,
                   height: panelHeight,
-                  child: _buildCompactCharacterPanel(controller),
+                  child: _buildCompactCharacterPanel(context, controller),
                 ),
               ],
             ),
@@ -260,7 +262,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   }
 
   /// Build right panel with character display and controls (Compact for Tablet)
-  Widget _buildCompactCharacterPanel(InteractiveImageController controller) {
+  Widget _buildCompactCharacterPanel(
+      BuildContext context, InteractiveImageController controller) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -300,7 +305,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '互动学习',
+                  localizations.interactiveLearning,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -335,7 +340,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '点击图中物品',
+                        localizations.clickItemHint,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -344,7 +349,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        '开始学习',
+                        localizations.startLearning,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey[400],
@@ -376,7 +381,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            '笔顺练习',
+                            localizations.strokePractice,
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey[500],
@@ -412,6 +417,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     InteractiveImageController controller,
     InteractiveRegion region,
   ) {
+    final localizations = AppLocalizations.of(Get.context!)!;
+
     return Obx(() {
       final isSpeaking = controller.isSpeaking.value;
 
@@ -441,9 +448,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   color: Color(0xFF00C37D),
                 ),
                 const SizedBox(width: 4),
-                const Text(
-                  '播放',
-                  style: TextStyle(
+                Text(
+                  localizations.playPronunciation,
+                  style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF00C37D),

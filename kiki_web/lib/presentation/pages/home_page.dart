@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../theme/app_colors.dart';
 import '../../design_ui/kiki_ui_kit.dart';
 import '../widgets/profile_tab.dart';
@@ -38,6 +39,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProfileEntryButton(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -47,7 +50,7 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(
               builder: (_) => Scaffold(
                 appBar: AppBar(
-                  title: const Text('个人中心'),
+                  title: Text(localizations.personalInfo),
                   backgroundColor: AppColors.backgroundCream,
                   foregroundColor: AppColors.textDarkBrown,
                   elevation: 0,

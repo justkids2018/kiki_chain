@@ -8,6 +8,7 @@ import '../../core/services/app_services.dart';
 import '../../core/exceptions/app_exceptions.dart';
 import '../../config/env_config.dart';
 import '../services/api/auth_api_service.dart';
+import 'package:intl/intl.dart';
 
 /// Auth 模块的数据层实现
 ///
@@ -105,10 +106,14 @@ class AuthRepositoryImpl implements IAuthRepository {
       // 明文密码
       final passwordToSend = password;
 
+      final trimmedNickname = nickname?.trim() ?? '';
+      final defaultNickname =
+          '临时${DateFormat('yyyyMMdd').format(DateTime.now())}';
+
       final response = await _authApiService.register(
         phone,
         passwordToSend,
-        nickname ?? phone,
+        trimmedNickname.isEmpty ? defaultNickname : trimmedNickname,
       );
 
       AppLogger.info('📡 注册响应: $response');
@@ -294,10 +299,12 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<String?> getAccessToken() async => await _localStorage.getAccessToken();
+  Future<String?> getAccessToken() async =>
+      await _localStorage.getAccessToken();
 
   @override
-  Future<String?> getRefreshToken() async => await _localStorage.getRefreshToken();
+  Future<String?> getRefreshToken() async =>
+      await _localStorage.getRefreshToken();
 
   @override
   Future<void> clearAuthData() async {

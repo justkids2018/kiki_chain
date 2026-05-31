@@ -20,3 +20,6 @@ kiki_admin/.vite/
 
 # Local TTS backup artifacts (do not commit large generated packages)
 docs/tts/model_data_backup/
+
+# Local HTTPS certificates (never commit private keys)
+product_family/hikiki/https/

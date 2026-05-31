@@ -28,6 +28,7 @@ class InteractiveImageController extends GetxController {
   final animationSpeed = 2.0.obs; // 动画速度：点击图片时更快(3.0)，点击单字时稍快(2.0)
   String? _lastInitializedText;
   bool _singleCharacterMode = false;
+  bool _hasTtsPlaybackError = false;
 
   // 动态数据：从导航参数接收
   late String _jsonFilePath;
@@ -458,17 +459,28 @@ Interactive Image Diagnostics:
     isSpeaking.value = true;
     try {
       await action();
-      if (errorMessage.value?.startsWith('语音播放失败') == true) {
+      if (_hasTtsPlaybackError) {
         errorMessage.value = null;
+        _hasTtsPlaybackError = false;
       }
     } catch (e) {
-      final message = '语音播放失败，请检查模型文件与音频输出设备。\n$e';
+      final message = _buildTtsPlaybackErrorMessage(e);
       errorMessage.value = message;
+      _hasTtsPlaybackError = true;
       AppLogger.error('TTS action failed', e);
     } finally {
       _isSpeaking = false;
       isSpeaking.value = false;
     }
+  }
+
+  String _buildTtsPlaybackErrorMessage(Object error) {
+    final languageCode =
+        (Get.locale ?? Get.deviceLocale)?.languageCode.toLowerCase();
+    if (languageCode == 'zh') {
+      return '语音播放失败，请检查模型文件与音频输出设备。\n$error';
+    }
+    return 'TTS playback failed. Please check model files and audio output device.\n$error';
   }
 
   void _setupCharacterProgress(String text, {bool force = false}) {

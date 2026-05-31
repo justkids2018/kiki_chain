@@ -42,8 +42,10 @@ class AuthApiService {
       return MockUsers.registerResponse(phone, password, nickname);
     }
 
+    final uid = 'kiki_${DateTime.now().millisecondsSinceEpoch}';
+
     return await _httpClient!.post(ApiEndpoints.authRegister, data: {
-      'uid': phone,       // 用手机号作为 uid
+      'uid': uid,
       'name': nickname,
       'email': '',
       'phone': phone,

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../controllers/scene_list_controller.dart';
 import '../widgets/scene_card.dart';
 import '../widgets/glass_back_button.dart';
@@ -175,9 +176,11 @@ class _SceneListPageState extends State<SceneListPage> {
   }
 
   Widget _buildBody(SceneListController controller) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Obx(() {
       if (controller.isLoadingScenes.value) {
-        return const AppLoadingWidget(message: '加载中...');
+        return AppLoadingWidget(message: localizations.loading);
       }
 
       if (controller.errorMessage.value.isNotEmpty) {
@@ -187,7 +190,7 @@ class _SceneListPageState extends State<SceneListPage> {
             children: [
               const Icon(Icons.error_outline, size: 64, color: Colors.white54),
               const SizedBox(height: 16),
-              Text('加载失败',
+              Text(localizations.loadFailed,
                   style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -200,7 +203,7 @@ class _SceneListPageState extends State<SceneListPage> {
               ElevatedButton.icon(
                 onPressed: () => controller.refreshScenes(),
                 icon: const Icon(Icons.refresh),
-                label: const Text('重试'),
+                label: Text(localizations.retry),
               ),
             ],
           ),
@@ -210,7 +213,7 @@ class _SceneListPageState extends State<SceneListPage> {
       if (controller.scenes.isEmpty) {
         return Center(
           child: Text(
-            '暂无场景',
+            localizations.noScenes,
             style: TextStyle(
               fontSize: 16,
               color: KikiUiColors.textSecondary.withValues(alpha: 0.95),

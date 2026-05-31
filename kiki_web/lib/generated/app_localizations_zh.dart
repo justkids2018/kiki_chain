@@ -352,6 +352,134 @@ class AppLocalizationsZh extends AppLocalizations {
   String get vocabularyInDev => '生词功能正在开发中';
 
   @override
+  String get temporaryName => '临时';
+
+  @override
+  String get noneValue => '无';
+
+  @override
+  String get userId => '用户ID';
+
+  @override
+  String get myInfo => '我的信息';
+
+  @override
+  String get accountAndSecurity => '账号与安全';
+
+  @override
+  String get messageNotifications => '消息通知';
+
+  @override
+  String get languageSwitch => '语言切换';
+
+  @override
+  String get personalInfo => '个人信息';
+
+  @override
+  String get registeredAt => '注册时间';
+
+  @override
+  String get lastLogin => '最近登录';
+
+  @override
+  String get profileReadonlyHint => '说明：当前版本仅支持查看信息，编辑能力后续开放。';
+
+  @override
+  String get profileCenter => '个人中心';
+
+  @override
+  String get forgotPassword => '忘记密码？';
+
+  @override
+  String get forgotPasswordNotAvailable => '暂未开放找回密码，请清空后重新输入账号和密码。';
+
+  @override
+  String get clearAndRetry => '清空重填';
+
+  @override
+  String get termsAgreementText => '我已阅读并同意《用户协议》和《隐私政策》';
+
+  @override
+  String get aboutUs => '关于我们';
+
+  @override
+  String get versionPrefix => '版本';
+
+  @override
+  String get aboutDescription =>
+      'Hi Kiki 通过场景认词、规范笔画与书写练习，帮助孩子把词汇理解和写字能力一起练起来。';
+
+  @override
+  String contactEmailHint(String email) {
+    return '有任何建议欢迎联系我们：$email';
+  }
+
+  @override
+  String get noMailClientDetected => '未检测到可用邮箱客户端';
+
+  @override
+  String get openMailFailed => '打开邮箱失败，请稍后重试';
+
+  @override
+  String emailCopied(String email) {
+    return '邮箱已复制：$email';
+  }
+
+  @override
+  String get feedbackSubmitSuccess => '反馈提交成功，感谢你的建议';
+
+  @override
+  String get feedbackSubmitFailed => '提交失败，请稍后重试';
+
+  @override
+  String get feedbackHeadline => '我们重视你的每一条建议';
+
+  @override
+  String get feedbackDescription => '请选择类型并描述问题，提交后管理员会在后台查看处理。';
+
+  @override
+  String get feedbackTypeLabel => '反馈类型';
+
+  @override
+  String get feedbackTypeGeneral => '产品建议';
+
+  @override
+  String get feedbackTypeBug => '问题反馈';
+
+  @override
+  String get feedbackTypeContent => '内容纠错';
+
+  @override
+  String get feedbackTypeAccount => '账号问题';
+
+  @override
+  String get feedbackContentHint => '请详细描述你的问题或建议';
+
+  @override
+  String get feedbackContentRequired => '请填写反馈内容';
+
+  @override
+  String get feedbackContentTooShort => '反馈内容至少 2 个字符';
+
+  @override
+  String get feedbackContactHint => '联系方式（选填，例如手机号/邮箱）';
+
+  @override
+  String get submittingFeedback => '提交中...';
+
+  @override
+  String get submitFeedback => '提交反馈';
+
+  @override
+  String get interactiveLearning => '互动学习';
+
+  @override
+  String get startLearning => '开始学习';
+
+  @override
+  String get strokePractice => '笔顺练习';
+
+  @override
   String get simplifiedChinese => '简体中文';
 
   @override
@@ -360,7 +488,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
 class AppLocalizationsZhTw extends AppLocalizationsZh {
-  AppLocalizationsZhTw(): super('zh_TW');
+  AppLocalizationsZhTw() : super('zh_TW');
 
   @override
   String get appName => 'Hi Kiki';
@@ -706,6 +834,125 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get vocabularyInDev => '生詞功能正在開發中';
+
+  @override
+  String get temporaryName => '臨時';
+
+  @override
+  String get noneValue => '無';
+
+  @override
+  String get userId => '用戶ID';
+
+  @override
+  String get myInfo => '我的信息';
+
+  @override
+  String get accountAndSecurity => '賬號與安全';
+
+  @override
+  String get messageNotifications => '消息通知';
+
+  @override
+  String get languageSwitch => '語言切換';
+
+  @override
+  String get personalInfo => '個人信息';
+
+  @override
+  String get registeredAt => '註冊時間';
+
+  @override
+  String get lastLogin => '最近登入';
+
+  @override
+  String get profileReadonlyHint => '說明：當前版本僅支持查看信息，編輯能力後續開放。';
+
+  @override
+  String get profileCenter => '個人中心';
+
+  @override
+  String get forgotPassword => '忘記密碼？';
+
+  @override
+  String get forgotPasswordNotAvailable => '暫未開放找回密碼，請清空後重新輸入賬號和密碼。';
+
+  @override
+  String get clearAndRetry => '清空重填';
+
+  @override
+  String get termsAgreementText => '我已閱讀並同意《用戶協議》和《隱私政策》';
+
+  @override
+  String get aboutUs => '關於我們';
+
+  @override
+  String get versionPrefix => '版本';
+
+  @override
+  String get aboutDescription =>
+      'Hi Kiki 通過場景認詞、規範筆畫與書寫練習，幫助孩子把詞彙理解和寫字能力一起練起來。';
+
+  @override
+  String contactEmailHint(String email) {
+    return '有任何建議歡迎聯繫我們：$email';
+  }
+
+  @override
+  String get noMailClientDetected => '未檢測到可用郵箱客戶端';
+
+  @override
+  String get openMailFailed => '打開郵箱失敗，請稍後重試';
+
+  @override
+  String emailCopied(String email) {
+    return '郵箱已複製：$email';
+  }
+
+  @override
+  String get feedbackSubmitSuccess => '反饋提交成功，感謝你的建議';
+
+  @override
+  String get feedbackSubmitFailed => '提交失敗，請稍後重試';
+
+  @override
+  String get feedbackHeadline => '我們重視你的每一條建議';
+
+  @override
+  String get feedbackDescription => '請選擇類型並描述問題，提交後管理員會在後台查看處理。';
+
+  @override
+  String get feedbackTypeLabel => '反饋類型';
+
+  @override
+  String get feedbackTypeGeneral => '產品建議';
+
+  @override
+  String get feedbackTypeBug => '問題反饋';
+
+  @override
+  String get feedbackTypeContent => '內容糾錯';
+
+  @override
+  String get feedbackTypeAccount => '賬號問題';
+
+  @override
+  String get feedbackContentHint => '請詳細描述你的問題或建議';
+
+  @override
+  String get feedbackContentRequired => '請填寫反饋內容';
+
+  @override
+  String get feedbackContentTooShort => '反饋內容至少 2 個字符';
+
+  @override
+  String get feedbackContactHint => '聯繫方式（選填，例如手機號/郵箱）';
+
+  @override
+  String get submittingFeedback => '提交中...';
+
+  @override
+  String get submitFeedback => '提交反饋';
 
   @override
   String get simplifiedChinese => '简体中文';

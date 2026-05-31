@@ -118,13 +118,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get learningStats => 'Learning Statistics';
 
   @override
-  String get viewProgressAndAchievements => 'View learning progress and achievements';
+  String get viewProgressAndAchievements =>
+      'View learning progress and achievements';
 
   @override
   String get featureTip => 'Feature Tip';
 
   @override
-  String get learningStatsInDevelopment => 'Learning statistics feature is under development';
+  String get learningStatsInDevelopment =>
+      'Learning statistics feature is under development';
 
   @override
   String get favorites => 'Favorites';
@@ -142,7 +144,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewLearningRecords => 'View learning records';
 
   @override
-  String get learningHistoryInDevelopment => 'Learning history feature is under development';
+  String get learningHistoryInDevelopment =>
+      'Learning history feature is under development';
 
   @override
   String get personalPreferences => 'Personal preferences';
@@ -178,7 +181,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get version100 => 'Version 1.0.0';
 
   @override
-  String get appDescription => 'A simple and easy-to-use vocabulary learning app that helps you master new vocabulary easily.';
+  String get appDescription =>
+      'A simple and easy-to-use vocabulary learning app that helps you master new vocabulary easily.';
 
   @override
   String get confirmExit => 'Confirm Exit';
@@ -205,13 +209,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get fillInfoToRegister => 'Fill in information to complete registration';
+  String get fillInfoToRegister =>
+      'Fill in information to complete registration';
 
   @override
   String get nicknameOptional => 'Nickname (optional, 2-20 characters)';
 
   @override
-  String get passwordRequirement => 'Password (6-20 characters, must contain letters and numbers)';
+  String get passwordRequirement =>
+      'Password (6-20 characters, must contain letters and numbers)';
 
   @override
   String get alreadyHaveAccount => 'Already have an account?';
@@ -223,7 +229,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hiPleaseLogin => 'Hi, please login';
 
   @override
-  String get loginToViewRecords => 'Login to view learning records and favorites';
+  String get loginToViewRecords =>
+      'Login to view learning records and favorites';
 
   @override
   String get phoneLabel => 'Phone: ';
@@ -275,7 +282,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerFailed => 'Registration failed, please try again';
 
   @override
-  String get registerDataEmpty => 'Registration data is empty, please try again later';
+  String get registerDataEmpty =>
+      'Registration data is empty, please try again later';
 
   @override
   String get pleaseTryAgainLater => ', please try again later';
@@ -302,7 +310,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterPassword => 'Please enter password';
 
   @override
-  String get passwordLengthError => 'Password length should be between 6-20 characters';
+  String get passwordLengthError =>
+      'Password length should be between 6-20 characters';
 
   @override
   String get passwordFormatError => 'Password must contain letters and numbers';
@@ -314,7 +323,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordMismatch => 'Passwords do not match';
 
   @override
-  String get nicknameLengthError => 'Nickname length should be between 2-20 characters';
+  String get nicknameLengthError =>
+      'Nickname length should be between 2-20 characters';
 
   @override
   String get chooseSceneToStart => 'Choose a scene to start learning!';
@@ -340,7 +350,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get learningRecordsInDev => 'Learning records feature is under development';
+  String get learningRecordsInDev =>
+      'Learning records feature is under development';
 
   @override
   String get favoritesInDev => 'Favorites feature is under development';
@@ -350,6 +361,142 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vocabularyInDev => 'Vocabulary feature is under development';
+
+  @override
+  String get temporaryName => 'Temporary';
+
+  @override
+  String get noneValue => 'None';
+
+  @override
+  String get userId => 'User ID';
+
+  @override
+  String get myInfo => 'My Info';
+
+  @override
+  String get accountAndSecurity => 'Account & Security';
+
+  @override
+  String get messageNotifications => 'Message Notifications';
+
+  @override
+  String get languageSwitch => 'Language Switch';
+
+  @override
+  String get personalInfo => 'Personal Info';
+
+  @override
+  String get registeredAt => 'Registered At';
+
+  @override
+  String get lastLogin => 'Last Login';
+
+  @override
+  String get profileReadonlyHint =>
+      'Note: This version supports viewing information only. Editing will be available later.';
+
+  @override
+  String get profileCenter => 'Profile Center';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get forgotPasswordNotAvailable =>
+      'Password recovery is not available yet. Please clear and re-enter your account and password.';
+
+  @override
+  String get clearAndRetry => 'Clear and Retry';
+
+  @override
+  String get termsAgreementText =>
+      'I have read and agree to the User Agreement and Privacy Policy';
+
+  @override
+  String get aboutUs => 'About Us';
+
+  @override
+  String get versionPrefix => 'Version';
+
+  @override
+  String get aboutDescription =>
+      'Hi Kiki helps children build vocabulary understanding and writing skills together through scene-based learning, stroke order practice, and writing exercises.';
+
+  @override
+  String contactEmailHint(String email) {
+    return 'If you have suggestions, contact us: $email';
+  }
+
+  @override
+  String get noMailClientDetected => 'No available mail client detected';
+
+  @override
+  String get openMailFailed =>
+      'Failed to open mail app. Please try again later';
+
+  @override
+  String emailCopied(String email) {
+    return 'Email copied: $email';
+  }
+
+  @override
+  String get feedbackSubmitSuccess =>
+      'Feedback submitted successfully. Thanks for your suggestion';
+
+  @override
+  String get feedbackSubmitFailed => 'Submit failed. Please try again later';
+
+  @override
+  String get feedbackHeadline => 'We value every suggestion you share';
+
+  @override
+  String get feedbackDescription =>
+      'Please choose a type and describe your issue. After submission, admins will review it in the backend.';
+
+  @override
+  String get feedbackTypeLabel => 'Feedback type';
+
+  @override
+  String get feedbackTypeGeneral => 'Product suggestion';
+
+  @override
+  String get feedbackTypeBug => 'Bug report';
+
+  @override
+  String get feedbackTypeContent => 'Content correction';
+
+  @override
+  String get feedbackTypeAccount => 'Account issue';
+
+  @override
+  String get feedbackContentHint =>
+      'Please describe your issue or suggestion in detail';
+
+  @override
+  String get feedbackContentRequired => 'Please enter feedback content';
+
+  @override
+  String get feedbackContentTooShort =>
+      'Feedback content must be at least 2 characters';
+
+  @override
+  String get feedbackContactHint => 'Contact info (optional, e.g. phone/email)';
+
+  @override
+  String get submittingFeedback => 'Submitting...';
+
+  @override
+  String get submitFeedback => 'Submit Feedback';
+
+  @override
+  String get interactiveLearning => 'Interactive Learning';
+
+  @override
+  String get startLearning => 'Start Learning';
+
+  @override
+  String get strokePractice => 'Stroke Practice';
 
   @override
   String get simplifiedChinese => 'Simplified Chinese';

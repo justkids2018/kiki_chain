@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../theme/app_colors.dart';
 import '../widgets/app_gradient_button.dart';
 
@@ -10,6 +11,8 @@ class LoginSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundCream,
       body: SafeArea(
@@ -31,7 +34,7 @@ class LoginSelectorPage extends StatelessWidget {
                       _buildAppIcon(),
                       SizedBox(height: isCompactHeight ? 70 : 76),
                       AppGradientButton(
-                        text: '立即登录',
+                        text: localizations.loginNow,
                         onPressed: () => Get.toNamed('/login'),
                         height: 52,
                         borderRadius: 28,
@@ -43,7 +46,7 @@ class LoginSelectorPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '还没有账号？',
+                            localizations.noAccountYet,
                             style: TextStyle(
                               fontSize: 12,
                               color: AppColors.textGray,
@@ -53,7 +56,7 @@ class LoginSelectorPage extends StatelessWidget {
                           GestureDetector(
                             onTap: () => Get.offNamed('/register'),
                             child: Text(
-                              '立即注册',
+                              localizations.register,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: AppColors.primaryGreen,

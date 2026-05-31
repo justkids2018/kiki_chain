@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../../../design_ui/kiki_ui_kit.dart';
 import '../controllers/register_page_controller.dart';
 import '../widgets/register_form.dart';
@@ -11,6 +12,7 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final RegisterPageController controller =
         Get.find<RegisterPageController>();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -39,9 +41,8 @@ class RegisterPage extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(height: 6),
-                          const Text(
-                            '创建账号',
+                          Text(
+                            localizations.createAccount,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
@@ -54,9 +55,9 @@ class RegisterPage extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                '已有账号？',
-                                style: TextStyle(
+                              Text(
+                                localizations.alreadyHaveAccount,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: KikiUiColors.textSecondary,
                                 ),
@@ -64,8 +65,8 @@ class RegisterPage extends StatelessWidget {
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: () => Get.offNamed('/login'),
-                                child: const Text(
-                                  '去登录',
+                                child: Text(
+                                  localizations.login,
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: KikiUiColors.brandGreen,

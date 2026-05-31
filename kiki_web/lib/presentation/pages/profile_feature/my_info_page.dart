@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/auth_controller.dart';
 
 class MyInfoPage extends StatelessWidget {
@@ -7,26 +8,37 @@ class MyInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final auth = Get.find<AuthController>();
     final user = auth.currentUser;
 
+    String displayOrNone(String? value) {
+      final text = value?.trim() ?? '';
+      return text.isEmpty ? localizations.noneValue : text;
+    }
+
+    String dateOrNone(DateTime? value) {
+      return value == null
+          ? localizations.noneValue
+          : value.toLocal().toString();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的信息'),
+        title: Text(localizations.myInfo),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          _infoTile('用户ID', user?.id ?? '-'),
-          _infoTile('昵称',
-              (user?.nickname.isNotEmpty ?? false) ? user!.nickname : '-'),
-          _infoTile('手机号', user?.phone ?? '-'),
-          _infoTile('注册时间', user?.createdAt.toLocal().toString() ?? '-'),
-          _infoTile('最近登录', user?.lastLoginAt.toLocal().toString() ?? '-'),
+          _infoTile(localizations.userId, displayOrNone(user?.id)),
+          _infoTile(localizations.nickname, displayOrNone(user?.nickname)),
+          _infoTile(localizations.phoneNumber, displayOrNone(user?.phone)),
+          _infoTile(localizations.registeredAt, dateOrNone(user?.createdAt)),
+          _infoTile(localizations.lastLogin, dateOrNone(user?.lastLoginAt)),
           const SizedBox(height: 12),
-          const Text(
-            '说明：当前版本仅支持查看信息，编辑能力后续开放。',
-            style: TextStyle(color: Color(0xFF7A6A5B), fontSize: 13),
+          Text(
+            localizations.profileReadonlyHint,
+            style: const TextStyle(color: Color(0xFF7A6A5B), fontSize: 13),
           ),
         ],
       ),

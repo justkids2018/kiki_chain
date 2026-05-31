@@ -97,7 +97,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _buildPhoneLoginButton(AppLocalizations localizations) {
     return AppGradientButton(
-      text: '立即登录',
+      text: localizations.loginNow,
       onPressed: () => Get.toNamed('/login'),
       height: 56,
       borderRadius: 28,
@@ -112,7 +112,7 @@ class _WelcomePageState extends State<WelcomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '还没有账号？',
+            localizations.noAccountYet,
             style: TextStyle(
               fontSize: 15,
               color: AppColors.textGray,
@@ -130,7 +130,7 @@ class _WelcomePageState extends State<WelcomePage> {
               child: Row(
                 children: [
                   Text(
-                    '立即注册',
+                    localizations.register,
                     style: TextStyle(
                       fontSize: 15,
                       color: AppColors.primaryGreen,

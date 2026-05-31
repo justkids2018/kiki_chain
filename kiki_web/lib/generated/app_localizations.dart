@@ -62,7 +62,8 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -774,6 +777,252 @@ abstract class AppLocalizations {
   /// **'Vocabulary feature is under development'**
   String get vocabularyInDev;
 
+  /// No description provided for @temporaryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary'**
+  String get temporaryName;
+
+  /// No description provided for @noneValue.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get noneValue;
+
+  /// No description provided for @userId.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get userId;
+
+  /// No description provided for @myInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'My Info'**
+  String get myInfo;
+
+  /// No description provided for @accountAndSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Security'**
+  String get accountAndSecurity;
+
+  /// No description provided for @messageNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Notifications'**
+  String get messageNotifications;
+
+  /// No description provided for @languageSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Switch'**
+  String get languageSwitch;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Info'**
+  String get personalInfo;
+
+  /// No description provided for @registeredAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered At'**
+  String get registeredAt;
+
+  /// No description provided for @lastLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Login'**
+  String get lastLogin;
+
+  /// No description provided for @profileReadonlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: This version supports viewing information only. Editing will be available later.'**
+  String get profileReadonlyHint;
+
+  /// No description provided for @profileCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Center'**
+  String get profileCenter;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @forgotPasswordNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Password recovery is not available yet. Please clear and re-enter your account and password.'**
+  String get forgotPasswordNotAvailable;
+
+  /// No description provided for @clearAndRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear and Retry'**
+  String get clearAndRetry;
+
+  /// No description provided for @termsAgreementText.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and agree to the User Agreement and Privacy Policy'**
+  String get termsAgreementText;
+
+  /// No description provided for @aboutUs.
+  ///
+  /// In en, this message translates to:
+  /// **'About Us'**
+  String get aboutUs;
+
+  /// No description provided for @versionPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get versionPrefix;
+
+  /// No description provided for @aboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi Kiki helps children build vocabulary understanding and writing skills together through scene-based learning, stroke order practice, and writing exercises.'**
+  String get aboutDescription;
+
+  /// No description provided for @contactEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have suggestions, contact us: {email}'**
+  String contactEmailHint(String email);
+
+  /// No description provided for @noMailClientDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No available mail client detected'**
+  String get noMailClientDetected;
+
+  /// No description provided for @openMailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to open mail app. Please try again later'**
+  String get openMailFailed;
+
+  /// No description provided for @emailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Email copied: {email}'**
+  String emailCopied(String email);
+
+  /// No description provided for @feedbackSubmitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted successfully. Thanks for your suggestion'**
+  String get feedbackSubmitSuccess;
+
+  /// No description provided for @feedbackSubmitFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit failed. Please try again later'**
+  String get feedbackSubmitFailed;
+
+  /// No description provided for @feedbackHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'We value every suggestion you share'**
+  String get feedbackHeadline;
+
+  /// No description provided for @feedbackDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a type and describe your issue. After submission, admins will review it in the backend.'**
+  String get feedbackDescription;
+
+  /// No description provided for @feedbackTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback type'**
+  String get feedbackTypeLabel;
+
+  /// No description provided for @feedbackTypeGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'Product suggestion'**
+  String get feedbackTypeGeneral;
+
+  /// No description provided for @feedbackTypeBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug report'**
+  String get feedbackTypeBug;
+
+  /// No description provided for @feedbackTypeContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Content correction'**
+  String get feedbackTypeContent;
+
+  /// No description provided for @feedbackTypeAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account issue'**
+  String get feedbackTypeAccount;
+
+  /// No description provided for @feedbackContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe your issue or suggestion in detail'**
+  String get feedbackContentHint;
+
+  /// No description provided for @feedbackContentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter feedback content'**
+  String get feedbackContentRequired;
+
+  /// No description provided for @feedbackContentTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback content must be at least 2 characters'**
+  String get feedbackContentTooShort;
+
+  /// No description provided for @feedbackContactHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact info (optional, e.g. phone/email)'**
+  String get feedbackContactHint;
+
+  /// No description provided for @submittingFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting...'**
+  String get submittingFeedback;
+
+  /// No description provided for @submitFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Feedback'**
+  String get submitFeedback;
+
+  /// No description provided for @interactiveLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Interactive Learning'**
+  String get interactiveLearning;
+
+  /// No description provided for @startLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Learning'**
+  String get startLearning;
+
+  /// No description provided for @strokePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Stroke Practice'**
+  String get strokePractice;
+
   /// No description provided for @simplifiedChinese.
   ///
   /// In en, this message translates to:
@@ -787,7 +1036,8 @@ abstract class AppLocalizations {
   String get traditionalChinese;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -796,34 +1046,37 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
   // Lookup logic when language+country codes are specified.
   switch (locale.languageCode) {
-    case 'zh': {
-  switch (locale.countryCode) {
-    case 'TW': return AppLocalizationsZhTw();
-   }
-  break;
-   }
+    case 'zh':
+      {
+        switch (locale.countryCode) {
+          case 'TW':
+            return AppLocalizationsZhTw();
+        }
+        break;
+      }
   }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'zh': return AppLocalizationsZh();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

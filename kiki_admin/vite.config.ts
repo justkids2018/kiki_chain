@@ -16,6 +16,12 @@ export default defineConfig({
         target: 'https://img.keepthinking.me',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/cdn/, '')
+      },
+      // 本地开发：/cdn-legacy/ → http://img.mtrain.xyz/（兼容旧域名资源）
+      '/cdn-legacy': {
+        target: 'http://img.mtrain.xyz',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/cdn-legacy/, '')
       }
     }
   }

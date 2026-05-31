@@ -4,10 +4,14 @@ import * as qiniu from 'qiniu-js'
 /** CDN 原始域名 */
 const CDN_ORIGIN = 'https://img.keepthinking.me/'
 const CDN_HOST = 'img.keepthinking.me'
+const LEGACY_CDN_ORIGIN_HTTP = 'http://img.mtrain.xyz/'
+const LEGACY_CDN_ORIGIN_HTTPS = 'https://img.mtrain.xyz/'
+const LEGACY_CDN_HOST = 'img.mtrain.xyz'
 
 /**
- * 将 CDN 绝对 HTTP URL 转换为相对代理路径 /cdn/...
+ * 将 CDN 绝对 URL 转换为相对代理路径。
  * 生产环境：nginx /cdn/ 代理到 https://img.keepthinking.me/（避免混合内容）
+ * 兼容历史：nginx /cdn-legacy/ 代理到 http://img.mtrain.xyz/
  * 本地开发：Vite proxy /cdn/ 代理到同一地址
  * 移动端 / 数据库存储：保持原始 https:// URL 不变
  */
@@ -34,12 +38,18 @@ export function toCDNUrl(url: string | null | undefined): string {
     if (parsed.hostname.toLowerCase() === CDN_HOST) {
       return `/cdn${parsed.pathname}${parsed.search}${parsed.hash}`
     }
+    if (parsed.hostname.toLowerCase() === LEGACY_CDN_HOST) {
+      return `/cdn-legacy${parsed.pathname}${parsed.search}${parsed.hash}`
+    }
   } catch {
     // 非法 URL 保持原值，避免吞掉真实问题
   }
 
   // 兜底：保留原先精确前缀匹配行为
-  return raw.startsWith(CDN_ORIGIN) ? '/cdn/' + raw.slice(CDN_ORIGIN.length) : raw
+  if (raw.startsWith(CDN_ORIGIN)) return '/cdn/' + raw.slice(CDN_ORIGIN.length)
+  if (raw.startsWith(LEGACY_CDN_ORIGIN_HTTP)) return '/cdn-legacy/' + raw.slice(LEGACY_CDN_ORIGIN_HTTP.length)
+  if (raw.startsWith(LEGACY_CDN_ORIGIN_HTTPS)) return '/cdn-legacy/' + raw.slice(LEGACY_CDN_ORIGIN_HTTPS.length)
+  return raw
 }
 
 /**

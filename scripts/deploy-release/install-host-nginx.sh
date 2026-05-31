@@ -61,6 +61,14 @@ server {
     proxy_set_header X-Forwarded-Proto https;
   }
 
+  location /cdn/ {
+    proxy_pass https://img.keepthinking.me/;
+    proxy_set_header Host img.keepthinking.me;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+  }
+
   location / {
     proxy_pass http://127.0.0.1:${DEPLOY_ADMIN_HOST_PORT};
     proxy_set_header Host \$host;
@@ -93,6 +101,14 @@ server {
   ssl_protocols TLSv1.2 TLSv1.3;
   ssl_prefer_server_ciphers on;
   ssl_session_cache shared:SSL:10m;
+
+  location /cdn/ {
+    proxy_pass https://img.keepthinking.me/;
+    proxy_set_header Host img.keepthinking.me;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+  }
 
   location / {
     proxy_pass http://127.0.0.1:${DEPLOY_ADMIN_HOST_PORT};

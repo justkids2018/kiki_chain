@@ -11,9 +11,9 @@ export default defineConfig({
         target: 'http://127.0.0.1:8081',
         changeOrigin: true
       },
-      // 本地开发：/cdn/ → http://img.mtrain.xyz/（解决 HTTP 图片加载问题）
+      // 本地开发：/cdn/ → https://img.keepthinking.me/（解决 HTTPS 图片加载问题）
       '/cdn': {
-        target: 'http://img.mtrain.xyz',
+        target: 'https://img.keepthinking.me',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/cdn/, '')
       }

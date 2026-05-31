@@ -32,9 +32,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
     if (!_formKey.currentState!.validate()) return;
     if (_submitting) return;
 
+    final localizations = AppLocalizations.of(context)!;
     setState(() => _submitting = true);
     try {
-      final localizations = AppLocalizations.of(context)!;
       await NetworkClient.instance.httpClient.post<Map<String, dynamic>>(
         ApiEndpoints.userFeedback,
         data: {
@@ -52,7 +52,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
         Get.back();
       }
     } catch (e) {
-      EasyLoading.showError(AppLocalizations.of(context)!.feedbackSubmitFailed);
+      EasyLoading.showError(localizations.feedbackSubmitFailed);
     } finally {
       if (mounted) {
         setState(() => _submitting = false);
@@ -125,8 +125,9 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 decoration: _inputDecor(localizations.feedbackContentHint),
                 validator: (value) {
                   final text = value?.trim() ?? '';
-                  if (text.isEmpty)
+                  if (text.isEmpty) {
                     return localizations.feedbackContentRequired;
+                  }
                   if (text.length < 2) {
                     return localizations.feedbackContentTooShort;
                   }

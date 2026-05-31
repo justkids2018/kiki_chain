@@ -2,14 +2,14 @@ import request from '../api/request'
 import * as qiniu from 'qiniu-js'
 
 /** CDN 原始域名 */
-const CDN_ORIGIN = 'http://img.mtrain.xyz/'
-const CDN_HOST = 'img.mtrain.xyz'
+const CDN_ORIGIN = 'https://img.keepthinking.me/'
+const CDN_HOST = 'img.keepthinking.me'
 
 /**
  * 将 CDN 绝对 HTTP URL 转换为相对代理路径 /cdn/...
- * 生产环境：nginx /cdn/ 代理到 http://img.mtrain.xyz/（避免混合内容）
+ * 生产环境：nginx /cdn/ 代理到 https://img.keepthinking.me/（避免混合内容）
  * 本地开发：Vite proxy /cdn/ 代理到同一地址
- * 移动端 / 数据库存储：保持原始 http:// URL 不变
+ * 移动端 / 数据库存储：保持原始 https:// URL 不变
  */
 export function toCDNUrl(url: string | null | undefined): string {
   if (!url) return ''
@@ -243,8 +243,8 @@ export async function uploadToQiniu(
       },
       complete(res) {
         console.log('七牛云上传成功:', res)
-        // 返回完整的 CDN URL（使用 HTTP）
-        const url = `http://img.mtrain.xyz/${res.key}`
+        // 返回完整的 CDN URL（使用 HTTPS）
+        const url = `https://img.keepthinking.me/${res.key}`
         resolve(url)
       },
     })

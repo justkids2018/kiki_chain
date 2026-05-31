@@ -10,18 +10,18 @@ class MockUsers {
   /// Mock 用户数据库（模拟真实数据库）
   static final List<Map<String, dynamic>> _users = [
     {
-      "id": "usr_test_001",
+      "id": "kiki_001",
       "phone": "13800138000",
-      "password": "test123",  // Mock模式使用明文密码
+      "password": "test123", // Mock模式使用明文密码
       "nickname": "测试用户1",
       "avatar": "https://cdn.example.com/avatars/avatar1.jpg",
       "createdAt": "2026-01-01T00:00:00Z",
       "lastLoginAt": "2026-01-18T10:00:00Z"
     },
     {
-      "id": "usr_test_002",
+      "id": "kiki_002",
       "phone": "13900139000",
-      "password": "test456",  // Mock模式使用明文密码
+      "password": "test456", // Mock模式使用明文密码
       "nickname": "测试用户2",
       "avatar": "https://cdn.example.com/avatars/avatar2.jpg",
       "createdAt": "2026-01-05T00:00:00Z",
@@ -31,7 +31,7 @@ class MockUsers {
 
   /// Mock 学习记录数据库
   static final Map<String, List<Map<String, dynamic>>> _learningRecords = {
-    "usr_test_001": [
+    "kiki_001": [
       {
         "sceneId": "scene_002",
         "learnedItems": ["scene_002_item_001", "scene_002_item_002"],
@@ -53,7 +53,7 @@ class MockUsers {
         "isFavorited": false
       }
     ],
-    "usr_test_002": []
+    "kiki_002": []
   };
 
   /// 注册新用户（模拟 API: POST /auth/register）
@@ -72,7 +72,7 @@ class MockUsers {
 
     // 创建新用户
     final newUser = {
-      "id": "usr_${DateTime.now().millisecondsSinceEpoch}",
+      "id": "kiki_${DateTime.now().millisecondsSinceEpoch}",
       "phone": phone,
       "password": password,
       "nickname": nickname,
@@ -95,9 +95,8 @@ class MockUsers {
           "avatar": newUser['avatar'],
         },
         "token": "mock_token_${newUser['id']}",
-        "expiresAt": DateTime.now()
-            .add(const Duration(days: 7))
-            .toIso8601String(),
+        "expiresAt":
+            DateTime.now().add(const Duration(days: 7)).toIso8601String(),
       }
     };
   }
@@ -133,9 +132,8 @@ class MockUsers {
           "avatar": user['avatar'],
         },
         "token": "mock_token_${user['id']}",
-        "expiresAt": DateTime.now()
-            .add(const Duration(days: 7))
-            .toIso8601String(),
+        "expiresAt":
+            DateTime.now().add(const Duration(days: 7)).toIso8601String(),
       }
     };
   }
@@ -158,8 +156,7 @@ class MockUsers {
 
     // 统计学习数据
     final records = _learningRecords[userId] ?? [];
-    final learnedScenes =
-        records.where((r) => r['progress'] >= 0.9).length;
+    final learnedScenes = records.where((r) => r['progress'] >= 0.9).length;
     final totalStudyTime =
         records.fold<int>(0, (sum, r) => sum + (r['studyTime'] as int));
     final favoriteScenes =
@@ -231,8 +228,7 @@ class MockUsers {
     final records = _learningRecords[userId] ?? [];
 
     // 查找已有记录
-    final existingIndex =
-        records.indexWhere((r) => r['sceneId'] == sceneId);
+    final existingIndex = records.indexWhere((r) => r['sceneId'] == sceneId);
 
     if (existingIndex >= 0) {
       // 更新已有记录
@@ -288,8 +284,7 @@ class MockUsers {
       String userId, String sceneId) {
     final records = _learningRecords[userId] ?? [];
 
-    final recordIndex =
-        records.indexWhere((r) => r['sceneId'] == sceneId);
+    final recordIndex = records.indexWhere((r) => r['sceneId'] == sceneId);
 
     if (recordIndex >= 0) {
       final isFavorited = !(records[recordIndex]['isFavorited'] as bool);

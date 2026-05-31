@@ -20,13 +20,13 @@ class CryptoUtils {
 
   /// 生成游客ID
   ///
-  /// 生成一个唯一的游客ID，格式为: guest_{timestamp}_{random}
+  /// 生成一个唯一的游客ID，格式为: kiki_guest_{timestamp}_{random}
   ///
   /// 返回:
   /// - [String] 游客ID
   static String generateGuestId() {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final random = DateTime.now().microsecondsSinceEpoch % 10000;
-    return 'guest_${timestamp}_$random';
+    return 'kiki_guest_${timestamp}_$random';
   }
 }

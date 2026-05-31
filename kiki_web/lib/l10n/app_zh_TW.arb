@@ -24,7 +24,6 @@
   "ok": "確定",
   "error": "錯誤",
   "success": "成功",
-  "loading": "載入中...",
   "noData": "暫無資料",
   "retry": "重試",
   "search": "搜尋",
@@ -62,7 +61,6 @@
   "confirmExit": "確認退出",
   "confirmLogoutMessage": "確定要登出嗎？",
   "exit": "退出",
-  "darkMode": "深色模式",
   "pushNotifications": "推送通知",
   "quickSwitch": "快速切換",
   "featureDemo": "功能演示",
@@ -115,6 +113,61 @@
   "favoritesInDev": "收藏功能開發中",
   "settingsInDev": "設置功能開發中",
   "vocabularyInDev": "生詞功能正在開發中",
+  "temporaryName": "臨時",
+  "noneValue": "無",
+  "userId": "用戶ID",
+  "myInfo": "我的信息",
+  "accountAndSecurity": "賬號與安全",
+  "messageNotifications": "消息通知",
+  "languageSwitch": "語言切換",
+  "personalInfo": "個人信息",
+  "registeredAt": "註冊時間",
+  "lastLogin": "最近登入",
+  "profileReadonlyHint": "說明：當前版本僅支持查看信息，編輯能力後續開放。",
+  "profileCenter": "個人中心",
+  "forgotPassword": "忘記密碼？",
+  "forgotPasswordNotAvailable": "暫未開放找回密碼，請清空後重新輸入賬號和密碼。",
+  "clearAndRetry": "清空重填",
+  "termsAgreementText": "我已閱讀並同意《用戶協議》和《隱私政策》",
+  "aboutUs": "關於我們",
+  "versionPrefix": "版本",
+  "aboutDescription": "Hi Kiki 通過場景認詞、規範筆畫與書寫練習，幫助孩子把詞彙理解和寫字能力一起練起來。",
+  "contactEmailHint": "有任何建議歡迎聯繫我們：{email}",
+  "@contactEmailHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "noMailClientDetected": "未檢測到可用郵箱客戶端",
+  "openMailFailed": "打開郵箱失敗，請稍後重試",
+  "emailCopied": "郵箱已複製：{email}",
+  "@emailCopied": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackSubmitSuccess": "反饋提交成功，感謝你的建議",
+  "feedbackSubmitFailed": "提交失敗，請稍後重試",
+  "feedbackHeadline": "我們重視你的每一條建議",
+  "feedbackDescription": "請選擇類型並描述問題，提交後管理員會在後台查看處理。",
+  "feedbackTypeLabel": "反饋類型",
+  "feedbackTypeGeneral": "產品建議",
+  "feedbackTypeBug": "問題反饋",
+  "feedbackTypeContent": "內容糾錯",
+  "feedbackTypeAccount": "賬號問題",
+  "feedbackContentHint": "請詳細描述你的問題或建議",
+  "feedbackContentRequired": "請填寫反饋內容",
+  "feedbackContentTooShort": "反饋內容至少 2 個字符",
+  "feedbackContactHint": "聯繫方式（選填，例如手機號/郵箱）",
+  "submittingFeedback": "提交中...",
+  "submitFeedback": "提交反饋",
+  "interactiveLearning": "互動學習",
+  "startLearning": "開始學習",
+  "strokePractice": "筆順練習",
   "simplifiedChinese": "简体中文",
   "traditionalChinese": "繁體中文"
 }

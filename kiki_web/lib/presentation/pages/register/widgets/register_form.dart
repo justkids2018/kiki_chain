@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../../../design_ui/kiki_ui_kit.dart';
 import '../../../widgets/app_gradient_button.dart';
 import '../controllers/register_page_controller.dart';
@@ -14,6 +15,8 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Form(
       key: controller.formKey,
       child: Column(
@@ -21,7 +24,7 @@ class RegisterForm extends StatelessWidget {
         children: [
           _buildTextField(
             controller: controller.phoneController,
-            hintText: '请输入手机号',
+            hintText: localizations.pleaseEnterPhone,
             prefixIcon: Icons.phone_android,
             keyboardType: TextInputType.phone,
             validator: controller.validatePhone,
@@ -33,7 +36,7 @@ class RegisterForm extends StatelessWidget {
                 child: Obx(
                   () => _buildTextField(
                     controller: controller.passwordController,
-                    hintText: '密码',
+                    hintText: localizations.password,
                     prefixIcon: Icons.lock_outline,
                     obscureText: !controller.passwordVisible,
                     suffixIcon: IconButton(
@@ -55,7 +58,7 @@ class RegisterForm extends StatelessWidget {
                 child: Obx(
                   () => _buildTextField(
                     controller: controller.confirmPasswordController,
-                    hintText: '确认密码',
+                    hintText: localizations.confirmPassword,
                     prefixIcon: Icons.lock_outline,
                     obscureText: !controller.confirmPasswordVisible,
                     suffixIcon: IconButton(
@@ -87,9 +90,9 @@ class RegisterForm extends StatelessWidget {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  '我已阅读并同意《用户协议》和《隐私政策》',
+                  localizations.termsAgreementText,
                   style: TextStyle(
                     fontSize: 12,
                     color: KikiUiColors.textSecondary,
@@ -100,7 +103,7 @@ class RegisterForm extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           AppGradientButton(
-            text: '注册',
+            text: localizations.register,
             onPressed: controller.register,
             height: 52,
             borderRadius: KikiUiRadii.button,

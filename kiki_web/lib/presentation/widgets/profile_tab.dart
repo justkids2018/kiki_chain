@@ -26,7 +26,7 @@ class ProfileTab extends StatelessWidget {
       child: SafeArea(
         child: Obx(() {
           if (authController.isLoggedIn) {
-            return _buildLoggedInView(authController);
+            return _buildLoggedInView(context, authController);
           } else {
             return _buildGuestView();
           }
@@ -107,6 +107,8 @@ class ProfileTab extends StatelessWidget {
                   ],
                 ),
 
+                SizedBox(height: 14),
+
                 SizedBox(height: 40),
               ],
             ),
@@ -117,12 +119,20 @@ class ProfileTab extends StatelessWidget {
   }
 
   /// 构建已登录状态视图
-  Widget _buildLoggedInView(AuthController authController) {
+  Widget _buildLoggedInView(
+      BuildContext context, AuthController authController) {
+    final localizations = AppLocalizations.of(context)!;
     final user = authController.currentUser;
     final phone = user?.phone ?? '';
     final maskedPhone = phone.length == 11
         ? '${phone.substring(0, 3)}****${phone.substring(7)}'
         : phone;
+    final displayName = (user?.nickname.trim().isNotEmpty == true)
+        ? user!.nickname.trim()
+        : localizations.noneValue;
+    final displayId = (user?.id.trim().isNotEmpty == true)
+        ? user!.id.trim()
+        : (maskedPhone.isNotEmpty ? maskedPhone : localizations.noneValue);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
@@ -188,7 +198,7 @@ class ProfileTab extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  user?.nickname ?? 'Kiki 小朋友',
+                                  displayName,
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w700,
@@ -207,7 +217,7 @@ class ProfileTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'ID: ${user?.id ?? maskedPhone}',
+                            '${localizations.userId}: $displayId',
                             style: const TextStyle(
                               fontSize: 13,
                               color: Color(0xFF9B8F84),
@@ -230,35 +240,35 @@ class ProfileTab extends StatelessWidget {
               _ProfileMenuData(
                 icon: Icons.person,
                 color: const Color(0xFF7CB342),
-                title: '我的信息',
+                title: localizations.myInfo,
                 onTap: () => Get.to(() => const MyInfoPage()),
               ),
               _ProfileMenuData(
                 icon: Icons.shield,
                 color: const Color(0xFFF6B722),
-                title: '账号与安全',
+                title: localizations.accountAndSecurity,
                 onTap: () {
-                  Get.snackbar('提示', '账号与安全功能开发中');
+                  Get.snackbar(localizations.hint, localizations.settingsInDev);
                 },
               ),
               _ProfileMenuData(
                 icon: Icons.notifications,
                 color: const Color(0xFF5DB2FF),
-                title: '消息通知',
+                title: localizations.messageNotifications,
                 onTap: () {
-                  Get.snackbar('提示', '消息通知功能开发中');
+                  Get.snackbar(localizations.hint, localizations.settingsInDev);
                 },
               ),
               _ProfileMenuData(
                 icon: Icons.help,
                 color: const Color(0xFF9C6ADE),
-                title: '帮助与反馈',
+                title: localizations.helpAndFeedback,
                 onTap: () => Get.to(() => const HelpFeedbackPage()),
               ),
               _ProfileMenuData(
                 icon: Icons.favorite,
                 color: const Color(0xFFFF6F9C),
-                title: '关于我们',
+                title: localizations.about,
                 onTap: () => Get.to(() => const AboutPage()),
               ),
             ],
@@ -428,7 +438,7 @@ class ProfileTab extends StatelessWidget {
   Widget _buildMenuCard({required List<_ProfileMenuData> items}) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: const Color(0xFFFFFCF7),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: AppColors.profileCardBorder, width: 1),
         boxShadow: [

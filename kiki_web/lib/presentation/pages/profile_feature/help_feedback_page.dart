@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/network/network_client.dart';
 import '../../widgets/app_gradient_button.dart';
@@ -33,6 +34,7 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
     setState(() => _submitting = true);
     try {
+      final localizations = AppLocalizations.of(context)!;
       await NetworkClient.instance.httpClient.post<Map<String, dynamic>>(
         ApiEndpoints.userFeedback,
         data: {
@@ -43,14 +45,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
         },
       );
 
-      await EasyLoading.showSuccess('反馈提交成功，感谢你的建议');
+      await EasyLoading.showSuccess(localizations.feedbackSubmitSuccess);
       _contentController.clear();
       _contactController.clear();
       if (mounted) {
         Get.back();
       }
     } catch (e) {
-      EasyLoading.showError('提交失败，请稍后重试');
+      EasyLoading.showError(AppLocalizations.of(context)!.feedbackSubmitFailed);
     } finally {
       if (mounted) {
         setState(() => _submitting = false);
@@ -60,8 +62,10 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('帮助与反馈')),
+      appBar: AppBar(title: Text(localizations.helpAndFeedback)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -69,8 +73,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '我们重视你的每一条建议',
+              Text(
+                localizations.feedbackHeadline,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -78,8 +82,8 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
-                '请选择类型并描述问题，提交后管理员会在后台查看处理。',
+              Text(
+                localizations.feedbackDescription,
                 style: TextStyle(fontSize: 13, color: Color(0xFF8D847C)),
               ),
               const SizedBox(height: 20),
@@ -91,12 +95,19 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                   color: Color(0xFF5E544B),
                   fontWeight: FontWeight.w500,
                 ),
-                decoration: _inputDecor('反馈类型'),
-                items: const [
-                  DropdownMenuItem(value: 'general', child: Text('产品建议')),
-                  DropdownMenuItem(value: 'bug', child: Text('问题反馈')),
-                  DropdownMenuItem(value: 'content', child: Text('内容纠错')),
-                  DropdownMenuItem(value: 'account', child: Text('账号问题')),
+                decoration: _inputDecor(localizations.feedbackTypeLabel),
+                items: [
+                  DropdownMenuItem(
+                      value: 'general',
+                      child: Text(localizations.feedbackTypeGeneral)),
+                  DropdownMenuItem(
+                      value: 'bug', child: Text(localizations.feedbackTypeBug)),
+                  DropdownMenuItem(
+                      value: 'content',
+                      child: Text(localizations.feedbackTypeContent)),
+                  DropdownMenuItem(
+                      value: 'account',
+                      child: Text(localizations.feedbackTypeAccount)),
                 ],
                 onChanged: (value) {
                   setState(() => _feedbackType = value ?? 'general');
@@ -111,11 +122,14 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 strutStyle:
                     const StrutStyle(height: 1.25, forceStrutHeight: true),
                 style: const TextStyle(height: 1.25),
-                decoration: _inputDecor('请详细描述你的问题或建议'),
+                decoration: _inputDecor(localizations.feedbackContentHint),
                 validator: (value) {
                   final text = value?.trim() ?? '';
-                  if (text.isEmpty) return '请填写反馈内容';
-                  if (text.length < 2) return '反馈内容至少 2 个字符';
+                  if (text.isEmpty)
+                    return localizations.feedbackContentRequired;
+                  if (text.length < 2) {
+                    return localizations.feedbackContentTooShort;
+                  }
                   return null;
                 },
               ),
@@ -126,14 +140,16 @@ class _HelpFeedbackPageState extends State<HelpFeedbackPage> {
                 strutStyle:
                     const StrutStyle(height: 1.25, forceStrutHeight: true),
                 style: const TextStyle(height: 1.25),
-                decoration: _inputDecor('联系方式（选填，例如手机号/邮箱）'),
+                decoration: _inputDecor(localizations.feedbackContactHint),
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: AppGradientButton(
-                  text: _submitting ? '提交中...' : '提交反馈',
+                  text: _submitting
+                      ? localizations.submittingFeedback
+                      : localizations.submitFeedback,
                   onPressed: _submitting ? null : _submitFeedback,
                   height: 50,
                   borderRadius: 25,

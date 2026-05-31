@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import '../../design_ui/kiki_ui_kit.dart';
 import '../widgets/app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -52,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.symmetric(
                             horizontal: isMobileWidth ? 20 : 28,
                           ),
-                          child: _buildLoginForm(authController),
+                          child: _buildLoginForm(authController, localizations),
                         ),
                       ),
                     ),
@@ -66,15 +68,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginForm(AuthController controller) {
+  Widget _buildLoginForm(
+      AuthController controller, AppLocalizations localizations) {
     return Form(
       key: controller.loginFormKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 10),
           Text(
-            '欢迎登录',
+            localizations.welcomeBack,
             style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w700,
@@ -83,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            '登录后继续你的学习旅程',
+            localizations.pleaseLoginToAccount,
             style: const TextStyle(
               fontSize: 13,
               color: KikiUiColors.textSecondary,
@@ -94,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
           // 手机号输入框
           _buildTextField(
             controller: controller.loginIdentifierController,
-            hintText: '请输入手机号',
+            hintText: localizations.pleaseEnterPhone,
             prefixIcon: Icons.phone_android,
             keyboardType: TextInputType.phone,
             validator: controller.validateLoginIdentifier,
@@ -105,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
           Obx(
             () => _buildTextField(
               controller: controller.loginPasswordController,
-              hintText: '请输入密码',
+              hintText: localizations.pleaseEnterPassword,
               prefixIcon: Icons.lock_outline,
               obscureText: !controller.loginPasswordVisible,
               suffixIcon: IconButton(
@@ -128,8 +130,8 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => _showForgotPasswordDialog(controller),
-                child: const Text(
-                  '忘记密码？',
+                child: Text(
+                  localizations.forgotPassword,
                   style: TextStyle(
                     fontSize: 14,
                     color: KikiUiColors.brandGreen,
@@ -143,15 +145,15 @@ class _LoginPageState extends State<LoginPage> {
           ],
 
           _buildPrimaryButton(
-            text: '登录',
+            text: localizations.login,
             onPressed: controller.login,
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                '还没有账号？',
+              Text(
+                localizations.noAccountYet,
                 style: TextStyle(
                   fontSize: 12,
                   color: KikiUiColors.textSecondary,
@@ -160,8 +162,8 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(width: 8),
               GestureDetector(
                 onTap: () => Get.offNamed('/register'),
-                child: const Text(
-                  '立即注册',
+                child: Text(
+                  localizations.register,
                   style: TextStyle(
                     fontSize: 13,
                     color: KikiUiColors.brandGreen,
@@ -219,20 +221,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _showForgotPasswordDialog(AuthController controller) async {
+    final localizations = AppLocalizations.of(context)!;
     final shouldClear = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('提示'),
-          content: const Text('暂未开放找回密码，请清空后重新输入账号和密码。'),
+          title: Text(localizations.hint),
+          content: Text(localizations.forgotPasswordNotAvailable),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('取消'),
+              child: Text(localizations.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('清空重填'),
+              child: Text(localizations.clearAndRetry),
             ),
           ],
         );

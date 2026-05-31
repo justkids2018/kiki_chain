@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kikichain/generated/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,18 +46,18 @@ class _AboutPageState extends State<AboutPage> {
       final launched =
           await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!launched && mounted) {
-        _showHint('未检测到可用邮箱客户端');
+        _showHint(AppLocalizations.of(context)!.noMailClientDetected);
       }
     } catch (_) {
       if (!mounted) return;
-      _showHint('打开邮箱失败，请稍后重试');
+      _showHint(AppLocalizations.of(context)!.openMailFailed);
     }
   }
 
   Future<void> _copyEmail() async {
     await Clipboard.setData(const ClipboardData(text: _contactEmail));
     if (!mounted) return;
-    _showHint('邮箱已复制：$_contactEmail');
+    _showHint(AppLocalizations.of(context)!.emailCopied(_contactEmail));
   }
 
   void _showHint(String message) {
@@ -68,12 +69,15 @@ class _AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('关于我们')),
+      appBar: AppBar(title: Text(localizations.aboutUs)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
         children: [
           _AboutSummaryCard(
+            localizations: localizations,
             versionText: _versionText,
             contactEmail: _contactEmail,
             onEmailTap: _openMailClient,
@@ -86,12 +90,14 @@ class _AboutPageState extends State<AboutPage> {
 }
 
 class _AboutSummaryCard extends StatelessWidget {
+  final AppLocalizations localizations;
   final String versionText;
   final String contactEmail;
   final VoidCallback onEmailTap;
   final VoidCallback onEmailLongPress;
 
   const _AboutSummaryCard({
+    required this.localizations,
     required this.versionText,
     required this.contactEmail,
     required this.onEmailTap,
@@ -131,7 +137,7 @@ class _AboutSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '版本 $versionText',
+            '${localizations.versionPrefix} $versionText',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -141,10 +147,10 @@ class _AboutSummaryCard extends StatelessWidget {
           const SizedBox(height: 16),
           const Divider(height: 1, color: Color(0xFFECE4D9)),
           const SizedBox(height: 16),
-          const Text(
-            'Hi Kiki 通过场景认词、规范笔画与书写练习，帮助孩子把词汇理解和写字能力一起练起来。',
+          Text(
+            localizations.aboutDescription,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               height: 1.65,
               color: Color(0xFF5E544B),
@@ -155,7 +161,7 @@ class _AboutSummaryCard extends StatelessWidget {
             onTap: onEmailTap,
             onLongPress: onEmailLongPress,
             child: Text(
-              '有任何建议欢迎联系我们：$contactEmail',
+              localizations.contactEmailHint(contactEmail),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,

@@ -96,10 +96,6 @@
   "@success": {
     "description": "Success message title"
   },
-  "loading": "Loading...",
-  "@loading": {
-    "description": "Loading message"
-  },
   "noData": "No data available",
   "@noData": {
     "description": "No data message"
@@ -248,7 +244,6 @@
   "@exit": {
     "description": "Exit button text"
   },
-  "darkMode": "Dark Mode",
   "@darkMode": {
     "description": "Dark mode setting"
   },
@@ -379,6 +374,61 @@
   "favoritesInDev": "Favorites feature is under development",
   "settingsInDev": "Settings feature is under development",
   "vocabularyInDev": "Vocabulary feature is under development",
+  "temporaryName": "Temporary",
+  "noneValue": "None",
+  "userId": "User ID",
+  "myInfo": "My Info",
+  "accountAndSecurity": "Account & Security",
+  "messageNotifications": "Message Notifications",
+  "languageSwitch": "Language Switch",
+  "personalInfo": "Personal Info",
+  "registeredAt": "Registered At",
+  "lastLogin": "Last Login",
+  "profileReadonlyHint": "Note: This version supports viewing information only. Editing will be available later.",
+  "profileCenter": "Profile Center",
+  "forgotPassword": "Forgot password?",
+  "forgotPasswordNotAvailable": "Password recovery is not available yet. Please clear and re-enter your account and password.",
+  "clearAndRetry": "Clear and Retry",
+  "termsAgreementText": "I have read and agree to the User Agreement and Privacy Policy",
+  "aboutUs": "About Us",
+  "versionPrefix": "Version",
+  "aboutDescription": "Hi Kiki helps children build vocabulary understanding and writing skills together through scene-based learning, stroke order practice, and writing exercises.",
+  "contactEmailHint": "If you have suggestions, contact us: {email}",
+  "@contactEmailHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "noMailClientDetected": "No available mail client detected",
+  "openMailFailed": "Failed to open mail app. Please try again later",
+  "emailCopied": "Email copied: {email}",
+  "@emailCopied": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackSubmitSuccess": "Feedback submitted successfully. Thanks for your suggestion",
+  "feedbackSubmitFailed": "Submit failed. Please try again later",
+  "feedbackHeadline": "We value every suggestion you share",
+  "feedbackDescription": "Please choose a type and describe your issue. After submission, admins will review it in the backend.",
+  "feedbackTypeLabel": "Feedback type",
+  "feedbackTypeGeneral": "Product suggestion",
+  "feedbackTypeBug": "Bug report",
+  "feedbackTypeContent": "Content correction",
+  "feedbackTypeAccount": "Account issue",
+  "feedbackContentHint": "Please describe your issue or suggestion in detail",
+  "feedbackContentRequired": "Please enter feedback content",
+  "feedbackContentTooShort": "Feedback content must be at least 2 characters",
+  "feedbackContactHint": "Contact info (optional, e.g. phone/email)",
+  "submittingFeedback": "Submitting...",
+  "submitFeedback": "Submit Feedback",
+  "interactiveLearning": "Interactive Learning",
+  "startLearning": "Start Learning",
+  "strokePractice": "Stroke Practice",
   "simplifiedChinese": "Simplified Chinese",
   "traditionalChinese": "Traditional Chinese"
 }

@@ -20,19 +20,20 @@ class InteractiveImageHomePage extends StatelessWidget {
         return Scaffold(
           body: Container(
             decoration: KikiUiDecor.pageBackgroundDecor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SafeArea(
-                  child: _buildFloatingHeader(context),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 25),
+            child: SafeArea(
+              minimum: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    top: 46,
                     child: _buildCategoryList(controller),
                   ),
-                ),
-              ],
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _buildFloatingHeader(context),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -42,47 +43,44 @@ class InteractiveImageHomePage extends StatelessWidget {
 
   /// 悬浮毛玻璃标题
   Widget _buildFloatingHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: KikiUiColors.panel.withValues(alpha: 0.76),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.85),
-                width: 1.2,
-              ),
-              boxShadow: KikiUiShadows.floating,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: KikiUiColors.panel.withValues(alpha: 0.76),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.85),
+              width: 1.2,
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Hi Kiki',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: KikiUiColors.brandGreen,
-                  ),
+            boxShadow: KikiUiShadows.floating,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Hi Kiki',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: KikiUiColors.brandGreen,
                 ),
-                const SizedBox(width: 8),
-                Builder(builder: (context) {
-                  final loc = AppLocalizations.of(context)!;
-                  return Text(
-                    loc.chooseSceneToStart,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: KikiUiColors.textSecondary,
-                    ),
-                  );
-                }),
-              ],
-            ),
+              ),
+              const SizedBox(width: 8),
+              Builder(builder: (context) {
+                final loc = AppLocalizations.of(context)!;
+                return Text(
+                  loc.chooseSceneToStart,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: KikiUiColors.textSecondary,
+                  ),
+                );
+              }),
+            ],
           ),
         ),
       ),
@@ -182,12 +180,15 @@ class InteractiveImageHomePage extends StatelessWidget {
         builder: (context, constraints) {
           final availableHeight = constraints.maxHeight;
           final screenWidth = constraints.maxWidth;
+          final isPhone = screenWidth < 700;
 
           // Card aspect ratio: portrait 7:9
           const cardAspectRatio = 7.0 / 9.0;
 
-          // Card height fits in available space (留一些边距)
-          double cardHeight = (availableHeight * 0.85).clamp(200.0, 500.0);
+          // Make cards larger, especially on phone.
+          double cardHeight =
+              (availableHeight * (isPhone ? 0.93 : 0.88)).clamp(230.0, 540.0);
+          cardHeight = (cardHeight - 10.0).clamp(220.0, 530.0);
           double cardWidth = cardHeight * cardAspectRatio;
 
           // On wide screens, cap width
@@ -197,21 +198,21 @@ class InteractiveImageHomePage extends StatelessWidget {
             cardHeight = cardWidth / cardAspectRatio;
           }
 
-          return Center(
+          return Align(
+            alignment: Alignment.centerLeft,
             child: SizedBox(
               height: cardHeight,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25), // 左右边距 25dp
+                padding: EdgeInsets.zero,
                 itemCount: controller.categories.length,
                 itemBuilder: (context, index) {
                   final category = controller.categories[index];
                   return Padding(
                     padding: EdgeInsets.only(
                       right: index < controller.categories.length - 1
-                          ? 30
-                          : 0, // 卡片间距 30dp
+                          ? (isPhone ? 22 : 28)
+                          : 0,
                     ),
                     child: SizedBox(
                       width: cardWidth,

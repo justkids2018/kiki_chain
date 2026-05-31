@@ -108,7 +108,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   // Main content — vertically centered below status bar
                   Positioned.fill(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: ScreenDiffusionLayer(
                         controller: _diffusionController,
                         child: Container(
@@ -155,7 +155,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     // 右侧固定尺寸：避免在移动端被拉成整宽，整体保持近似方形。
     final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
-    final double panelHeight = isCompactLandscape ? 420.0 : 460.0;
 
     final availableWidth = (screenSize.width - horizontalPadding * 2)
         .clamp(360.0, double.infinity);
@@ -167,13 +166,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         (availableWidth - panelGap - panelWidth).clamp(160.0, double.infinity);
 
     final maxLayoutHeight =
-        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 20)
+        (screenSize.height - mediaPadding.top - mediaPadding.bottom - 30)
             .clamp(320.0, double.infinity);
 
     // 左图优先放大，尽量吃满剩余区域；保持方形以保证视觉稳定。
     final imageSize = imageMaxWidth.clamp(160.0, maxLayoutHeight);
+    final panelHeight = imageSize;
     final groupWidth = imageSize + panelGap + panelWidth;
-    final layoutHeight = imageSize > panelHeight ? imageSize : panelHeight;
+    final layoutHeight = imageSize;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),

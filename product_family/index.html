@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JustKids Product Studio | Hi Kiki · Just 60</title>
+    <meta name="description" content="JustKids Product Studio：Hi Kiki 与 Just 60 小院。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #f4f2ed;
+            --bg-soft: #ffffff;
+            --ink: #111111;
+            --muted: #57534d;
+            --brand: #84cc16;
+            --brand-deep: #65a30d;
+            --accent: #111111;
+            --card: #ffffff;
+            --line: #d6d3d1;
+            --shadow: 0 18px 44px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 100% -5%, rgba(132, 204, 22, 0.16) 0%, transparent 28%),
+                radial-gradient(circle at -10% 20%, rgba(17, 17, 17, 0.08) 0%, transparent 30%),
+                var(--bg);
+            font-family: "Noto Sans SC", "Space Grotesk", sans-serif;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image:
+                linear-gradient(to right, rgba(17, 17, 17, 0.35) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(17, 17, 17, 0.35) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .container {
+            width: min(1120px, calc(100vw - 32px));
+            margin: 18px auto 48px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(17, 17, 17, 0.16);
+            border-radius: 26px;
+            background:
+                linear-gradient(130deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 248, 247, 0.95) 100%);
+            box-shadow: var(--shadow);
+            padding: 30px;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(2px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero::before {
+            width: 250px;
+            height: 250px;
+            right: -80px;
+            top: -80px;
+            background: rgba(132, 204, 22, 0.24);
+        }
+
+        .hero::after {
+            width: 200px;
+            height: 200px;
+            left: -60px;
+            bottom: -100px;
+            background: rgba(17, 17, 17, 0.12);
+        }
+
+        .hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(17, 17, 17, 0.18);
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 8px 11px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            background: var(--brand);
+        }
+
+        .name {
+            margin-top: 18px;
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            font-size: clamp(38px, 9vw, 86px);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            margin-top: 12px;
+            max-width: 760px;
+            color: var(--muted);
+            font-size: clamp(14px, 3.2vw, 18px);
+            line-height: 1.78;
+            font-weight: 500;
+        }
+
+        .profile-rows {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .chip {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 13px 14px;
+        }
+
+        .chip-title {
+            color: #78716c;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .chip-value {
+            margin-top: 7px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1c1917;
+        }
+
+        .chip-value a {
+            color: #4b4136;
+            text-decoration: none;
+            border-bottom: 1px dashed #b7a385;
+        }
+
+        .chip-value a:hover {
+            color: var(--brand-deep);
+            border-bottom-color: var(--brand-deep);
+        }
+
+        .section {
+            margin-top: 22px;
+            border: 1px solid rgba(17, 17, 17, 0.16);
+            border-radius: 22px;
+            background: var(--bg-soft);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-head {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--line);
+            background: #fafaf9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .section-sub {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .lang-switch {
+            display: inline-flex;
+            border: 1px solid #d4d4d4;
+            border-radius: 999px;
+            padding: 3px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: #57534e;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 140ms ease;
+        }
+
+        .lang-btn[aria-pressed="true"] {
+            color: #fff;
+            background: linear-gradient(125deg, var(--brand) 0%, var(--brand-deep) 100%);
+        }
+
+        .product-list {
+            padding: 8px 18px 22px;
+        }
+
+        .product-item {
+            position: relative;
+            display: grid;
+            grid-template-columns: 86px 1fr;
+            gap: 18px;
+            padding: 22px 0;
+            border-bottom: 1px solid var(--line);
+            opacity: 0;
+            transform: translateY(14px);
+            animation: fadeUp 650ms ease forwards;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-item:nth-child(1) {
+            animation-delay: 60ms;
+        }
+
+        .product-item:nth-child(2) {
+            animation-delay: 160ms;
+        }
+
+        .product-index {
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: rgba(76, 143, 34, 0.62);
+            line-height: 1;
+            padding-top: 6px;
+        }
+
+        .product-panel {
+            border: 1px solid #d4d4d8;
+            border-radius: 16px;
+            background: linear-gradient(160deg, #ffffff 0%, #f7f7f6 100%);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+            padding: 18px;
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .product-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .status-pill {
+            border-radius: 8px;
+            border: 1px solid rgba(17, 17, 17, 0.2);
+            color: #1f2937;
+            background: rgba(132, 204, 22, 0.2);
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .product-title {
+            margin: 0;
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            font-size: clamp(28px, 4.5vw, 46px);
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .product-desc {
+            margin-top: 10px;
+            margin-bottom: 0;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 14px;
+            max-width: 66ch;
+        }
+
+        .product-body {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        .product-main {
+            min-width: 0;
+        }
+
+        .product-visual {
+            border: 1px dashed #bdbdbd;
+            border-radius: 16px;
+            background: repeating-linear-gradient(45deg,
+                    #fbfbfb,
+                    #fbfbfb 12px,
+                    #f5f5f4 12px,
+                    #f5f5f4 24px);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            min-height: 170px;
+        }
+
+        .visual-hint {
+            margin: 0;
+            color: #57534e;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .icon-wrap {
+            width: 68px;
+            height: 68px;
+            border-radius: 14px;
+            border: 1px solid #cfcfcf;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .icon-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tags {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            border-radius: 8px;
+            border: 1px solid #d4d4d4;
+            background: #f8f8f7;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #44403c;
+        }
+
+        .cta-row {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid transparent;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.01em;
+            padding: 11px 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 160ms ease;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(120deg, var(--brand) 0%, var(--brand-deep) 100%);
+            box-shadow: 0 8px 18px rgba(101, 163, 13, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px rgba(101, 163, 13, 0.3);
+        }
+
+        .btn-ghost {
+            color: #3f3f46;
+            border-color: #cfcfcf;
+            background: #f8f8f8;
+        }
+
+        .qr-box {
+            margin-top: 12px;
+            border-radius: 16px;
+            border: 1px dashed #b7b7b7;
+            background: repeating-linear-gradient(45deg,
+                    #fafafa,
+                    #fafafa 12px,
+                    #f3f3f3 12px,
+                    #f3f3f3 24px);
+            min-height: 160px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #57534e;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .footnote {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #78716c;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline {
+            padding: 14px;
+            border-top: 1px solid var(--line);
+            background: #f8faf5;
+        }
+
+        .timeline h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .timeline ul {
+            margin: 10px 0 0;
+            padding-left: 18px;
+            color: #44403c;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 980px) {
+            .profile-rows {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 20px;
+                border-radius: 24px;
+            }
+
+            .product-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 16px 0;
+            }
+
+            .product-index {
+                font-size: 22px;
+                padding-top: 0;
+            }
+
+            .product-body {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grain"></div>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-top">
+                <span class="badge" data-i18n="badge"><span class="dot"></span> JUSTKIDS · PRODUCT STUDIO</span>
+                <div class="hero-meta">
+                    <div class="lang-switch" role="group" aria-label="Language switcher">
+                        <button class="lang-btn" type="button" data-lang="zh" aria-pressed="true">中</button>
+                        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="name" data-i18n="heroTitle">JustKids 产品工作室</div>
+            <p class="subtitle" data-i18n="heroSubtitle">
+                我们把「儿童启蒙」与「长期主义研究」做成可持续迭代的数字产品。
+                当前核心项目为 Hi Kiki 与 Just 60 小院。
+            </p>
+
+            <div class="profile-rows">
+                <div class="chip">
+                    <div class="chip-title" data-i18n="chipDomainTitle">领域</div>
+                    <div class="chip-value" data-i18n="chipDomainValue">教育产品 / 价值投资研究</div>
+                </div>
+                <div class="chip">
+                    <div class="chip-title" data-i18n="chipFormTitle">形式</div>
+                    <div class="chip-value" data-i18n="chipFormValue">移动 App、研究内容系统</div>
+                </div>
+                <div class="chip">
+                    <div class="chip-title" data-i18n="chipContactTitle">联系方式</div>
+                    <div class="chip-value">
+                        <a href="mailto:qishoudong@163.com">qishoudong@163.com</a><br />
+                        <a href="mailto:justkids2018101@gmail.com">justkids2018101@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <header class="section-head">
+                <h2 class="section-title" data-i18n="sectionTitle">在做的产品</h2>
+                <span class="section-sub" data-i18n="sectionSub">Curated List · 2</span>
+            </header>
+
+            <div class="product-list">
+                <article class="product-item">
+                    <div class="product-index">01</div>
+                    <div class="product-panel">
+                        <div class="product-head">
+                            <div>
+                                <h3 class="product-title">Hi Kiki</h3>
+                                <p class="product-desc" data-i18n="p1Desc">
+                                    儿童启蒙互动学习产品，围绕图像点击学习、语音朗读、笔顺训练等场景，
+                                    支持中英文内容体验。
+                                </p>
+                            </div>
+                            <span class="status-pill" data-i18n="p1Status">Android 已上线</span>
+                        </div>
+
+                        <div class="product-body">
+                            <div class="product-main">
+                                <div class="tags">
+                                    <span class="tag" data-i18n="p1Tag1">Android</span>
+                                    <span class="tag" data-i18n="p1Tag2">iOS（规划中）</span>
+                                    <span class="tag" data-i18n="p1Tag3">教育启蒙</span>
+                                    <span class="tag" data-i18n="p1Tag4">互动学习</span>
+                                </div>
+
+                                <div class="cta-row">
+                                    <a class="btn btn-primary" href="./hikiki/" title="前往下载页" data-i18n="p1Cta1">下载
+                                        Android
+                                        版</a>
+                                    <span class="btn btn-ghost" aria-disabled="true" title="当前暂无公开产品页"
+                                        data-i18n="p1Cta2">产品介绍整理中</span>
+                                </div>
+
+                                <p class="footnote" data-i18n="p1Footnote">
+                                    替换方式：把二维码图片放到 product_family 目录后，替换右侧占位区域。
+                                </p>
+                            </div>
+
+                            <div class="product-visual">
+                                <div class="icon-wrap" aria-label="Hi Kiki App Icon">
+                                    <img src="../kiki_web/assets/icon/app_icon.png" alt="Hi Kiki App Icon" />
+                                </div>
+                                <div class="qr-box" data-i18n="p1Qr">Android 下载二维码占位区</div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-item">
+                    <div class="product-index">02</div>
+                    <div class="product-panel">
+                        <div class="product-head">
+                            <div>
+                                <h3 class="product-title">Just 60 小院</h3>
+                                <p class="product-desc" data-i18n="p2Desc">
+                                    一个面向长期价值投资的研究分析产品，当前聚焦于公司研究、估值跟踪、
+                                    组合复盘与策略记录。当前处于内容体系打磨阶段，后续可扩展为 App。
+                                </p>
+                            </div>
+                            <span class="status-pill" data-i18n="p2Status">Web First</span>
+                        </div>
+
+                        <div class="product-body">
+                            <div class="product-main">
+                                <div class="tags">
+                                    <span class="tag" data-i18n="p2Tag1">价值投资</span>
+                                    <span class="tag" data-i18n="p2Tag2">公司研究</span>
+                                    <span class="tag" data-i18n="p2Tag3">估值跟踪</span>
+                                    <span class="tag" data-i18n="p2Tag4">组合复盘</span>
+                                    <span class="tag" data-i18n="p2Tag5">内容体系</span>
+                                    <span class="tag" data-i18n="p2Tag6">App 可拓展</span>
+                                </div>
+
+                                <div class="cta-row">
+                                    <span class="btn btn-primary" aria-disabled="true" title="当前暂无公开入口"
+                                        data-i18n="p2Cta1">项目资料整理中</span>
+                                    <span class="btn btn-ghost" aria-disabled="true" title="当前暂无线上入口"
+                                        data-i18n="p2Cta2">内测入口预留</span>
+                                </div>
+                            </div>
+
+                            <div class="product-visual">
+                                <p class="visual-hint" data-i18n="p2Hint">
+                                    这个位置可以放「示例报告封面」或「核心指标截图」，
+                                    让投资分析产品的专业感更直接。
+                                </p>
+                                <div class="qr-box" data-i18n="p2Qr">预留：若做移动端，可放安装二维码</div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <section class="timeline">
+                <h3 data-i18n="nextTitle">Next</h3>
+                <ul>
+                    <li data-i18n="next1">Hi Kiki：完善 Android 下载链路，并补 iOS 上架信息。</li>
+                    <li data-i18n="next2">Just 60 小院：先做 Web 分析入口，再决定是否并行开发 App。</li>
+                    <li data-i18n="next3">统一品牌页：后续可追加“关于我 / 联系方式 / 合作入口”。</li>
+                </ul>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const i18n = {
+            zh: {
+                pageTitle: 'JustKids Product Studio | Hi Kiki · Just 60',
+                metaDescription: 'JustKids Product Studio：Hi Kiki 与 Just 60 小院。',
+                badge: 'JUSTKIDS · PRODUCT STUDIO',
+                heroTitle: 'JustKids 产品工作室',
+                heroSubtitle: '我们把「儿童启蒙」与「长期主义研究」做成可持续迭代的数字产品。当前核心项目为 Hi Kiki 与 Just 60 小院，学习练字产品也在规划中。',
+                chipDomainTitle: '领域',
+                chipDomainValue: '教育产品 / 价值投资研究',
+                chipFormTitle: '形式',
+                chipFormValue: '移动 App、研究内容系统',
+                chipContactTitle: '联系方式',
+                sectionTitle: '在做的产品',
+                sectionSub: 'Curated List · 2',
+                p1Desc: '儿童启蒙互动学习产品，围绕图像点击学习、语音朗读、笔顺训练等场景，支持中英文内容体验。',
+                p1Status: 'Android 已上线',
+                p1Tag1: 'Android',
+                p1Tag2: 'iOS（规划中）',
+                p1Tag3: '教育启蒙',
+                p1Tag4: '互动学习',
+                p1Cta1: '下载 Android 版',
+                p1Cta2: '产品介绍整理中',
+                p1Footnote: '替换方式：把二维码图片放到 product_family 目录后，替换右侧占位区域。',
+                p1Qr: 'Android 下载二维码占位区',
+                p2Desc: '一个面向长期价值投资的研究分析产品，当前聚焦于公司研究、估值跟踪、组合复盘与策略记录。当前处于内容体系打磨阶段，后续可扩展为 App。',
+                p2Status: 'Web First',
+                p2Tag1: '价值投资',
+                p2Tag2: '公司研究',
+                p2Tag3: '估值跟踪',
+                p2Tag4: '组合复盘',
+                p2Tag5: '内容体系',
+                p2Tag6: 'App 可拓展',
+                p2Cta1: '项目资料整理中',
+                p2Cta2: '内测入口预留',
+                p2Hint: '这个位置可以放「示例报告封面」或「核心指标截图」，让投资分析产品的专业感更直接。',
+                p2Qr: '预留：若做移动端，可放安装二维码',
+                nextTitle: 'Next',
+                next1: 'Hi Kiki：完善 Android 下载链路，并补 iOS 上架信息。',
+                next2: 'Just 60 小院：先做内容与分析资料，再决定是否并行开发 App。',
+                next3: '学习练字产品：按“一个产品一个目录”新增独立页面与下载入口。'
+            },
+            en: {
+                pageTitle: 'JustKids Product Studio | Hi Kiki · Just 60',
+                metaDescription: 'JustKids Product Studio: Hi Kiki and Just 60.',
+                badge: 'JUSTKIDS · PRODUCT STUDIO',
+                heroTitle: 'JustKids Product Studio',
+                heroSubtitle: 'We build sustainable digital products across early learning and long-term investing research. Our current focus is Hi Kiki and Just 60, with a handwriting-learning product in planning.',
+                chipDomainTitle: 'Focus',
+                chipDomainValue: 'EdTech / Value Investing Research',
+                chipFormTitle: 'Format',
+                chipFormValue: 'Mobile App + Research Content System',
+                chipContactTitle: 'Contact',
+                sectionTitle: 'Products In Progress',
+                sectionSub: 'Curated List · 2',
+                p1Desc: 'An interactive early-learning product focused on tappable visuals, read-aloud playback, and stroke-order practice, with bilingual content support.',
+                p1Status: 'Android Live',
+                p1Tag1: 'Android',
+                p1Tag2: 'iOS (Planned)',
+                p1Tag3: 'Early Learning',
+                p1Tag4: 'Interactive Study',
+                p1Cta1: 'Download Android',
+                p1Cta2: 'Profile In Preparation',
+                p1Footnote: 'Replace this with your real QR image in product_family when ready.',
+                p1Qr: 'Android Download QR Placeholder',
+                p2Desc: 'A long-term value-investing research product centered on company deep-dives, valuation tracking, portfolio reviews, and strategy notes. It may expand into an app later.',
+                p2Status: 'Web First',
+                p2Tag1: 'Value Investing',
+                p2Tag2: 'Company Research',
+                p2Tag3: 'Valuation Tracking',
+                p2Tag4: 'Portfolio Review',
+                p2Tag5: 'Content System',
+                p2Tag6: 'App Expandable',
+                p2Cta1: 'Materials In Preparation',
+                p2Cta2: 'Private Access Reserved',
+                p2Hint: 'You can place a sample report cover or key metric screenshot here to make the product feel more professional.',
+                p2Qr: 'Reserved for future app install QR',
+                nextTitle: 'Next',
+                next1: 'Hi Kiki: complete Android distribution and add iOS release info.',
+                next2: 'Just 60: refine content and research materials before deciding on app development.',
+                next3: 'Handwriting-learning product: add a dedicated directory and standalone download page.'
+            }
+        };
+
+        const applyLanguage = (lang) => {
+            const dictionary = i18n[lang] || i18n.zh;
+            document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+            document.title = dictionary.pageTitle;
+            document.querySelector('meta[name="description"]').setAttribute('content', dictionary.metaDescription);
+
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (dictionary[key]) {
+                    el.textContent = dictionary[key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach((btn) => {
+                const isActive = btn.getAttribute('data-lang') === lang;
+                btn.setAttribute('aria-pressed', String(isActive));
+            });
+
+            localStorage.setItem('product_family_lang', lang);
+        };
+
+        const saved = localStorage.getItem('product_family_lang');
+        const browserLang = navigator.language && navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        const initialLang = saved || browserLang;
+        applyLanguage(initialLang);
+
+        document.querySelectorAll('.lang-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                applyLanguage(lang);
+            });
+        });
+    </script>
+</body>
+
+</html>

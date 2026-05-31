@@ -25,7 +25,7 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       QINIU_UPLOAD_URL: ${{ vars.QINIU_UPLOAD_URL || 'https://up-z2.qiniup.com' }}
       QINIU_DOMAIN: ${{ vars.QINIU_DOMAIN || 'img.keepthinking.me' }}
-      QINIU_DOWNAPP_PREFIX: ${{ vars.QINIU_DOWNAPP_PREFIX || 'download/hikiki' }}
+      QINIU_DOWNAPP_PREFIX: ${{ vars.QINIU_DOWNAPP_PREFIX || '' }}
 
     defaults:
       run:
@@ -129,12 +129,34 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Fallback: load Qiniu credentials from repository dotenv file when
+          # secrets/vars are not available in this workflow context.
+          if [[ -f "kiki_server/.env" ]]; then
+            if [[ -z "${QINIU_ACCESS_KEY}" ]]; then
+              QINIU_ACCESS_KEY="$(grep -E '^QINIU_ACCESS_KEY=' kiki_server/.env | tail -n1 | cut -d'=' -f2- || true)"
+            fi
+            if [[ -z "${QINIU_SECRET_KEY}" ]]; then
+              QINIU_SECRET_KEY="$(grep -E '^QINIU_SECRET_KEY=' kiki_server/.env | tail -n1 | cut -d'=' -f2- || true)"
+            fi
+            if [[ -z "${QINIU_BUCKET}" ]]; then
+              QINIU_BUCKET="$(grep -E '^QINIU_BUCKET=' kiki_server/.env | tail -n1 | cut -d'=' -f2- || true)"
+            fi
+            if [[ -z "${QINIU_DOWNAPP_PREFIX}" ]]; then
+              QINIU_DOWNAPP_PREFIX="$(grep -E '^QINIU_DOWNAPP_PREFIX=' kiki_server/.env | tail -n1 | cut -d'=' -f2- || true)"
+            fi
+          fi
+
+          if [[ -z "${QINIU_DOWNAPP_PREFIX}" ]]; then
+            QINIU_DOWNAPP_PREFIX="download/hikiki"
+          fi
+
           if [[ -z "${QINIU_ACCESS_KEY}" || -z "${QINIU_SECRET_KEY}" || -z "${QINIU_BUCKET}" ]]; then
             echo "Missing required Qiniu credentials for upload."
             echo "Tried (in order):"
             echo "- QINIU_ACCESS_KEY / DEPLOY_QINIU_ACCESS_KEY / KIKI_QINIU_ACCESS_KEY"
             echo "- QINIU_SECRET_KEY / DEPLOY_QINIU_SECRET_KEY / KIKI_QINIU_SECRET_KEY"
             echo "- QINIU_BUCKET / DEPLOY_QINIU_BUCKET / KIKI_QINIU_BUCKET"
+            echo "- kiki_server/.env: QINIU_ACCESS_KEY / QINIU_SECRET_KEY / QINIU_BUCKET"
             echo "Please configure them in repository Secrets (preferred) or Variables."
             exit 1
           fi

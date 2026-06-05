@@ -75,6 +75,53 @@ class CachedRemoteAudioService {
     }
   }
 
+  /// 播放本地asset音频文件
+  Future<void> playAsset(String assetPath) async {
+    if (_disposed) return;
+    final trimmed = assetPath.trim();
+    if (trimmed.isEmpty) return;
+
+    await initialize();
+
+    // Stop current playback if any
+    if (_currentPlayingUrl != null) {
+      AppLogger.debug('[RemoteAudio] Stopping current playback');
+      try {
+        await _player!.stop();
+      } catch (e) {
+        AppLogger.debug('[RemoteAudio] Error stopping: $e');
+      }
+    }
+
+    _currentPlayingUrl = trimmed;
+
+    try {
+      await _player!.setAsset(trimmed);
+      await _player!.play();
+
+      // Wait for completion
+      await _player!.playerStateStream
+          .firstWhere(
+            (state) =>
+              state.processingState == ProcessingState.completed ||
+              state.processingState == ProcessingState.idle,
+          )
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              AppLogger.warning('[RemoteAudio] Asset playback timeout');
+              return PlayerState(false, ProcessingState.idle);
+            },
+          );
+
+      AppLogger.debug('[RemoteAudio] Finished playing asset: $trimmed');
+    } catch (e) {
+      AppLogger.error('[RemoteAudio] Error playing asset $trimmed', e);
+    } finally {
+      _currentPlayingUrl = null;
+    }
+  }
+
   Future<void> stop() async {
     if (_disposed) return;
     try {

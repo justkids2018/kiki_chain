@@ -10,6 +10,7 @@ class InteractiveImageView extends StatefulWidget {
   final List<InteractiveRegion> regions;
   final Function(InteractiveRegion) onRegionTap;
   final ValueChanged<Offset>? onRegionTapDown;
+  final VoidCallback? onBlankAreaTap;
   // Debug switch for region frame overlay. Keep default OFF in production.
   // Turn ON temporarily when validating click areas or diagnosing tap issues.
   final bool showRegionDebugFrames;
@@ -22,6 +23,7 @@ class InteractiveImageView extends StatefulWidget {
     required this.regions,
     required this.onRegionTap,
     this.onRegionTapDown,
+    this.onBlankAreaTap,
     this.showRegionDebugFrames = false,
   }) : super(key: key);
 
@@ -126,6 +128,10 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
                           AppLogger.debug(
                               'Region tapped(best-hit): ${hitRegion.text} at (${rect.left}, ${rect.top}) size: ${rect.width}x${rect.height}');
                           widget.onRegionTap(hitRegion);
+                        } else {
+                          // 点击了空白区域
+                          AppLogger.debug('Blank area tapped');
+                          widget.onBlankAreaTap?.call();
                         }
                       },
                       child: Stack(

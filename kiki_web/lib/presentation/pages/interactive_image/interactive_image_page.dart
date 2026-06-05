@@ -65,9 +65,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
+      onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          // Only allow back navigation via the back button, not gestures
+          // 处理返回时保存进度
+          await _handleBackNavigation(context);
         }
       },
       child: Scaffold(
@@ -133,6 +134,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                     right: 0,
                     child: _buildFloatingTopBar(context),
                   ),
+
+                  // Star Flying Animation Layer
+                  Obx(() {
+                    if (controller.showStarAnimation.value) {
+                      return _buildStarFlyingAnimation(controller);
+                    }
+                    return const SizedBox.shrink();
+                  }),
                 ],
               );
             }),
@@ -254,6 +263,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               regions: controller.regions,
               onRegionTap: controller.speakRegion,
               onRegionTapDown: _triggerScreenDiffusion,
+              onBlankAreaTap: controller.onBlankAreaClicked,
             ),
           ),
         ),
@@ -480,14 +490,17 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   }
 
   Widget _buildFloatingTopBar(BuildContext context) {
+    final controller = Get.find<InteractiveImageController>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           // Back Button
           const GlassBackButton(),
-          // TODO: Settings button temporarily removed to simplify UI.
-          // Speed adjustment is low-frequency feature. Consider adding to main page or dedicated settings.
+          const Spacer(),
+          // Star Progress Display
+          Obx(() => _buildStarProgress(controller)),
         ],
       ),
     );
@@ -622,6 +635,172 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 color: Color(0xFF66A9D9),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 处理返回导航并保存进度
+  Future<void> _handleBackNavigation(BuildContext context) async {
+    final controller = Get.find<InteractiveImageController>();
+
+    // 显示保存进度的加载提示
+    bool? shouldPop = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => FutureBuilder<bool>(
+        future: controller.saveProgress(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // 正在保存
+            return AlertDialog(
+              content: Row(
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 16),
+                  Text(AppLocalizations.of(context)!.loading),
+                ],
+              ),
+            );
+          }
+
+          if (snapshot.hasError || snapshot.data == false) {
+            // 保存失败
+            return AlertDialog(
+              title: const Text('保存失败'),
+              content: const Text('学习进度保存失败，是否重试？\n如果选择退出，本次学习进度将丢失。'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('放弃并退出'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('重试'),
+                ),
+              ],
+            );
+          }
+
+          // 保存成功，自动关闭对话框
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              Navigator.of(context).pop(true);
+            }
+          });
+
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+
+    // 处理结果
+    if (shouldPop == true) {
+      // 用户确认退出
+      Navigator.of(context).pop();
+    } else if (shouldPop == false) {
+      // 用户选择重试
+      await _handleBackNavigation(context);
+    }
+  }
+
+  /// 构建星星进度显示
+  Widget _buildStarProgress(InteractiveImageController controller) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(3, (index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: _buildStar(
+              index: index,
+              isEarned: index < controller.starsEarned.value,
+              isCompleted: controller.isSceneCompleted.value,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  /// 构建单个星星
+  Widget _buildStar({
+    required int index,
+    required bool isEarned,
+    required bool isCompleted,
+  }) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      child: Icon(
+        isEarned ? Icons.star : Icons.star_border,
+        size: 28,
+        color: isEarned
+            ? const Color(0xFFFFD700)  // 金色
+            : Colors.white.withValues(alpha: 0.5),  // 灰色轮廓
+        shadows: isEarned
+            ? [
+                Shadow(
+                  color: const Color(0xFFFFD700).withValues(alpha: 0.5),
+                  blurRadius: 8,
+                ),
+              ]
+            : null,
+      ),
+    );
+  }
+
+  /// 构建星星飞行动画
+  Widget _buildStarFlyingAnimation(InteractiveImageController controller) {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Center(
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 800),
+            tween: Tween(begin: 0.0, end: 1.0),
+            builder: (context, value, child) {
+              // 从中心飞向顶部的动画
+              final offsetY = (1 - value) * 200; // 从下往上飞
+              final scale = 0.5 + (value * 0.5); // 从小到大
+              final opacity = value; // 淡入
+
+              return Transform.translate(
+                offset: Offset(0, offsetY),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: const Icon(
+                      Icons.star,
+                      size: 80,
+                      color: Color(0xFFFFD700),
+                      shadows: [
+                        Shadow(
+                          color: Color(0xFFFFD700),
+                          blurRadius: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

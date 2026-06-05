@@ -5,6 +5,9 @@ use axum::{middleware, routing::get, Router};
 use tracing::info;
 
 use crate::adapters::http::feedback::submit_feedback_handler;
+use crate::adapters::http::learning::{
+    get_progress_handler, submit_progress_handler, get_user_summary_handler,
+};
 use crate::adapters::http::middleware::mobile_auth_middleware;
 use crate::adapters::http::scene::{
     get_categories_handler, get_recommendations_handler, get_scene_detail_handler,
@@ -53,6 +56,19 @@ pub fn create_mobile_routes(app_state: AppState) -> Router {
         .route(
             ApiPaths::MOBILE_FEEDBACK,
             axum::routing::post(submit_feedback_handler).with_state(app_state.clone()),
+        )
+        // 学习进度路由
+        .route(
+            ApiPaths::MOBILE_LEARNING_PROGRESS,
+            get(get_progress_handler).with_state(app_state.get_progress_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_LEARNING_SUBMIT,
+            axum::routing::post(submit_progress_handler).with_state(app_state.submit_progress_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_LEARNING_SUMMARY,
+            get(get_user_summary_handler).with_state(app_state.get_user_summary_uc.clone()),
         )
         .layer(middleware::from_fn(mobile_auth_middleware));
 

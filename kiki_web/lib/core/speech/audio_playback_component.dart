@@ -50,6 +50,11 @@ class AudioPlaybackComponent {
     // TTS removed: character-level playback is disabled when no per-char audio URL exists.
   }
 
+  /// 播放本地音频文件（用于提示音等）
+  Future<void> playAudioFile(String assetPath) async {
+    await _remoteAudioService.playAsset(assetPath);
+  }
+
   Future<void> stop() async {
     await _remoteAudioService.stop();
   }

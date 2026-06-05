@@ -1,9 +1,11 @@
 // 核心业务模块
 // 存放实体、值对象、错误定义及端口接口
 
+pub mod domain;
 pub mod entities;
 pub mod errors;
 pub mod ports;
+pub mod repositories;
 pub mod value_objects;
 
 // 用例模块在后续阶段迁移

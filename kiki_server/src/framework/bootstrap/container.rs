@@ -1,13 +1,17 @@
 use sqlx::PgPool;
 use std::sync::Arc;
 
-use crate::adapters::persistence::{PostgresSceneRepository, PostgresUserRepository};
+use crate::adapters::persistence::{PostgresSceneRepository, PostgresUserRepository, PostgresLearningProgressRepository};
 use crate::adapters::storage::QiniuService;
 use crate::core::ports::{SceneRepository, UserRepository};
+use crate::core::repositories::learning::LearningProgressRepository;
 use crate::core::use_cases::{
     AdminSceneUseCase, GetCategoriesUseCase, GetRecommendationsUseCase,
     GetSceneDetailUseCase, GetScenesByCategoryUseCase, LoginUserUseCase,
     RegisterUserUseCase, SearchScenesUseCase,
+};
+use crate::core::use_cases::learning::{
+    GetProgressUseCase, SubmitProgressUseCase, GetUserSummaryUseCase,
 };
 use crate::framework::logging::Logger;
 
@@ -31,6 +35,11 @@ pub struct AppState {
     // 管理端用例
     pub admin_scene_uc: Arc<AdminSceneUseCase>,
 
+    // 学习进度用例
+    pub get_progress_uc: Arc<GetProgressUseCase>,
+    pub submit_progress_uc: Arc<SubmitProgressUseCase>,
+    pub get_user_summary_uc: Arc<GetUserSummaryUseCase>,
+
     // 用户仓储（供 profile 接口使用）
     pub user_repository: Arc<dyn UserRepository>,
 
@@ -51,6 +60,8 @@ impl DependencyContainer {
             Arc::new(PostgresUserRepository::new(pool.clone()));
         let scene_repository: Arc<dyn SceneRepository> =
             Arc::new(PostgresSceneRepository::new(pool.clone()));
+        let learning_repository: Arc<dyn LearningProgressRepository> =
+            Arc::new(PostgresLearningProgressRepository::new(pool.clone()));
 
         // 认证用例
         let login_use_case = Arc::new(LoginUserUseCase::new(user_repository.clone()));
@@ -62,6 +73,11 @@ impl DependencyContainer {
         let get_scene_detail_uc = Arc::new(GetSceneDetailUseCase::new(scene_repository.clone()));
         let search_scenes_uc = Arc::new(SearchScenesUseCase::new(scene_repository.clone()));
         let get_recommendations_uc = Arc::new(GetRecommendationsUseCase::new(scene_repository.clone()));
+
+        // 学习进度用例
+        let get_progress_uc = Arc::new(GetProgressUseCase::new(learning_repository.clone()));
+        let submit_progress_uc = Arc::new(SubmitProgressUseCase::new(learning_repository.clone()));
+        let get_user_summary_uc = Arc::new(GetUserSummaryUseCase::new(learning_repository.clone()));
 
         // 管理端用例
         let admin_scene_uc = Arc::new(AdminSceneUseCase::new(scene_repository.clone()));
@@ -90,6 +106,9 @@ impl DependencyContainer {
             search_scenes_uc,
             get_recommendations_uc,
             admin_scene_uc,
+            get_progress_uc,
+            submit_progress_uc,
+            get_user_summary_uc,
             user_repository,
             qiniu_service,
         };

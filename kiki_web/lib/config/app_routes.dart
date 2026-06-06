@@ -8,6 +8,7 @@ import '../presentation/pages/register/pages/register_page.dart';
 import '../presentation/pages/welcome_page.dart';
 import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
+import '../presentation/pages/interactive_image/interactive_image_controller.dart';
 import '../presentation/pages/scene_list_page.dart';
 import '../presentation/controllers/home_controller.dart';
 import '../core/constants/app_constants.dart';
@@ -62,7 +63,12 @@ class AppRoutes {
     // 互动图片页面
     GetPage(
       name: AppConstants.routeInteractiveImage,
-      page: () => InteractiveImagePage(),
+      page: () => const InteractiveImagePage(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<InteractiveImageController>(
+          () => InteractiveImageController(),
+        );
+      }),
     ),
     // 互动图片首页
     GetPage(

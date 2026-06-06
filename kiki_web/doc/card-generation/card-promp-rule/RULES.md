@@ -20,6 +20,8 @@
 - 每张卡片必须是完整页面场景，且具备前景/中景/后景的分层空间。
 - 每张卡片必须固定出现 2 个可爱小女孩（姐妹）+ 1 只可爱的白色小猫。
 - 人物与小猫的固定/随机细则统一引用：`card-promp-rule/components/CHARACTER_CAST.md`。
+- 画布、视角、整体风格锁统一引用：`card-promp-rule/components/CANVAS_STYLE.md`。
+- 生成前质量门禁统一引用：`card-promp-rule/components/QUALITY_GATE.md`。
 
 ### 三行文本铁律
 
@@ -92,12 +94,18 @@
 - 词表来源：`doc/card-generation/SCENES.md`
 - 模板来源：`card-promp-rule/PROMPT_REAL_SCENE.md`
 - 组件来源：`card-promp-rule/components/*`
+- 场景预设来源：`card-promp-rule/scene-presets/*`
+- 对象防混淆规则来源：`card-promp-rule/object-rules/*`
+- 单卡变量协议：`card-promp-rule/assembly/CARD_PROMPT_SCHEMA.md`
 
 组装层次：
 
-1. 写死规则注入
-2. 场景强化注入
-3. 卡片词表与落点映射注入
+1. 画布与风格锁注入
+2. 场景预设注入
+3. 人物与小猫注入
+4. 卡片词表与落点映射注入
+5. 标签、文字、箭头、角标组件注入
+6. 生成前质检注入
 
 每张卡片目录交付物：
 

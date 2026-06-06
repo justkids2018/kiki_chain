@@ -1,64 +1,90 @@
-# 公园散步 — 真实场景学习卡片 Prompt
+# 公园散步 — 组件化学习卡片 Prompt
 
 > 分类：日常生活
 > 主题序号：3.2
 > 场景文件：kik_日常生活_02_公园散步.png
 > 热区文件：kik_日常生活_02_公园散步.json
+> 生成方式：card-promp-rule 组件化合成
 
 ---
 
 ```text
 **公园散步** (主题): Hi Kiki
 
-### I. Core Setup
+### I. Canvas & Style Lock
 - Target age: 3-6 years old
 - Format: exact square 1:1
 - Resolution: exact 1024x1024 pixels
-- View: slightly elevated 3/4 top-front view, looking into a real 公园散步 daily-life environment
-- Style: realistic base with fuller, softer 3D volume enhancement
-- Keep real-world proportions and recognizable shapes
-- Do not over-inflate objects into balloon or gummy style
-- Keep the image realistic first, but forms should feel rounded, solid, and full-bodied
-- Color palette suggestion: 嫩绿色、天蓝色
+- View: slightly elevated 3/4 top-front view
 - The final image must fully use the square canvas, with no portrait crop, no landscape crop, no inner frame, no extra border, and no unused blank margin
+- Render everything as a premium miniature toy diorama
+- Indoor Montessori learning room style
+- Rounded educational toy objects
+- Soft polished 3D materials
+- Warm contact shadows and soft highlights
+- Cute but elegant
+- Like Apple-quality preschool product advertisement
+- The scene may show a real-life or imaginative layout, but it must not look like a real photograph
+- If "real scene" conflicts with "premium miniature toy diorama", the toy diorama style has higher priority
+- NOT photorealistic documentary
+- NOT live-action people
+- NOT a normal real-world snapshot
 
-### Style Master Lock
-- Render everything as a premium miniature toy diorama.
-- Indoor Montessori learning room style.
-- Rounded educational toy objects.
-- Soft polished 3D materials.
-- Cute but elegant.
-- Like Apple-quality preschool product advertisement.
-- NOT realistic outdoor photography.
+### II. Scene Background
+Create a complete 公园散步 daily-life learning environment inside a cozy Montessori-style play world.
+The entire image IS this scene — there is no separate display table or product shelf.
 
-### II. Real Scene Requirement
-Create a complete, real 公园散步 environment. The entire image IS this scene — there is no separate display table or product shelf.
+Scene preset rules:
+- Create a complete daily-life learning environment that clearly matches the current theme.
+- The setting must feel familiar, clean, natural, and child-safe.
+- Use real-life object positions, but render them as premium rounded toy-diorama props.
+- Avoid making the image look like a real photograph of an actual public place or home.
 
-Scene elements:
-- Home/public setting matching the theme
-- Natural object placement in real use positions
-- Human-scale furniture and practical props
-- Simple and clean background separation
-- Comfortable warm light with realistic materials
+Theme-specific scene elements:
+- A cozy toy park path with grass, trees, and open sky
+- Bench and picnic mat at ground level
+- Fountain and ice cream truck as clear space anchors
+- Kite in the sky and pigeon/skateboard/boat separated by depth
+
+General scene elements:
+- home/public setting matching the theme
+- human-scale furniture and practical props rendered as toy-like miniatures
+- natural object placement in real use positions
+- simple clean background separation
+- comfortable warm indoor or outdoor light with soft toy materials
 
 Scene atmosphere:
-- Natural, familiar, and life-oriented
+- Natural, familiar, life-oriented, sunny, fresh, cheerful, and positive
+- Color palette suggestion: 嫩绿色、天蓝色
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Natural light direction and contact shadows
 - No giant title text anywhere
 
 Depth distribution:
-- Place some objects in foreground (larger and clearer)
-- Place some in middle ground
-- Place some in background (still identifiable)
+- Foreground: 2-3 large and clear target objects
+- Middle ground: main character action and 3-4 target objects
+- Background: theme anchors, room anchors, and remaining objects
 - Avoid clustering all objects on one surface
 
-Character baseline:
-- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
-- The scene must include exactly one cute white kitten
-- The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
+### III. Character Cast
+The scene must include exactly two cute sister girls and exactly one cute white kitten:
+1. Older sister: 10 years old, long loose hair, cute and friendly.
+2. Younger sister: 4 years old, two ponytails, childlike, preferably wearing a dress.
+3. White kitten: cute, clearly visible, naturally integrated into the scene.
 
-### III. 8 Target Vocabulary Objects
+Character rules:
+- The older sister, younger sister, and white kitten must be placed in different depth layers.
+- Character outfits must feel sunny, fresh, happy, cheerful, and positive.
+- Clothing colors should be bright but soft child-friendly colors: light blue, cream white, warm yellow, soft pink, mint green, coral orange, lavender purple, or fresh denim blue.
+- Outfit styling must be clean, light, lively, healthy, and friendly.
+- Outfit defaults to summer style, but can adapt naturally to the current daily-life scene.
+- Older sister outfit may vary among dress, overalls, light cardigan, preppy outerwear, or soft seasonal layers.
+- Younger sister outfit may vary among dress, pinafore dress, doll-collar top, knit vest dress, or soft seasonal layers.
+- Avoid all-black, gloomy, dirty, broken, aggressive streetwear, overly mature, or heavy adult styling.
+- Do not replace the sister pair or kitten with other characters.
+- Characters must not cover target objects, label cards, or arrow landing points.
+
+### IV. 8 Target Vocabulary Objects
 - [cháng yǐ] / 长椅 / Bench (/bɛntʃ/)
 - [pēn quán] / 喷泉 / Fountain (/ˈfaʊntən/)
 - [fēng zhēng] / 风筝 / Kite (/kaɪt/)
@@ -69,33 +95,40 @@ Character baseline:
 - [yě cān diàn] / 野餐垫 / Picnic Mat (/ˈpɪknɪk mæt/)
 
 Object placement map:
-1. 长椅 (cháng yǐ / Bench) — place naturally at a real-world position in this scene.
-2. 喷泉 (pēn quán / Fountain) — place naturally at a real-world position in this scene.
-3. 风筝 (fēng zhēng / Kite) — place naturally at a real-world position in this scene.
-4. 小船 (xiǎo chuán / Boat) — place naturally at a real-world position in this scene.
-5. 鸽子 (gē zi / Pigeon) — place naturally at a real-world position in this scene.
-6. 冰淇淋车 (bīng qí lín chē / Ice Cream Truck) — place naturally at a real-world position in this scene.
-7. 滑板 (huá bǎn / Skateboard) — place naturally at a real-world position in this scene.
-8. 野餐垫 (yě cān diàn / Picnic Mat) — place naturally at a real-world position in this scene.
+1. 长椅 (cháng yǐ / Bench) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 喷泉 (pēn quán / Fountain) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 风筝 (fēng zhēng / Kite) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 小船 (xiǎo chuán / Boat) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 鸽子 (gē zi / Pigeon) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 冰淇淋车 (bīng qí lín chē / Ice Cream Truck) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 滑板 (huá bǎn / Skateboard) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 野餐垫 (yě cān diàn / Picnic Mat) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Every object must be clearly visible and identifiable
-- Small objects must still be enlarged enough for child recognition
+- Small objects must be enlarged enough for child recognition and later hotspot annotation
 - Avoid heavy overlap that hides object identity
 - Keep directional separation when two nearby objects might be confused
 - No two objects should overlap so much that either becomes hard to identify
 
-### IV. Label Cards (exactly 8)
+Easy-confusion protection:
+- Kite should be in the sky with a clear string and not confused with decorations.
+- Boat should be on water or a pond area and not confused with bench or picnic props.
+- Pigeon must be a bird body on the ground, not a background texture.
+- Skateboard must be separated from picnic mat and path markings.
+
+### V. Label Cards
 Each object gets exactly one compact floating label card.
 
 Card style:
 - Rounded rectangle with warm-white base
-- Gentle thickness and soft shadow
+- Gentle 3D thickness and soft shadow
 - Very thin low-contrast border
+- Consistent radius, border, padding, and shadow across all cards
 - Keep cards compact; do not cover object body
 
-Each card must contain exactly these 3 lines (no extra text):
+Each card must contain exactly these 3 lines and no extra text:
 Line 1: [pinyin]
 Line 2: 汉字
 Line 3: english
@@ -123,49 +156,51 @@ Label placement for scattered objects:
 - No two labels should overlap
 - Keep labels from covering core object body
 
-### V. Arrows (exactly 8)
-Each label card connects to its object with one arrow.
+### VI. Arrows
+Each label card connects to its object with exactly one arrow.
 
 Arrow rules:
-- Clean and short, prefer gentle curves
+- Exactly 8 arrows
+- Clean, short, precise, and gently curved
+- All arrows share one consistent soft blue accent color family
 - Arrowhead clearly visible
-- Must touch target object body (not nearby background)
+- Arrow must touch target object body, not nearby blank/background
 - Avoid crossing and ambiguous endpoints
-- All arrows should share one consistent accent color family
 
 Arrow precision map:
-- 长椅 arrow -> lands on Bench object body (not nearby blank/background).
-- 喷泉 arrow -> lands on Fountain object body (not nearby blank/background).
-- 风筝 arrow -> lands on Kite object body (not nearby blank/background).
-- 小船 arrow -> lands on Boat object body (not nearby blank/background).
-- 鸽子 arrow -> lands on Pigeon object body (not nearby blank/background).
-- 冰淇淋车 arrow -> lands on Ice Cream Truck object body (not nearby blank/background).
-- 滑板 arrow -> lands on Skateboard object body (not nearby blank/background).
-- 野餐垫 arrow -> lands on Picnic Mat object body (not nearby blank/background).
+- 长椅 arrow -> lands on Bench object body.
+- 喷泉 arrow -> lands on Fountain object body.
+- 风筝 arrow -> lands on Kite object body.
+- 小船 arrow -> lands on Boat object body.
+- 鸽子 arrow -> lands on Pigeon object body.
+- 冰淇淋车 arrow -> lands on Ice Cream Truck object body.
+- 滑板 arrow -> lands on Skateboard object body.
+- 野餐垫 arrow -> lands on Picnic Mat object body.
 
-### VI. Branding Badge
+### VII. Branding Badge
 - Top-right corner
 - One line only: Hi Kiki
-- Warm-white rounded badge with subtle depth
+- Warm-white rounded badge with subtle 3D depth
 - Low visual weight; must not dominate the scene
+- Must not become a large title
 
-### VII. Hard Constraints
+### VIII. Hard Constraints
 - Must be exactly 1024x1024 square composition
 - No large title/banner
 - No duplicated or missing vocabulary objects
 - No wrong label-object mapping
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
-- The scene must feel like a real environment, not a product display board
+- The scene must feel like a premium miniature toy diorama in a real daily-life setting, not a product display board and not a real-life photograph.
 - Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
-### VIII. Pre-Final Self-Check
+### IX. Pre-Final Self-Check
 Before final output, verify all checks:
 1. DIRTY TEXT SCAN: each card is exactly 3 lines [pinyin] / hanzi / english, no cite/reference artifacts
 2. COUNT CHECK: exactly 8 objects, 8 label cards, 8 arrows, no duplicates
 3. MAPPING CHECK: every card matches the correct object and every arrow lands on that object body
 4. ARROW PRECISION: no floating arrows, no crossing, no ambiguous endpoints
-5. VISUAL CHECK: scene realism, object readability, label readability, full 1024x1024 canvas utilization
+5. VISUAL CHECK: premium toy-diorama style, object readability, label readability, full 1024x1024 canvas utilization
 If any check fails, regenerate the layout before finalizing.
 ```
 

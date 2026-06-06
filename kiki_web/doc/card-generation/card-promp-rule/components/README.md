@@ -9,6 +9,8 @@
 - [ARROWS.md](./ARROWS.md)
 - [BRANDING_BADGE.md](./BRANDING_BADGE.md)
 - [CHARACTER_CAST.md](./CHARACTER_CAST.md)
+- [CANVAS_STYLE.md](./CANVAS_STYLE.md)
+- [QUALITY_GATE.md](./QUALITY_GATE.md)
 
 ## 职责边界
 

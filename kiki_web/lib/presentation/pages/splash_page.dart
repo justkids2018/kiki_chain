@@ -50,7 +50,7 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: AppColors.backgroundCream,
       body: Center(
         child: Image.asset(
-          'assets/images/kiki_welcom.png',
+          'assets/images/kiki_welcome.png',
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,

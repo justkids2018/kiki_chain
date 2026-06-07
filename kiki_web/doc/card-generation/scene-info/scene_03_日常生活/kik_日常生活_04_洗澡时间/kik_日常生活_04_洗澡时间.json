@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "浴缸",
+    "text_pinyin": "yù gāng",
+    "text_english": "Bathtub",
+    "text_phonetic": "/ˈbæθtʌb/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 15,
+            "y": 215
+          },
+          {
+            "x": 185,
+            "y": 215
+          },
+          {
+            "x": 15,
+            "y": 370
+          },
+          {
+            "x": 185,
+            "y": 370
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 300
+          },
+          {
+            "x": 295,
+            "y": 300
+          },
+          {
+            "x": 20,
+            "y": 505
+          },
+          {
+            "x": 295,
+            "y": 505
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "肥皂",
+    "text_pinyin": "féi zào",
+    "text_english": "Soap",
+    "text_phonetic": "/soʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 235,
+            "y": 875
+          },
+          {
+            "x": 430,
+            "y": 875
+          },
+          {
+            "x": 235,
+            "y": 1023
+          },
+          {
+            "x": 430,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 360,
+            "y": 790
+          },
+          {
+            "x": 525,
+            "y": 790
+          },
+          {
+            "x": 360,
+            "y": 905
+          },
+          {
+            "x": 525,
+            "y": 905
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "毛巾",
+    "text_pinyin": "máo jīn",
+    "text_english": "Towel",
+    "text_phonetic": "/ˈtaʊəl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 675,
+            "y": 165
+          },
+          {
+            "x": 855,
+            "y": 165
+          },
+          {
+            "x": 675,
+            "y": 335
+          },
+          {
+            "x": 855,
+            "y": 335
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 700,
+            "y": 160
+          },
+          {
+            "x": 845,
+            "y": 160
+          },
+          {
+            "x": 700,
+            "y": 335
+          },
+          {
+            "x": 845,
+            "y": 335
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "洗发水",
+    "text_pinyin": "xǐ fà shuǐ",
+    "text_english": "Shampoo",
+    "text_phonetic": "/ʃæmˈpuː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 35,
+            "y": 720
+          },
+          {
+            "x": 200,
+            "y": 720
+          },
+          {
+            "x": 35,
+            "y": 875
+          },
+          {
+            "x": 200,
+            "y": 875
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 100,
+            "y": 500
+          },
+          {
+            "x": 255,
+            "y": 500
+          },
+          {
+            "x": 100,
+            "y": 735
+          },
+          {
+            "x": 255,
+            "y": 735
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "泡泡",
+    "text_pinyin": "pào pào",
+    "text_english": "Bubble",
+    "text_phonetic": "/ˈbʌbl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 845,
+            "y": 420
+          },
+          {
+            "x": 1020,
+            "y": 420
+          },
+          {
+            "x": 845,
+            "y": 585
+          },
+          {
+            "x": 1020,
+            "y": 585
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 930,
+            "y": 220
+          },
+          {
+            "x": 1018,
+            "y": 220
+          },
+          {
+            "x": 930,
+            "y": 365
+          },
+          {
+            "x": 1018,
+            "y": 365
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "小黄鸭",
+    "text_pinyin": "xiǎo huáng yā",
+    "text_english": "Rubber Duck",
+    "text_phonetic": "/ˈrʌbər dʌk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 530
+          },
+          {
+            "x": 195,
+            "y": 530
+          },
+          {
+            "x": 20,
+            "y": 700
+          },
+          {
+            "x": 195,
+            "y": 700
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 75,
+            "y": 620
+          },
+          {
+            "x": 250,
+            "y": 620
+          },
+          {
+            "x": 75,
+            "y": 795
+          },
+          {
+            "x": 250,
+            "y": 795
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "花洒",
+    "text_pinyin": "huā sǎ",
+    "text_english": "Shower",
+    "text_phonetic": "/ˈʃaʊər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 565,
+            "y": 860
+          },
+          {
+            "x": 740,
+            "y": 860
+          },
+          {
+            "x": 565,
+            "y": 1023
+          },
+          {
+            "x": 740,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 760,
+            "y": 650
+          },
+          {
+            "x": 1018,
+            "y": 650
+          },
+          {
+            "x": 760,
+            "y": 905
+          },
+          {
+            "x": 1018,
+            "y": 905
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "浴帽",
+    "text_pinyin": "yù mào",
+    "text_english": "Shower Cap",
+    "text_phonetic": "/ˈʃaʊər kæp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 410,
+            "y": 20
+          },
+          {
+            "x": 580,
+            "y": 20
+          },
+          {
+            "x": 410,
+            "y": 180
+          },
+          {
+            "x": 580,
+            "y": 180
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 455,
+            "y": 80
+          },
+          {
+            "x": 625,
+            "y": 80
+          },
+          {
+            "x": 455,
+            "y": 240
+          },
+          {
+            "x": 625,
+            "y": 240
+          }
+        ]
+      }
+    ]
+  }
+]

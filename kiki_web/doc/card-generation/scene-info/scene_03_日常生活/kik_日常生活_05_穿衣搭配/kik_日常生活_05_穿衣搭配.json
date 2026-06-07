@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "上衣",
+    "text_pinyin": "shàng yī",
+    "text_english": "Shirt",
+    "text_phonetic": "/ʃɜːrt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 110,
+            "y": 170
+          },
+          {
+            "x": 285,
+            "y": 170
+          },
+          {
+            "x": 110,
+            "y": 320
+          },
+          {
+            "x": 285,
+            "y": 320
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 200,
+            "y": 280
+          },
+          {
+            "x": 430,
+            "y": 280
+          },
+          {
+            "x": 200,
+            "y": 570
+          },
+          {
+            "x": 430,
+            "y": 570
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "裤子",
+    "text_pinyin": "kù zi",
+    "text_english": "Pants",
+    "text_phonetic": "/pænts/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 850,
+            "y": 140
+          },
+          {
+            "x": 1023,
+            "y": 140
+          },
+          {
+            "x": 850,
+            "y": 305
+          },
+          {
+            "x": 1023,
+            "y": 305
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 820,
+            "y": 165
+          },
+          {
+            "x": 995,
+            "y": 165
+          },
+          {
+            "x": 820,
+            "y": 385
+          },
+          {
+            "x": 995,
+            "y": 385
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "裙子",
+    "text_pinyin": "qún zi",
+    "text_english": "Skirt",
+    "text_phonetic": "/skɜːrt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 760,
+            "y": 330
+          },
+          {
+            "x": 915,
+            "y": 330
+          },
+          {
+            "x": 760,
+            "y": 480
+          },
+          {
+            "x": 915,
+            "y": 480
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 860,
+            "y": 355
+          },
+          {
+            "x": 1018,
+            "y": 355
+          },
+          {
+            "x": 860,
+            "y": 705
+          },
+          {
+            "x": 1018,
+            "y": 705
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "袜子",
+    "text_pinyin": "wà zi",
+    "text_english": "Socks",
+    "text_phonetic": "/sɑːks/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 375,
+            "y": 875
+          },
+          {
+            "x": 560,
+            "y": 875
+          },
+          {
+            "x": 375,
+            "y": 1023
+          },
+          {
+            "x": 560,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 420,
+            "y": 790
+          },
+          {
+            "x": 705,
+            "y": 790
+          },
+          {
+            "x": 420,
+            "y": 935
+          },
+          {
+            "x": 705,
+            "y": 935
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "帽子",
+    "text_pinyin": "mào zi",
+    "text_english": "Hat",
+    "text_phonetic": "/hæt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 15,
+            "y": 420
+          },
+          {
+            "x": 180,
+            "y": 420
+          },
+          {
+            "x": 15,
+            "y": 575
+          },
+          {
+            "x": 180,
+            "y": 575
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 90,
+            "y": 545
+          },
+          {
+            "x": 290,
+            "y": 545
+          },
+          {
+            "x": 90,
+            "y": 735
+          },
+          {
+            "x": 290,
+            "y": 735
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "围巾",
+    "text_pinyin": "wéi jīn",
+    "text_english": "Scarf",
+    "text_phonetic": "/skɑːrf/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 270,
+            "y": 545
+          },
+          {
+            "x": 430,
+            "y": 545
+          },
+          {
+            "x": 270,
+            "y": 700
+          },
+          {
+            "x": 430,
+            "y": 700
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 235,
+            "y": 620
+          },
+          {
+            "x": 425,
+            "y": 620
+          },
+          {
+            "x": 235,
+            "y": 835
+          },
+          {
+            "x": 425,
+            "y": 835
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "手套",
+    "text_pinyin": "shǒu tào",
+    "text_english": "Gloves",
+    "text_phonetic": "/ɡlʌvz/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 585,
+            "y": 25
+          },
+          {
+            "x": 770,
+            "y": 25
+          },
+          {
+            "x": 585,
+            "y": 175
+          },
+          {
+            "x": 770,
+            "y": 175
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 560,
+            "y": 120
+          },
+          {
+            "x": 845,
+            "y": 120
+          },
+          {
+            "x": 560,
+            "y": 335
+          },
+          {
+            "x": 845,
+            "y": 335
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "运动鞋",
+    "text_pinyin": "yùn dòng xié",
+    "text_english": "Sneakers",
+    "text_phonetic": "/ˈsniːkərz/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 890
+          },
+          {
+            "x": 190,
+            "y": 890
+          },
+          {
+            "x": 20,
+            "y": 1023
+          },
+          {
+            "x": 190,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 85,
+            "y": 790
+          },
+          {
+            "x": 315,
+            "y": 790
+          },
+          {
+            "x": 85,
+            "y": 945
+          },
+          {
+            "x": 315,
+            "y": 945
+          }
+        ]
+      }
+    ]
+  }
+]

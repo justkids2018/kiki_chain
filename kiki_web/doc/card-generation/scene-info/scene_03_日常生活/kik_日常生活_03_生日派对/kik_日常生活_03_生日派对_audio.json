@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "生日蛋糕",
+    "text_pinyin": "shēng rì dàn gāo",
+    "text_english": "Birthday Cake",
+    "text_phonetic": "/ˈbɜːrθdeɪ keɪk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 49,
+            "y": 425
+          },
+          {
+            "x": 210,
+            "y": 425
+          },
+          {
+            "x": 49,
+            "y": 541
+          },
+          {
+            "x": 210,
+            "y": 541
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 361,
+            "y": 488
+          },
+          {
+            "x": 537,
+            "y": 488
+          },
+          {
+            "x": 361,
+            "y": 644
+          },
+          {
+            "x": 537,
+            "y": 644
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/生日蛋糕-b178a7_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/生日蛋糕-b178a7_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/birthday-cake-b178a7_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/birthday-cake-b178a7_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "蜡烛",
+    "text_pinyin": "là zhú",
+    "text_english": "Candle",
+    "text_phonetic": "/ˈkændl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 405,
+            "y": 253
+          },
+          {
+            "x": 533,
+            "y": 253
+          },
+          {
+            "x": 405,
+            "y": 381
+          },
+          {
+            "x": 533,
+            "y": 381
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 399,
+            "y": 379
+          },
+          {
+            "x": 514,
+            "y": 379
+          },
+          {
+            "x": 399,
+            "y": 477
+          },
+          {
+            "x": 514,
+            "y": 477
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/蜡烛-213671_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/蜡烛-213671_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/candle-213671_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/candle-213671_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "气球",
+    "text_pinyin": "qì qiú",
+    "text_english": "Balloon",
+    "text_phonetic": "/bəˈluːn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 744,
+            "y": 125
+          },
+          {
+            "x": 886,
+            "y": 125
+          },
+          {
+            "x": 744,
+            "y": 256
+          },
+          {
+            "x": 886,
+            "y": 256
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 469,
+            "y": 4
+          },
+          {
+            "x": 745,
+            "y": 4
+          },
+          {
+            "x": 469,
+            "y": 250
+          },
+          {
+            "x": 745,
+            "y": 250
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/气球-9c1ac3_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/气球-9c1ac3_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/balloon-9c1ac3_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/balloon-9c1ac3_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "礼物",
+    "text_pinyin": "lǐ wù",
+    "text_english": "Gift",
+    "text_phonetic": "/ɡɪft/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 742,
+            "y": 474
+          },
+          {
+            "x": 870,
+            "y": 474
+          },
+          {
+            "x": 742,
+            "y": 625
+          },
+          {
+            "x": 870,
+            "y": 625
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 570,
+            "y": 523
+          },
+          {
+            "x": 718,
+            "y": 523
+          },
+          {
+            "x": 570,
+            "y": 715
+          },
+          {
+            "x": 718,
+            "y": 715
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/礼物-bfb7ea_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/礼物-bfb7ea_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/gift-bfb7ea_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/gift-bfb7ea_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "彩带",
+    "text_pinyin": "cǎi dài",
+    "text_english": "Ribbon",
+    "text_phonetic": "/ˈrɪbən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 228,
+            "y": 861
+          },
+          {
+            "x": 344,
+            "y": 861
+          },
+          {
+            "x": 228,
+            "y": 987
+          },
+          {
+            "x": 344,
+            "y": 987
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 148,
+            "y": 759
+          },
+          {
+            "x": 395,
+            "y": 759
+          },
+          {
+            "x": 148,
+            "y": 884
+          },
+          {
+            "x": 395,
+            "y": 884
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/彩带-e4d3cb_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/彩带-e4d3cb_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/ribbon-e4d3cb_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/ribbon-e4d3cb_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "派对帽",
+    "text_pinyin": "pài duì mào",
+    "text_english": "Party Hat",
+    "text_phonetic": "/ˈpɑːrti hæt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 879,
+            "y": 602
+          },
+          {
+            "x": 1017,
+            "y": 602
+          },
+          {
+            "x": 879,
+            "y": 755
+          },
+          {
+            "x": 1017,
+            "y": 755
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 721,
+            "y": 644
+          },
+          {
+            "x": 870,
+            "y": 644
+          },
+          {
+            "x": 721,
+            "y": 874
+          },
+          {
+            "x": 870,
+            "y": 874
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/派对帽-0210d2_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/派对帽-0210d2_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/party-hat-0210d2_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/party-hat-0210d2_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "纸杯",
+    "text_pinyin": "zhǐ bēi",
+    "text_english": "Paper Cup",
+    "text_phonetic": "/ˈpeɪpər kʌp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 665,
+            "y": 884
+          },
+          {
+            "x": 778,
+            "y": 884
+          },
+          {
+            "x": 665,
+            "y": 999
+          },
+          {
+            "x": 778,
+            "y": 999
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 442,
+            "y": 722
+          },
+          {
+            "x": 644,
+            "y": 722
+          },
+          {
+            "x": 442,
+            "y": 899
+          },
+          {
+            "x": 644,
+            "y": 899
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/纸杯-48212a_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/纸杯-48212a_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/paper-cup-48212a_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/paper-cup-48212a_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "邀请卡",
+    "text_pinyin": "yāo qǐng kǎ",
+    "text_english": "Invitation Card",
+    "text_phonetic": "/ˌɪnvɪˈteɪʃən kɑːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 592
+          },
+          {
+            "x": 155,
+            "y": 592
+          },
+          {
+            "x": 0,
+            "y": 736
+          },
+          {
+            "x": 155,
+            "y": 736
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 181,
+            "y": 569
+          },
+          {
+            "x": 327,
+            "y": 569
+          },
+          {
+            "x": 181,
+            "y": 755
+          },
+          {
+            "x": 327,
+            "y": 755
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_03_生日派对/邀请卡-90e257_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/邀请卡-90e257_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_03_生日派对/invitation-card-90e257_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_03_生日派对/invitation-card-90e257_en.mp3"
+  }
+]

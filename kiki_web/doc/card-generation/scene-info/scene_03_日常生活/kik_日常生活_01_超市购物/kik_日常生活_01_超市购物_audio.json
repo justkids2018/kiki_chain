@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "购物车",
+    "text_pinyin": "gòu wù chē",
+    "text_english": "Shopping Cart",
+    "text_phonetic": "/ˈʃɑːpɪŋ kɑːrt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 62,
+            "y": 577
+          },
+          {
+            "x": 193,
+            "y": 577
+          },
+          {
+            "x": 62,
+            "y": 683
+          },
+          {
+            "x": 193,
+            "y": 683
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 209,
+            "y": 393
+          },
+          {
+            "x": 492,
+            "y": 393
+          },
+          {
+            "x": 209,
+            "y": 646
+          },
+          {
+            "x": 492,
+            "y": 646
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/购物车-a19f69_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/购物车-a19f69_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/shopping-cart-a19f69_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/shopping-cart-a19f69_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "收银台",
+    "text_pinyin": "shōu yín tái",
+    "text_english": "Cashier",
+    "text_phonetic": "/kæˈʃɪr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 661,
+            "y": 72
+          },
+          {
+            "x": 826,
+            "y": 72
+          },
+          {
+            "x": 661,
+            "y": 237
+          },
+          {
+            "x": 826,
+            "y": 237
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 720,
+            "y": 151
+          },
+          {
+            "x": 961,
+            "y": 151
+          },
+          {
+            "x": 720,
+            "y": 412
+          },
+          {
+            "x": 961,
+            "y": 412
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/收银台-4d9e00_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/收银台-4d9e00_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/cashier-4d9e00_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/cashier-4d9e00_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "货架",
+    "text_pinyin": "huò jià",
+    "text_english": "Shelf",
+    "text_phonetic": "/ʃɛlf/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 145,
+            "y": 15
+          },
+          {
+            "x": 295,
+            "y": 15
+          },
+          {
+            "x": 145,
+            "y": 155
+          },
+          {
+            "x": 295,
+            "y": 155
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 9,
+            "y": 11
+          },
+          {
+            "x": 294,
+            "y": 11
+          },
+          {
+            "x": 9,
+            "y": 396
+          },
+          {
+            "x": 294,
+            "y": 396
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/货架-61dc57_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/货架-61dc57_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/shelf-61dc57_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/shelf-61dc57_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "价格标签",
+    "text_pinyin": "jià gé biāo qiān",
+    "text_english": "Price Tag",
+    "text_phonetic": "/praɪs tæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 39,
+            "y": 779
+          },
+          {
+            "x": 171,
+            "y": 779
+          },
+          {
+            "x": 39,
+            "y": 881
+          },
+          {
+            "x": 171,
+            "y": 881
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 118,
+            "y": 834
+          },
+          {
+            "x": 280,
+            "y": 834
+          },
+          {
+            "x": 118,
+            "y": 959
+          },
+          {
+            "x": 280,
+            "y": 959
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/价格标签-056abb_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/价格标签-056abb_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/price-tag-056abb_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/price-tag-056abb_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "购物袋",
+    "text_pinyin": "gòu wù dài",
+    "text_english": "Shopping Bag",
+    "text_phonetic": "/ˈʃɑːpɪŋ bæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 871,
+            "y": 581
+          },
+          {
+            "x": 1022,
+            "y": 581
+          },
+          {
+            "x": 871,
+            "y": 692
+          },
+          {
+            "x": 1022,
+            "y": 692
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 768,
+            "y": 400
+          },
+          {
+            "x": 901,
+            "y": 400
+          },
+          {
+            "x": 768,
+            "y": 668
+          },
+          {
+            "x": 901,
+            "y": 668
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/购物袋-dcbf45_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/购物袋-dcbf45_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/shopping-bag-dcbf45_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/shopping-bag-dcbf45_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "零食",
+    "text_pinyin": "líng shí",
+    "text_english": "Snack",
+    "text_phonetic": "/snæk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 325,
+            "y": 835
+          },
+          {
+            "x": 500,
+            "y": 835
+          },
+          {
+            "x": 325,
+            "y": 1005
+          },
+          {
+            "x": 500,
+            "y": 1005
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 168,
+            "y": 677
+          },
+          {
+            "x": 477,
+            "y": 677
+          },
+          {
+            "x": 168,
+            "y": 826
+          },
+          {
+            "x": 477,
+            "y": 826
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/零食-397eda_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/零食-397eda_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/snack-397eda_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/snack-397eda_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "饮料",
+    "text_pinyin": "yǐn liào",
+    "text_english": "Drink",
+    "text_phonetic": "/drɪŋk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 549,
+            "y": 856
+          },
+          {
+            "x": 682,
+            "y": 856
+          },
+          {
+            "x": 549,
+            "y": 984
+          },
+          {
+            "x": 682,
+            "y": 984
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 519,
+            "y": 676
+          },
+          {
+            "x": 719,
+            "y": 676
+          },
+          {
+            "x": 519,
+            "y": 856
+          },
+          {
+            "x": 719,
+            "y": 856
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/饮料-73d256_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/饮料-73d256_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/drink-73d256_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/drink-73d256_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "糖果",
+    "text_pinyin": "táng guǒ",
+    "text_english": "Candy",
+    "text_phonetic": "/ˈkændi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 775,
+            "y": 855
+          },
+          {
+            "x": 940,
+            "y": 855
+          },
+          {
+            "x": 775,
+            "y": 1015
+          },
+          {
+            "x": 940,
+            "y": 1015
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 748,
+            "y": 691
+          },
+          {
+            "x": 1011,
+            "y": 691
+          },
+          {
+            "x": 748,
+            "y": 886
+          },
+          {
+            "x": 1011,
+            "y": 886
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_01_超市购物/糖果-4b203b_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/糖果-4b203b_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_01_超市购物/candy-4b203b_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_01_超市购物/candy-4b203b_en.mp3"
+  }
+]

@@ -1,15 +1,15 @@
-# 看医生 — 组件化学习卡片 Prompt
+# 穿衣搭配 — 组件化学习卡片 Prompt
 
 > 分类：日常生活
-> 主题序号：3.6
-> 场景文件：kik_日常生活_06_看医生.png
-> 热区文件：kik_日常生活_06_看医生.json
+> 主题序号：3.5
+> 场景文件：kik_日常生活_05_穿衣搭配.png
+> 热区文件：kik_日常生活_05_穿衣搭配.json
 > 生成方式：card-promp-rule 组件化合成
 
 ---
 
 ```text
-**看医生** (主题): Hi Kiki
+**穿衣搭配** (主题): Hi Kiki
 
 ### I. Canvas & Style Lock
 - Target age: 3-6 years old
@@ -31,7 +31,7 @@
 - NOT a normal real-world snapshot
 
 ### II. Scene Background
-Create a complete 看医生 daily-life learning environment inside a cozy Montessori-style play world.
+Create a complete 穿衣搭配 daily-life learning environment inside a cozy Montessori-style play world.
 The entire image IS this scene — there is no separate display table or product shelf.
 
 Scene preset rules:
@@ -41,10 +41,10 @@ Scene preset rules:
 - Avoid making the image look like a real photograph of an actual public place or home.
 
 Theme-specific scene elements:
-- A clean friendly toy clinic room
-- Doctor tools and clinic props placed in practical positions
-- Stethoscope, thermometer, medicine box, bandage, syringe, hospital bed, doctor bag, and mask clearly separated
-- Medical props must look child-friendly, not scary
+- A cozy toy wardrobe or dressing room
+- Closet, mirror, clothes, shoes, hat, scarf, socks, and hanger placed in real dressing positions
+- Warm wood wardrobe and soft colorful fabric textures
+- Separate clothing items so arrows do not overlap
 
 General scene elements:
 - home/public setting matching the theme
@@ -55,7 +55,7 @@ General scene elements:
 
 Scene atmosphere:
 - Natural, familiar, life-oriented, sunny, fresh, cheerful, and positive
-- Color palette suggestion: 洁净白、浅蓝绿
+- Color palette suggestion: 衣橱暖木色、柔和彩色
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Natural light direction and contact shadows
 - No giant title text anywhere
@@ -85,24 +85,24 @@ Character rules:
 - Characters must not cover target objects, label cards, or arrow landing points.
 
 ### IV. 8 Target Vocabulary Objects
-- [tīng zhěn qì] / 听诊器 / Stethoscope (/ˈstɛθəskoʊp/)
-- [tǐ wēn jì] / 体温计 / Thermometer (/θərˈmɑːmɪtər/)
-- [yào xiāng] / 药箱 / Medicine Box (/ˈmɛdɪsɪn bɑːks/)
-- [běng dài] / 绷带 / Bandage (/ˈbændɪdʒ/)
-- [bìng chuáng] / 病床 / Hospital Bed (/ˈhɑːspɪtl bɛd/)
-- [zhù shè qì] / 注射器 / Syringe (/sɪˈrɪndʒ/)
-- [yī shēng bāo] / 医生包 / Doctor Bag (/ˈdɑːktər bæɡ/)
-- [kǒu zhào] / 口罩 / Mask (/mæsk/)
+- [shàng yī] / 上衣 / Shirt (/ʃɜːrt/)
+- [kù zi] / 裤子 / Pants (/pænts/)
+- [qún zi] / 裙子 / Skirt (/skɜːrt/)
+- [wà zi] / 袜子 / Socks (/sɑːks/)
+- [mào zi] / 帽子 / Hat (/hæt/)
+- [wéi jīn] / 围巾 / Scarf (/skɑːrf/)
+- [shǒu tào] / 手套 / Gloves (/ɡlʌvz/)
+- [yùn dòng xié] / 运动鞋 / Sneakers (/ˈsniːkərz/)
 
 Object placement map:
-1. 听诊器 (tīng zhěn qì / Stethoscope) — place as a clear, separate, toy-like target object in a natural position for this scene.
-2. 体温计 (tǐ wēn jì / Thermometer) — place as a clear, separate, toy-like target object in a natural position for this scene.
-3. 药箱 (yào xiāng / Medicine Box) — place as a clear, separate, toy-like target object in a natural position for this scene.
-4. 绷带 (běng dài / Bandage) — place as a clear, separate, toy-like target object in a natural position for this scene.
-5. 病床 (bìng chuáng / Hospital Bed) — place as a clear, separate, toy-like target object in a natural position for this scene.
-6. 注射器 (zhù shè qì / Syringe) — place as a clear, separate, toy-like target object in a natural position for this scene.
-7. 医生包 (yī shēng bāo / Doctor Bag) — place as a clear, separate, toy-like target object in a natural position for this scene.
-8. 口罩 (kǒu zhào / Mask) — place as a clear, separate, toy-like target object in a natural position for this scene.
+1. 上衣 (shàng yī / Shirt) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 裤子 (kù zi / Pants) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 裙子 (qún zi / Skirt) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 袜子 (wà zi / Socks) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 帽子 (mào zi / Hat) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 围巾 (wéi jīn / Scarf) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 手套 (shǒu tào / Gloves) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 运动鞋 (yùn dòng xié / Sneakers) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
 - CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
@@ -117,11 +117,10 @@ Critical placement rules:
 - No two objects should overlap so much that either becomes hard to identify
 
 Easy-confusion protection:
-- Thermometer, syringe, and stethoscope must be visually distinct.
-- Bandage and mask must not overlap.
-- Medicine box must be a box, not loose pills.
-- Doctor bag and medicine box must be visually distinct.
-- Hospital bed must be clearly separate from the examination table or background furniture.
+- Clothes, scarf, socks, and hat must be separated.
+- Shoe must be clearly footwear, not a clothing fold.
+- Hanger arrow must land on hanger body, not the clothing hanging on it.
+- Mirror and closet must be different large objects.
 
 ### V. Label Cards
 Each object gets exactly one compact floating label card.
@@ -139,14 +138,14 @@ Line 2: 汉字
 Line 3: english
 
 The 8 label cards must be:
-- [tīng zhěn qì] / 听诊器 / Stethoscope
-- [tǐ wēn jì] / 体温计 / Thermometer
-- [yào xiāng] / 药箱 / Medicine Box
-- [běng dài] / 绷带 / Bandage
-- [bìng chuáng] / 病床 / Hospital Bed
-- [zhù shè qì] / 注射器 / Syringe
-- [yī shēng bāo] / 医生包 / Doctor Bag
-- [kǒu zhào] / 口罩 / Mask
+- [shàng yī] / 上衣 / Shirt
+- [kù zi] / 裤子 / Pants
+- [qún zi] / 裙子 / Skirt
+- [wà zi] / 袜子 / Socks
+- [mào zi] / 帽子 / Hat
+- [wéi jīn] / 围巾 / Scarf
+- [shǒu tào] / 手套 / Gloves
+- [yùn dòng xié] / 运动鞋 / Sneakers
 
 Text rules:
 - Hanzi largest and boldest
@@ -173,14 +172,14 @@ Arrow rules:
 - Avoid crossing and ambiguous endpoints
 
 Arrow precision map:
-- 听诊器 arrow -> lands on Stethoscope object body.
-- 体温计 arrow -> lands on Thermometer object body.
-- 药箱 arrow -> lands on Medicine Box object body.
-- 绷带 arrow -> lands on Bandage object body.
-- 病床 arrow -> lands on Hospital Bed object body.
-- 注射器 arrow -> lands on Syringe object body.
-- 医生包 arrow -> lands on Doctor Bag object body.
-- 口罩 arrow -> lands on Mask object body.
+- 上衣 arrow -> lands on Shirt object body.
+- 裤子 arrow -> lands on Pants object body.
+- 裙子 arrow -> lands on Skirt object body.
+- 袜子 arrow -> lands on Socks object body.
+- 帽子 arrow -> lands on Hat object body.
+- 围巾 arrow -> lands on Scarf object body.
+- 手套 arrow -> lands on Gloves object body.
+- 运动鞋 arrow -> lands on Sneakers object body.
 
 ### VII. Branding Badge
 - Top-right corner
@@ -213,7 +212,7 @@ If any check fails, regenerate the layout before finalizing.
 
 ## 生产记录
 
-- [ ] 生成 PNG：`kik_日常生活_06_看医生.png`
-- [ ] 生成 JSON：`kik_日常生活_06_看医生.json`
+- [ ] 生成 PNG：`kik_日常生活_05_穿衣搭配.png`
+- [ ] 生成 JSON：`kik_日常生活_05_穿衣搭配.json`
 - [ ] 通过 `hotspot-preview.html` 叠加校验
 - [ ] 同步到运行时 assets

@@ -4,7 +4,7 @@
 > 主题序号：3.1
 > 场景文件：kik_日常生活_01_超市购物.png
 > 热区文件：kik_日常生活_01_超市购物.json
-> 生成方式：card-promp-rule 组件化合成样例
+> 生成方式：card-promp-rule 组件化合成
 
 ---
 
@@ -24,27 +24,38 @@
 - Warm contact shadows and soft highlights
 - Cute but elegant
 - Like Apple-quality preschool product advertisement
-- The scene may show a real-life supermarket layout, but it must not look like a real supermarket photograph
+- The scene may show a real-life or imaginative layout, but it must not look like a real photograph
 - If "real scene" conflicts with "premium miniature toy diorama", the toy diorama style has higher priority
 - NOT photorealistic documentary
 - NOT live-action people
-- NOT a normal store aisle photo
+- NOT a normal real-world snapshot
 
 ### II. Scene Background
-Create a complete 超市购物 daily-life learning environment inside a cozy Montessori-style play room.
+Create a complete 超市购物 daily-life learning environment inside a cozy Montessori-style play world.
 The entire image IS this scene — there is no separate display table or product shelf.
 
-Scene elements:
+Scene preset rules:
+- Create a complete daily-life learning environment that clearly matches the current theme.
+- The setting must feel familiar, clean, natural, and child-safe.
+- Use real-life object positions, but render them as premium rounded toy-diorama props.
+- Avoid making the image look like a real photograph of an actual public place or home.
+
+Theme-specific scene elements:
 - Toy-like supermarket shelves on the left and/or right side
-- A clear toy checkout counter with register in the midground or background
+- A clear toy checkout counter with register
 - A toy shopping cart in the foreground or midground
 - Separate zones for snack packs, drink bottles, candy, shopping bag, and price tag
-- Simple clean background separation
-- Comfortable warm indoor light with realistic toy materials
+
+General scene elements:
+- home/public setting matching the theme
+- human-scale furniture and practical props rendered as toy-like miniatures
+- natural object placement in real use positions
+- simple clean background separation
+- comfortable warm indoor or outdoor light with soft toy materials
 
 Scene atmosphere:
-- Natural, familiar, life-oriented, and child-safe
-- Bright warm white and soft light blue palette
+- Natural, familiar, life-oriented, sunny, fresh, cheerful, and positive
+- Color palette suggestion: 明亮、柔和、儿童友好色
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Natural light direction and contact shadows
 - No giant title text anywhere
@@ -52,7 +63,7 @@ Scene atmosphere:
 Depth distribution:
 - Foreground: 2-3 large and clear target objects
 - Middle ground: main character action and 3-4 target objects
-- Background: supermarket shelves, checkout counter, room anchors, and remaining objects
+- Background: theme anchors, room anchors, and remaining objects
 - Avoid clustering all objects on one surface
 
 ### III. Character Cast
@@ -66,12 +77,12 @@ Character rules:
 - Character outfits must feel sunny, fresh, happy, cheerful, and positive.
 - Clothing colors should be bright but soft child-friendly colors: light blue, cream white, warm yellow, soft pink, mint green, coral orange, lavender purple, or fresh denim blue.
 - Outfit styling must be clean, light, lively, healthy, and friendly.
-- Outfit defaults to summer style, but can adapt naturally to the indoor supermarket scene.
+- Outfit defaults to summer style, but can adapt naturally to the current daily-life scene.
 - Older sister outfit may vary among dress, overalls, light cardigan, preppy outerwear, or soft seasonal layers.
 - Younger sister outfit may vary among dress, pinafore dress, doll-collar top, knit vest dress, or soft seasonal layers.
 - Avoid all-black, gloomy, dirty, broken, aggressive streetwear, overly mature, or heavy adult styling.
 - Do not replace the sister pair or kitten with other characters.
-- Characters must not cover target objects or label cards.
+- Characters must not cover target objects, label cards, or arrow landing points.
 
 ### IV. 8 Target Vocabulary Objects
 - [gòu wù chē] / 购物车 / Shopping Cart (/ˈʃɑːpɪŋ kɑːrt/)
@@ -84,16 +95,20 @@ Character rules:
 - [táng guǒ] / 糖果 / Candy (/ˈkændi/)
 
 Object placement map:
-1. 购物车 (gòu wù chē / Shopping Cart) — place as an independent toy shopping cart, foreground or midground.
-2. 收银台 (shōu yín tái / Cashier) — place as a checkout counter with register, midground or background.
-3. 货架 (huò jià / Shelf) — place as a clear supermarket shelf body, not just product packages.
-4. 价格标签 (jià gé biāo qiān / Price Tag) — place as an enlarged shelf-edge price tag, clearly separate from shelf body.
-5. 购物袋 (gòu wù dài / Shopping Bag) — place as a distinct shopping bag with visible bag body.
-6. 零食 (líng shí / Snack) — place as a distinct snack pack or snack group, separate from the shopping bag.
-7. 饮料 (yǐn liào / Drink) — place as toy drink bottles or cartons, separate from snack and candy.
-8. 糖果 (táng guǒ / Candy) — place as a candy jar, candy box, or candy display, separate from snack.
+1. 购物车 (gòu wù chē / Shopping Cart) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 收银台 (shōu yín tái / Cashier) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 货架 (huò jià / Shelf) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 价格标签 (jià gé biāo qiān / Price Tag) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 购物袋 (gòu wù dài / Shopping Bag) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 零食 (líng shí / Snack) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 饮料 (yǐn liào / Drink) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 糖果 (táng guǒ / Candy) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Every object must be clearly visible and identifiable
 - Small objects must be enlarged enough for child recognition and later hotspot annotation
@@ -102,13 +117,10 @@ Critical placement rules:
 - No two objects should overlap so much that either becomes hard to identify
 
 Easy-confusion protection:
-- Snack must look like chips, crackers, or snack packs
-- Candy must look like colorful candies, candy jar, or candy box
-- Shopping Bag arrow must land on the bag body, not on products inside the bag
-- Snack arrow must land on snack pack/body, not the shopping bag
-- Drink arrow must land on bottles/cartons, not snack packaging
-- Shelf arrow must land on the shelf body
-- Price Tag arrow must land on the enlarged price tag only
+- Snack must look like chips, crackers, or snack packs.
+- Candy must look like colorful candies, candy jar, or candy box.
+- Shopping Bag arrow must land on the bag body, not on products inside the bag.
+- Shelf arrow must land on the shelf body; Price Tag arrow must land on the enlarged price tag only.
 
 ### V. Label Cards
 Each object gets exactly one compact floating label card.
@@ -160,14 +172,14 @@ Arrow rules:
 - Avoid crossing and ambiguous endpoints
 
 Arrow precision map:
-- 购物车 arrow -> lands on Shopping Cart body.
-- 收银台 arrow -> lands on Cashier counter/register body.
-- 货架 arrow -> lands on Shelf body.
-- 价格标签 arrow -> lands on Price Tag body.
-- 购物袋 arrow -> lands on Shopping Bag body.
-- 零食 arrow -> lands on Snack body.
-- 饮料 arrow -> lands on Drink bottle/carton body.
-- 糖果 arrow -> lands on Candy body.
+- 购物车 arrow -> lands on Shopping Cart object body.
+- 收银台 arrow -> lands on Cashier object body.
+- 货架 arrow -> lands on Shelf object body.
+- 价格标签 arrow -> lands on Price Tag object body.
+- 购物袋 arrow -> lands on Shopping Bag object body.
+- 零食 arrow -> lands on Snack object body.
+- 饮料 arrow -> lands on Drink object body.
+- 糖果 arrow -> lands on Candy object body.
 
 ### VII. Branding Badge
 - Top-right corner
@@ -183,7 +195,7 @@ Arrow precision map:
 - No wrong label-object mapping
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
-- The scene must feel like a premium miniature toy diorama in a real daily-life setting, not a product display board and not a real supermarket photograph
+- The scene must feel like a premium miniature toy diorama in a real daily-life setting, not a product display board and not a real-life photograph.
 - Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
 ### IX. Pre-Final Self-Check

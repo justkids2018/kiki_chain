@@ -83,6 +83,10 @@ Object placement map:
 10. 十 (shí / Ten) — place naturally at a real-world position in this scene.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 10 target objects, 10 label cards, 10 arrows
 - Every object must be clearly visible and identifiable
 - Small objects must still be enlarged enough for child recognition

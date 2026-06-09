@@ -85,26 +85,30 @@ Character rules:
 - Characters must not cover target objects, label cards, or arrow landing points.
 
 ### IV. 8 Target Vocabulary Objects
-- [shàng yī] / 上衣 / Shirt (/ʃɜːrt/)
-- [kù zi] / 裤子 / Pants (/pænts/)
-- [qún zi] / 裙子 / Skirt (/skɜːrt/)
-- [wà zi] / 袜子 / Socks (/sɑːks/)
+- [yī fú] / 衣服 / Clothes (/kloʊðz/)
+- [yī jià] / 衣架 / Hanger (/ˈhæŋər/)
+- [yī guì] / 衣柜 / Closet (/ˈklɑːzɪt/)
+- [jìng zi] / 镜子 / Mirror (/ˈmɪrər/)
 - [mào zi] / 帽子 / Hat (/hæt/)
 - [wéi jīn] / 围巾 / Scarf (/skɑːrf/)
-- [shǒu tào] / 手套 / Gloves (/ɡlʌvz/)
-- [yùn dòng xié] / 运动鞋 / Sneakers (/ˈsniːkərz/)
+- [xié zi] / 鞋子 / Shoes (/ʃuːz/)
+- [wà zi] / 袜子 / Socks (/sɑːks/)
 
 Object placement map:
-1. 上衣 (shàng yī / Shirt) — place as a clear, separate, toy-like target object in a natural position for this scene.
-2. 裤子 (kù zi / Pants) — place as a clear, separate, toy-like target object in a natural position for this scene.
-3. 裙子 (qún zi / Skirt) — place as a clear, separate, toy-like target object in a natural position for this scene.
-4. 袜子 (wà zi / Socks) — place as a clear, separate, toy-like target object in a natural position for this scene.
+1. 衣服 (yī fú / Clothes) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 衣架 (yī jià / Hanger) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 衣柜 (yī guì / Closet) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 镜子 (jìng zi / Mirror) — place as a clear, separate, toy-like target object in a natural position for this scene.
 5. 帽子 (mào zi / Hat) — place as a clear, separate, toy-like target object in a natural position for this scene.
 6. 围巾 (wéi jīn / Scarf) — place as a clear, separate, toy-like target object in a natural position for this scene.
-7. 手套 (shǒu tào / Gloves) — place as a clear, separate, toy-like target object in a natural position for this scene.
-8. 运动鞋 (yùn dòng xié / Sneakers) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 鞋子 (xié zi / Shoes) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 袜子 (wà zi / Socks) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Every object must be clearly visible and identifiable
 - Small objects must be enlarged enough for child recognition and later hotspot annotation
@@ -113,8 +117,8 @@ Critical placement rules:
 - No two objects should overlap so much that either becomes hard to identify
 
 Easy-confusion protection:
-- Clothes, scarf, socks, and hat must be separated.
-- Shoe must be clearly footwear, not a clothing fold.
+- Clothes, scarf, socks, shoes, and hat must be separated.
+- Shoes must be clearly footwear, not a clothing fold.
 - Hanger arrow must land on hanger body, not the clothing hanging on it.
 - Mirror and closet must be different large objects.
 
@@ -134,14 +138,14 @@ Line 2: 汉字
 Line 3: english
 
 The 8 label cards must be:
-- [shàng yī] / 上衣 / Shirt
-- [kù zi] / 裤子 / Pants
-- [qún zi] / 裙子 / Skirt
-- [wà zi] / 袜子 / Socks
+- [yī fú] / 衣服 / Clothes
+- [yī jià] / 衣架 / Hanger
+- [yī guì] / 衣柜 / Closet
+- [jìng zi] / 镜子 / Mirror
 - [mào zi] / 帽子 / Hat
 - [wéi jīn] / 围巾 / Scarf
-- [shǒu tào] / 手套 / Gloves
-- [yùn dòng xié] / 运动鞋 / Sneakers
+- [xié zi] / 鞋子 / Shoes
+- [wà zi] / 袜子 / Socks
 
 Text rules:
 - Hanzi largest and boldest
@@ -168,14 +172,14 @@ Arrow rules:
 - Avoid crossing and ambiguous endpoints
 
 Arrow precision map:
-- 上衣 arrow -> lands on Shirt object body.
-- 裤子 arrow -> lands on Pants object body.
-- 裙子 arrow -> lands on Skirt object body.
-- 袜子 arrow -> lands on Socks object body.
+- 衣服 arrow -> lands on Clothes object body.
+- 衣架 arrow -> lands on Hanger object body.
+- 衣柜 arrow -> lands on Closet object body.
+- 镜子 arrow -> lands on Mirror object body.
 - 帽子 arrow -> lands on Hat object body.
 - 围巾 arrow -> lands on Scarf object body.
-- 手套 arrow -> lands on Gloves object body.
-- 运动鞋 arrow -> lands on Sneakers object body.
+- 鞋子 arrow -> lands on Shoes object body.
+- 袜子 arrow -> lands on Socks object body.
 
 ### VII. Branding Badge
 - Top-right corner

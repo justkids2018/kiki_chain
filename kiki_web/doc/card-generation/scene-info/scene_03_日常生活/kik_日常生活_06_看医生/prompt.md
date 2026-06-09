@@ -87,22 +87,22 @@ Character rules:
 ### IV. 8 Target Vocabulary Objects
 - [tīng zhěn qì] / 听诊器 / Stethoscope (/ˈstɛθəskoʊp/)
 - [tǐ wēn jì] / 体温计 / Thermometer (/θərˈmɑːmɪtər/)
-- [yào xiāng] / 药箱 / Medicine Box (/ˈmɛdɪsɪn bɑːks/)
-- [běng dài] / 绷带 / Bandage (/ˈbændɪdʒ/)
-- [bìng chuáng] / 病床 / Hospital Bed (/ˈhɑːspɪtl bɛd/)
+- [chuāng kě tiē] / 创可贴 / Band-Aid (/ˈbænd eɪd/)
+- [yào píng] / 药瓶 / Medicine Bottle (/ˈmɛdɪsɪn ˈbɑːtl/)
 - [zhù shè qì] / 注射器 / Syringe (/sɪˈrɪndʒ/)
-- [yī shēng bāo] / 医生包 / Doctor Bag (/ˈdɑːktər bæɡ/)
+- [bái dà guà] / 白大褂 / Lab Coat (/læb koʊt/)
 - [kǒu zhào] / 口罩 / Mask (/mæsk/)
+- [mián qiān] / 棉签 / Cotton Swab (/ˈkɑːtn swɑːb/)
 
 Object placement map:
 1. 听诊器 (tīng zhěn qì / Stethoscope) — place as a clear, separate, toy-like target object in a natural position for this scene.
 2. 体温计 (tǐ wēn jì / Thermometer) — place as a clear, separate, toy-like target object in a natural position for this scene.
-3. 药箱 (yào xiāng / Medicine Box) — place as a clear, separate, toy-like target object in a natural position for this scene.
-4. 绷带 (běng dài / Bandage) — place as a clear, separate, toy-like target object in a natural position for this scene.
-5. 病床 (bìng chuáng / Hospital Bed) — place as a clear, separate, toy-like target object in a natural position for this scene.
-6. 注射器 (zhù shè qì / Syringe) — place as a clear, separate, toy-like target object in a natural position for this scene.
-7. 医生包 (yī shēng bāo / Doctor Bag) — place as a clear, separate, toy-like target object in a natural position for this scene.
-8. 口罩 (kǒu zhào / Mask) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 创可贴 (chuāng kě tiē / Band-Aid) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 药瓶 (yào píng / Medicine Bottle) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 注射器 (zhù shè qì / Syringe) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 白大褂 (bái dà guà / Lab Coat) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 口罩 (kǒu zhào / Mask) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 棉签 (mián qiān / Cotton Swab) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
 - CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
@@ -120,7 +120,6 @@ Easy-confusion protection:
 - Thermometer, syringe, and stethoscope must be visually distinct.
 - Bandage and mask must not overlap.
 - Medicine box must be a box, not loose pills.
-- Doctor bag and medicine box must be visually distinct.
 - Hospital bed must be clearly separate from the examination table or background furniture.
 
 ### V. Label Cards
@@ -141,12 +140,12 @@ Line 3: english
 The 8 label cards must be:
 - [tīng zhěn qì] / 听诊器 / Stethoscope
 - [tǐ wēn jì] / 体温计 / Thermometer
-- [yào xiāng] / 药箱 / Medicine Box
-- [běng dài] / 绷带 / Bandage
-- [bìng chuáng] / 病床 / Hospital Bed
+- [chuāng kě tiē] / 创可贴 / Band-Aid
+- [yào píng] / 药瓶 / Medicine Bottle
 - [zhù shè qì] / 注射器 / Syringe
-- [yī shēng bāo] / 医生包 / Doctor Bag
+- [bái dà guà] / 白大褂 / Lab Coat
 - [kǒu zhào] / 口罩 / Mask
+- [mián qiān] / 棉签 / Cotton Swab
 
 Text rules:
 - Hanzi largest and boldest
@@ -175,12 +174,12 @@ Arrow rules:
 Arrow precision map:
 - 听诊器 arrow -> lands on Stethoscope object body.
 - 体温计 arrow -> lands on Thermometer object body.
-- 药箱 arrow -> lands on Medicine Box object body.
-- 绷带 arrow -> lands on Bandage object body.
-- 病床 arrow -> lands on Hospital Bed object body.
+- 创可贴 arrow -> lands on Band-Aid object body.
+- 药瓶 arrow -> lands on Medicine Bottle object body.
 - 注射器 arrow -> lands on Syringe object body.
-- 医生包 arrow -> lands on Doctor Bag object body.
+- 白大褂 arrow -> lands on Lab Coat object body.
 - 口罩 arrow -> lands on Mask object body.
+- 棉签 arrow -> lands on Cotton Swab object body.
 
 ### VII. Branding Badge
 - Top-right corner

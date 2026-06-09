@@ -8,7 +8,8 @@
 ---
 
 ```text
-**操场晨练** (主题): Hi Kiki
+**操场晨练** (主题): Hi Kiki、
+
 
 ### I. Core Setup
 - Target age: 3-6 years old
@@ -21,6 +22,15 @@
 - Keep the image realistic first, but forms should feel rounded, solid, and full-bodied
 - Color palette suggestion: 清新绿、天蓝色
 - The final image must fully use the square canvas, with no portrait crop, no landscape crop, no inner frame, no extra border, and no unused blank margin
+
+### Style Master Lock
+- Render everything as a premium miniature toy diorama.
+- Indoor Montessori learning room style.
+- Rounded educational toy objects.
+- Soft polished 3D materials.
+- Cute but elegant.
+- Like Apple-quality preschool product advertisement.
+- NOT realistic outdoor photography.
 
 ### II. Real Scene Requirement
 Create a complete, real 操场晨练 environment. The entire image IS this scene — there is no separate display table or product shelf.
@@ -49,6 +59,11 @@ Depth distribution:
 - Place some in background (still identifiable)
 - Avoid clustering all objects on one surface
 
+Character baseline:
+- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
+- The scene must include exactly one cute white kitten
+- The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
+
 ### III. 8 Target Vocabulary Objects
 - [tiào shéng] / 跳绳 / Jump Rope (/dʒʌmp roʊp/)
 - [pí qiú] / 皮球 / Ball (/bɔːl/)
@@ -70,6 +85,10 @@ Object placement map:
 8. 沙包 (shā bāo / Sandbag) — lower-right on the grass, one cloth sandbag separated from the shuttlecock and track.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Each target object must appear exactly once; do not duplicate sandbags, hoops, ropes, tracks, or any other vocab item.
 - Every object must be clearly visible and identifiable
@@ -150,6 +169,7 @@ Arrow precision map:
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
 - The scene must feel like a real environment, not a product display board
+- Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
 ### VIII. Pre-Final Self-Check
 Before final output, verify all checks:

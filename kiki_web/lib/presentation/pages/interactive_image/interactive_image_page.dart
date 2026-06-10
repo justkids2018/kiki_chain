@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
+import '../../../core/speech/audio_playback_component.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
@@ -10,6 +11,8 @@ import 'models/character_cell.dart';
 import 'widgets/bubble_animation_layer.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
+import 'widgets/glass_star_bar.dart';
+import 'widgets/star_fly_animation.dart';
 import '../../widgets/app_loading_widget.dart';
 import '../../widgets/glass_back_button.dart';
 
@@ -26,9 +29,18 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       ScreenDiffusionController();
   bool _isHandlingBackNavigation = false;
 
+  // 3 颗星星的 GlobalKey（用于飞翔动画定位目标坐标）
+  final List<GlobalKey> _starKeys = List.generate(3, (_) => GlobalKey());
+
+  // 飞翔动画控制器
+  final StarFlyAnimationController _starFlyController =
+      StarFlyAnimationController();
+
+  // 最近一次点击的全局坐标（作为星星飞翔起点）
+  Offset _lastTapPosition = Offset.zero;
+
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
-
   double get _englishFontSizeTablet => _isAndroid ? 14.0 : 24.0;
   double get _englishGridHeight => _isAndroid ? 56.0 : 74.0;
   double get _chineseCellSizeTablet => _isAndroid ? 74.0 : 110.0;
@@ -42,6 +54,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   @override
   void dispose() {
     _diffusionController.dispose();
+    _starFlyController.dispose();
     super.dispose();
   }
 
@@ -52,12 +65,22 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ? Get.find<InteractiveImageController>()
         : Get.put(InteractiveImageController());
 
+    // 监听星星奖励事件，触发飞翔动画
+    ever(controller.starRewardEvent, (StarRewardEvent? event) {
+      if (event == null) return;
+      _launchStarFlyAnimation(context, controller, event.starIndex);
+      // 消费事件，防止重复触发
+      Future.microtask(() => controller.starRewardEvent.value = null);
+    });
+
     return WillPopScope(
+      // 禁用 Android 返回键 / iOS 左滑手势（旧 API 兼容）
       onWillPop: () async {
         await _handleBackNavigation(context);
         return false;
       },
       child: PopScope(
+        // 禁用 iOS 边缘左滑返回（Flutter 3.12+ 新 API）
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {
           if (!didPop) {
@@ -81,7 +104,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   );
                 }
 
-                // DEBUG: Check if controller has errors
                 if (controller.errorMessage.value != null) {
                   return Center(
                     child: Column(
@@ -97,8 +119,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         const SizedBox(height: 16),
                         Text(
                           'Debug: ${controller.getDiagnostics()}',
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 12),
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: 12),
                         ),
                       ],
                     ),
@@ -129,11 +151,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 );
               }),
+              // 顶部浮层：返回按钮 + 星星栏
               Positioned(
                 top: 10,
                 left: 0,
                 right: 0,
-                child: _buildFloatingTopBar(context),
+                child: _buildFloatingTopBar(context, controller),
               ),
             ],
           ),
@@ -142,18 +165,84 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
+  // ─── 星星飞翔动画 ─────────────────────────────────────────────
+
+  /// 从词语点击位置飞向右上角对应星星
+  void _launchStarFlyAnimation(
+    BuildContext context,
+    InteractiveImageController controller,
+    int starIndex,
+  ) {
+    final overlay = Overlay.of(context);
+
+    // 目标坐标：右上角对应星星的中心
+    Offset? targetPosition;
+    final starKey = _starKeys[starIndex];
+    final starContext = starKey.currentContext;
+    if (starContext != null) {
+      final box = starContext.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize) {
+        final offset = box.localToGlobal(Offset.zero);
+        targetPosition = offset + Offset(box.size.width / 2, box.size.height / 2);
+      }
+    }
+
+    if (targetPosition == null) {
+      // fallback：右上角固定坐标
+      final screenSize = MediaQuery.of(context).size;
+      final safePadding = MediaQuery.of(context).padding;
+      targetPosition = Offset(
+        screenSize.width - 40.0 - starIndex * 34.0,
+        safePadding.top + 36,
+      );
+    }
+
+    _starFlyController.launch(
+      overlayState: overlay,
+      startPosition: _lastTapPosition,
+      targetPosition: targetPosition,
+      onArrived: () {
+        // 叮咚音效（当前用 star_1.mp3 占位，后续替换为 star_ding.mp3）
+        final isFinalStar = controller.starsEarned.value >= 3;
+        final audioFile = isFinalStar
+            ? 'assets/audio/star_3_complete.mp3'
+            : 'assets/audio/star_1.mp3';
+        AudioPlaybackComponent().playAudioFile(audioFile).catchError((_) {});
+      },
+    );
+  }
+
+  // ─── 辅助方法 ─────────────────────────────────────────────────
+
   void _triggerScreenDiffusion(Offset globalPosition) {
+    // 同时保存点击坐标作为星星飞翔起点
+    _lastTapPosition = globalPosition;
+
     final context = _effectLayerKey.currentContext;
     if (context == null) return;
-
     final renderObject = context.findRenderObject();
     if (renderObject is! RenderBox) return;
-
     final localPosition = renderObject.globalToLocal(globalPosition);
     _diffusionController.trigger(localPosition);
   }
 
-  Widget _buildFloatingTopBar(BuildContext context) {
+  Future<void> _handleBackNavigation(BuildContext context) async {
+    if (_isHandlingBackNavigation) return;
+    _isHandlingBackNavigation = true;
+    try {
+      final controller = Get.find<InteractiveImageController>();
+      await controller.saveProgress();
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    } finally {
+      _isHandlingBackNavigation = false;
+    }
+  }
+
+  // ─── 顶部栏（返回按钮 + 星星栏）────────────────────────────────
+
+  Widget _buildFloatingTopBar(
+      BuildContext context, InteractiveImageController controller) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -163,28 +252,19 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               onTap: () => _handleBackNavigation(context),
             ),
             const Spacer(),
+            // 毛玻璃星星栏（响应式更新）
+            Obx(() => GlassStarBar(
+                  starsEarned: controller.starsEarned.value,
+                  starKeys: _starKeys,
+                )),
           ],
         ),
       ),
     );
   }
 
-  Future<void> _handleBackNavigation(BuildContext context) async {
-    if (_isHandlingBackNavigation) return;
-    _isHandlingBackNavigation = true;
+  // ─── 主布局 ───────────────────────────────────────────────────
 
-    try {
-      final controller = Get.find<InteractiveImageController>();
-      await controller.saveProgress();
-
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
-    } finally {
-      _isHandlingBackNavigation = false;
-    }
-  }
-
-  /// Unified landscape layout: left image + right learning panel.
   Widget _buildUnifiedLandscapeLayout(
     BuildContext context,
     InteractiveImageController controller,
@@ -196,24 +276,19 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     final isCompactLandscape = screenSize.shortestSide < 700;
     final horizontalPadding = isCompactLandscape ? 8.0 : 24.0;
     final panelGap = (isCompactLandscape ? 10.0 : 20.0) + 15.0;
-
-    // 右侧固定尺寸：避免在移动端被拉成整宽，整体保持近似方形。
     final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
 
     final availableWidth = (screenSize.width - horizontalPadding * 2)
         .clamp(360.0, double.infinity);
-
-    final panelMaxWidth = (availableWidth - panelGap - 160).clamp(240.0, 360.0);
+    final panelMaxWidth =
+        (availableWidth - panelGap - 160).clamp(240.0, 360.0);
     final panelWidth = panelWidthPreset.clamp(240.0, panelMaxWidth);
-
     final imageMaxWidth =
         (availableWidth - panelGap - panelWidth).clamp(160.0, double.infinity);
-
     final maxLayoutHeight =
         (screenSize.height - mediaPadding.top - mediaPadding.bottom - 30)
             .clamp(320.0, double.infinity);
 
-    // 左图优先放大，尽量吃满剩余区域；保持方形以保证视觉稳定。
     final imageSize = imageMaxWidth.clamp(160.0, maxLayoutHeight);
     final panelHeight = imageSize;
     final groupWidth = imageSize + panelGap + panelWidth;
@@ -233,12 +308,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 SizedBox(
                   width: imageSize,
                   height: imageSize,
-                  child: _buildLargeImageContainer(
-                    controller: controller,
-                  ),
+                  child: _buildLargeImageContainer(controller: controller),
                 ),
                 SizedBox(width: panelGap),
-                // Right: fixed panel size in centered group.
                 SizedBox(
                   width: panelWidth,
                   height: panelHeight,
@@ -252,7 +324,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  /// Build large image container — square (1:1) aspect ratio
   Widget _buildLargeImageContainer({
     required InteractiveImageController controller,
   }) {
@@ -260,21 +331,18 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          // Strong edge shadow for floating effect
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 60,
             offset: const Offset(0, 30),
             spreadRadius: -10,
           ),
-          // Mid-range shadow
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 30,
             offset: const Offset(0, 15),
             spreadRadius: -5,
           ),
-          // Close shadow for depth
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 15,
@@ -295,11 +363,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             final side = width > 0 && height > 0
                 ? (width < height ? width : height)
                 : (width > 0 ? width : height);
-
-            if (side <= 0) {
-              return const SizedBox.shrink();
-            }
-
+            if (side <= 0) return const SizedBox.shrink();
             return InteractiveViewer(
               constrained: false,
               minScale: 0.5,
@@ -323,7 +387,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     );
   }
 
-  /// Build right panel with character display and controls (Compact for Tablet)
   Widget _buildCompactCharacterPanel(
       BuildContext context, InteractiveImageController controller) {
     final localizations = AppLocalizations.of(context)!;
@@ -370,10 +433,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                     localizations.interactiveLearning,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF00C37D),
+                      color: Color(0xFF00C37D),
                       letterSpacing: 1.2,
                     ),
                   ),
@@ -393,8 +456,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         width: 72,
                         height: 72,
                         decoration: BoxDecoration(
-                          color:
-                              const Color(0xFF00C37D).withValues(alpha: 0.08),
+                          color: const Color(0xFF00C37D).withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -424,17 +486,13 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 );
               }
-
               return SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _buildLearningInfoSection(
-                      controller,
-                      region,
-                    ),
+                    _buildLearningInfoSection(controller, region),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -483,10 +541,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     InteractiveRegion region,
   ) {
     final localizations = AppLocalizations.of(Get.context!)!;
-
     return Obx(() {
       final isSpeaking = controller.isSpeaking.value;
-
       return Material(
         color: Colors.transparent,
         child: InkWell(
@@ -507,11 +563,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.volume_up_rounded,
-                  size: 14,
-                  color: Color(0xFF00C37D),
-                ),
+                const Icon(Icons.volume_up_rounded,
+                    size: 14, color: Color(0xFF00C37D)),
                 const SizedBox(width: 4),
                 Text(
                   localizations.playPronunciation,
@@ -543,13 +596,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     return Obx(() {
       final visibleCount = controller.visibleCharCount.value;
       final activeIndex = controller.currentCharIndex.value;
-      final speed = controller.animationSpeed.value; // 响应速度变化
+      final speed = controller.animationSpeed.value;
       final int total = characters.length;
       final int unlocked = visibleCount.clamp(0, total);
 
       final cells = List<CharacterCell>.generate(total, (index) {
         CharacterCellStatus status;
-
         if (index >= unlocked) {
           status = CharacterCellStatus.pending;
         } else if (activeIndex < 0) {
@@ -565,11 +617,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         } else {
           status = CharacterCellStatus.pending;
         }
-
-        return CharacterCell(
-          character: characters[index],
-          status: status,
-        );
+        return CharacterCell(character: characters[index], status: status);
       });
 
       return Center(
@@ -650,11 +698,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(
-                Icons.volume_up_rounded,
-                size: 15,
-                color: Color(0xFF66A9D9),
-              ),
+              const Icon(Icons.volume_up_rounded,
+                  size: 15, color: Color(0xFF66A9D9)),
             ],
           ),
         ),

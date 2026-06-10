@@ -78,4 +78,68 @@ void main() {
     expect(find.byType(InteractiveImageView), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('scene navigation falls back to cover image', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1400, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(GetMaterialApp(
+      getPages: AppRoutes.routes,
+      initialRoute: '/',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const Scaffold(body: SizedBox()),
+    ));
+
+    Get.toNamed(AppConstants.routeInteractiveImage, arguments: {
+      'jsonFile': null,
+      'imageItem': null,
+      'images': <dynamic>[],
+      'scene': {
+        'id': 'scene_cover_only',
+        'name': '封面图场景',
+        'coverImage': 'assets/images/kiki_zhiwuyuan.jpg',
+        'image_width': 1024,
+        'image_height': 1024,
+        'items_data': [
+          {
+            'type': 'chinese',
+            'id': 'chinese_01',
+            'index': 1,
+            'text': '苹果',
+            'text_pinyin': 'píng guǒ',
+            'text_english': 'Apple',
+            'text_phonetic': '/ˈæpl/',
+            'regions': [
+              {
+                'region_type': 'card',
+                'coordinate': [
+                  {'x': 10, 'y': 10},
+                  {'x': 100, 'y': 10},
+                  {'x': 10, 'y': 100},
+                  {'x': 100, 'y': 100},
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(seconds: 1));
+
+    final controller = Get.find<InteractiveImageController>();
+    expect(controller.isLoaded.value, isTrue);
+    expect(controller.imagePath, 'assets/images/kiki_zhiwuyuan.jpg');
+    expect(controller.regions, hasLength(1));
+    expect(find.byType(InteractiveImageView), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

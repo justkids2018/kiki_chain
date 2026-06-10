@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
 

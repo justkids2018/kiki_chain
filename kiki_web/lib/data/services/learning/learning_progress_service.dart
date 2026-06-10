@@ -13,7 +13,8 @@ class LearningProgressService {
   LearningProgressService({Dio? dio}) : _dio = dio;
 
   /// 从本地加载场景进度
-  Future<SceneProgress?> loadLocalProgress(String userId, String sceneId) async {
+  Future<SceneProgress?> loadLocalProgress(
+      String userId, String sceneId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = _buildKey(userId, sceneId);
@@ -55,13 +56,14 @@ class LearningProgressService {
     String userId,
     String sceneId,
   ) async {
-    if (_dio == null) {
+    final dio = _dio;
+    if (dio == null) {
       AppLogger.warning('HTTP客户端未初始化');
       return null;
     }
 
     try {
-      final response = await _dio!.get(
+      final response = await dio.get(
         '/api/v1/learning/progress/$userId/$sceneId',
       );
 
@@ -90,13 +92,14 @@ class LearningProgressService {
     required bool isCompleted,
     required int studyTime,
   }) async {
-    if (_dio == null) {
+    final dio = _dio;
+    if (dio == null) {
       AppLogger.warning('HTTP客户端未初始化，跳过服务器同步');
       return true; // 本地保存成功即可
     }
 
     try {
-      final response = await _dio!.post(
+      final response = await dio.post(
         '/api/v1/learning/progress/batch',
         data: {
           'user_id': userId,

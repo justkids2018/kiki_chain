@@ -1,19 +1,17 @@
-import 'dart:ui';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
 import 'models/character_cell.dart';
+import 'widgets/bubble_animation_layer.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
-import 'widgets/bubble_animation_layer.dart';
-import '../../widgets/glass_back_button.dart';
 import '../../widgets/app_loading_widget.dart';
+import '../../widgets/glass_back_button.dart';
 
 class InteractiveImagePage extends StatefulWidget {
   const InteractiveImagePage({Key? key}) : super(key: key);
@@ -26,6 +24,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   final GlobalKey _effectLayerKey = GlobalKey();
   final ScreenDiffusionController _diffusionController =
       ScreenDiffusionController();
+  bool _isHandlingBackNavigation = false;
 
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
@@ -46,6 +45,103 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final controller = Get.isRegistered<InteractiveImageController>()
+        ? Get.find<InteractiveImageController>()
+        : Get.put(InteractiveImageController());
+
+    return WillPopScope(
+      onWillPop: () async {
+        await _handleBackNavigation(context);
+        return false;
+      },
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (!didPop) {
+            await _handleBackNavigation(context);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+              ),
+              Obx(() {
+                if (!controller.isLoaded.value) {
+                  return AppLoadingWidget(
+                    message: localizations.loading,
+                    progress: null,
+                  );
+                }
+
+                // DEBUG: Check if controller has errors
+                if (controller.errorMessage.value != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error, size: 64, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error: ${controller.errorMessage.value}',
+                          style: const TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Debug: ${controller.getDiagnostics()}',
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                final imageWidth = controller.imageWidth.value;
+                final imageHeight = controller.imageHeight.value;
+                final aspectRatio = imageWidth > 0 && imageHeight > 0
+                    ? imageWidth / imageHeight
+                    : 1.0;
+
+                return Positioned.fill(
+                  child: ScreenDiffusionLayer(
+                    controller: _diffusionController,
+                    child: Container(
+                      key: _effectLayerKey,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: _buildUnifiedLandscapeLayout(
+                          context,
+                          controller,
+                          aspectRatio,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+              Positioned(
+                top: 10,
+                left: 0,
+                right: 0,
+                child: _buildFloatingTopBar(context),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _triggerScreenDiffusion(Offset globalPosition) {
     final context = _effectLayerKey.currentContext;
     if (context == null) return;
@@ -57,99 +153,35 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     _diffusionController.trigger(localPosition);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final controller = Get.isRegistered<InteractiveImageController>()
-        ? Get.find<InteractiveImageController>()
-        : Get.put(InteractiveImageController());
-
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop) {
-          // 处理返回时保存进度
-          await _handleBackNavigation(context);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
+  Widget _buildFloatingTopBar(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
           children: [
-            // 1. Blurred background image
-            Positioned.fill(
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  child: _buildBackgroundImage(controller.imagePath),
-                ),
-              ),
+            GlassBackButton(
+              onTap: () => _handleBackNavigation(context),
             ),
-
-            // 2. Darker overlay
-            Positioned.fill(
-              child: Container(color: Colors.black.withValues(alpha: 0.4)),
-            ),
-
-            // 3. Reactive content: loading spinner OR main layout
-            Obx(() {
-              if (!controller.isLoaded.value) {
-                return AppLoadingWidget(
-                  message: localizations.loading,
-                  progress: null,
-                );
-              }
-
-              final imageWidth = controller.imageWidth.value;
-              final imageHeight = controller.imageHeight.value;
-              final aspectRatio = imageWidth > 0 && imageHeight > 0
-                  ? imageWidth / imageHeight
-                  : 1.0;
-
-              return Stack(
-                children: [
-                  // Main content — vertically centered below status bar
-                  Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: ScreenDiffusionLayer(
-                        controller: _diffusionController,
-                        child: Container(
-                          key: _effectLayerKey,
-                          alignment: Alignment.center,
-                          child: _buildUnifiedLandscapeLayout(
-                            context,
-                            controller,
-                            aspectRatio,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Floating TopBar (always on top layer)
-                  Positioned(
-                    top: 10,
-                    left: 0,
-                    right: 0,
-                    child: _buildFloatingTopBar(context),
-                  ),
-
-                  // Star Flying Animation Layer
-                  Obx(() {
-                    if (controller.showStarAnimation.value) {
-                      return _buildStarFlyingAnimation(controller);
-                    }
-                    return const SizedBox.shrink();
-                  }),
-                ],
-              );
-            }),
+            const Spacer(),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _handleBackNavigation(BuildContext context) async {
+    if (_isHandlingBackNavigation) return;
+    _isHandlingBackNavigation = true;
+
+    try {
+      final controller = Get.find<InteractiveImageController>();
+      await controller.saveProgress();
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    } finally {
+      _isHandlingBackNavigation = false;
+    }
   }
 
   /// Unified landscape layout: left image + right learning panel.
@@ -163,7 +195,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     final isCompactLandscape = screenSize.shortestSide < 700;
     final horizontalPadding = isCompactLandscape ? 8.0 : 24.0;
-    final panelGap = isCompactLandscape ? 10.0 : 20.0;
+    final panelGap = (isCompactLandscape ? 10.0 : 20.0) + 15.0;
 
     // 右侧固定尺寸：避免在移动端被拉成整宽，整体保持近似方形。
     final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
@@ -282,7 +314,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   regions: controller.regions,
                   onRegionTap: controller.speakRegion,
                   onRegionTapDown: _triggerScreenDiffusion,
-                  onBlankAreaTap: controller.onBlankAreaClicked,
                 ),
               ),
             );
@@ -306,7 +337,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           width: 1,
         ),
         boxShadow: [
-          // Softer shadow to reduce heavy "solid card" feeling.
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.14),
             blurRadius: 28,
@@ -335,13 +365,17 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  localizations.interactiveLearning,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF00C37D),
-                    letterSpacing: 1.2,
+                Expanded(
+                  child: Text(
+                    localizations.interactiveLearning,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF00C37D),
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
               ],
@@ -401,7 +435,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                       controller,
                       region,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
@@ -427,7 +461,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: _buildReadChinesePlayButton(controller, region),
@@ -493,42 +527,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ),
       );
     });
-  }
-
-  Widget _buildBackgroundImage(String path) {
-    if (path.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: path,
-        fit: BoxFit.cover,
-        useOldImageOnUrlChange: true,
-        fadeInDuration: Duration.zero,
-        fadeOutDuration: Duration.zero,
-        placeholder: (_, __) => const SizedBox.expand(),
-        errorWidget: (_, __, ___) => Container(color: Colors.grey[900]),
-      );
-    }
-    return Image.asset(
-      path,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(color: Colors.grey[900]),
-    );
-  }
-
-  Widget _buildFloatingTopBar(BuildContext context) {
-    final controller = Get.find<InteractiveImageController>();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          // Back Button
-          const GlassBackButton(),
-          const Spacer(),
-          // Star Progress Display
-          Obx(() => _buildStarProgress(controller)),
-        ],
-      ),
-    );
   }
 
   Widget _buildCharacterGrid(
@@ -616,7 +614,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         if (phonetic.isNotEmpty) ...[
           _buildPronunciationChip(
             value: phonetic,
-            onTap: () => controller.speakEnglishWord(region),
+            onTap: () => controller.speakPinyin(region),
           ),
           const SizedBox(height: 6),
         ],
@@ -633,8 +631,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
         onTap: onTap,
-        splashColor: const Color(0xFF66A9D9).withValues(alpha: 0.14),
-        highlightColor: const Color(0xFF66A9D9).withValues(alpha: 0.08),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
@@ -660,176 +656,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 color: Color(0xFF66A9D9),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 处理返回导航并保存进度
-  Future<void> _handleBackNavigation(BuildContext context) async {
-    final controller = Get.find<InteractiveImageController>();
-
-    // 显示保存进度的加载提示
-    bool? shouldPop = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => FutureBuilder<bool>(
-        future: controller.saveProgress(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // 正在保存
-            return AlertDialog(
-              content: Row(
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(width: 16),
-                  Text(AppLocalizations.of(context)!.loading),
-                ],
-              ),
-            );
-          }
-
-          if (snapshot.hasError || snapshot.data == false) {
-            // 保存失败
-            return AlertDialog(
-              title: const Text('保存失败'),
-              content: const Text('学习进度保存失败，是否重试？\n如果选择退出，本次学习进度将丢失。'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('放弃并退出'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('重试'),
-                ),
-              ],
-            );
-          }
-
-          // 保存成功，自动关闭对话框
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              Navigator.of(context).pop(true);
-            }
-          });
-
-          return const SizedBox.shrink();
-        },
-      ),
-    );
-
-    if (!context.mounted) {
-      return;
-    }
-
-    // 处理结果
-    if (shouldPop == true) {
-      // 用户确认退出
-      Navigator.of(context).pop();
-    } else if (shouldPop == false) {
-      // 用户选择重试
-      await _handleBackNavigation(context);
-    }
-  }
-
-  /// 构建星星进度显示
-  Widget _buildStarProgress(InteractiveImageController controller) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(3, (index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: _buildStar(
-              index: index,
-              isEarned: index < controller.starsEarned.value,
-              isCompleted: controller.isSceneCompleted.value,
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  /// 构建单个星星
-  Widget _buildStar({
-    required int index,
-    required bool isEarned,
-    required bool isCompleted,
-  }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      child: Icon(
-        isEarned ? Icons.star : Icons.star_border,
-        size: 28,
-        color: isEarned
-            ? const Color(0xFFFFD700) // 金色
-            : Colors.white.withValues(alpha: 0.5), // 灰色轮廓
-        shadows: isEarned
-            ? [
-                Shadow(
-                  color: const Color(0xFFFFD700).withValues(alpha: 0.5),
-                  blurRadius: 8,
-                ),
-              ]
-            : null,
-      ),
-    );
-  }
-
-  /// 构建星星飞行动画
-  Widget _buildStarFlyingAnimation(InteractiveImageController controller) {
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: Center(
-          child: TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 800),
-            tween: Tween(begin: 0.0, end: 1.0),
-            builder: (context, value, child) {
-              // 从中心飞向顶部的动画
-              final offsetY = (1 - value) * 200; // 从下往上飞
-              final scale = 0.5 + (value * 0.5); // 从小到大
-              final opacity = value; // 淡入
-
-              return Transform.translate(
-                offset: Offset(0, offsetY),
-                child: Transform.scale(
-                  scale: scale,
-                  child: Opacity(
-                    opacity: opacity,
-                    child: const Icon(
-                      Icons.star,
-                      size: 80,
-                      color: Color(0xFFFFD700),
-                      shadows: [
-                        Shadow(
-                          color: Color(0xFFFFD700),
-                          blurRadius: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
           ),
         ),
       ),

@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "帐篷",
+    "text_pinyin": "zhàng péng",
+    "text_english": "Tent",
+    "text_phonetic": "/tɛnt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 610,
+            "y": 73
+          },
+          {
+            "x": 750,
+            "y": 73
+          },
+          {
+            "x": 610,
+            "y": 176
+          },
+          {
+            "x": 750,
+            "y": 176
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 366,
+            "y": 18
+          },
+          {
+            "x": 624,
+            "y": 18
+          },
+          {
+            "x": 366,
+            "y": 353
+          },
+          {
+            "x": 624,
+            "y": 353
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "小丑",
+    "text_pinyin": "xiǎo chǒu",
+    "text_english": "Clown",
+    "text_phonetic": "/klaʊn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 204,
+            "y": 185
+          },
+          {
+            "x": 322,
+            "y": 185
+          },
+          {
+            "x": 204,
+            "y": 314
+          },
+          {
+            "x": 322,
+            "y": 314
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 286,
+            "y": 363
+          },
+          {
+            "x": 431,
+            "y": 363
+          },
+          {
+            "x": 286,
+            "y": 617
+          },
+          {
+            "x": 431,
+            "y": 617
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "狮子",
+    "text_pinyin": "shī zi",
+    "text_english": "Lion",
+    "text_phonetic": "/ˈlaɪən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 678,
+            "y": 287
+          },
+          {
+            "x": 799,
+            "y": 287
+          },
+          {
+            "x": 678,
+            "y": 382
+          },
+          {
+            "x": 799,
+            "y": 382
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 514,
+            "y": 363
+          },
+          {
+            "x": 644,
+            "y": 363
+          },
+          {
+            "x": 514,
+            "y": 552
+          },
+          {
+            "x": 644,
+            "y": 552
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "杂技球",
+    "text_pinyin": "zá jì qiú",
+    "text_english": "Juggling Ball",
+    "text_phonetic": "/ˈdʒʌɡlɪŋ bɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 8,
+            "y": 644
+          },
+          {
+            "x": 130,
+            "y": 644
+          },
+          {
+            "x": 8,
+            "y": 763
+          },
+          {
+            "x": 130,
+            "y": 763
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 147,
+            "y": 642
+          },
+          {
+            "x": 284,
+            "y": 642
+          },
+          {
+            "x": 147,
+            "y": 765
+          },
+          {
+            "x": 284,
+            "y": 765
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "魔术帽",
+    "text_pinyin": "mó shù mào",
+    "text_english": "Magic Hat",
+    "text_phonetic": "/ˈmædʒɪk hæt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 270,
+            "y": 831
+          },
+          {
+            "x": 431,
+            "y": 831
+          },
+          {
+            "x": 270,
+            "y": 958
+          },
+          {
+            "x": 431,
+            "y": 958
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 301,
+            "y": 611
+          },
+          {
+            "x": 444,
+            "y": 611
+          },
+          {
+            "x": 301,
+            "y": 797
+          },
+          {
+            "x": 444,
+            "y": 797
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "火圈",
+    "text_pinyin": "huǒ quān",
+    "text_english": "Fire Ring",
+    "text_phonetic": "/faɪər rɪŋ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 480,
+            "y": 817
+          },
+          {
+            "x": 604,
+            "y": 817
+          },
+          {
+            "x": 480,
+            "y": 946
+          },
+          {
+            "x": 604,
+            "y": 946
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 526,
+            "y": 592
+          },
+          {
+            "x": 690,
+            "y": 592
+          },
+          {
+            "x": 526,
+            "y": 774
+          },
+          {
+            "x": 690,
+            "y": 774
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "独轮车",
+    "text_pinyin": "dú lún chē",
+    "text_english": "Unicycle",
+    "text_phonetic": "/ˈjuːnɪˌsaɪkl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 828,
+            "y": 686
+          },
+          {
+            "x": 958,
+            "y": 686
+          },
+          {
+            "x": 828,
+            "y": 806
+          },
+          {
+            "x": 958,
+            "y": 806
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 704,
+            "y": 462
+          },
+          {
+            "x": 829,
+            "y": 462
+          },
+          {
+            "x": 704,
+            "y": 704
+          },
+          {
+            "x": 829,
+            "y": 704
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "爆米花",
+    "text_pinyin": "bào mǐ huā",
+    "text_english": "Popcorn",
+    "text_phonetic": "/ˈpɑːpkɔːrn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 870,
+            "y": 817
+          },
+          {
+            "x": 1005,
+            "y": 817
+          },
+          {
+            "x": 870,
+            "y": 928
+          },
+          {
+            "x": 1005,
+            "y": 928
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 704,
+            "y": 768
+          },
+          {
+            "x": 850,
+            "y": 768
+          },
+          {
+            "x": 704,
+            "y": 1011
+          },
+          {
+            "x": 850,
+            "y": 1011
+          }
+        ]
+      }
+    ]
+  }
+]

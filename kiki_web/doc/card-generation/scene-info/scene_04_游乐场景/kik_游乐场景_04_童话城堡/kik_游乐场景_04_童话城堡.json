@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "城堡",
+    "text_pinyin": "chéng bǎo",
+    "text_english": "Castle",
+    "text_phonetic": "/ˈkæsl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 615,
+            "y": 37
+          },
+          {
+            "x": 743,
+            "y": 37
+          },
+          {
+            "x": 615,
+            "y": 134
+          },
+          {
+            "x": 743,
+            "y": 134
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 341,
+            "y": 55
+          },
+          {
+            "x": 674,
+            "y": 55
+          },
+          {
+            "x": 341,
+            "y": 379
+          },
+          {
+            "x": 674,
+            "y": 379
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "王冠",
+    "text_pinyin": "wáng guān",
+    "text_english": "Crown",
+    "text_phonetic": "/kraʊn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 206,
+            "y": 136
+          },
+          {
+            "x": 328,
+            "y": 136
+          },
+          {
+            "x": 206,
+            "y": 230
+          },
+          {
+            "x": 328,
+            "y": 230
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 94,
+            "y": 263
+          },
+          {
+            "x": 296,
+            "y": 263
+          },
+          {
+            "x": 94,
+            "y": 360
+          },
+          {
+            "x": 296,
+            "y": 360
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "魔法棒",
+    "text_pinyin": "mó fǎ bàng",
+    "text_english": "Magic Wand",
+    "text_phonetic": "/ˈmædʒɪk wɑːnd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 843,
+            "y": 826
+          },
+          {
+            "x": 989,
+            "y": 826
+          },
+          {
+            "x": 843,
+            "y": 950
+          },
+          {
+            "x": 989,
+            "y": 950
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 490,
+            "y": 884
+          },
+          {
+            "x": 795,
+            "y": 884
+          },
+          {
+            "x": 490,
+            "y": 997
+          },
+          {
+            "x": 795,
+            "y": 997
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "龙",
+    "text_pinyin": "lóng",
+    "text_english": "Dragon",
+    "text_phonetic": "/ˈdræɡən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 811,
+            "y": 218
+          },
+          {
+            "x": 922,
+            "y": 218
+          },
+          {
+            "x": 811,
+            "y": 315
+          },
+          {
+            "x": 922,
+            "y": 315
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 702,
+            "y": 343
+          },
+          {
+            "x": 892,
+            "y": 343
+          },
+          {
+            "x": 702,
+            "y": 541
+          },
+          {
+            "x": 892,
+            "y": 541
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "公主",
+    "text_pinyin": "gōng zhǔ",
+    "text_english": "Princess",
+    "text_phonetic": "/ˈprɪnsɛs/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 223,
+            "y": 391
+          },
+          {
+            "x": 350,
+            "y": 391
+          },
+          {
+            "x": 223,
+            "y": 492
+          },
+          {
+            "x": 350,
+            "y": 492
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 332,
+            "y": 498
+          },
+          {
+            "x": 476,
+            "y": 498
+          },
+          {
+            "x": 332,
+            "y": 714
+          },
+          {
+            "x": 476,
+            "y": 714
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "骑士",
+    "text_pinyin": "qí shì",
+    "text_english": "Knight",
+    "text_phonetic": "/naɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 570,
+            "y": 391
+          },
+          {
+            "x": 679,
+            "y": 391
+          },
+          {
+            "x": 570,
+            "y": 491
+          },
+          {
+            "x": 679,
+            "y": 491
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 483,
+            "y": 495
+          },
+          {
+            "x": 611,
+            "y": 495
+          },
+          {
+            "x": 483,
+            "y": 709
+          },
+          {
+            "x": 611,
+            "y": 709
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "盾牌",
+    "text_pinyin": "dùn pái",
+    "text_english": "Shield",
+    "text_phonetic": "/ʃiːld/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 904,
+            "y": 405
+          },
+          {
+            "x": 1014,
+            "y": 405
+          },
+          {
+            "x": 904,
+            "y": 517
+          },
+          {
+            "x": 1014,
+            "y": 517
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 657,
+            "y": 563
+          },
+          {
+            "x": 813,
+            "y": 563
+          },
+          {
+            "x": 657,
+            "y": 707
+          },
+          {
+            "x": 813,
+            "y": 707
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "宝剑",
+    "text_pinyin": "bǎo jiàn",
+    "text_english": "Sword",
+    "text_phonetic": "/sɔːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 51,
+            "y": 845
+          },
+          {
+            "x": 172,
+            "y": 845
+          },
+          {
+            "x": 51,
+            "y": 935
+          },
+          {
+            "x": 172,
+            "y": 935
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 224,
+            "y": 818
+          },
+          {
+            "x": 428,
+            "y": 818
+          },
+          {
+            "x": 224,
+            "y": 931
+          },
+          {
+            "x": 428,
+            "y": 931
+          }
+        ]
+      }
+    ]
+  }
+]

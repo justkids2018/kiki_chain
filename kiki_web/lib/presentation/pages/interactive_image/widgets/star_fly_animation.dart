@@ -147,16 +147,62 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
               opacity: opacity,
               child: Transform.scale(
                 scale: scale,
-                child: const Icon(
-                  Icons.star_rounded,
+                child: const _GradientStarIcon(
+                  icon: Icons.star_rounded,
                   size: _starSize,
-                  color: Color(0xFFFFB800),
                 ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+/// 3D 渐变金色星星组件
+class _GradientStarIcon extends StatelessWidget {
+  final IconData icon;
+  final double size;
+
+  const _GradientStarIcon({
+    Key? key,
+    required this.icon,
+    required this.size,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) {
+        return const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFFFEA79), // 亮金顶光
+            Color(0xFFFFB800), // 饱满金黄
+            Color(0xFFE58F00), // 底部暗金阴影
+          ],
+          stops: [0.0, 0.55, 1.0],
+        ).createShader(bounds);
+      },
+      child: Icon(
+        icon,
+        size: size,
+        color: Colors.white, // ShaderMask 遮罩基色必须为白色
+        shadows: [
+          Shadow(
+            color: Colors.black.withOpacity(0.25),
+            offset: const Offset(0, 1.5),
+            blurRadius: 1.5,
+          ),
+          Shadow(
+            color: const Color(0xFFFFD700).withOpacity(0.35),
+            offset: Offset.zero,
+            blurRadius: 4.0,
+          ),
+        ],
+      ),
     );
   }
 }

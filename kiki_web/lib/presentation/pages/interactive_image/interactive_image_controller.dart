@@ -383,18 +383,7 @@ class InteractiveImageController extends GetxController {
     if (total == 0) return;
 
     final learned = _learnedRegionIds.length;
-    int newStars = _rewardService.calculateStars(learned, total);
-
-    // 第 3 颗星（满星）需要额外时间门槛 ≥30 秒，防刷
-    if (newStars == 3 && starsEarned.value < 3) {
-      final elapsed = DateTime.now()
-          .difference(_sessionStartTime ?? DateTime.now())
-          .inSeconds;
-      if (elapsed < 30) {
-        AppLogger.info('满星时间不足 $elapsed 秒（需≥30秒），暂缓发放第3颗星');
-        newStars = 2;
-      }
-    }
+    final newStars = _rewardService.calculateStars(learned, total);
 
     if (newStars > starsEarned.value) {
       final newStarIndex = starsEarned.value; // 即将点亮的星星索引（0-based）

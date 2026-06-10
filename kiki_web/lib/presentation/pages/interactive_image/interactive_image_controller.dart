@@ -271,7 +271,7 @@ class InteractiveImageController extends GetxController {
       _learnedRegionIds.addAll(savedIds);
 
       // 根据已学数量重新计算星星（比例制）
-      final total = regions.length;
+      final total = regions.map((r) => r.text).toSet().length;
       if (total > 0 && _learnedRegionIds.isNotEmpty) {
         starsEarned.value =
             _rewardService.calculateStars(_learnedRegionIds.length, total);
@@ -355,10 +355,12 @@ class InteractiveImageController extends GetxController {
   /// 记录学习进度，并在满足门槛时触发星星奖励
   void _recordLearningProgress(InteractiveRegion region) {
     final regionId = region.text;
+    final total = regions.map((r) => r.text).toSet().length;
 
     // 去重：已学过的词不再计入
     if (_learnedRegionIds.contains(regionId)) {
       AppLogger.debug('区域已学过，跳过: $regionId');
+      _checkStarReward(); // 允许重新检查以防之前因为时间门槛（<30秒）未获得满星，而现在时间已满足
       return;
     }
 
@@ -370,14 +372,14 @@ class InteractiveImageController extends GetxController {
     });
 
     AppLogger.info(
-        '✅ 记录学习: $regionId (${_learnedRegionIds.length}/${regions.length})');
+        '✅ 记录学习: $regionId (${_learnedRegionIds.length}/$total)');
 
     _checkStarReward();
   }
 
-  /// 检查是否触发新星星奖励（33% / 67% / 100%）
+  /// 检查是否触发新星星奖励（30% / 60% / 100%）
   void _checkStarReward() {
-    final total = regions.length;
+    final total = regions.map((r) => r.text).toSet().length;
     if (total == 0) return;
 
     final learned = _learnedRegionIds.length;
@@ -480,6 +482,13 @@ Interactive Image Diagnostics:
 - learnedCount: ${_learnedRegionIds.length}
 - error: ${errorMessage.value ?? 'none'}
     ''';
+  }
+
+  /// 播放本地音效（使用独立的 SFX 通道）
+  void playSfx(String assetPath) {
+    _audioPlayback.playAudioFile(assetPath).catchError((e) {
+      AppLogger.error('Failed to play SFX $assetPath', e);
+    });
   }
 
   // ─── 生命周期 ─────────────────────────────────────────────────

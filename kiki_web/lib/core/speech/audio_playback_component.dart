@@ -1,8 +1,11 @@
+import 'package:just_audio/just_audio.dart';
 import '../../domain/entities/interactive_region.dart';
 import 'cached_remote_audio_service.dart';
+import '../logging/app_logger.dart';
 
 class AudioPlaybackComponent {
   final CachedRemoteAudioService _remoteAudioService;
+  AudioPlayer? _sfxPlayer;
 
   AudioPlaybackComponent({
     CachedRemoteAudioService? remoteAudioService,
@@ -50,16 +53,26 @@ class AudioPlaybackComponent {
     // TTS removed: character-level playback is disabled when no per-char audio URL exists.
   }
 
-  /// 播放本地音频文件（用于提示音等）
+  /// 播放本地音频文件（使用独立的 SFX 通道，不与单词发音冲突，不泄露资源）
   Future<void> playAudioFile(String assetPath) async {
-    await _remoteAudioService.playAsset(assetPath);
+    _sfxPlayer ??= AudioPlayer();
+    try {
+      await _sfxPlayer!.stop();
+      await _sfxPlayer!.setAsset(assetPath);
+      await _sfxPlayer!.play();
+    } catch (e) {
+      AppLogger.error('Failed to play SFX: $assetPath', e);
+    }
   }
 
   Future<void> stop() async {
     await _remoteAudioService.stop();
+    await _sfxPlayer?.stop();
   }
 
   void dispose() {
     _remoteAudioService.dispose();
+    _sfxPlayer?.dispose();
+    _sfxPlayer = null;
   }
 }

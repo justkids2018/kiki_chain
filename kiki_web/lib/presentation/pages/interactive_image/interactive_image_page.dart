@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
-import '../../../core/speech/audio_playback_component.dart';
 import '../../../domain/entities/interactive_region.dart';
 import 'interactive_image_controller.dart';
 import 'interactive_image_view.dart';
@@ -218,12 +217,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         final dingFile = isFinalStar
             ? 'assets/audio/star_3_complete.mp3'
             : 'assets/audio/star_2.mp3';
-        AudioPlaybackComponent().playAudioFile(dingFile).catchError((_) {});
+        controller.playSfx(dingFile);
       },
     );
 
     // 嗖声：飞翔开始时播放（用 star_1.mp3 占位，后续替换 star_whoosh.mp3）
-    AudioPlaybackComponent().playAudioFile('assets/audio/star_1.mp3').catchError((_) {});
+    controller.playSfx('assets/audio/star_1.mp3');
   }
 
   // ─── 辅助方法 ─────────────────────────────────────────────────

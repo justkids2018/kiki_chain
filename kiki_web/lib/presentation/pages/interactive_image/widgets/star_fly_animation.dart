@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 /// 星星飞翔动画控制器
 ///
-/// 效果：从点击位置 "嗖" 一下飞向目标星星位置（easeIn 起步快，
-/// easeOut 减速落地），落地后回调 [onArrived] 播放叮当声。
+/// 效果：从点击位置飞向屏幕中央悬停并做 3D 脉动缩放，随后快速飞向目标星星栏，
+/// 到达后点亮并播放音效。
 class StarFlyAnimationController {
   OverlayEntry? _entry;
 
@@ -12,7 +12,7 @@ class StarFlyAnimationController {
   /// [overlayState]：当前页面的 Overlay
   /// [startPosition]：起飞点（全局坐标，词语点击处）
   /// [targetPosition]：降落点（全局坐标，目标星星中心）
-  /// [onArrived]：动画完成回调（播放叮当音效 + 更新状态）
+  /// [onArrived]：动画完成回调
   void launch({
     required OverlayState overlayState,
     required Offset startPosition,
@@ -74,54 +74,90 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
 
     _controller = AnimationController(
       vsync: this,
-      // 850ms：前半段"嗖"起速，后半段减速落地
-      duration: const Duration(milliseconds: 850),
+      // 1600ms：包含起飞到中心、中心缩放脉动、快速落袋三个阶段
+      duration: const Duration(milliseconds: 1600),
     );
 
-    // 位置：先快后慢（decelerate = 嗖的感觉）
-    _positionAnim = Tween<Offset>(
-      begin: widget.startPosition,
-      end: widget.targetPosition,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInCubic),
-    );
+    // 计算屏幕中心位置，由多段 TweenSequence 控制运动轨迹
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final screenSize = MediaQuery.of(context).size;
+      final centerPos = Offset(screenSize.width / 2, screenSize.height / 2);
 
-    // 缩放：发射时略放大（兴奋感），落地时弹跳收缩
-    _scaleAnim = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween(begin: 0.7, end: 1.3)
-            .chain(CurveTween(curve: Curves.easeOut)),
-        weight: 30,
-      ),
-      TweenSequenceItem(
-        tween: Tween(begin: 1.3, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 55,
-      ),
-      TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.6)
-            .chain(CurveTween(curve: Curves.easeIn)),
-        weight: 15,
-      ),
-    ]).animate(_controller);
-
-    // 透明度：飞行中可见，最后 20% 淡出消失
-    _opacityAnim = TweenSequence<double>([
-      TweenSequenceItem(tween: ConstantTween(1.0), weight: 80),
-      TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
-        weight: 20,
-      ),
-    ]).animate(_controller);
+      _setupAnimations(centerPos);
+      _controller.forward();
+    });
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         widget.onArrived();
       }
     });
+  }
 
-    _controller.forward();
+  void _setupAnimations(Offset centerPos) {
+    // 轨迹：起飞 -> 悬停屏幕中心 -> 快速落到目标点
+    _positionAnim = TweenSequence<Offset>([
+      // 1. 起飞阶段：从起点飞到屏幕中心 (占 35% 时间)
+      TweenSequenceItem(
+        tween: Tween<Offset>(begin: widget.startPosition, end: centerPos)
+            .chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 35,
+      ),
+      // 2. 悬停阶段：在屏幕中心悬停做脉动动画 (占 35% 时间)
+      TweenSequenceItem(
+        tween: ConstantTween<Offset>(centerPos),
+        weight: 35,
+      ),
+      // 3. 落袋阶段：从屏幕中心快速飞向右上角目标星星 (占 30% 时间)
+      TweenSequenceItem(
+        tween: Tween<Offset>(begin: centerPos, end: widget.targetPosition)
+            .chain(CurveTween(curve: Curves.easeInCubic)),
+        weight: 30,
+      ),
+    ]).animate(_controller);
+
+    // 缩放：起飞变大 -> 中心脉动(缩->放->收缩弹跳) -> 快速落袋变小
+    _scaleAnim = TweenSequence<double>([
+      // 1. 飞向中心阶段：从 0.5 变大至 2.8 倍，显眼突出
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.5, end: 2.8)
+            .chain(CurveTween(curve: Curves.easeOut)),
+        weight: 35,
+      ),
+      // 2. 中心脉动阶段：大 -> 小 -> 极大 -> 回弹 (2.8 -> 1.6 -> 3.2 -> 2.0)
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 2.8, end: 1.6)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 12,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.6, end: 3.2)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 13,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 3.2, end: 2.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 10,
+      ),
+      // 3. 落袋阶段：从 2.0 相应缩小到 0.9，完美套入 InlineStarBar 目标框
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 2.0, end: 0.9)
+            .chain(CurveTween(curve: Curves.easeIn)),
+        weight: 30,
+      ),
+    ]).animate(_controller);
+
+    // 透明度：绝大部分时间完全可见，在落袋最后一瞬间淡出，让位给 InlineStarBar 点亮状态
+    _opacityAnim = TweenSequence<double>([
+      TweenSequenceItem(tween: ConstantTween<double>(1.0), weight: 85),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.0)
+            .chain(CurveTween(curve: Curves.easeIn)),
+        weight: 15,
+      ),
+    ]).animate(_controller);
   }
 
   @override
@@ -135,6 +171,11 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, _) {
+        // 在第一帧绘制（未初始化多段动画）前返回空
+        if (_controller.value == 0.0 && !(_controller.isAnimating)) {
+          return const SizedBox.shrink();
+        }
+
         final pos = _positionAnim.value;
         final scale = _scaleAnim.value;
         final opacity = _opacityAnim.value;

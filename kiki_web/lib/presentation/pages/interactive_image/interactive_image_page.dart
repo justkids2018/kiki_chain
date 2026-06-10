@@ -212,6 +212,11 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       startPosition: _lastTapPosition,
       targetPosition: targetPosition,
       onArrived: () {
+        // 当星星飞抵目标框时，再点亮 UI 上的那颗星星
+        if (controller.starsEarned.value < starIndex + 1) {
+          controller.starsEarned.value = starIndex + 1;
+        }
+
         // 叮当音效：落地时播放（满星用完成音效，普通星用叮声占位）
         final isFinalStar = controller.starsEarned.value >= 3;
         final dingFile = isFinalStar

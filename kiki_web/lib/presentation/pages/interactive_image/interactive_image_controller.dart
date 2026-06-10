@@ -44,6 +44,9 @@ class InteractiveImageController extends GetxController {
   /// 已获得的星星数（0~3）
   final starsEarned = 0.obs;
 
+  /// 实际被授予的星星数（以防在UI上立即亮起，等飞行动画落地后再给 starsEarned 赋值）
+  int _starsAwarded = 0;
+
   /// 飞翔动画事件流：Page 层监听后触发动画
   final starRewardEvent = Rxn<StarRewardEvent>();
 
@@ -273,10 +276,12 @@ class InteractiveImageController extends GetxController {
       // 根据已学数量重新计算星星（比例制）
       final total = regions.map((r) => r.text).toSet().length;
       if (total > 0 && _learnedRegionIds.isNotEmpty) {
-        starsEarned.value =
+        final loadedStars =
             _rewardService.calculateStars(_learnedRegionIds.length, total);
+        starsEarned.value = loadedStars;
+        _starsAwarded = loadedStars;
         AppLogger.info(
-            '恢复本地进度: ${_learnedRegionIds.length}/$total 词, ${starsEarned.value} 颗星');
+            '恢复本地进度: ${_learnedRegionIds.length}/$total 词, $loadedStars 颗星');
       }
     } catch (e) {
       AppLogger.error('恢复本地进度失败', e);
@@ -383,16 +388,17 @@ class InteractiveImageController extends GetxController {
     if (total == 0) return;
 
     final learned = _learnedRegionIds.length;
-    final newStars = _rewardService.calculateStars(learned, total);
+    final targetStars = _rewardService.calculateStars(learned, total);
 
-    if (newStars > starsEarned.value) {
-      final newStarIndex = starsEarned.value; // 即将点亮的星星索引（0-based）
-      starsEarned.value = newStars;
+    if (targetStars > _starsAwarded) {
+      final oldStarsAwarded = _starsAwarded;
+      _starsAwarded = targetStars;
 
-      AppLogger.info('🌟 触发星星奖励：第 ${newStarIndex + 1} 颗星');
-
-      // 通知 Page 层触发飞翔动画
-      starRewardEvent.value = StarRewardEvent(newStarIndex);
+      // 依次发射每一个新获得的星星（支持连发动画）
+      for (int i = oldStarsAwarded; i < targetStars; i++) {
+        AppLogger.info('🌟 触发星星奖励：第 ${i + 1} 颗星');
+        starRewardEvent.value = StarRewardEvent(i);
+      }
 
       // 保存进度到本地（异步，不阻塞 UI）
       _saveLocalProgressAsync();
@@ -436,8 +442,8 @@ class InteractiveImageController extends GetxController {
         userId: _userId,
         sceneId: sceneId,
         learnedRegionIds: Set.from(_learnedRegionIds),
-        starsEarned: starsEarned.value,
-        isCompleted: starsEarned.value >= 3,
+        starsEarned: _starsAwarded,
+        isCompleted: _starsAwarded >= 3,
         studyTimeSeconds: studyTime,
       );
 

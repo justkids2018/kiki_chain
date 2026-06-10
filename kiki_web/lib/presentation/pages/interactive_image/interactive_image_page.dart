@@ -415,7 +415,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 10, 0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 20, 0),
             child: Row(
               children: [
                 Container(
@@ -490,7 +490,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                 );
               }
               return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
+                padding: const EdgeInsets.fromLTRB(12, 22, 12, 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -660,7 +660,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
               markVowels: true,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 18),
         ],
         if (phonetic.isNotEmpty) ...[
           _buildPronunciationChip(

@@ -11,7 +11,7 @@ import 'models/character_cell.dart';
 import 'widgets/bubble_animation_layer.dart';
 import 'widgets/character_stroke_grid.dart';
 import 'widgets/english_four_line_grid.dart';
-import 'widgets/glass_star_bar.dart';
+import 'widgets/glass_star_bar.dart'; // InlineStarBar
 import 'widgets/star_fly_animation.dart';
 import '../../widgets/app_loading_widget.dart';
 import '../../widgets/glass_back_button.dart';
@@ -88,12 +88,22 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           }
         },
         child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: const Color(0xFFF2F4F8),
           body: Stack(
             children: [
+              // 亮色渐变背景
               Positioned.fill(
                 child: Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFF0F4FF), // 浅蓝紫
+                        Color(0xFFEAF6F0), // 浅薄荷绿
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Obx(() {
@@ -151,12 +161,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 );
               }),
-              // 顶部浮层：返回按钮 + 星星栏
+              // 顶部浮层：仅返回按钮
               Positioned(
                 top: 10,
                 left: 0,
                 right: 0,
-                child: _buildFloatingTopBar(context, controller),
+                child: _buildFloatingTopBar(context),
               ),
             ],
           ),
@@ -188,12 +198,12 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     }
 
     if (targetPosition == null) {
-      // fallback：右上角固定坐标
+      // fallback：面板右上角附近固定坐标
       final screenSize = MediaQuery.of(context).size;
       final safePadding = MediaQuery.of(context).padding;
       targetPosition = Offset(
-        screenSize.width - 40.0 - starIndex * 34.0,
-        safePadding.top + 36,
+        screenSize.width - 80.0 + starIndex * 22.0,
+        safePadding.top + 80,
       );
     }
 
@@ -202,14 +212,17 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       startPosition: _lastTapPosition,
       targetPosition: targetPosition,
       onArrived: () {
-        // 叮咚音效（当前用 star_1.mp3 占位，后续替换为 star_ding.mp3）
+        // 叮当音效：落地时播放（满星用完成音效，普通星用叮声占位）
         final isFinalStar = controller.starsEarned.value >= 3;
-        final audioFile = isFinalStar
+        final dingFile = isFinalStar
             ? 'assets/audio/star_3_complete.mp3'
-            : 'assets/audio/star_1.mp3';
-        AudioPlaybackComponent().playAudioFile(audioFile).catchError((_) {});
+            : 'assets/audio/star_2.mp3';
+        AudioPlaybackComponent().playAudioFile(dingFile).catchError((_) {});
       },
     );
+
+    // 嗖声：飞翔开始时播放（用 star_1.mp3 占位，后续替换 star_whoosh.mp3）
+    AudioPlaybackComponent().playAudioFile('assets/audio/star_1.mp3').catchError((_) {});
   }
 
   // ─── 辅助方法 ─────────────────────────────────────────────────
@@ -239,10 +252,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     }
   }
 
-  // ─── 顶部栏（返回按钮 + 星星栏）────────────────────────────────
+  // ─── 顶部栏（仅返回按钮）────────────────────────────────────────
 
-  Widget _buildFloatingTopBar(
-      BuildContext context, InteractiveImageController controller) {
+  Widget _buildFloatingTopBar(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -251,12 +263,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             GlassBackButton(
               onTap: () => _handleBackNavigation(context),
             ),
-            const Spacer(),
-            // 毛玻璃星星栏（响应式更新）
-            Obx(() => GlassStarBar(
-                  starsEarned: controller.starsEarned.value,
-                  starKeys: _starKeys,
-                )),
           ],
         ),
       ),
@@ -332,21 +338,15 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 60,
-            offset: const Offset(0, 30),
-            spreadRadius: -10,
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
+            spreadRadius: -4,
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
-            spreadRadius: -5,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -393,30 +393,24 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.42),
-          width: 1,
+          color: Colors.white.withOpacity(0.6),
+          width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.14),
-            blurRadius: 28,
-            offset: const Offset(0, 10),
-            spreadRadius: -8,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 12, 0),
+            padding: const EdgeInsets.fromLTRB(12, 12, 10, 0),
             child: Row(
               children: [
                 Container(
@@ -428,19 +422,23 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    localizations.interactiveLearning,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF00C37D),
-                      letterSpacing: 1.2,
-                    ),
+                Text(
+                  localizations.interactiveLearning,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF00C37D),
+                    letterSpacing: 1.2,
                   ),
                 ),
+                const Spacer(),
+                // 3 颗星星，紧跟「互动学习」标题右侧
+                Obx(() => InlineStarBar(
+                      starsEarned: controller.starsEarned.value,
+                      starKeys: _starKeys,
+                    )),
               ],
             ),
           ),

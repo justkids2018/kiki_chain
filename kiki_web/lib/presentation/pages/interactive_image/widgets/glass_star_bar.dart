@@ -1,21 +1,18 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
-/// 毛玻璃效果的 3 星进度栏
+/// 内联 3 星进度指示器
 ///
-/// 用法：
-/// ```dart
-/// GlassStarBar(starsEarned: 2, starKeys: _starKeys)
-/// ```
-/// [starKeys] 用于外部获取每颗星星的全局坐标（飞翔动画目标点）。
-class GlassStarBar extends StatelessWidget {
+/// 放置于"互动学习"标题行右侧。
+/// - 灰色圆角背景，无模糊，无发散光晕
+/// - 金色实心 vs 浅灰描边，清晰紧凑
+/// - [starKeys] 每颗星的 GlobalKey，供飞翔动画精确定位目标坐标
+class InlineStarBar extends StatelessWidget {
   final int starsEarned;
   static const int maxStars = 3;
 
-  /// 每颗星星的 GlobalKey，供飞翔动画定位目标坐标
   final List<GlobalKey> starKeys;
 
-  const GlassStarBar({
+  const InlineStarBar({
     Key? key,
     required this.starsEarned,
     required this.starKeys,
@@ -23,124 +20,38 @@ class GlassStarBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-          decoration: BoxDecoration(
-            // 毛玻璃基底：白色半透明
-            color: Colors.white.withValues(alpha: 0.22),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.45),
-              width: 1.2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.12),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(maxStars, (index) {
-              final earned = index < starsEarned;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: _StarItem(
-                  starKey: starKeys[index],
-                  earned: earned,
-                  index: index,
-                ),
-              );
-            }),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _StarItem extends StatelessWidget {
-  final GlobalKey starKey;
-  final bool earned;
-  final int index;
-
-  const _StarItem({
-    required this.starKey,
-    required this.earned,
-    required this.index,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 350),
-      switchInCurve: Curves.elasticOut,
-      switchOutCurve: Curves.easeIn,
-      transitionBuilder: (child, animation) {
-        return ScaleTransition(scale: animation, child: child);
-      },
-      child: SizedBox(
-        key: ValueKey('star_${index}_${earned ? 'on' : 'off'}'),
-        width: 26,
-        height: 26,
-        child: earned ? _EarnedStar(starKey: starKey) : _EmptyStar(starKey: starKey),
-      ),
-    );
-  }
-}
-
-class _EarnedStar extends StatelessWidget {
-  final GlobalKey starKey;
-
-  const _EarnedStar({required this.starKey});
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      key: starKey,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFFD700).withValues(alpha: 0.55),
-            blurRadius: 10,
-            spreadRadius: 1,
-          ),
-        ],
+        color: const Color(0xFFEEEEEE),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: const Icon(
-        Icons.star_rounded,
-        size: 26,
-        color: Color(0xFFFFD700),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(maxStars, (index) {
+          final earned = index < starsEarned;
+          return SizedBox(
+            key: starKeys[index],
+            width: 22,
+            height: 22,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              switchInCurve: Curves.elasticOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+              child: Icon(
+                key: ValueKey('star_${index}_$earned'),
+                earned ? Icons.star_rounded : Icons.star_outline_rounded,
+                size: 20,
+                color: earned
+                    ? const Color(0xFFFFB800) // 清晰饱和金色
+                    : const Color(0xFFBBBBBB), // 浅灰描边
+              ),
+            ),
+          );
+        }),
       ),
-    );
-  }
-}
-
-class _EmptyStar extends StatelessWidget {
-  final GlobalKey starKey;
-
-  const _EmptyStar({required this.starKey});
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      key: starKey,
-      Icons.star_border_rounded,
-      size: 26,
-      color: Colors.white.withValues(alpha: 0.75),
-      shadows: [
-        Shadow(
-          color: Colors.black.withValues(alpha: 0.2),
-          blurRadius: 4,
-        ),
-      ],
     );
   }
 }

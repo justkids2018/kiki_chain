@@ -3,19 +3,17 @@ import '../../../core/logging/app_logger.dart';
 import '../../models/learning/scene_progress.dart';
 import '../../../core/network/http_client.dart';
 
-/// 奖励服务 — 5 星制学习进度管理
+/// 奖励服务 — 3 星制学习进度管理
 ///
-/// 奖励规则（比例制，5 星）：
-///   ≥ 20% → 1 星
-///   ≥ 40% → 2 星
-///   ≥ 60% → 3 星
-///   ≥ 80% → 4 星
-///   ≥ 100% → 5 星（满星）
+/// 奖励规则（比例制，3 星）：
+///   ≥ 30% → 1 星
+///   ≥ 60% → 2 星
+///   ≥ 100% → 3 星（满星）
 ///
 /// 降级策略：接口失败时不授予星星，保持已有进度不变。
 class RewardService {
   static const String _keyPrefix = 'reward_v2_';
-  static const int maxStars = 5;
+  static const int maxStars = 3;
 
   final HttpClient? _httpClient;
 
@@ -61,15 +59,13 @@ class RewardService {
 
   // ─── 星星计算 ─────────────────────────────────────────────────
 
-  /// 根据已学数量和总数计算应得星星数（0~5）
+  /// 根据已学数量和总数计算应得星星数（0~3）
   int calculateStars(int learned, int total) {
     if (total <= 0) return 0;
     final ratio = learned / total;
-    if (ratio >= 1.0) return 5;
-    if (ratio >= 0.8) return 4;
-    if (ratio >= 0.6) return 3;
-    if (ratio >= 0.4) return 2;
-    if (ratio >= 0.2) return 1;
+    if (ratio >= 1.0) return 3;
+    if (ratio >= 0.6) return 2;
+    if (ratio >= 0.3) return 1;
     return 0;
   }
 

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 /// 星星飞翔动画控制器
 ///
-/// 在 [OverlayEntry] 上绘制一颗从起始位置飞向目标位置的星星。
-/// 动画结束后自动销毁 Overlay，并回调 [onArrived]。
+/// 效果：从点击位置 "嗖" 一下飞向目标星星位置（easeIn 起步快，
+/// easeOut 减速落地），落地后回调 [onArrived] 播放叮当声。
 class StarFlyAnimationController {
   OverlayEntry? _entry;
 
   /// 触发一次飞翔动画
   ///
-  /// [overlayState]：当前页面的 Overlay（通过 Overlay.of(context) 获取）
+  /// [overlayState]：当前页面的 Overlay
   /// [startPosition]：起飞点（全局坐标，词语点击处）
-  /// [targetPosition]：降落点（全局坐标，右上角对应星星的中心）
-  /// [onArrived]：动画完成时的回调（用于更新 starsEarned 和播放音效）
+  /// [targetPosition]：降落点（全局坐标，目标星星中心）
+  /// [onArrived]：动画完成回调（播放叮当音效 + 更新状态）
   void launch({
     required OverlayState overlayState,
     required Offset startPosition,
@@ -66,7 +66,7 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
   late final Animation<double> _scaleAnim;
   late final Animation<double> _opacityAnim;
 
-  static const double _starSize = 32.0;
+  static const double _starSize = 28.0;
 
   @override
   void initState() {
@@ -74,38 +74,44 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 650),
+      // 850ms：前半段"嗖"起速，后半段减速落地
+      duration: const Duration(milliseconds: 850),
     );
 
-    // 位置：从起点曲线飞向终点（略带弧线，通过 Curves.easeInCubic 模拟）
+    // 位置：先快后慢（decelerate = 嗖的感觉）
     _positionAnim = Tween<Offset>(
       begin: widget.startPosition,
       end: widget.targetPosition,
     ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+      CurvedAnimation(parent: _controller, curve: Curves.easeInCubic),
     );
 
-    // 缩放：从 0.6 放大至 1.0，到达后缩小至 0.8（弹跳感）
+    // 缩放：发射时略放大（兴奋感），落地时弹跳收缩
     _scaleAnim = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.6, end: 1.1)
+        tween: Tween(begin: 0.7, end: 1.3)
             .chain(CurveTween(curve: Curves.easeOut)),
-        weight: 60,
+        weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.1, end: 0.85)
+        tween: Tween(begin: 1.3, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 55,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 0.6)
             .chain(CurveTween(curve: Curves.easeIn)),
-        weight: 40,
+        weight: 15,
       ),
     ]).animate(_controller);
 
-    // 透明度：飞行中完全可见，最后 15% 淡出
+    // 透明度：飞行中可见，最后 20% 淡出消失
     _opacityAnim = TweenSequence<double>([
-      TweenSequenceItem(tween: ConstantTween(1.0), weight: 85),
+      TweenSequenceItem(tween: ConstantTween(1.0), weight: 80),
       TweenSequenceItem(
         tween: Tween(begin: 1.0, end: 0.0)
             .chain(CurveTween(curve: Curves.easeIn)),
-        weight: 15,
+        weight: 20,
       ),
     ]).animate(_controller);
 
@@ -128,7 +134,7 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
+      builder: (context, _) {
         final pos = _positionAnim.value;
         final scale = _scaleAnim.value;
         final opacity = _opacityAnim.value;
@@ -141,24 +147,10 @@ class _StarFlyWidgetState extends State<_StarFlyWidget>
               opacity: opacity,
               child: Transform.scale(
                 scale: scale,
-                child: Container(
-                  width: _starSize,
-                  height: _starSize,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFD700).withValues(alpha: 0.7),
-                        blurRadius: 12,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.star_rounded,
-                    size: _starSize,
-                    color: Color(0xFFFFD700),
-                  ),
+                child: const Icon(
+                  Icons.star_rounded,
+                  size: _starSize,
+                  color: Color(0xFFFFB800),
                 ),
               ),
             ),

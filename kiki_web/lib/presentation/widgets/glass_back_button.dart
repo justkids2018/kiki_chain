@@ -26,16 +26,23 @@ class GlassBackButton extends StatelessWidget {
             width: size,
             height: size,
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.45),
+              color: Colors.white.withOpacity(0.65),
               shape: BoxShape.circle,
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
-                width: 1,
+                color: Colors.white.withOpacity(0.5),
+                width: 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Icon(
               Icons.arrow_back_rounded,
-              color: Colors.white,
+              color: const Color(0xFF5A6B7B),
               size: iconSize,
             ),
           ),

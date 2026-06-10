@@ -1,0 +1,235 @@
+name: Product Static Sites Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      install_nginx:
+        description: "Install or update nginx config for all.keepthinking.me and down.kiki.keepthinking.me"
+        required: false
+        type: boolean
+        default: false
+      skip_url_check:
+        description: "Skip public URL checks after deploy"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  ALL_SOURCE_DIR: kiki_product_html/all
+  ALL_DOMAIN: all.keepthinking.me
+  ALL_URL: https://all.keepthinking.me/
+  ALL_DEFAULT_REMOTE_DIR: ~/product_all_static
+  HIKIKI_SOURCE_DIR: kiki_product_html/hikiki
+  HIKIKI_DOMAIN: down.kiki.keepthinking.me
+  HIKIKI_URL: https://down.kiki.keepthinking.me/index.html
+  HIKIKI_DEFAULT_REMOTE_DIR: ~/hikiki_static
+  DEFAULT_TLS_CERT_DOMAIN: all.keepthinking.me
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate static sites
+        run: |
+          set -euo pipefail
+          test -f "${ALL_SOURCE_DIR}/index.html"
+          test -f "${ALL_SOURCE_DIR}/img/app_icon.png"
+          grep -q "${HIKIKI_URL}" "${ALL_SOURCE_DIR}/index.html"
+          test -f "${HIKIKI_SOURCE_DIR}/index.html"
+          test -f "${HIKIKI_SOURCE_DIR}/hikik_version.json"
+          echo "All site files:"
+          find "${ALL_SOURCE_DIR}" -type f | sort
+          echo "HiKiki site files:"
+          find "${HIKIKI_SOURCE_DIR}" -type f | sort
+
+      - name: Validate deploy secrets
+        env:
+          TENCENT_SSH_PRIVATE_KEY: ${{ secrets.TENCENT_SSH_PRIVATE_KEY }}
+          DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+        run: |
+          set -euo pipefail
+          test -n "${TENCENT_SSH_PRIVATE_KEY}" || (echo "Missing secret: TENCENT_SSH_PRIVATE_KEY" && exit 1)
+          test -n "${DEPLOY_SERVER_IP}" || (echo "Missing secret: DEPLOY_SERVER_IP" && exit 1)
+          test -n "${DEPLOY_SSH_USER}" || (echo "Missing secret: DEPLOY_SSH_USER" && exit 1)
+
+      - name: Setup SSH
+        env:
+          TENCENT_SSH_PRIVATE_KEY: ${{ secrets.TENCENT_SSH_PRIVATE_KEY }}
+          DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
+        run: |
+          set -euo pipefail
+          SERVER_IP="$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf "%s\n" "${TENCENT_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${SERVER_IP}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Package static sites
+        run: |
+          set -euo pipefail
+          tar -C "${ALL_SOURCE_DIR}" -czf /tmp/product-all-static-site.tar.gz .
+          tar -C "${HIKIKI_SOURCE_DIR}" \
+            --exclude './https' \
+            --exclude './https/**' \
+            -czf /tmp/hikiki-static-site.tar.gz .
+          if tar -tzf /tmp/hikiki-static-site.tar.gz | grep -E '(^|/)(privkey|.*\.key$)' >/dev/null; then
+            echo "Private key detected in static package"
+            exit 1
+          fi
+
+      - name: Upload and switch releases
+        id: deploy
+        env:
+          DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          PRODUCT_ALL_REMOTE_DIR: ${{ secrets.PRODUCT_ALL_REMOTE_DIR }}
+          HIKIKI_REMOTE_DIR: ${{ secrets.HIKIKI_REMOTE_DIR }}
+        run: |
+          set -euo pipefail
+          SERVER_IP="$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')"
+          SSH_USER="$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')"
+          ALL_REMOTE_DIR="${PRODUCT_ALL_REMOTE_DIR:-${ALL_DEFAULT_REMOTE_DIR}}"
+          HIKIKI_REMOTE_DIR_VALUE="${HIKIKI_REMOTE_DIR:-${HIKIKI_DEFAULT_REMOTE_DIR}}"
+          RELEASE_ID="sha-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
+
+          scp /tmp/product-all-static-site.tar.gz "${SSH_USER}@${SERVER_IP}:/tmp/product-all-static-site-${RELEASE_ID}.tar.gz"
+          scp /tmp/hikiki-static-site.tar.gz "${SSH_USER}@${SERVER_IP}:/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz"
+
+          ssh "${SSH_USER}@${SERVER_IP}" "set -euo pipefail
+            deploy_site() {
+              local remote_dir=\"\$1\"
+              local remote_tar=\"\$2\"
+              local release_id=\"\$3\"
+              local release_dir=\"\${remote_dir}/releases/\${release_id}\"
+              mkdir -p \"\${release_dir}\"
+              tar -xzf \"\${remote_tar}\" -C \"\${release_dir}\"
+              rm -f \"\${remote_tar}\"
+              ln -sfn \"\${release_dir}\" \"\${remote_dir}/current\"
+              find \"\${remote_dir}/releases\" -mindepth 1 -maxdepth 1 -type d | sort | head -n -5 | xargs -r rm -rf
+              readlink -f \"\${remote_dir}/current\"
+            }
+            echo ALL_CURRENT=\$(deploy_site '${ALL_REMOTE_DIR}' '/tmp/product-all-static-site-${RELEASE_ID}.tar.gz' '${RELEASE_ID}')
+            echo HIKIKI_CURRENT=\$(deploy_site '${HIKIKI_REMOTE_DIR_VALUE}' '/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz' '${RELEASE_ID}')
+          " | tee /tmp/product-static-sites-current-paths.txt
+
+          ALL_CURRENT_PATH="$(grep '^ALL_CURRENT=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
+          HIKIKI_CURRENT_PATH="$(grep '^HIKIKI_CURRENT=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
+          echo "all_current_path=${ALL_CURRENT_PATH}" >> "$GITHUB_OUTPUT"
+          echo "hikiki_current_path=${HIKIKI_CURRENT_PATH}" >> "$GITHUB_OUTPUT"
+          echo "all_remote_dir=${ALL_REMOTE_DIR}" >> "$GITHUB_OUTPUT"
+          echo "hikiki_remote_dir=${HIKIKI_REMOTE_DIR_VALUE}" >> "$GITHUB_OUTPUT"
+          echo "release_id=${RELEASE_ID}" >> "$GITHUB_OUTPUT"
+
+      - name: Install nginx configs
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.install_nginx == 'true' }}
+        env:
+          DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          PRODUCT_ALL_TLS_CERT_DOMAIN: ${{ secrets.PRODUCT_ALL_TLS_CERT_DOMAIN }}
+          HIKIKI_TLS_CERT_DOMAIN: ${{ secrets.HIKIKI_TLS_CERT_DOMAIN }}
+          ALL_CURRENT_PATH: ${{ steps.deploy.outputs.all_current_path }}
+          HIKIKI_CURRENT_PATH: ${{ steps.deploy.outputs.hikiki_current_path }}
+        run: |
+          set -euo pipefail
+          SERVER_IP="$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')"
+          SSH_USER="$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')"
+          ALL_TLS_CERT_DOMAIN="${PRODUCT_ALL_TLS_CERT_DOMAIN:-${DEFAULT_TLS_CERT_DOMAIN}}"
+          HIKIKI_TLS_CERT_DOMAIN_VALUE="${HIKIKI_TLS_CERT_DOMAIN:-${DEFAULT_TLS_CERT_DOMAIN}}"
+
+          cat >/tmp/product-static-sites.conf <<EOF
+          server {
+            listen 80;
+            server_name ${ALL_DOMAIN};
+
+            location /.well-known/acme-challenge/ {
+              root /var/www/certbot;
+              default_type text/plain;
+            }
+
+            location / {
+              return 301 https://\$host\$request_uri;
+            }
+          }
+
+          server {
+            listen 443 ssl http2;
+            server_name ${ALL_DOMAIN};
+
+            ssl_certificate /etc/letsencrypt/live/${ALL_TLS_CERT_DOMAIN}/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/${ALL_TLS_CERT_DOMAIN}/privkey.pem;
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_prefer_server_ciphers on;
+            ssl_session_cache shared:SSL:10m;
+
+            root ${ALL_CURRENT_PATH};
+            index index.html;
+
+            location / {
+              try_files \$uri \$uri/ /index.html;
+            }
+          }
+
+          server {
+            listen 80;
+            server_name ${HIKIKI_DOMAIN};
+
+            location /.well-known/acme-challenge/ {
+              root /var/www/certbot;
+              default_type text/plain;
+            }
+
+            location / {
+              return 301 https://\$host\$request_uri;
+            }
+          }
+
+          server {
+            listen 443 ssl http2;
+            server_name ${HIKIKI_DOMAIN};
+
+            ssl_certificate /etc/letsencrypt/live/${HIKIKI_TLS_CERT_DOMAIN_VALUE}/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/${HIKIKI_TLS_CERT_DOMAIN_VALUE}/privkey.pem;
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_prefer_server_ciphers on;
+            ssl_session_cache shared:SSL:10m;
+
+            root ${HIKIKI_CURRENT_PATH};
+            index index.html;
+
+            location / {
+              try_files \$uri \$uri/ /index.html;
+            }
+          }
+          EOF
+
+          scp /tmp/product-static-sites.conf "${SSH_USER}@${SERVER_IP}:/tmp/product-static-sites.conf"
+          ssh "${SSH_USER}@${SERVER_IP}" "sudo mkdir -p /etc/nginx/conf.d && sudo mv /tmp/product-static-sites.conf /etc/nginx/conf.d/product-static-sites.conf && sudo nginx -t && sudo systemctl reload nginx"
+
+      - name: Verify public URLs
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.skip_url_check == 'true') }}
+        run: |
+          set -euo pipefail
+          curl -fsSIL --retry 5 --retry-delay 3 "${ALL_URL}" | tee /tmp/product-all-url-check.txt
+          curl -fsSIL --retry 5 --retry-delay 3 "${HIKIKI_URL}" | tee /tmp/hikiki-url-check.txt
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "### Product Static Sites Release" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Site | URL | Remote Dir | Current Path |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|-----|------------|--------------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| All Products | \`${ALL_URL}\` | \`${{ steps.deploy.outputs.all_remote_dir }}\` | \`${{ steps.deploy.outputs.all_current_path }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| HiKiki Download | \`${HIKIKI_URL}\` | \`${{ steps.deploy.outputs.hikiki_remote_dir }}\` | \`${{ steps.deploy.outputs.hikiki_current_path }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Release: \`${{ steps.deploy.outputs.release_id }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Status: \`${{ job.status }}\`" >> "$GITHUB_STEP_SUMMARY"

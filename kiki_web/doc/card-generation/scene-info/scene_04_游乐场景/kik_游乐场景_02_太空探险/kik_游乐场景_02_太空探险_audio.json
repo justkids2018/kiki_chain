@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "火箭",
+    "text_pinyin": "huǒ jiàn",
+    "text_english": "Rocket",
+    "text_phonetic": "/ˈrɑːkɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 293,
+            "y": 72
+          },
+          {
+            "x": 404,
+            "y": 72
+          },
+          {
+            "x": 293,
+            "y": 158
+          },
+          {
+            "x": 404,
+            "y": 158
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 131,
+            "y": 52
+          },
+          {
+            "x": 305,
+            "y": 52
+          },
+          {
+            "x": 131,
+            "y": 446
+          },
+          {
+            "x": 305,
+            "y": 446
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/火箭-608dad_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/火箭-608dad_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/rocket-608dad_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/rocket-608dad_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "宇航员",
+    "text_pinyin": "yǔ háng yuán",
+    "text_english": "Astronaut",
+    "text_phonetic": "/ˈæstrənɔːt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 882,
+            "y": 371
+          },
+          {
+            "x": 1012,
+            "y": 371
+          },
+          {
+            "x": 882,
+            "y": 478
+          },
+          {
+            "x": 1012,
+            "y": 478
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 760,
+            "y": 435
+          },
+          {
+            "x": 930,
+            "y": 435
+          },
+          {
+            "x": 760,
+            "y": 735
+          },
+          {
+            "x": 930,
+            "y": 735
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/宇航员-839ff7_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/宇航员-839ff7_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/astronaut-839ff7_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/astronaut-839ff7_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "月球",
+    "text_pinyin": "yuè qiú",
+    "text_english": "Moon",
+    "text_phonetic": "/muːn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 433,
+            "y": 856
+          },
+          {
+            "x": 544,
+            "y": 856
+          },
+          {
+            "x": 433,
+            "y": 971
+          },
+          {
+            "x": 544,
+            "y": 971
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 289,
+            "y": 758
+          },
+          {
+            "x": 519,
+            "y": 758
+          },
+          {
+            "x": 289,
+            "y": 930
+          },
+          {
+            "x": 519,
+            "y": 930
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/月球-5be838_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/月球-5be838_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/moon-5be838_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/moon-5be838_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "星星",
+    "text_pinyin": "xīng xīng",
+    "text_english": "Star",
+    "text_phonetic": "/stɑːr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 503,
+            "y": 60
+          },
+          {
+            "x": 624,
+            "y": 60
+          },
+          {
+            "x": 503,
+            "y": 151
+          },
+          {
+            "x": 624,
+            "y": 151
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 589,
+            "y": 159
+          },
+          {
+            "x": 707,
+            "y": 159
+          },
+          {
+            "x": 589,
+            "y": 258
+          },
+          {
+            "x": 707,
+            "y": 258
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/星星-e9576b_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/星星-e9576b_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/star-e9576b_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/star-e9576b_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "飞碟",
+    "text_pinyin": "fēi dié",
+    "text_english": "UFO",
+    "text_phonetic": "/juː ɛf oʊ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 724,
+            "y": 86
+          },
+          {
+            "x": 834,
+            "y": 86
+          },
+          {
+            "x": 724,
+            "y": 174
+          },
+          {
+            "x": 834,
+            "y": 174
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 740,
+            "y": 189
+          },
+          {
+            "x": 963,
+            "y": 189
+          },
+          {
+            "x": 740,
+            "y": 337
+          },
+          {
+            "x": 963,
+            "y": 337
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/飞碟-1e7690_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/飞碟-1e7690_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/ufo-1e7690_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/ufo-1e7690_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "望远镜",
+    "text_pinyin": "wàng yuǎn jìng",
+    "text_english": "Telescope",
+    "text_phonetic": "/ˈtɛlɪskoʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 21,
+            "y": 485
+          },
+          {
+            "x": 159,
+            "y": 485
+          },
+          {
+            "x": 21,
+            "y": 565
+          },
+          {
+            "x": 159,
+            "y": 565
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 35,
+            "y": 543
+          },
+          {
+            "x": 317,
+            "y": 543
+          },
+          {
+            "x": 35,
+            "y": 736
+          },
+          {
+            "x": 317,
+            "y": 736
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/望远镜-64d4d6_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/望远镜-64d4d6_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/telescope-64d4d6_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/telescope-64d4d6_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "太阳",
+    "text_pinyin": "tài yáng",
+    "text_english": "Sun",
+    "text_phonetic": "/sʌn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 845,
+            "y": 865
+          },
+          {
+            "x": 957,
+            "y": 865
+          },
+          {
+            "x": 845,
+            "y": 970
+          },
+          {
+            "x": 957,
+            "y": 970
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 798,
+            "y": 719
+          },
+          {
+            "x": 971,
+            "y": 719
+          },
+          {
+            "x": 798,
+            "y": 887
+          },
+          {
+            "x": 971,
+            "y": 887
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/太阳-80e2a7_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/太阳-80e2a7_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/sun-80e2a7_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/sun-80e2a7_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "地球",
+    "text_pinyin": "dì qiú",
+    "text_english": "Earth",
+    "text_phonetic": "/ɜːrθ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 638,
+            "y": 876
+          },
+          {
+            "x": 750,
+            "y": 876
+          },
+          {
+            "x": 638,
+            "y": 986
+          },
+          {
+            "x": 750,
+            "y": 986
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 612,
+            "y": 700
+          },
+          {
+            "x": 793,
+            "y": 700
+          },
+          {
+            "x": 612,
+            "y": 878
+          },
+          {
+            "x": 793,
+            "y": 878
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_02_太空探险/地球-163d7a_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/地球-163d7a_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_02_太空探险/earth-163d7a_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_02_太空探险/earth-163d7a_en.mp3"
+  }
+]

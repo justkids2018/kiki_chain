@@ -16,6 +16,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   static const Duration _minimumSplashDuration = Duration(milliseconds: 300);
+  static const Duration _authInitializationTimeout = Duration(seconds: 4);
 
   @override
   void initState() {
@@ -26,22 +27,27 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _checkLoginStatus() async {
     final authController = Get.find<AuthController>();
 
-    // 等待认证状态初始化完成
-    await _waitAuthInitialization(authController);
+    // 等待认证状态初始化完成，但不能无限停留在启动页。
+    final authReady = await _waitAuthInitialization(authController);
+    if (!mounted) return;
 
     // 已登录用户直接进入首页，未登录用户稍作延迟后进入欢迎页
-    if (authController.isLoggedIn || authController.isGuestMode) {
+    if (authReady &&
+        (authController.isLoggedIn || authController.isGuestMode)) {
       Get.offAllNamed(AppConstants.routeHome);
     } else {
       await Future.delayed(_minimumSplashDuration);
+      if (!mounted) return;
       Get.offAllNamed(AppConstants.routeWelcome);
     }
   }
 
-  Future<void> _waitAuthInitialization(AuthController authController) async {
-    while (!authController.isInitialized) {
+  Future<bool> _waitAuthInitialization(AuthController authController) async {
+    final deadline = DateTime.now().add(_authInitializationTimeout);
+    while (!authController.isInitialized && DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
+    return authController.isInitialized;
   }
 
   @override
@@ -51,7 +57,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Center(
         child: Image.asset(
           'assets/images/kiki_welcome.png',
-          fit: BoxFit.cover,
+          fit: BoxFit.fitHeight,
           width: double.infinity,
           height: double.infinity,
         ),

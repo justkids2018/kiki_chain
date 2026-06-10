@@ -189,7 +189,6 @@ class InteractiveImageController extends GetxController {
       await Future.wait([
         _loadRegions(),
         _loadImageDimensions(),
-        _loadLearningProgress(), // 加载学习进度
       ]).timeout(
         const Duration(seconds: 15),
         onTimeout: () {
@@ -205,12 +204,21 @@ class InteractiveImageController extends GetxController {
       loadingProgress.value = 1.0;
       await Future.delayed(const Duration(milliseconds: 200));
       isLoaded.value = true;
+      _loadLearningProgressInBackground();
       AppLogger.info('Initialization completed successfully');
     } catch (e) {
       AppLogger.error('Initialization error', e);
       errorMessage.value = "Failed to initialize: $e";
       isLoaded.value = true; // Set to loaded to show error UI
     }
+  }
+
+  void _loadLearningProgressInBackground() {
+    unawaited(
+      _loadLearningProgress().catchError((e) {
+        AppLogger.error('后台加载学习进度失败', e);
+      }),
+    );
   }
 
   Future<void> _loadRegions() async {

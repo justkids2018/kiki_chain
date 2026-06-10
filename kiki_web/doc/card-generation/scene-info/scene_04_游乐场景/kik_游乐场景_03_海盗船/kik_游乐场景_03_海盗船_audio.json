@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "海盗船",
+    "text_pinyin": "hǎi dào chuán",
+    "text_english": "Pirate Ship",
+    "text_phonetic": "/ˈpaɪrət ʃɪp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 525,
+            "y": 55
+          },
+          {
+            "x": 686,
+            "y": 55
+          },
+          {
+            "x": 525,
+            "y": 158
+          },
+          {
+            "x": 686,
+            "y": 158
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 485,
+            "y": 351
+          },
+          {
+            "x": 671,
+            "y": 351
+          },
+          {
+            "x": 485,
+            "y": 593
+          },
+          {
+            "x": 671,
+            "y": 593
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/海盗船-04afe6_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/海盗船-04afe6_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/pirate-ship-04afe6_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/pirate-ship-04afe6_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "藏宝图",
+    "text_pinyin": "cáng bǎo tú",
+    "text_english": "Treasure Map",
+    "text_phonetic": "/ˈtrɛʒər mæp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 797,
+            "y": 376
+          },
+          {
+            "x": 946,
+            "y": 376
+          },
+          {
+            "x": 797,
+            "y": 471
+          },
+          {
+            "x": 946,
+            "y": 471
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 692,
+            "y": 552
+          },
+          {
+            "x": 900,
+            "y": 552
+          },
+          {
+            "x": 692,
+            "y": 709
+          },
+          {
+            "x": 900,
+            "y": 709
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/藏宝图-3f73d3_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/藏宝图-3f73d3_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/treasure-map-3f73d3_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/treasure-map-3f73d3_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "宝箱",
+    "text_pinyin": "bǎo xiāng",
+    "text_english": "Treasure Chest",
+    "text_phonetic": "/ˈtrɛʒər tʃɛst/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 429,
+            "y": 812
+          },
+          {
+            "x": 566,
+            "y": 812
+          },
+          {
+            "x": 429,
+            "y": 941
+          },
+          {
+            "x": 566,
+            "y": 941
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 446,
+            "y": 620
+          },
+          {
+            "x": 625,
+            "y": 620
+          },
+          {
+            "x": 446,
+            "y": 807
+          },
+          {
+            "x": 625,
+            "y": 807
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/宝箱-ffca08_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/宝箱-ffca08_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/treasure-chest-ffca08_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/treasure-chest-ffca08_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "望远镜",
+    "text_pinyin": "wàng yuǎn jìng",
+    "text_english": "Telescope",
+    "text_phonetic": "/ˈtɛlɪskoʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 7,
+            "y": 454
+          },
+          {
+            "x": 153,
+            "y": 454
+          },
+          {
+            "x": 7,
+            "y": 545
+          },
+          {
+            "x": 153,
+            "y": 545
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 184,
+            "y": 300
+          },
+          {
+            "x": 326,
+            "y": 300
+          },
+          {
+            "x": 184,
+            "y": 652
+          },
+          {
+            "x": 326,
+            "y": 652
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/望远镜-3ab8be_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/望远镜-3ab8be_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/telescope-3ab8be_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/telescope-3ab8be_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "船帆",
+    "text_pinyin": "chuán fān",
+    "text_english": "Sail",
+    "text_phonetic": "/seɪl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 234,
+            "y": 71
+          },
+          {
+            "x": 344,
+            "y": 71
+          },
+          {
+            "x": 234,
+            "y": 167
+          },
+          {
+            "x": 344,
+            "y": 167
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 331,
+            "y": 163
+          },
+          {
+            "x": 490,
+            "y": 163
+          },
+          {
+            "x": 331,
+            "y": 362
+          },
+          {
+            "x": 490,
+            "y": 362
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/船帆-b8377b_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/船帆-b8377b_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/sail-b8377b_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/sail-b8377b_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "锚",
+    "text_pinyin": "máo",
+    "text_english": "Anchor",
+    "text_phonetic": "/ˈæŋkər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 16,
+            "y": 654
+          },
+          {
+            "x": 127,
+            "y": 654
+          },
+          {
+            "x": 16,
+            "y": 751
+          },
+          {
+            "x": 127,
+            "y": 751
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 117,
+            "y": 736
+          },
+          {
+            "x": 273,
+            "y": 736
+          },
+          {
+            "x": 117,
+            "y": 881
+          },
+          {
+            "x": 273,
+            "y": 881
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/锚-f4dbf0_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/锚-f4dbf0_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/anchor-f4dbf0_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/anchor-f4dbf0_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "鹦鹉",
+    "text_pinyin": "yīng wǔ",
+    "text_english": "Parrot",
+    "text_phonetic": "/ˈpærət/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 771,
+            "y": 179
+          },
+          {
+            "x": 875,
+            "y": 179
+          },
+          {
+            "x": 771,
+            "y": 271
+          },
+          {
+            "x": 875,
+            "y": 271
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 662,
+            "y": 139
+          },
+          {
+            "x": 762,
+            "y": 139
+          },
+          {
+            "x": 662,
+            "y": 345
+          },
+          {
+            "x": 762,
+            "y": 345
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/鹦鹉-4f0e5d_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/鹦鹉-4f0e5d_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/parrot-4f0e5d_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/parrot-4f0e5d_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "金币",
+    "text_pinyin": "jīn bì",
+    "text_english": "Gold Coin",
+    "text_phonetic": "/ɡoʊld kɔɪn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 731,
+            "y": 851
+          },
+          {
+            "x": 840,
+            "y": 851
+          },
+          {
+            "x": 731,
+            "y": 980
+          },
+          {
+            "x": 840,
+            "y": 980
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 676,
+            "y": 784
+          },
+          {
+            "x": 952,
+            "y": 784
+          },
+          {
+            "x": 676,
+            "y": 907
+          },
+          {
+            "x": 952,
+            "y": 907
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_03_海盗船/金币-b3a01f_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/金币-b3a01f_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_03_海盗船/gold-coin-b3a01f_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_03_海盗船/gold-coin-b3a01f_en.mp3"
+  }
+]

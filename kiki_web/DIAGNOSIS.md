@@ -86,4 +86,39 @@ Calculated display size - 0.0 x 0.0
 3. 验证日志显示正确的非零约束：`constraints - XXX x YYY (both > 0)`
 4. 确认图片正常显示和交互
 
+---
+
+# DIAGNOSIS: Android 编译找不到 SharedPreferencesPlugin
+
+## Failure Signature
+`GeneratedPluginRegistrant.java` 编译失败：
+`找不到符号 io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin`
+
+## Root Cause
+这是一次构建产物不一致问题：`shared_preferences_android` 的 Kotlin 插件类在脏构建状态下未被正确产出，导致应用模块编译 `GeneratedPluginRegistrant.java` 时无法解析 `SharedPreferencesPlugin`。
+
+通过完整清理 Flutter 构建缓存与插件生成文件后，插件类恢复正常，构建通过。
+
+## Evidence
+- 失败日志位置：`android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java:74`
+- 失败前插件注册代码引用：`new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin()`
+- 本地执行 `flutter clean && flutter pub get && flutter build apk --debug` 后，问题消失并成功产出 `build/app/outputs/flutter-apk/app-debug.apk`
+
+## Affected Scope
+- `android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java`
+- Flutter/Gradle 本地构建缓存（`build/`、`.dart_tool/`、插件生成元数据）
+
+## Patch Plan
+1. 执行 `flutter clean`
+2. 执行 `flutter pub get`
+3. 重新执行 `flutter build apk --debug`（或 `flutter run`）
+
+## Regression Risk
+低。未修改业务代码，仅重建本地产物与缓存。
+
+## Verification Plan
+1. 运行 `flutter build apk --debug`
+2. 确认无 `SharedPreferencesPlugin` 符号缺失错误
+3. 确认产物存在：`build/app/outputs/flutter-apk/app-debug.apk`
+
 

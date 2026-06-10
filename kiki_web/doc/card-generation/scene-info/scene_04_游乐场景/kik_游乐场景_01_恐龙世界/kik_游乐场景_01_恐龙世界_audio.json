@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "霸王龙",
+    "text_pinyin": "bà wáng lóng",
+    "text_english": "T-Rex",
+    "text_phonetic": "/tiː rɛks/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 54,
+            "y": 138
+          },
+          {
+            "x": 203,
+            "y": 138
+          },
+          {
+            "x": 54,
+            "y": 239
+          },
+          {
+            "x": 203,
+            "y": 239
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 14,
+            "y": 151
+          },
+          {
+            "x": 396,
+            "y": 151
+          },
+          {
+            "x": 14,
+            "y": 521
+          },
+          {
+            "x": 396,
+            "y": 521
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/霸王龙-05e8e9-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/霸王龙-05e8e9-cn.mp3",
+    "audio_en_key": "kiki/audio/t-rex-05e8e9-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/t-rex-05e8e9-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "三角龙",
+    "text_pinyin": "sān jiǎo lóng",
+    "text_english": "Triceratops",
+    "text_phonetic": "/traɪˈsɛrətɑːps/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 846,
+            "y": 257
+          },
+          {
+            "x": 992,
+            "y": 257
+          },
+          {
+            "x": 846,
+            "y": 358
+          },
+          {
+            "x": 992,
+            "y": 358
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 689,
+            "y": 365
+          },
+          {
+            "x": 1017,
+            "y": 365
+          },
+          {
+            "x": 689,
+            "y": 594
+          },
+          {
+            "x": 1017,
+            "y": 594
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/三角龙-899d3b-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/三角龙-899d3b-cn.mp3",
+    "audio_en_key": "kiki/audio/triceratops-899d3b-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/triceratops-899d3b-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "翼龙",
+    "text_pinyin": "yì lóng",
+    "text_english": "Pterodactyl",
+    "text_phonetic": "/ˌtɛrəˈdæktɪl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 291,
+            "y": 18
+          },
+          {
+            "x": 422,
+            "y": 18
+          },
+          {
+            "x": 291,
+            "y": 116
+          },
+          {
+            "x": 422,
+            "y": 116
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 398,
+            "y": 21
+          },
+          {
+            "x": 649,
+            "y": 21
+          },
+          {
+            "x": 398,
+            "y": 189
+          },
+          {
+            "x": 649,
+            "y": 189
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/翼龙-17ea50-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/翼龙-17ea50-cn.mp3",
+    "audio_en_key": "kiki/audio/pterodactyl-17ea50-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/pterodactyl-17ea50-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "恐龙蛋",
+    "text_pinyin": "kǒng lóng dàn",
+    "text_english": "Dinosaur Egg",
+    "text_phonetic": "/ˈdaɪnəsɔːr ɛɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 227,
+            "y": 829
+          },
+          {
+            "x": 374,
+            "y": 829
+          },
+          {
+            "x": 227,
+            "y": 926
+          },
+          {
+            "x": 374,
+            "y": 926
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 225,
+            "y": 657
+          },
+          {
+            "x": 448,
+            "y": 657
+          },
+          {
+            "x": 225,
+            "y": 785
+          },
+          {
+            "x": 448,
+            "y": 785
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/恐龙蛋-5ee455-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/恐龙蛋-5ee455-cn.mp3",
+    "audio_en_key": "kiki/audio/dinosaur-egg-5ee455-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/dinosaur-egg-5ee455-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "化石",
+    "text_pinyin": "huà shí",
+    "text_english": "Fossil",
+    "text_phonetic": "/ˈfɑːsl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 833,
+            "y": 863
+          },
+          {
+            "x": 962,
+            "y": 863
+          },
+          {
+            "x": 833,
+            "y": 960
+          },
+          {
+            "x": 962,
+            "y": 960
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 815,
+            "y": 694
+          },
+          {
+            "x": 1012,
+            "y": 694
+          },
+          {
+            "x": 815,
+            "y": 824
+          },
+          {
+            "x": 1012,
+            "y": 824
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/化石-816a7c-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/化石-816a7c-cn.mp3",
+    "audio_en_key": "kiki/audio/fossil-816a7c-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/fossil-816a7c-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "火山",
+    "text_pinyin": "huǒ shān",
+    "text_english": "Volcano",
+    "text_phonetic": "/vɑːlˈkeɪnoʊ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 848,
+            "y": 116
+          },
+          {
+            "x": 977,
+            "y": 116
+          },
+          {
+            "x": 848,
+            "y": 214
+          },
+          {
+            "x": 977,
+            "y": 214
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 646,
+            "y": 66
+          },
+          {
+            "x": 838,
+            "y": 66
+          },
+          {
+            "x": 646,
+            "y": 332
+          },
+          {
+            "x": 838,
+            "y": 332
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/火山-fd4724-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/火山-fd4724-cn.mp3",
+    "audio_en_key": "kiki/audio/volcano-fd4724-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/volcano-fd4724-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "骨架",
+    "text_pinyin": "gǔ jià",
+    "text_english": "Skeleton",
+    "text_phonetic": "/ˈskɛlɪtn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 31,
+            "y": 780
+          },
+          {
+            "x": 162,
+            "y": 780
+          },
+          {
+            "x": 31,
+            "y": 879
+          },
+          {
+            "x": 162,
+            "y": 879
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 16,
+            "y": 558
+          },
+          {
+            "x": 218,
+            "y": 558
+          },
+          {
+            "x": 16,
+            "y": 763
+          },
+          {
+            "x": 218,
+            "y": 763
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/骨架-49cb0d-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/骨架-49cb0d-cn.mp3",
+    "audio_en_key": "kiki/audio/skeleton-49cb0d-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/skeleton-49cb0d-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "脚印",
+    "text_pinyin": "jiǎo yìn",
+    "text_english": "Footprint",
+    "text_phonetic": "/ˈfʊtprɪnt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 590,
+            "y": 867
+          },
+          {
+            "x": 719,
+            "y": 867
+          },
+          {
+            "x": 590,
+            "y": 987
+          },
+          {
+            "x": 719,
+            "y": 987
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 481,
+            "y": 750
+          },
+          {
+            "x": 719,
+            "y": 750
+          },
+          {
+            "x": 481,
+            "y": 866
+          },
+          {
+            "x": 719,
+            "y": 866
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/脚印-309d73-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/脚印-309d73-cn.mp3",
+    "audio_en_key": "kiki/audio/footprint-309d73-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/footprint-309d73-en.mp3"
+  }
+]

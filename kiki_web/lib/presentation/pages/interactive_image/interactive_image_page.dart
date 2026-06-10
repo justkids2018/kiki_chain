@@ -224,63 +224,69 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   Widget _buildLargeImageContainer({
     required InteractiveImageController controller,
   }) {
-    return AspectRatio(
-      aspectRatio: 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            // Strong edge shadow for floating effect
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 60,
-              offset: const Offset(0, 30),
-              spreadRadius: -10,
-            ),
-            // Mid-range shadow
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 30,
-              offset: const Offset(0, 15),
-              spreadRadius: -5,
-            ),
-            // Close shadow for depth
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final side = constraints.biggest.shortestSide;
-              if (side <= 0) {
-                return const SizedBox.shrink();
-              }
-
-              return InteractiveViewer(
-                constrained: false,
-                minScale: 0.5,
-                maxScale: 4.0,
-                child: SizedBox(
-                  width: side,
-                  height: side,
-                  child: InteractiveImageView(
-                    imagePath: controller.imagePath,
-                    originalWidth: controller.imageWidth.value,
-                    originalHeight: controller.imageHeight.value,
-                    regions: controller.regions,
-                    onRegionTap: controller.speakRegion,
-                    onRegionTapDown: _triggerScreenDiffusion,
-                    onBlankAreaTap: controller.onBlankAreaClicked,
-                  ),
-                ),
-              );
-            },
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          // Strong edge shadow for floating effect
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 60,
+            offset: const Offset(0, 30),
+            spreadRadius: -10,
           ),
+          // Mid-range shadow
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+            spreadRadius: -5,
+          ),
+          // Close shadow for depth
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth.isFinite
+                ? constraints.maxWidth
+                : constraints.biggest.width;
+            final height = constraints.maxHeight.isFinite
+                ? constraints.maxHeight
+                : constraints.biggest.height;
+            final side = width > 0 && height > 0
+                ? (width < height ? width : height)
+                : (width > 0 ? width : height);
+
+            if (side <= 0) {
+              return const SizedBox.shrink();
+            }
+
+            return InteractiveViewer(
+              constrained: false,
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: SizedBox(
+                width: side,
+                height: side,
+                child: InteractiveImageView(
+                  imagePath: controller.imagePath,
+                  originalWidth: controller.imageWidth.value,
+                  originalHeight: controller.imageHeight.value,
+                  regions: controller.regions,
+                  onRegionTap: controller.speakRegion,
+                  onRegionTapDown: _triggerScreenDiffusion,
+                  onBlankAreaTap: controller.onBlankAreaClicked,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

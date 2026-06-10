@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "沙桶",
+    "text_pinyin": "shā tǒng",
+    "text_english": "Sand Bucket",
+    "text_phonetic": "/sænd ˈbʌkɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 29,
+            "y": 690
+          },
+          {
+            "x": 155,
+            "y": 690
+          },
+          {
+            "x": 29,
+            "y": 786
+          },
+          {
+            "x": 155,
+            "y": 786
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 222,
+            "y": 640
+          },
+          {
+            "x": 385,
+            "y": 640
+          },
+          {
+            "x": 222,
+            "y": 774
+          },
+          {
+            "x": 385,
+            "y": 774
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/沙桶-f2b42d_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/沙桶-f2b42d_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/sand-bucket-f2b42d_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/sand-bucket-f2b42d_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "铲子",
+    "text_pinyin": "chǎn zi",
+    "text_english": "Shovel",
+    "text_phonetic": "/ˈʃʌvl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 199,
+            "y": 855
+          },
+          {
+            "x": 309,
+            "y": 855
+          },
+          {
+            "x": 199,
+            "y": 965
+          },
+          {
+            "x": 309,
+            "y": 965
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 340,
+            "y": 777
+          },
+          {
+            "x": 481,
+            "y": 777
+          },
+          {
+            "x": 340,
+            "y": 892
+          },
+          {
+            "x": 481,
+            "y": 892
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/铲子-14e9a5_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/铲子-14e9a5_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/shovel-14e9a5_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/shovel-14e9a5_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "贝壳",
+    "text_pinyin": "bèi ké",
+    "text_english": "Shell",
+    "text_phonetic": "/ʃɛl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 503,
+            "y": 901
+          },
+          {
+            "x": 611,
+            "y": 901
+          },
+          {
+            "x": 503,
+            "y": 1021
+          },
+          {
+            "x": 611,
+            "y": 1021
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 497,
+            "y": 796
+          },
+          {
+            "x": 649,
+            "y": 796
+          },
+          {
+            "x": 497,
+            "y": 882
+          },
+          {
+            "x": 649,
+            "y": 882
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/贝壳-b428ee_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/贝壳-b428ee_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/shell-b428ee_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/shell-b428ee_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "海星",
+    "text_pinyin": "hǎi xīng",
+    "text_english": "Starfish",
+    "text_phonetic": "/ˈstɑːrfɪʃ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 823,
+            "y": 832
+          },
+          {
+            "x": 946,
+            "y": 832
+          },
+          {
+            "x": 823,
+            "y": 950
+          },
+          {
+            "x": 946,
+            "y": 950
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 677,
+            "y": 785
+          },
+          {
+            "x": 862,
+            "y": 785
+          },
+          {
+            "x": 677,
+            "y": 886
+          },
+          {
+            "x": 862,
+            "y": 886
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/海星-5b9266_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/海星-5b9266_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/starfish-5b9266_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/starfish-5b9266_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "遮阳伞",
+    "text_pinyin": "zhē yáng sǎn",
+    "text_english": "Beach Umbrella",
+    "text_phonetic": "/biːtʃ ʌmˈbrɛlə/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 268,
+            "y": 98
+          },
+          {
+            "x": 421,
+            "y": 98
+          },
+          {
+            "x": 268,
+            "y": 193
+          },
+          {
+            "x": 421,
+            "y": 193
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 298,
+            "y": 178
+          },
+          {
+            "x": 571,
+            "y": 178
+          },
+          {
+            "x": 298,
+            "y": 345
+          },
+          {
+            "x": 571,
+            "y": 345
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/遮阳伞-cb4631_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/遮阳伞-cb4631_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/beach-umbrella-cb4631_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/beach-umbrella-cb4631_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "冲浪板",
+    "text_pinyin": "chōng làng bǎn",
+    "text_english": "Surfboard",
+    "text_phonetic": "/ˈsɜːrfbɔːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 572,
+            "y": 226
+          },
+          {
+            "x": 706,
+            "y": 226
+          },
+          {
+            "x": 572,
+            "y": 318
+          },
+          {
+            "x": 706,
+            "y": 318
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 546,
+            "y": 336
+          },
+          {
+            "x": 643,
+            "y": 336
+          },
+          {
+            "x": 546,
+            "y": 582
+          },
+          {
+            "x": 643,
+            "y": 582
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/冲浪板-bff686_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/冲浪板-bff686_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/surfboard-bff686_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/surfboard-bff686_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "泳圈",
+    "text_pinyin": "yǒng quān",
+    "text_english": "Swim Ring",
+    "text_phonetic": "/swɪm rɪŋ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 802,
+            "y": 336
+          },
+          {
+            "x": 927,
+            "y": 336
+          },
+          {
+            "x": 802,
+            "y": 444
+          },
+          {
+            "x": 927,
+            "y": 444
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 645,
+            "y": 444
+          },
+          {
+            "x": 839,
+            "y": 444
+          },
+          {
+            "x": 645,
+            "y": 571
+          },
+          {
+            "x": 839,
+            "y": 571
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/泳圈-5cb0f1_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/泳圈-5cb0f1_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/swim-ring-5cb0f1_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/swim-ring-5cb0f1_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "椰子树",
+    "text_pinyin": "yē zi shù",
+    "text_english": "Palm Tree",
+    "text_phonetic": "/pɑːm triː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 532,
+            "y": 23
+          },
+          {
+            "x": 712,
+            "y": 23
+          },
+          {
+            "x": 532,
+            "y": 169
+          },
+          {
+            "x": 712,
+            "y": 169
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 716,
+            "y": 20
+          },
+          {
+            "x": 858,
+            "y": 20
+          },
+          {
+            "x": 716,
+            "y": 328
+          },
+          {
+            "x": 858,
+            "y": 328
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/椰子树-e37aa8_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/椰子树-e37aa8_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_游乐场景_06_沙滩乐园/palm-tree-e37aa8_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_游乐场景_06_沙滩乐园/palm-tree-e37aa8_en.mp3"
+  }
+]

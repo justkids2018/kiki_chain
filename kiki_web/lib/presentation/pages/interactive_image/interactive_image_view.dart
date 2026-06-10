@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
 
@@ -155,12 +156,15 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
   /// 构建图片组件，支持本地和网络图片
   Widget _buildImage(String imagePath, BuildContext context) {
     return imagePath.startsWith('http://') || imagePath.startsWith('https://')
-        ? Image.network(
-            imagePath,
+        ? CachedNetworkImage(
+            imageUrl: imagePath,
             fit: BoxFit.fill,
-            errorBuilder: (context, error, stackTrace) {
-              return _buildErrorWidget(context, imagePath);
-            },
+            useOldImageOnUrlChange: true,
+            fadeInDuration: Duration.zero,
+            fadeOutDuration: Duration.zero,
+            placeholder: (_, __) => const SizedBox.expand(),
+            errorWidget: (context, url, error) =>
+                _buildErrorWidget(context, imagePath),
           )
         : Image.asset(
             imagePath,

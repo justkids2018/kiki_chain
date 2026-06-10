@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../../domain/entities/interactive_region.dart';
@@ -253,18 +254,32 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: InteractiveViewer(
-            minScale: 0.5,
-            maxScale: 4.0,
-            child: InteractiveImageView(
-              imagePath: controller.imagePath,
-              originalWidth: controller.imageWidth.value,
-              originalHeight: controller.imageHeight.value,
-              regions: controller.regions,
-              onRegionTap: controller.speakRegion,
-              onRegionTapDown: _triggerScreenDiffusion,
-              onBlankAreaTap: controller.onBlankAreaClicked,
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final side = constraints.biggest.shortestSide;
+              if (side <= 0) {
+                return const SizedBox.shrink();
+              }
+
+              return InteractiveViewer(
+                constrained: false,
+                minScale: 0.5,
+                maxScale: 4.0,
+                child: SizedBox(
+                  width: side,
+                  height: side,
+                  child: InteractiveImageView(
+                    imagePath: controller.imagePath,
+                    originalWidth: controller.imageWidth.value,
+                    originalHeight: controller.imageHeight.value,
+                    regions: controller.regions,
+                    onRegionTap: controller.speakRegion,
+                    onRegionTapDown: _triggerScreenDiffusion,
+                    onBlankAreaTap: controller.onBlankAreaClicked,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -476,10 +491,14 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
   Widget _buildBackgroundImage(String path) {
     if (path.startsWith('http')) {
-      return Image.network(
-        path,
+      return CachedNetworkImage(
+        imageUrl: path,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(color: Colors.grey[900]),
+        useOldImageOnUrlChange: true,
+        fadeInDuration: Duration.zero,
+        fadeOutDuration: Duration.zero,
+        placeholder: (_, __) => const SizedBox.expand(),
+        errorWidget: (_, __, ___) => Container(color: Colors.grey[900]),
       );
     }
     return Image.asset(
@@ -695,6 +714,10 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       ),
     );
 
+    if (!context.mounted) {
+      return;
+    }
+
     // 处理结果
     if (shouldPop == true) {
       // 用户确认退出
@@ -752,8 +775,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         isEarned ? Icons.star : Icons.star_border,
         size: 28,
         color: isEarned
-            ? const Color(0xFFFFD700)  // 金色
-            : Colors.white.withValues(alpha: 0.5),  // 灰色轮廓
+            ? const Color(0xFFFFD700) // 金色
+            : Colors.white.withValues(alpha: 0.5), // 灰色轮廓
         shadows: isEarned
             ? [
                 Shadow(

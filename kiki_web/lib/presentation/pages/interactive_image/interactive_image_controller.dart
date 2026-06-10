@@ -68,8 +68,7 @@ class InteractiveImageController extends GetxController {
         _scene = arguments['scene'];
         // 从 scene 对象中提取图片路径
         if (_scene is Map) {
-          _imagePath =
-              _scene['interactive_image'] ?? _scene['interactiveImage'] ?? '';
+          _imagePath = _resolveSceneImagePath(_scene);
         } else {
           // 如果是 Scene 对象，直接访问属性
           try {
@@ -120,6 +119,17 @@ class InteractiveImageController extends GetxController {
     AppLogger.debug('Has Scene = ${_scene != null}');
     AppLogger.debug('Current ImageItem = ${_currentImageItem?.title}');
     AppLogger.debug('Images count = ${_imagesList.length}');
+  }
+
+  String _resolveSceneImagePath(Map scene) {
+    final interactiveImage =
+        (scene['interactive_image'] ?? scene['interactiveImage'] ?? '')
+            .toString();
+    final coverImage =
+        (scene['cover_image'] ?? scene['coverImage'] ?? '').toString();
+    final resolved =
+        interactiveImage.trim().isNotEmpty ? interactiveImage : coverImage;
+    return resolved.trim();
   }
 
   /// 根据 JSON 文件名推断图片路径
@@ -179,7 +189,7 @@ class InteractiveImageController extends GetxController {
       await Future.wait([
         _loadRegions(),
         _loadImageDimensions(),
-        _loadLearningProgress(),  // 加载学习进度
+        _loadLearningProgress(), // 加载学习进度
       ]).timeout(
         const Duration(seconds: 15),
         onTimeout: () {
@@ -321,13 +331,13 @@ class InteractiveImageController extends GetxController {
   static const Duration _blankAreaClickTimeout = Duration(seconds: 2);
 
   // 星星奖励系统
-  final starsEarned = 0.obs;  // 当前获得的星星数（0-3）
-  final isSceneCompleted = false.obs;  // 场景是否已完成
-  final Set<String> _learnedRegionIds = {};  // 已学习的区域ID集合
-  final List<Map<String, dynamic>> _sessionLearnedRegions = [];  // 本次会话学习的区域
-  DateTime? _sessionStartTime;  // 会话开始时间
-  final showStarAnimation = false.obs;  // 是否显示星星动画
-  final latestStarCount = 0.obs;  // 最新获得的星星数（用于触发动画）
+  final starsEarned = 0.obs; // 当前获得的星星数（0-3）
+  final isSceneCompleted = false.obs; // 场景是否已完成
+  final Set<String> _learnedRegionIds = {}; // 已学习的区域ID集合
+  final List<Map<String, dynamic>> _sessionLearnedRegions = []; // 本次会话学习的区域
+  DateTime? _sessionStartTime; // 会话开始时间
+  final showStarAnimation = false.obs; // 是否显示星星动画
+  final latestStarCount = 0.obs; // 最新获得的星星数（用于触发动画）
 
   /// Speak a region's audio (Chinese and English)
   Future<void> speakRegion(InteractiveRegion region) async {
@@ -595,7 +605,8 @@ Interactive Image Diagnostics:
       'learned_at': DateTime.now().toIso8601String(),
     });
 
-    AppLogger.info('✅ 记录学习进度: $regionId (已学习 ${_learnedRegionIds.length}/${regions.length})');
+    AppLogger.info(
+        '✅ 记录学习进度: $regionId (已学习 ${_learnedRegionIds.length}/${regions.length})');
 
     // 检查是否触发新星星
     _checkStarReward();
@@ -611,12 +622,13 @@ Interactive Image Diagnostics:
     // 计算应该获得的星星数（1/3、2/3、3/3进度）
     int newStars = _calculateStars(learnedCount, totalRegions);
 
-    AppLogger.debug('进度计算: $learnedCount/$totalRegions → 应得星星: $newStars, 当前星星: ${starsEarned.value}');
+    AppLogger.debug(
+        '进度计算: $learnedCount/$totalRegions → 应得星星: $newStars, 当前星星: ${starsEarned.value}');
 
     // 如果是第3颗星，需要检查时间条件
     if (newStars == 3 && starsEarned.value < 3) {
       final studyTime = _getSessionDuration();
-      AppLogger.info('检查第3颗星时间条件: ${studyTime}秒 (需要>=30秒)');
+      AppLogger.info('检查第3颗星时间条件: $studyTime秒 (需要>=30秒)');
 
       if (studyTime < 30) {
         // 时间不够，只给2颗星
@@ -635,7 +647,7 @@ Interactive Image Diagnostics:
       starsEarned.value = newStars;
       latestStarCount.value = earnedNow;
 
-      AppLogger.info('🌟 触发星星奖励: 第${earnedNow}颗星');
+      AppLogger.info('🌟 触发星星奖励: 第$earnedNow颗星');
       _playStarRewardAnimation(earnedNow);
     }
   }
@@ -646,9 +658,9 @@ Interactive Image Diagnostics:
 
     double progress = learned / total;
 
-    if (progress >= 1.0) return 3;      // 100%
-    if (progress >= 0.67) return 2;     // 67%
-    if (progress >= 0.33) return 1;     // 33%
+    if (progress >= 1.0) return 3; // 100%
+    if (progress >= 0.67) return 2; // 67%
+    if (progress >= 0.33) return 1; // 33%
     return 0;
   }
 
@@ -694,7 +706,7 @@ Interactive Image Diagnostics:
   Future<void> _loadLearningProgress() async {
     try {
       // 获取当前用户ID（TODO: 从用户服务获取）
-      const currentUserId = 'guest_user';  // 临时使用guest
+      const currentUserId = 'guest_user'; // 临时使用guest
       final sceneId = _getSceneId();
 
       if (sceneId.isEmpty) {
@@ -709,12 +721,10 @@ Interactive Image Diagnostics:
       );
 
       // 如果本地没有，尝试从服务器获取（可选）
-      if (progress == null) {
-        progress = await _progressService.fetchProgressFromServer(
-          currentUserId,
-          sceneId,
-        );
-      }
+      progress ??= await _progressService.fetchProgressFromServer(
+        currentUserId,
+        sceneId,
+      );
 
       // 恢复进度状态
       if (progress != null) {

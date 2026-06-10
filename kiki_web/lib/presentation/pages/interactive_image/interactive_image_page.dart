@@ -55,6 +55,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   void dispose() {
     _diffusionController.dispose();
     _starFlyController.dispose();
+    Get.delete<InteractiveImageController>(force: true);
     super.dispose();
   }
 

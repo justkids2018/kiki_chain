@@ -31,12 +31,11 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   // 3 颗星星的 GlobalKey（用于飞翔动画定位目标坐标）
   final List<GlobalKey> _starKeys = List.generate(3, (_) => GlobalKey());
 
-  // 飞翔动画控制器
-  final StarFlyAnimationController _starFlyController =
-      StarFlyAnimationController();
-
   // 最近一次点击的全局坐标（作为星星飞翔起点）
   Offset _lastTapPosition = Offset.zero;
+
+  // 星星奖励监听器 Worker
+  Worker? _starWorker;
 
   // Platform-specific sizing
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
@@ -48,12 +47,36 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   @override
   void initState() {
     super.initState();
+
+    // 确保控制器已注册并获取实例
+    final controller = Get.isRegistered<InteractiveImageController>()
+        ? Get.find<InteractiveImageController>()
+        : Get.put(InteractiveImageController());
+
+    // 调用参数刷新逻辑以防控制器被复用
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        controller.refreshArguments();
+      }
+    });
+
+    // 在 initState 中统一监听星星事件，避免每次 build 重复绑定导致并发和内存泄漏
+    _starWorker = ever(controller.starRewardEvent, (StarRewardEvent? event) {
+      if (event == null) return;
+      if (mounted) {
+        _launchStarFlyAnimation(context, controller, event.starIndex);
+        // 消费事件，防止重复触发
+        Future.microtask(() => controller.starRewardEvent.value = null);
+      }
+    });
   }
 
   @override
   void dispose() {
     _diffusionController.dispose();
-    _starFlyController.dispose();
+    _starWorker?.dispose();
+    // 取消并清理所有当前播放中的悬浮星星动画
+    StarRewardAnimator.cancel();
     Get.delete<InteractiveImageController>(force: true);
     super.dispose();
   }
@@ -61,17 +84,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final controller = Get.isRegistered<InteractiveImageController>()
-        ? Get.find<InteractiveImageController>()
-        : Get.put(InteractiveImageController());
-
-    // 监听星星奖励事件，触发飞翔动画
-    ever(controller.starRewardEvent, (StarRewardEvent? event) {
-      if (event == null) return;
-      _launchStarFlyAnimation(context, controller, event.starIndex);
-      // 消费事件，防止重复触发
-      Future.microtask(() => controller.starRewardEvent.value = null);
-    });
+    final controller = Get.find<InteractiveImageController>();
 
     return WillPopScope(
       // 禁用 Android 返回键 / iOS 左滑手势（旧 API 兼容）
@@ -183,8 +196,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     InteractiveImageController controller,
     int starIndex,
   ) {
-    final overlay = Overlay.of(context);
-
     // 目标坐标：右上角对应星星的中心
     Offset? targetPosition;
     final starKey = _starKeys[starIndex];
@@ -207,8 +218,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       );
     }
 
-    _starFlyController.launch(
-      overlayState: overlay,
+    StarRewardAnimator.play(
+      context: context,
       startPosition: _lastTapPosition,
       targetPosition: targetPosition,
       onArrived: () {
@@ -383,6 +394,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   regions: controller.regions,
                   onRegionTap: controller.speakRegion,
                   onRegionTapDown: _triggerScreenDiffusion,
+                  onBlankAreaTap: controller.onBlankAreaClicked,
                 ),
               ),
             );

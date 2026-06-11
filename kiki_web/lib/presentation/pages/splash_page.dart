@@ -32,8 +32,7 @@ class _SplashPageState extends State<SplashPage> {
     if (!mounted) return;
 
     // 已登录用户直接进入首页，未登录用户稍作延迟后进入欢迎页
-    if (authReady &&
-        (authController.isLoggedIn || authController.isGuestMode)) {
+    if (authReady && authController.isLoggedIn) {
       Get.offAllNamed(AppConstants.routeHome);
     } else {
       await Future.delayed(_minimumSplashDuration);

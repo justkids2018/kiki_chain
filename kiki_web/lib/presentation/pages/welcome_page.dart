@@ -31,7 +31,7 @@ class _WelcomePageState extends State<WelcomePage> {
       await Future.delayed(const Duration(milliseconds: 100));
     }
     if (!mounted || !authController.isInitialized) return;
-    if (authController.isLoggedIn || authController.isGuestMode) {
+    if (authController.isLoggedIn) {
       Get.offAllNamed(AppConstants.routeHome);
     }
   }

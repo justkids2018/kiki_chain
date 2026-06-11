@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import '../../../core/logging/app_logger.dart';
+import '../../../core/network/network_client.dart';
 import '../../../data/models/image_item.dart';
 import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
@@ -8,6 +9,8 @@ import '../../../data/repositories/interactive_image/interactive_image_repositor
 import '../../../core/speech/audio_playback_component.dart';
 import '../../../data/services/learning/reward_service.dart';
 import '../../widgets/stroke_animation/stroke_speed_config.dart';
+import '../../controllers/auth_controller.dart';
+import '../../../core/network/interceptors/auth_interceptor.dart';
 
 /// 星星奖励事件：通知 Page 层触发飞翔动画
 class StarRewardEvent {
@@ -66,8 +69,30 @@ class InteractiveImageController extends GetxController {
   List<ImageItem> _imagesList = [];
   dynamic _scene;
 
-  // ─── 用户 ID（后续可从 AuthController 获取）─────────────────
-  static const String _userId = 'guest_user';
+  // ─── 用户 ID（从 AuthController 获取）─────────────────
+  String get _userId {
+    try {
+      final authController = Get.find<AuthController>();
+      if (authController.isLoggedIn) {
+        return authController.currentUser?.id ?? '';
+      }
+    } catch (e) {
+      AppLogger.warning('Failed to find AuthController', e);
+    }
+    return '';
+  }
+
+  /// 检查当前是否应与服务器同步（已登录且持有有效 Token）
+  bool get _isServerSyncEnabled {
+    try {
+      final authController = Get.find<AuthController>();
+      if (!authController.isLoggedIn) return false;
+
+      final authInterceptor = NetworkClient.instance.getInterceptor<AuthInterceptor>();
+      return authInterceptor?.hasToken ?? false;
+    } catch (_) {}
+    return false;
+  }
 
   InteractiveImageController({
     IInteractiveImageRepository? repository,
@@ -76,7 +101,7 @@ class InteractiveImageController extends GetxController {
   }) {
     _repository = repository ?? InteractiveImageRepositoryImpl();
     _audioPlayback = audioPlayback ?? AudioPlaybackComponent();
-    _rewardService = rewardService ?? RewardService();
+    _rewardService = rewardService ?? RewardService(httpClient: NetworkClient.instance.httpClient);
     _getParametersFromRoute();
   }
 
@@ -177,12 +202,26 @@ class InteractiveImageController extends GetxController {
     super.onInit();
     _initialize();
   }
-
   Future<void> _initialize() async {
     try {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
       _sessionStartTime = DateTime.now();
+
+      // 重置状态以支持控制器复用
+      regions.clear();
+      activeRegion.value = null;
+      currentCharIndex.value = -1;
+      visibleCharCount.value = 0;
+      totalCharCount.value = 0;
+      _lastInitializedText = null;
+      _singleCharacterMode = false;
+      _hasTtsPlaybackError = false;
+      starsEarned.value = 0;
+      _starsAwarded = 0;
+      _learnedRegionIds.clear();
+      _sessionLearnedRegions.clear();
+      isLoaded.value = false;
 
       await Future.wait([
         _loadRegions(),
@@ -198,7 +237,7 @@ class InteractiveImageController extends GetxController {
         return <void>[];
       });
 
-      // 加载完成后恢复本地进度
+      // 加载完成后恢复本地与服务器进度
       await _loadLocalProgress();
 
       loadingProgress.value = 1.0;
@@ -211,6 +250,16 @@ class InteractiveImageController extends GetxController {
     }
   }
 
+  /// 外部（如 Page）在进入时调用，确保如果控制器实例被复用，也能加载最新路由参数的数据
+  void refreshArguments() {
+    final oldJson = _jsonFilePath;
+    final oldSceneId = _getSceneId();
+    _getParametersFromRoute();
+    if (_jsonFilePath != oldJson || _getSceneId() != oldSceneId) {
+      AppLogger.info('Scene arguments changed, re-initializing: $oldSceneId -> ${_getSceneId()}');
+      _initialize();
+    }
+  }
   Future<void> _loadRegions() async {
     try {
       List<InteractiveRegion> loadedRegions = [];
@@ -270,18 +319,40 @@ class InteractiveImageController extends GetxController {
   }
 
   // ─── 学习进度恢复 ─────────────────────────────────────────────
-
-  /// 从本地缓存恢复进度（不依赖服务器）
+  /// 从本地缓存与服务器恢复进度
   Future<void> _loadLocalProgress() async {
     try {
       final sceneId = _getSceneId();
       if (sceneId.isEmpty) return;
 
+      // 1. 从本地加载已学习的词 IDs
       final savedIds =
           await _rewardService.loadLearnedRegionIds(_userId, sceneId);
       _learnedRegionIds.addAll(savedIds);
 
-      // 根据已学数量重新计算星星（比例制）
+      // 2. 尝试从服务器拉取最新进度并合并
+      if (_isServerSyncEnabled) {
+        try {
+          final serverProgress =
+              await _rewardService.fetchProgressFromServer(_userId, sceneId);
+          if (serverProgress != null) {
+            final serverIds = serverProgress.learnedRegions;
+            if (serverIds.isNotEmpty) {
+              _learnedRegionIds.addAll(serverIds);
+              // 将合并后的最新进度更新到本地
+              await _rewardService.saveLearnedRegionIds(
+                _userId,
+                sceneId,
+                Set.from(_learnedRegionIds),
+              );
+            }
+          }
+        } catch (e) {
+          AppLogger.warning('从服务器同步进度失败，仅使用本地缓存', e);
+        }
+      }
+
+      // 3. 根据已学数量重新计算星星数（比例制）
       final total = vocabularyRegions.map((r) => r.text).toSet().length;
       if (total > 0 && _learnedRegionIds.isNotEmpty) {
         final loadedStars =
@@ -289,13 +360,12 @@ class InteractiveImageController extends GetxController {
         starsEarned.value = loadedStars;
         _starsAwarded = loadedStars;
         AppLogger.info(
-            '恢复本地进度: ${_learnedRegionIds.length}/$total 词, $loadedStars 颗星');
+            '恢复进度: ${_learnedRegionIds.length}/$total 词, $loadedStars 颗星');
       }
     } catch (e) {
-      AppLogger.error('恢复本地进度失败', e);
+      AppLogger.error('恢复本地与服务器进度失败', e);
     }
   }
-
   // ─── 音频播放 ─────────────────────────────────────────────────
   bool _isSpeaking = false;
   final isSpeaking = false.obs;
@@ -421,14 +491,27 @@ class InteractiveImageController extends GetxController {
     }
   }
 
-  /// 异步保存本地进度（不阻塞 UI）
+  /// 异步保存本地进度并提交服务器（不阻塞 UI）
   void _saveLocalProgressAsync() {
     final sceneId = _getSceneId();
     if (sceneId.isEmpty) return;
 
     _rewardService
         .saveLearnedRegionIds(_userId, sceneId, Set.from(_learnedRegionIds))
-        .catchError((e) {
+        .then((_) {
+      if (!_isServerSyncEnabled) return;
+      final studyTime = DateTime.now()
+          .difference(_sessionStartTime ?? DateTime.now())
+          .inSeconds;
+      _rewardService.submitProgressToServer(
+        userId: _userId,
+        sceneId: sceneId,
+        learnedRegionIds: Set.from(_learnedRegionIds),
+        starsEarned: _starsAwarded,
+        isCompleted: _starsAwarded >= 3,
+        studyTimeSeconds: studyTime,
+      );
+    }).catchError((e) {
       AppLogger.error('保存本地进度失败', e);
     });
   }
@@ -453,15 +536,17 @@ class InteractiveImageController extends GetxController {
         Set.from(_learnedRegionIds),
       );
 
-      // 2. 提交服务器（失败静默忽略）
-      await _rewardService.submitProgressToServer(
-        userId: _userId,
-        sceneId: sceneId,
-        learnedRegionIds: Set.from(_learnedRegionIds),
-        starsEarned: _starsAwarded,
-        isCompleted: _starsAwarded >= 3,
-        studyTimeSeconds: studyTime,
-      );
+      // 2. 提交服务器（仅当登录时同步，失败静默忽略）
+      if (_isServerSyncEnabled) {
+        await _rewardService.submitProgressToServer(
+          userId: _userId,
+          sceneId: sceneId,
+          learnedRegionIds: Set.from(_learnedRegionIds),
+          starsEarned: _starsAwarded,
+          isCompleted: _starsAwarded >= 3,
+          studyTimeSeconds: studyTime,
+        );
+      }
 
       return true;
     } catch (e) {

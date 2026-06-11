@@ -163,6 +163,14 @@ class InteractiveImageController extends GetxController {
   ImageItem? get currentImageItem => _currentImageItem;
   List<ImageItem> get imagesList => _imagesList;
 
+  /// 过滤掉标题、副标题等非词卡区域，仅保留真实的学习词语区域
+  List<InteractiveRegion> get vocabularyRegions {
+    return regions.where((r) {
+      final idLower = r.id.toLowerCase();
+      return !idLower.contains('title') && !idLower.contains('subtitle');
+    }).toList();
+  }
+
   // ─── 初始化 ───────────────────────────────────────────────────
   @override
   void onInit() {
@@ -274,7 +282,7 @@ class InteractiveImageController extends GetxController {
       _learnedRegionIds.addAll(savedIds);
 
       // 根据已学数量重新计算星星（比例制）
-      final total = regions.map((r) => r.text).toSet().length;
+      final total = vocabularyRegions.map((r) => r.text).toSet().length;
       if (total > 0 && _learnedRegionIds.isNotEmpty) {
         final loadedStars =
             _rewardService.calculateStars(_learnedRegionIds.length, total);
@@ -359,8 +367,15 @@ class InteractiveImageController extends GetxController {
 
   /// 记录学习进度，并在满足门槛时触发星星奖励
   void _recordLearningProgress(InteractiveRegion region) {
+    // 标题和副标题不作为词汇卡片记录进度
+    if (region.id.toLowerCase().contains('title') ||
+        region.id.toLowerCase().contains('subtitle')) {
+      AppLogger.debug('点击的是标题或副标题，跳过进度记录: ${region.text}');
+      return;
+    }
+
     final regionId = region.text;
-    final total = regions.map((r) => r.text).toSet().length;
+    final total = vocabularyRegions.map((r) => r.text).toSet().length;
 
     // 去重：已学过的词不再计入
     if (_learnedRegionIds.contains(regionId)) {
@@ -376,15 +391,16 @@ class InteractiveImageController extends GetxController {
       'learned_at': DateTime.now().toIso8601String(),
     });
 
+    final allVocab = vocabularyRegions.map((r) => r.text).toSet();
     AppLogger.info(
-        '✅ 记录学习: $regionId (${_learnedRegionIds.length}/$total)');
+        '✅ 记录学习: $regionId (${_learnedRegionIds.length}/$total) | 已学: $_learnedRegionIds | 总表: $allVocab');
 
     _checkStarReward();
   }
 
   /// 检查是否触发新星星奖励（30% / 60% / 100%）
   void _checkStarReward() {
-    final total = regions.map((r) => r.text).toSet().length;
+    final total = vocabularyRegions.map((r) => r.text).toSet().length;
     if (total == 0) return;
 
     final learned = _learnedRegionIds.length;

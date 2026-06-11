@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                   assetPath: 'assets/images/hi_kiki_title_animated.svg',
                   width: 240,
                   height: 80,
-                  animate: true, // 主 LOGO 启用动画，通过 RepaintBoundary 隔离重绘
+                  animate: kIsWeb, // 移动端使用静态高性能渲染（避免多 WebView 引发的 lockHardwareCanvas 日志），Web 端使用动画渲染
                 ),
                 // 右侧按钮组（保持垂直居中对齐）
                 Row(

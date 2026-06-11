@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../theme/app_colors.dart';
-import '../../design_ui/kiki_ui_kit.dart';
 import '../widgets/profile_tab.dart';
 import '../widgets/animated_svg/animated_svg.dart';
+import '../widgets/glass_back_button.dart';
 import '../controllers/auth_controller.dart';
 import 'interactive_image_home/interactive_image_home_page.dart';
 import 'learning_record/learning_record_page.dart';
@@ -55,29 +54,52 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _buildStarStatusButton(context),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 15),
                     _buildSvgButton(
                       assetPath: 'assets/images/hi_kiki_learning_record_button.svg',
                       onTap: () {
                         Get.to(() => const LearningRecordPage());
                       },
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     _buildSvgButton(
                       assetPath: 'assets/images/hi_kiki_profile_button.svg',
                       onTap: () {
                         final localizations = AppLocalizations.of(context)!;
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => Scaffold(
-                              appBar: AppBar(
-                                title: Text(localizations.personalInfo),
-                                backgroundColor: AppColors.backgroundCream,
-                                foregroundColor: AppColors.textDarkBrown,
-                                elevation: 0,
-                              ),
+                            builder: (ctx) => Scaffold(
                               backgroundColor: AppColors.profilePageBackground,
-                              body: const ProfileTab(),
+                              body: SafeArea(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 统一顶栏
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
+                                      child: Row(
+                                        children: [
+                                          GlassBackButton(
+                                            onTap: () => Navigator.of(ctx).pop(),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          Text(
+                                            localizations.personalInfo,
+                                            style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w900,
+                                              fontFamily: 'Fredoka',
+                                              color: Color(0xFF5A3A15),
+                                              letterSpacing: 0.4,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Expanded(child: ProfileTab()),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         );
@@ -93,35 +115,56 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 星星状态展示按钮（去掉了背景，icon 尺寸调为 34x34，数字采用 Fredoka 艺术字体，启用原生呼吸动画）
   Widget _buildStarStatusButton(BuildContext context) {
     final authController = Get.find<AuthController>();
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const AnimatedSvgWidget(
-          assetPath: 'assets/images/hi_kiki_star_icon.svg',
-          width: 34, // 星星稍微缩小，从 40 调为 34，配合排版更精致
-          height: 34, // 星星稍微缩小，从 40 调为 34，配合排版更精致
-          animate: true,
-          animationType: SvgAnimationType.pulse, // 原生呼吸呼吸动效
-        ),
-        const SizedBox(width: 6),
-        Obx(() {
-          final stars = authController.currentUser?.totalStars ?? 0;
-          return Text(
-            '$stars',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: KikiUiColors.textPrimary,
-              fontFamily: 'Fredoka',
+    return Obx(() {
+      final stars = authController.currentUser?.totalStars ?? 0;
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.92),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: const Color(0xFFFFCB45).withOpacity(0.7),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFFD65A).withOpacity(0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
-          );
-        }),
-      ],
-    );
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 星星图标（脉冲动画）
+            const AnimatedSvgWidget(
+              assetPath: 'assets/images/hi_kiki_star_icon.svg',
+              width: 26,
+              height: 26,
+              animate: true,
+              animationType: SvgAnimationType.pulse,
+            ),
+            const SizedBox(width: 5),
+            // 数字：金色，与星星呼应
+            Text(
+              '$stars',
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                color: Color(0xFFD48A00), // 琥珀金，与星星颜色呼应
+                fontFamily: 'Fredoka',
+                height: 1,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   /// 构建圆角矢量按钮，使用 Stack 叠加透明 InkWell 捕捉原生的点击事件
@@ -130,16 +173,16 @@ class _HomePageState extends State<HomePage> {
     required VoidCallback onTap,
   }) {
     return SizedBox(
-      width: 40,
-      height: 40,
+      width: 48,
+      height: 48,
       child: Stack(
         children: [
           AnimatedSvgWidget(
             assetPath: assetPath,
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             animate: true,
-            animationType: SvgAnimationType.float, // 启用 Flutter 原生浮动微动效
+            animationType: SvgAnimationType.float,
           ),
           Positioned.fill(
             child: Material(

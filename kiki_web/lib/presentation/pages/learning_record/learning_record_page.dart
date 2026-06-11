@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kikichain/design_ui/kiki_ui_kit.dart';
 import '../../../data/models/learning/scene_progress.dart';
 import '../../controllers/learning_record_controller.dart';
+import '../../widgets/glass_back_button.dart';
 
 class LearningRecordPage extends StatefulWidget {
   const LearningRecordPage({Key? key}) : super(key: key);
@@ -98,8 +99,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
       child: Row(
         children: [
-          _roundBtn(
-            icon: Icons.arrow_back_ios_new_rounded,
+          GlassBackButton(
             onTap: () => Navigator.of(context).pop(),
           ),
           const SizedBox(width: 14),
@@ -114,26 +114,6 @@ class _LearningRecordPageState extends State<LearningRecordPage>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _roundBtn({required IconData icon, required VoidCallback onTap}) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(999),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(999),
-        onTap: onTap,
-        child: Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFFDDD0BC)),
-          ),
-          child: Icon(icon, size: 17, color: const Color(0xFF7A4A22)),
-        ),
       ),
     );
   }

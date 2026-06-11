@@ -45,7 +45,8 @@ class _HomePageState extends State<HomePage> {
                   assetPath: 'assets/images/hi_kiki_title_animated.svg',
                   width: 240,
                   height: 80,
-                  animate: kIsWeb, // 移动端使用静态高性能渲染（避免多 WebView 引发的 lockHardwareCanvas 日志），Web 端使用动画渲染
+                  animate: true,
+                  animationType: SvgAnimationType.float, // 启用 Flutter 原生浮动动画，确保 100% 渲染成功，无 WebView 黑屏冲突
                 ),
                 // 右侧按钮组（保持垂直居中对齐）
                 Row(
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 星星状态展示按钮（去掉了背景，icon 尺寸调为 40x40，数字采用 Fredoka 艺术字体）
+  /// 星星状态展示按钮（去掉了背景，icon 尺寸调为 34x34，数字采用 Fredoka 艺术字体，启用原生呼吸动画）
   Widget _buildStarStatusButton(BuildContext context) {
     final authController = Get.find<AuthController>();
 
@@ -100,9 +101,10 @@ class _HomePageState extends State<HomePage> {
       children: [
         const AnimatedSvgWidget(
           assetPath: 'assets/images/hi_kiki_star_icon.svg',
-          width: 40,
-          height: 40,
-          animate: false, // 静态展示，避免 WebView 内存和重绘开销
+          width: 34, // 星星稍微缩小，从 40 调为 34，配合排版更精致
+          height: 34, // 星星稍微缩小，从 40 调为 34，配合排版更精致
+          animate: true,
+          animationType: SvgAnimationType.pulse, // 原生呼吸呼吸动效
         ),
         const SizedBox(width: 6),
         Obx(() {
@@ -135,7 +137,8 @@ class _HomePageState extends State<HomePage> {
             assetPath: assetPath,
             width: 40,
             height: 40,
-            animate: false, // 静态按钮，避免 WebView 内存和重绘开销
+            animate: true,
+            animationType: SvgAnimationType.float, // 启用 Flutter 原生浮动微动效
           ),
           Positioned.fill(
             child: Material(

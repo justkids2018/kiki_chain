@@ -5,6 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+enum SvgAnimationType {
+  none,
+  float,
+  pulse,
+}
+
 /// A reusable, encapsulated widget that displays any animated SVG.
 ///
 /// On iOS and Android, it utilizes a transparent WebView to run the SVG's native CSS keyframe animations.
@@ -14,6 +20,7 @@ class AnimatedSvgWidget extends StatefulWidget {
   final double? width;
   final double? height;
   final bool animate;
+  final SvgAnimationType animationType;
 
   const AnimatedSvgWidget({
     Key? key,
@@ -21,28 +28,80 @@ class AnimatedSvgWidget extends StatefulWidget {
     this.width,
     this.height,
     this.animate = false,
+    this.animationType = SvgAnimationType.none,
   }) : super(key: key);
 
   @override
   State<AnimatedSvgWidget> createState() => _AnimatedSvgWidgetState();
 }
 
-class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
+class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> with SingleTickerProviderStateMixin {
   WebViewController? _webViewController;
   String? _svgContent;
   bool _isLoading = true;
   bool _isMobile = false;
+  AnimationController? _animationController;
+  Animation<double>? _animation;
 
   @override
   void initState() {
     super.initState();
     // Check if the current platform is mobile native
     _isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-    if (widget.animate) {
-      _loadSvg();
-    } else {
-      _isLoading = false;
+    _loadSvg();
+    _initAnimation();
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedSvgWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.animate != oldWidget.animate ||
+        widget.animationType != oldWidget.animationType ||
+        widget.assetPath != oldWidget.assetPath) {
+      _animationController?.dispose();
+      _animationController = null;
+      _animation = null;
+      _initAnimation();
+      if (widget.assetPath != oldWidget.assetPath) {
+        _isLoading = true;
+        _loadSvg();
+      }
     }
+  }
+
+  void _initAnimation() {
+    if (!widget.animate || widget.animationType == SvgAnimationType.none) {
+      return;
+    }
+
+    if (widget.animationType == SvgAnimationType.pulse) {
+      _animationController = AnimationController(
+        duration: const Duration(milliseconds: 1800),
+        vsync: this,
+      )..repeat(reverse: true);
+      _animation = Tween<double>(begin: 1.0, end: 1.08).animate(
+        CurvedAnimation(parent: _animationController!, curve: Curves.easeInOut),
+      );
+    } else if (widget.animationType == SvgAnimationType.float) {
+      // For titles, float displacement is larger. For buttons, it is smaller.
+      final isLogo = widget.assetPath.contains('title');
+      final double startVal = isLogo ? 4.0 : 1.5;
+      final double endVal = isLogo ? -4.0 : -1.5;
+
+      _animationController = AnimationController(
+        duration: const Duration(milliseconds: 2400), // 稍微加快周期，动效更灵动
+        vsync: this,
+      )..repeat(reverse: true);
+      _animation = Tween<double>(begin: startVal, end: endVal).animate(
+        CurvedAnimation(parent: _animationController!, curve: Curves.easeInOut),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSvg() async {
@@ -54,13 +113,24 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
       processedSvg = processedSvg.replaceFirst(RegExp(r'width="[0-9.]+"'), 'width="100%"');
       processedSvg = processedSvg.replaceFirst(RegExp(r'height="[0-9.]+"'), 'height="100%"');
 
+      final useWebView = widget.animate && widget.animationType == SvgAnimationType.none && _isMobile;
+
+      if (!useWebView) {
+        // Strip out drop shadows (both XML attributes & CSS style properties) and animations
+        // so flutter_svg can parse colors and gradients natively without rendering gray/black fallbacks
+        processedSvg = processedSvg.replaceAll(RegExp(r'filter\s*=\s*"url\([^)]+\)"'), '');
+        processedSvg = processedSvg.replaceAll(RegExp(r'filter\s*:\s*url\([^)]+\);?'), '');
+        processedSvg = processedSvg.replaceAll(RegExp(r'animation\s*:\s*[^;]+;?'), '');
+      }
+
       if (mounted) {
         setState(() {
           _svgContent = processedSvg;
           _isLoading = false;
         });
         
-        if (_isMobile) {
+        // Only run WebView on mobile if we request full CSS animation (animate is true, animationType is none)
+        if (useWebView) {
           _initWebViewController(processedSvg);
         }
       }
@@ -116,15 +186,6 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // If animate is false, render statically and synchronously using flutter_svg
-    if (!widget.animate) {
-      return SvgPicture.asset(
-        widget.assetPath,
-        width: widget.width,
-        height: widget.height,
-      );
-    }
-
     if (_isLoading) {
       return SizedBox(
         width: widget.width,
@@ -147,8 +208,8 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
       );
     }
 
-    // On Mobile (iOS / Android), render using transparent WebView to run the CSS animations
-    if (_isMobile && _webViewController != null) {
+    // On Mobile (iOS / Android), render using transparent WebView to run the CSS animations if requested (animationType == none)
+    if (widget.animate && widget.animationType == SvgAnimationType.none && _isMobile && _webViewController != null) {
       return SizedBox(
         width: widget.width,
         height: widget.height,
@@ -158,15 +219,38 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
       );
     }
 
-    // On other platforms (Desktop macOS/Windows, or fallback), render statically using flutter_svg
+    // Default: render using static/processed SvgPicture string
+    Widget svgWidget = SvgPicture.string(
+      _svgContent!,
+      width: widget.width,
+      height: widget.height,
+    );
+
+    // Apply native Flutter animations if requested
+    if (widget.animate && _animation != null) {
+      if (widget.animationType == SvgAnimationType.pulse) {
+        svgWidget = ScaleTransition(
+          scale: _animation!,
+          child: svgWidget,
+        );
+      } else if (widget.animationType == SvgAnimationType.float) {
+        svgWidget = AnimatedBuilder(
+          animation: _animation!,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _animation!.value),
+              child: child,
+            );
+          },
+          child: svgWidget,
+        );
+      }
+    }
+
     return SizedBox(
       width: widget.width,
       height: widget.height,
-      child: SvgPicture.string(
-        _svgContent!,
-        width: widget.width,
-        height: widget.height,
-      ),
+      child: svgWidget,
     );
   }
 }

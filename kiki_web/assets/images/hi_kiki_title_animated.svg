@@ -25,8 +25,6 @@
       font-family: "Fredoka", "Nunito", "Arial Rounded MT Bold", sans-serif;
       font-weight: 900;
       font-size: 92px;
-      fill: url(#brown);
-      filter: url(#textShadow);
       letter-spacing: 2px;
     }
     .leaf {
@@ -74,9 +72,9 @@
   <g class="badge">
     <rect x="82" y="45" width="556" height="150" rx="56" fill="url(#cream)" filter="url(#softShadow)"/>
     <rect x="94" y="57" width="532" height="126" rx="46" fill="none" stroke="#8ED96B" stroke-width="6"/>
-    <rect class="stitch" x="110" y="72" width="500" height="96" rx="34"/>
+    <rect class="stitch" x="110" y="72" width="500" height="96" rx="34" fill="none" stroke="#E9C98D" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 14"/>
 
-    <text x="360" y="145" text-anchor="middle" class="title">Hi Kiki</text>
+    <text x="360" y="145" text-anchor="middle" class="title" fill="url(#brown)" font-family="Fredoka, Nunito, Arial Rounded MT Bold, sans-serif" font-weight="900" font-size="92" letter-spacing="2">Hi Kiki</text>
 
     <path class="heart" d="M566 76 C566 63 582 59 589 70 C596 59 613 63 613 77 C613 94 589 106 589 106 C589 106 566 94 566 76Z" fill="#FF7FA0"/>
 

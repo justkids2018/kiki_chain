@@ -21,7 +21,7 @@ class InteractiveImageHomePage extends StatelessWidget {
           body: Container(
             decoration: KikiUiDecor.pageBackgroundDecor,
             child: SafeArea(
-              minimum: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+              minimum: const EdgeInsets.fromLTRB(15, 20, 10, 20),
               child: Stack(
                 children: [
                   Positioned.fill(

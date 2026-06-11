@@ -86,6 +86,7 @@ dependencies:
   just_audio: ^0.9.39
   stroke_order_animator: ^3.3.1
   cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.10
   crypto: ^3.0.3
   url_launcher: ^6.2.5
 
@@ -128,6 +129,18 @@ flutter:
     - assets/data/toy/
     - assets/data/stroke_order/
     - config/
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Regular.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+        - asset: assets/fonts/Fredoka-SemiBold.ttf
+          weight: 600
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

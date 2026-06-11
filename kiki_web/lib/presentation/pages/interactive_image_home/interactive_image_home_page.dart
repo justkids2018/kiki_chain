@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
@@ -42,47 +41,12 @@ class InteractiveImageHomePage extends StatelessWidget {
     );
   }
 
-  /// 悬浮毛玻璃标题
+  /// 顶部标题
   Widget _buildFloatingHeader(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(18),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: KikiUiColors.panel.withValues(alpha: 0.76),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.85),
-              width: 1.2,
-            ),
-            boxShadow: KikiUiShadows.floating,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              createAnimatedSvgWidget(
-                'assets/images/hi_kiki_title_animated.svg',
-                width: 132,
-                height: 44,
-              ),
-              const SizedBox(width: 12),
-              Builder(builder: (context) {
-                final loc = AppLocalizations.of(context)!;
-                return Text(
-                  loc.chooseSceneToStart,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: KikiUiColors.textSecondary,
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-      ),
+    return const AnimatedSvgWidget(
+      assetPath: 'assets/images/hi_kiki_title_animated.svg',
+      width: 240,
+      height: 80,
     );
   }
 

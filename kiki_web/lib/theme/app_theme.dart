@@ -9,6 +9,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Nunito',
       colorScheme: ColorScheme.light(
         primary: AppColors.primaryGreen,
         secondary: AppColors.orange,
@@ -29,18 +30,21 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: AppColors.textDarkBrown,
           height: 1.2,
+          fontFamily: 'Fredoka',
         ),
         displayMedium: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.bold,
           color: AppColors.textDarkBrown,
           height: 1.2,
+          fontFamily: 'Fredoka',
         ),
         displaySmall: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: AppColors.textDarkBrown,
           height: 1.2,
+          fontFamily: 'Fredoka',
         ),
 
         // 标题

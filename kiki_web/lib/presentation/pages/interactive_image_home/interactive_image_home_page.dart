@@ -21,16 +21,12 @@ class InteractiveImageHomePage extends StatelessWidget {
           body: Container(
             decoration: KikiUiDecor.pageBackgroundDecor,
             child: SafeArea(
-              minimum: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+              minimum: const EdgeInsets.fromLTRB(10, 20, 10, 20),
               child: Stack(
                 children: [
                   Positioned.fill(
-                    top: 46,
+                    top: 60, // 向上移动分类列表（配合顶栏上移），使卡片整体上浮并减少中部空白空间
                     child: _buildCategoryList(controller),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: _buildFloatingHeader(context),
                   ),
                 ],
               ),
@@ -38,15 +34,6 @@ class InteractiveImageHomePage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  /// 顶部标题
-  Widget _buildFloatingHeader(BuildContext context) {
-    return const AnimatedSvgWidget(
-      assetPath: 'assets/images/hi_kiki_title_animated.svg',
-      width: 240,
-      height: 80,
     );
   }
 

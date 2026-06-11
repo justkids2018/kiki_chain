@@ -5,17 +5,20 @@ import 'dart:html' as html;
 import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AnimatedSvgWidget extends StatefulWidget {
   final String assetPath;
   final double? width;
   final double? height;
+  final bool animate;
 
   const AnimatedSvgWidget({
     Key? key,
     required this.assetPath,
     this.width,
     this.height,
+    this.animate = false,
   }) : super(key: key);
 
   @override
@@ -29,7 +32,9 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
   @override
   void initState() {
     super.initState();
-    _loadSvg();
+    if (widget.animate) {
+      _loadSvg();
+    }
   }
 
   Future<void> _loadSvg() async {
@@ -78,6 +83,15 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // If animate is false, render statically using flutter_svg
+    if (!widget.animate) {
+      return SvgPicture.asset(
+        widget.assetPath,
+        width: widget.width,
+        height: widget.height,
+      );
+    }
+
     if (_hasError) {
       return SizedBox(
         width: widget.width,
@@ -112,7 +126,9 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
     return SizedBox(
       width: widget.width,
       height: widget.height,
-      child: HtmlElementView(viewType: _viewType!),
+      child: RepaintBoundary(
+        child: HtmlElementView(viewType: _viewType!),
+      ),
     );
   }
 }

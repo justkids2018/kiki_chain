@@ -272,6 +272,17 @@ class AuthController extends GetxController {
     }
   }
 
+  /// 更新本地缓存的用户总星星数
+  Future<void> updateUserStars(int totalStars) async {
+    final user = _currentUser.value;
+    if (user != null) {
+      final updatedUser = user.copyWith(totalStars: totalStars);
+      _currentUser.value = updatedUser;
+      await AppServices.instance.localStorage.setUserInfo(updatedUser.toJson());
+      AppLogger.info('AuthController: 更新本地用户总星星数为 $totalStars 颗星');
+    }
+  }
+
   /// 切换登录密码可见性
   void toggleLoginPasswordVisibility() {
     _loginPasswordVisible.value = !_loginPasswordVisible.value;

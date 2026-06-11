@@ -118,8 +118,8 @@ class RewardService {
 
   /// 提交学习进度到服务器（退出页面或获得新星星时调用）
   ///
-  /// 失败时静默忽略（不影响本地体验）。
-  Future<void> submitProgressToServer({
+  /// 返回最新用户总星星数，失败时返回 null 并静默忽略。
+  Future<int?> submitProgressToServer({
     required String userId,
     required String sceneId,
     required Set<String> learnedRegionIds,
@@ -130,7 +130,7 @@ class RewardService {
     final client = _httpClient;
     if (client == null) {
       AppLogger.warning('RewardService: HTTP 客户端未初始化，跳过服务器提交');
-      return;
+      return null;
     }
 
     try {
@@ -138,11 +138,12 @@ class RewardService {
           .map((id) => {
                 'region_id': id,
                 'region_text': id,
+                'region_text_english': id, // 补齐必填字段，防止后端 JSON 解析失败
                 'learned_at': DateTime.now().toIso8601String(),
               })
           .toList();
 
-      await client.post(
+      final response = await client.post(
         '/api/v1/learning/progress/batch',
         data: {
           'user_id': userId,
@@ -153,9 +154,42 @@ class RewardService {
           'study_time': studyTimeSeconds,
         },
       );
-      AppLogger.info('RewardService: 进度提交成功');
+      
+      AppLogger.info('RewardService: 进度提交成功: $response');
+      if (response != null && response['code'] == 0 && response['data'] != null) {
+        final data = response['data'] as Map<String, dynamic>;
+        return (data['user_total_stars'] as num?)?.toInt();
+      }
+      return null;
     } catch (e) {
       AppLogger.warning('RewardService: 进度提交失败（静默忽略）', e);
+      return null;
+    }
+  }
+
+  /// 从服务器拉取用户总星星数
+  Future<int?> fetchUserTotalStars(String userId) async {
+    final client = _httpClient;
+    if (client == null) {
+      AppLogger.warning('RewardService: HTTP 客户端未初始化，跳过拉取用户汇总');
+      return null;
+    }
+
+    try {
+      final response = await client.get(
+        '/api/v1/learning/user/$userId/summary',
+      );
+
+      if (response != null && response['code'] == 0 && response['data'] != null) {
+        final data = response['data'] as Map<String, dynamic>;
+        final totalStars = (data['total_stars'] as num?)?.toInt();
+        AppLogger.info('RewardService: 获取用户总星星数成功 — $totalStars 颗星');
+        return totalStars;
+      }
+      return null;
+    } catch (e) {
+      AppLogger.warning('RewardService: 获取用户总星星数失败', e);
+      return null;
     }
   }
 }

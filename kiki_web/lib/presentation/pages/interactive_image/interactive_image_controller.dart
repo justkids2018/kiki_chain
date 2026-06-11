@@ -50,11 +50,17 @@ class InteractiveImageController extends GetxController {
   /// 实际被授予的星星数（以防在UI上立即亮起，等飞行动画落地后再给 starsEarned 赋值）
   int _starsAwarded = 0;
 
+  /// 历史已获得的星星数（0~3）
+  int _historicalStars = 0;
+
   /// 飞翔动画事件流：Page 层监听后触发动画
   final starRewardEvent = Rxn<StarRewardEvent>();
 
-  /// 已学词 ID 集合（去重）
+  /// 已学词 ID 集合（去重，累积历史记录）
   final Set<String> _learnedRegionIds = {};
+
+  /// 本次学习会话已学词 ID 集合（去重，每次进入重新开始）
+  final Set<String> _sessionLearnedRegionIds = {};
 
   /// 会话本次新学词（用于提交服务器）
   final List<Map<String, dynamic>> _sessionLearnedRegions = [];
@@ -219,7 +225,9 @@ class InteractiveImageController extends GetxController {
       _hasTtsPlaybackError = false;
       starsEarned.value = 0;
       _starsAwarded = 0;
+      _historicalStars = 0;
       _learnedRegionIds.clear();
+      _sessionLearnedRegionIds.clear();
       _sessionLearnedRegions.clear();
       isLoaded.value = false;
 
@@ -352,16 +360,20 @@ class InteractiveImageController extends GetxController {
         }
       }
 
-      // 3. 根据已学数量重新计算星星数（比例制）
+      // 3. 根据已学数量重新计算历史已获星星数（比例制）
       final total = vocabularyRegions.map((r) => r.text).toSet().length;
       if (total > 0 && _learnedRegionIds.isNotEmpty) {
         final loadedStars =
             _rewardService.calculateStars(_learnedRegionIds.length, total);
-        starsEarned.value = loadedStars;
-        _starsAwarded = loadedStars;
+        _historicalStars = loadedStars;
         AppLogger.info(
-            '恢复进度: ${_learnedRegionIds.length}/$total 词, $loadedStars 颗星');
+            '恢复历史星星: ${_learnedRegionIds.length}/$total 词, 历史已获 $loadedStars 颗星. 当前会话重置为 0 颗星开始');
+      } else {
+        _historicalStars = 0;
       }
+      // UI 会话奖励从 0 开始
+      starsEarned.value = 0;
+      _starsAwarded = 0;
     } catch (e) {
       AppLogger.error('恢复本地与服务器进度失败', e);
     }
@@ -447,23 +459,24 @@ class InteractiveImageController extends GetxController {
     final regionId = region.text;
     final total = vocabularyRegions.map((r) => r.text).toSet().length;
 
-    // 去重：已学过的词不再计入
-    if (_learnedRegionIds.contains(regionId)) {
-      AppLogger.debug('区域已学过，跳过: $regionId');
-      _checkStarReward(); // 允许重新检查以防之前因为时间门槛（<30秒）未获得满星，而现在时间已满足
-      return;
+    // 1. 记录到会话已学列表（支持重玩重新计分）
+    final isNewInSession = !_sessionLearnedRegionIds.contains(regionId);
+    if (isNewInSession) {
+      _sessionLearnedRegionIds.add(regionId);
+      _sessionLearnedRegions.add({
+        'region_id': regionId,
+        'region_text': region.text,
+        'learned_at': DateTime.now().toIso8601String(),
+      });
     }
 
-    _learnedRegionIds.add(regionId);
-    _sessionLearnedRegions.add({
-      'region_id': regionId,
-      'region_text': region.text,
-      'learned_at': DateTime.now().toIso8601String(),
-    });
+    // 2. 记录到全局历史已学列表（仅首次记录）
+    if (!_learnedRegionIds.contains(regionId)) {
+      _learnedRegionIds.add(regionId);
+    }
 
-    final allVocab = vocabularyRegions.map((r) => r.text).toSet();
     AppLogger.info(
-        '✅ 记录学习: $regionId (${_learnedRegionIds.length}/$total) | 已学: $_learnedRegionIds | 总表: $allVocab');
+        '✅ 记录学习: $regionId | 当前会话已学: ${_sessionLearnedRegionIds.length}/$total | 全局已学: ${_learnedRegionIds.length}/$total');
 
     _checkStarReward();
   }
@@ -473,7 +486,7 @@ class InteractiveImageController extends GetxController {
     final total = vocabularyRegions.map((r) => r.text).toSet().length;
     if (total == 0) return;
 
-    final learned = _learnedRegionIds.length;
+    final learned = _sessionLearnedRegionIds.length;
     final targetStars = _rewardService.calculateStars(learned, total);
 
     if (targetStars > _starsAwarded) {
@@ -481,8 +494,8 @@ class InteractiveImageController extends GetxController {
       _starsAwarded = targetStars;
 
       // 依次发射每一个新获得的星星（支持连发动画）
-      for (int i = oldStarsAwarded; i < targetStars; i++) {
-        AppLogger.info('🌟 触发星星奖励：第 ${i + 1} 颗星');
+      for (int i = oldStarsAwarded; i < targetStars; i++) { 
+        AppLogger.info('🌟 触发会话星星奖励：第 ${i + 1} 颗星');
         starRewardEvent.value = StarRewardEvent(i);
       }
 
@@ -496,6 +509,8 @@ class InteractiveImageController extends GetxController {
     final sceneId = _getSceneId();
     if (sceneId.isEmpty) return;
 
+    final submitStars = _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
+
     _rewardService
         .saveLearnedRegionIds(_userId, sceneId, Set.from(_learnedRegionIds))
         .then((_) {
@@ -507,10 +522,18 @@ class InteractiveImageController extends GetxController {
         userId: _userId,
         sceneId: sceneId,
         learnedRegionIds: Set.from(_learnedRegionIds),
-        starsEarned: _starsAwarded,
-        isCompleted: _starsAwarded >= 3,
+        starsEarned: submitStars,
+        isCompleted: submitStars >= 3,
         studyTimeSeconds: studyTime,
-      );
+      ).then((newTotalStars) {
+        if (newTotalStars != null) {
+          try {
+            Get.find<AuthController>().updateUserStars(newTotalStars);
+          } catch (e) {
+            AppLogger.warning('Failed to update user stars in AuthController', e);
+          }
+        }
+      });
     }).catchError((e) {
       AppLogger.error('保存本地进度失败', e);
     });
@@ -520,7 +543,7 @@ class InteractiveImageController extends GetxController {
   Future<bool> saveProgress() async {
     try {
       final sceneId = _getSceneId();
-      if (sceneId.isEmpty || _sessionLearnedRegions.isEmpty) {
+      if (sceneId.isEmpty || _sessionLearnedRegionIds.isEmpty) {
         AppLogger.debug('无新学习内容，跳过保存');
         return true;
       }
@@ -528,6 +551,8 @@ class InteractiveImageController extends GetxController {
       final studyTime = DateTime.now()
           .difference(_sessionStartTime ?? DateTime.now())
           .inSeconds;
+
+      final submitStars = _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
 
       // 1. 保存本地
       await _rewardService.saveLearnedRegionIds(
@@ -538,14 +563,21 @@ class InteractiveImageController extends GetxController {
 
       // 2. 提交服务器（仅当登录时同步，失败静默忽略）
       if (_isServerSyncEnabled) {
-        await _rewardService.submitProgressToServer(
+        final newTotalStars = await _rewardService.submitProgressToServer(
           userId: _userId,
           sceneId: sceneId,
           learnedRegionIds: Set.from(_learnedRegionIds),
-          starsEarned: _starsAwarded,
-          isCompleted: _starsAwarded >= 3,
+          starsEarned: submitStars,
+          isCompleted: submitStars >= 3,
           studyTimeSeconds: studyTime,
         );
+        if (newTotalStars != null) {
+          try {
+            await Get.find<AuthController>().updateUserStars(newTotalStars); 
+          } catch (e) {
+            AppLogger.warning('Failed to update user stars in AuthController on exit', e);
+          }
+        }
       }
 
       return true;

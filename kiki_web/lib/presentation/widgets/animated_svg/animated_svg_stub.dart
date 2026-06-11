@@ -13,12 +13,14 @@ class AnimatedSvgWidget extends StatefulWidget {
   final String assetPath;
   final double? width;
   final double? height;
+  final bool animate;
 
   const AnimatedSvgWidget({
     Key? key,
     required this.assetPath,
     this.width,
     this.height,
+    this.animate = false,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,11 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
     super.initState();
     // Check if the current platform is mobile native
     _isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-    _loadSvg();
+    if (widget.animate) {
+      _loadSvg();
+    } else {
+      _isLoading = false;
+    }
   }
 
   Future<void> _loadSvg() async {
@@ -110,6 +116,15 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // If animate is false, render statically and synchronously using flutter_svg
+    if (!widget.animate) {
+      return SvgPicture.asset(
+        widget.assetPath,
+        width: widget.width,
+        height: widget.height,
+      );
+    }
+
     if (_isLoading) {
       return SizedBox(
         width: widget.width,
@@ -137,7 +152,9 @@ class _AnimatedSvgWidgetState extends State<AnimatedSvgWidget> {
       return SizedBox(
         width: widget.width,
         height: widget.height,
-        child: WebViewWidget(controller: _webViewController!),
+        child: RepaintBoundary(
+          child: WebViewWidget(controller: _webViewController!),
+        ),
       );
     }
 

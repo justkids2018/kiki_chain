@@ -9,7 +9,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      fontFamily: 'Nunito',
+      fontFamily: 'Fredoka',
       colorScheme: ColorScheme.light(
         primary: AppColors.primaryGreen,
         secondary: AppColors.orange,

@@ -439,18 +439,20 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  localizations.interactiveLearning,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF00C37D),
-                    letterSpacing: 1.2,
+                Expanded(
+                  child: Text(
+                    localizations.interactiveLearning,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF00C37D),
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
                 // 3 颗星星，紧跟「互动学习」标题右侧
                 Obx(() => InlineStarBar(
                       starsEarned: controller.starsEarned.value,

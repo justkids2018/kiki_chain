@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kikichain/config/app_routes.dart';
 import 'package:kikichain/core/constants/app_constants.dart';
 import 'package:kikichain/generated/app_localizations.dart';
+import 'package:kikichain/core/network/api_config.dart';
+import 'package:kikichain/presentation/controllers/auth_controller.dart';
 import 'package:kikichain/presentation/pages/interactive_image/interactive_image_controller.dart';
 import 'package:kikichain/presentation/pages/interactive_image/interactive_image_view.dart';
 
 void main() {
+  setUpAll(() {
+    ApiConfig.initTest();
+    SharedPreferences.setMockInitialValues({});
+    Get.put(AuthController());
+  });
+
   tearDown(() async {
     await Get.deleteAll(force: true);
     Get.reset();

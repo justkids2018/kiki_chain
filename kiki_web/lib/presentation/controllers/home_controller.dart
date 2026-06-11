@@ -6,6 +6,9 @@ import '../../domain/repositories/i_auth_repository.dart';
 import '../../domain/repositories/i_scene_repository.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/logging/app_logger.dart';
+import '../../data/services/learning/reward_service.dart';
+import '../../core/network/network_client.dart';
+import 'auth_controller.dart';
 
 /// 简化的首页控制器
 class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -80,14 +83,26 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
     await loadCategories();
   }
   
-  /// 加载用户信息
+  /// 加载用户信息并同步服务器星星数据
   void _loadUserInfo() async {
     try {
       // 从认证仓库获取当前用户信息
       final user = await _authRepository.getCurrentUser();
       currentUser.value = user;
+
+      // 如果用户已登录，从服务器拉取最新的总星星数进行同步
+      if (user != null) {
+        final authController = Get.find<AuthController>();
+        final rewardService = RewardService(httpClient: NetworkClient.instance.httpClient);
+        final serverStars = await rewardService.fetchUserTotalStars(user.id);
+        if (serverStars != null) {
+          await authController.updateUserStars(serverStars);
+          // 刷新本地的 currentUser
+          currentUser.value = authController.currentUser;
+        }
+      }
     } catch (e) {
-      // 如果获取失败，使用模拟数据
+      AppLogger.warning('HomeController: 加载/同步用户信息失败', e);
     }
   }
   

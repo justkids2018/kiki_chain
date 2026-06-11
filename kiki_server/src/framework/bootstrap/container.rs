@@ -11,7 +11,7 @@ use crate::core::use_cases::{
     RegisterUserUseCase, SearchScenesUseCase,
 };
 use crate::core::use_cases::learning::{
-    GetProgressUseCase, SubmitProgressUseCase, GetUserSummaryUseCase,
+    GetProgressUseCase, SubmitProgressUseCase, GetUserSummaryUseCase, GetUserProgressListUseCase,
 };
 use crate::framework::logging::Logger;
 
@@ -39,6 +39,7 @@ pub struct AppState {
     pub get_progress_uc: Arc<GetProgressUseCase>,
     pub submit_progress_uc: Arc<SubmitProgressUseCase>,
     pub get_user_summary_uc: Arc<GetUserSummaryUseCase>,
+    pub get_user_progress_list_uc: Arc<GetUserProgressListUseCase>,
 
     // 用户仓储（供 profile 接口使用）
     pub user_repository: Arc<dyn UserRepository>,
@@ -78,6 +79,7 @@ impl DependencyContainer {
         let get_progress_uc = Arc::new(GetProgressUseCase::new(learning_repository.clone()));
         let submit_progress_uc = Arc::new(SubmitProgressUseCase::new(learning_repository.clone()));
         let get_user_summary_uc = Arc::new(GetUserSummaryUseCase::new(learning_repository.clone()));
+        let get_user_progress_list_uc = Arc::new(GetUserProgressListUseCase::new(learning_repository.clone()));
 
         // 管理端用例
         let admin_scene_uc = Arc::new(AdminSceneUseCase::new(scene_repository.clone()));
@@ -109,6 +111,7 @@ impl DependencyContainer {
             get_progress_uc,
             submit_progress_uc,
             get_user_summary_uc,
+            get_user_progress_list_uc,
             user_repository,
             qiniu_service,
         };

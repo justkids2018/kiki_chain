@@ -1,16 +1,17 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/logging/app_logger.dart';
+import '../../../core/network/http_client.dart';
+import '../../../core/utils/api_response_handler.dart';
 import '../../models/learning/scene_progress.dart';
 
 /// 学习进度服务
 /// 负责本地缓存和服务器同步
 class LearningProgressService {
   static const String _keyPrefix = 'learning_progress_';
-  final Dio? _dio; // HTTP客户端
+  final HttpClient? _httpClient; // 统一使用封装的 HttpClient
 
-  LearningProgressService({Dio? dio}) : _dio = dio;
+  LearningProgressService({HttpClient? httpClient}) : _httpClient = httpClient;
 
   /// 从本地加载场景进度
   Future<SceneProgress?> loadLocalProgress(
@@ -56,30 +57,45 @@ class LearningProgressService {
     String userId,
     String sceneId,
   ) async {
-    final dio = _dio;
-    if (dio == null) {
+    final client = _httpClient;
+    if (client == null) {
       AppLogger.warning('HTTP客户端未初始化');
       return null;
     }
 
     try {
-      final response = await dio.get(
+      final response = await client.get<Map<String, dynamic>>(
         '/api/v1/learning/progress/$userId/$sceneId',
       );
 
-      if (response.statusCode == 200 && response.data['code'] == 0) {
-        final data = response.data['data'];
-        return SceneProgress.fromJson(data);
-      } else if (response.statusCode == 404) {
-        AppLogger.info('服务器无该场景进度: $sceneId');
-        return null;
-      } else {
-        AppLogger.error('获取进度失败: ${response.data}', null);
-        return null;
-      }
+      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      return SceneProgress.fromJson(data);
     } catch (e) {
       AppLogger.error('从服务器获取进度失败', e);
       return null;
+    }
+  }
+
+  /// 从服务器获取用户所有场景进度列表
+  Future<List<SceneProgress>> fetchAllUserProgress(String userId) async {
+    final client = _httpClient;
+    if (client == null) {
+      AppLogger.warning('HTTP客户端未初始化');
+      return [];
+    }
+
+    try {
+      final response = await client.get<Map<String, dynamic>>(
+        '/api/v1/learning/progress/user/$userId/all',
+      );
+
+      final data = ApiResponseHandler.handle<List<dynamic>>(response);
+      return data
+          .map((json) => SceneProgress.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      AppLogger.error('从服务器获取所有场景进度失败', e);
+      return [];
     }
   }
 
@@ -92,14 +108,14 @@ class LearningProgressService {
     required bool isCompleted,
     required int studyTime,
   }) async {
-    final dio = _dio;
-    if (dio == null) {
+    final client = _httpClient;
+    if (client == null) {
       AppLogger.warning('HTTP客户端未初始化，跳过服务器同步');
       return true; // 本地保存成功即可
     }
 
     try {
-      final response = await dio.post(
+      final response = await client.post<Map<String, dynamic>>(
         '/api/v1/learning/progress/batch',
         data: {
           'user_id': userId,
@@ -111,13 +127,9 @@ class LearningProgressService {
         },
       );
 
-      if (response.statusCode == 200 && response.data['code'] == 0) {
-        AppLogger.info('提交进度到服务器成功');
-        return true;
-      } else {
-        AppLogger.error('提交进度失败: ${response.data}', null);
-        return false;
-      }
+      ApiResponseHandler.handle<dynamic>(response);
+      AppLogger.info('提交进度到服务器成功');
+      return true;
     } catch (e) {
       AppLogger.error('提交进度到服务器失败', e);
       return false;

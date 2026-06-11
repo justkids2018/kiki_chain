@@ -25,4 +25,7 @@ pub trait LearningProgressRepository: Send + Sync {
 
     /// 计算用户完成场景数
     async fn calculate_completed_scenes(&self, user_id: &str) -> anyhow::Result<i32>;
+
+    /// 获取用户的所有场景学习进度列表
+    async fn get_user_progress_list(&self, user_id: &str) -> anyhow::Result<Vec<SceneProgress>>;
 }

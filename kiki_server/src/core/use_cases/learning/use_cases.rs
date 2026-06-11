@@ -167,3 +167,19 @@ impl GetUserSummaryUseCase {
         self.repository.get_user_summary(user_id).await
     }
 }
+
+/// 获取用户所有场景进度列表用例
+pub struct GetUserProgressListUseCase {
+    repository: Arc<dyn LearningProgressRepository>,
+}
+
+impl GetUserProgressListUseCase {
+    pub fn new(repository: Arc<dyn LearningProgressRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub async fn execute(&self, user_id: &str) -> anyhow::Result<Vec<SceneProgress>> {
+        info!("📚 获取用户所有场景进度: user={}", user_id);
+        self.repository.get_user_progress_list(user_id).await
+    }
+}

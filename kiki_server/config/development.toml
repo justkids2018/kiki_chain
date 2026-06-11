@@ -10,8 +10,9 @@
 host = "0.0.0.0"
 port = 8081
 
-# 开发环境CORS配置：包含常用开发端口
+# 开发环境CORS配置：包含常用开发端口与通配符，方便各种调试工具直连
 cors_origins = [
+    "*",                          # 允许所有源（开发环境专用）
     "http://localhost:5173",      # Vite默认端口
     "http://localhost:5176",      # kiki_admin 端口
     "http://localhost:5178",      # kiki_admin 备用端口

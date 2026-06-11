@@ -181,4 +181,23 @@ impl LearningProgressRepository for PostgresLearningProgressRepository {
 
         Ok(result.0 as i32)
     }
+
+    async fn get_user_progress_list(&self, user_id: &str) -> anyhow::Result<Vec<SceneProgress>> {
+        let progresses = sqlx::query_as::<_, SceneProgress>(
+            r#"
+            SELECT id, user_id, scene_id, total_regions, learned_regions,
+                   learned_count, stars_earned, total_score, is_completed,
+                   first_learned_at, last_learned_at, total_study_time,
+                   created_at, updated_at
+            FROM user_scene_progress
+            WHERE user_id = $1
+            ORDER BY last_learned_at DESC
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(progresses)
+    }
 }

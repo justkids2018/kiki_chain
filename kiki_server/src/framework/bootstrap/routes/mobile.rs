@@ -6,7 +6,7 @@ use tracing::info;
 
 use crate::adapters::http::feedback::submit_feedback_handler;
 use crate::adapters::http::learning::{
-    get_progress_handler, submit_progress_handler, get_user_summary_handler,
+    get_progress_handler, submit_progress_handler, get_user_summary_handler, get_user_progress_list_handler,
 };
 use crate::adapters::http::middleware::mobile_auth_middleware;
 use crate::adapters::http::scene::{
@@ -69,6 +69,10 @@ pub fn create_mobile_routes(app_state: AppState) -> Router {
         .route(
             ApiPaths::MOBILE_LEARNING_SUMMARY,
             get(get_user_summary_handler).with_state(app_state.get_user_summary_uc.clone()),
+        )
+        .route(
+            ApiPaths::MOBILE_LEARNING_PROGRESS_LIST,
+            get(get_user_progress_list_handler).with_state(app_state.get_user_progress_list_uc.clone()),
         )
         .layer(middleware::from_fn(mobile_auth_middleware));
 

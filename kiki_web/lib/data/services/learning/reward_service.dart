@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/logging/app_logger.dart';
+import '../../../core/utils/api_response_handler.dart';
 import '../../models/learning/scene_progress.dart';
 import '../../../core/network/http_client.dart';
 
@@ -85,31 +86,27 @@ class RewardService {
     }
 
     try {
-      final response = await client.get(
+      final response = await client.get<Map<String, dynamic>>(
         '/api/v1/learning/progress/$userId/$sceneId',
       );
 
-      if (response['code'] == 0 && response['data'] != null) {
-        final data = response['data'] as Map<String, dynamic>;
-        final learnedRaw = data['learned_regions'];
-        final learnedList = learnedRaw is List
-            ? learnedRaw.map((e) => e.toString()).toList()
-            : <String>[];
-        final progress = SceneProgress(
-          userId: userId,
-          sceneId: sceneId,
-          totalRegions: (data['total_regions'] as num?)?.toInt() ?? 0,
-          learnedRegions: learnedList,
-          learnedCount: learnedList.length,
-          starsEarned: (data['stars_earned'] as num?)?.toInt() ?? 0,
-          isCompleted: data['is_completed'] as bool? ?? false,
-        );
-        AppLogger.info(
-            'RewardService: 从服务器加载进度成功 — ${progress.learnedCount} 词 / ${progress.starsEarned} 星');
-        return progress;
-      }
-      AppLogger.info('RewardService: 服务器无历史进度 (scene=$sceneId)');
-      return null;
+      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      final learnedRaw = data['learned_regions'];
+      final learnedList = learnedRaw is List
+          ? learnedRaw.map((e) => e.toString()).toList()
+          : <String>[];
+      final progress = SceneProgress(
+        userId: userId,
+        sceneId: sceneId,
+        totalRegions: (data['total_regions'] as num?)?.toInt() ?? 0,
+        learnedRegions: learnedList,
+        learnedCount: learnedList.length,
+        starsEarned: (data['stars_earned'] as num?)?.toInt() ?? 0,
+        isCompleted: data['is_completed'] as bool? ?? false,
+      );
+      AppLogger.info(
+          'RewardService: 从服务器加载进度成功 — ${progress.learnedCount} 词 / ${progress.starsEarned} 星');
+      return progress;
     } catch (e) {
       AppLogger.warning('RewardService: 拉取服务器进度失败，使用本地数据', e);
       return null;
@@ -143,7 +140,7 @@ class RewardService {
               })
           .toList();
 
-      final response = await client.post(
+      final response = await client.post<Map<String, dynamic>>(
         '/api/v1/learning/progress/batch',
         data: {
           'user_id': userId,
@@ -156,11 +153,8 @@ class RewardService {
       );
       
       AppLogger.info('RewardService: 进度提交成功: $response');
-      if (response != null && response['code'] == 0 && response['data'] != null) {
-        final data = response['data'] as Map<String, dynamic>;
-        return (data['user_total_stars'] as num?)?.toInt();
-      }
-      return null;
+      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      return (data['user_total_stars'] as num?)?.toInt();
     } catch (e) {
       AppLogger.warning('RewardService: 进度提交失败（静默忽略）', e);
       return null;
@@ -176,17 +170,14 @@ class RewardService {
     }
 
     try {
-      final response = await client.get(
+      final response = await client.get<Map<String, dynamic>>(
         '/api/v1/learning/user/$userId/summary',
       );
 
-      if (response != null && response['code'] == 0 && response['data'] != null) {
-        final data = response['data'] as Map<String, dynamic>;
-        final totalStars = (data['total_stars'] as num?)?.toInt();
-        AppLogger.info('RewardService: 获取用户总星星数成功 — $totalStars 颗星');
-        return totalStars;
-      }
-      return null;
+      final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
+      final totalStars = (data['total_stars'] as num?)?.toInt();
+      AppLogger.info('RewardService: 获取用户总星星数成功 — $totalStars 颗星');
+      return totalStars;
     } catch (e) {
       AppLogger.warning('RewardService: 获取用户总星星数失败', e);
       return null;

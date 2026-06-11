@@ -10,7 +10,7 @@ use std::sync::Arc;
 use tracing::{error, info};
 
 use crate::core::use_cases::learning::{
-    GetProgressUseCase, SubmitProgressUseCase, GetUserSummaryUseCase,
+    GetProgressUseCase, SubmitProgressUseCase, GetUserSummaryUseCase, GetUserProgressListUseCase,
     SubmitProgressCommand,
 };
 use crate::shared::api_response::ApiResponse;
@@ -104,6 +104,26 @@ pub async fn get_user_summary_handler(
         Err(e) => {
             error!("❌ 获取用户汇总失败: {}", e);
             let r = ApiResponse::<serde_json::Value>::error(500, format!("获取用户汇总失败: {}", e));
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
+        }
+    }
+}
+
+/// GET /api/v1/learning/progress/user/:user_id/all
+pub async fn get_user_progress_list_handler(
+    State(uc): State<Arc<GetUserProgressListUseCase>>,
+    Path(user_id): Path<String>,
+) -> Response {
+    info!("📚 [学习] 获取所有场景进度: user={}", user_id);
+
+    match uc.execute(&user_id).await {
+        Ok(progresses) => {
+            let dtos: Vec<ProgressResponseDto> = progresses.iter().map(ProgressResponseDto::from).collect();
+            (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
+        }
+        Err(e) => {
+            error!("❌ 获取所有场景进度失败: {}", e);
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("获取所有场景进度失败: {}", e));
             (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
         }
     }

@@ -224,6 +224,11 @@ pub async fn error_handling_middleware(request: Request<Body>, next: Next) -> Re
 /// 参数: allowed_origins - 允许的源域名列表
 /// 返回: CORS层配置
 pub fn create_cors_layer(allowed_origins: Vec<String>) -> CorsLayer {
+    // 如果包含通配符 "*"，直接返回 permissive 宽松CORS层，以方便本地各种端口调试
+    if allowed_origins.iter().any(|origin| origin == "*") {
+        return CorsLayer::permissive();
+    }
+
     let origins: Result<Vec<HeaderValue>, _> = allowed_origins
         .into_iter()
         .map(|origin| origin.parse())

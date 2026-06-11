@@ -8,6 +8,7 @@ import '../widgets/profile_tab.dart';
 import '../widgets/animated_svg/animated_svg.dart';
 import '../controllers/auth_controller.dart';
 import 'interactive_image_home/interactive_image_home_page.dart';
+import 'learning_record/learning_record_page.dart';
 
 /// 主页面
 ///
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                     _buildSvgButton(
                       assetPath: 'assets/images/hi_kiki_learning_record_button.svg',
                       onTap: () {
-                        Get.snackbar('提示', '学习记录功能开发中');
+                        Get.to(() => const LearningRecordPage());
                       },
                     ),
                     const SizedBox(width: 12),

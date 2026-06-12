@@ -150,9 +150,12 @@ class LearningRecordController extends GetxController {
     try {
       isLoading.value = true;
       AppLogger.info('🚀 Continuing learning for scene: $sceneId');
-      
+
       // Fetch full scene details (which contains items_data for interactive region rendering)
-      final sceneData = await _sceneRepository.getSceneDetail(sceneId);
+      final response = await _sceneRepository.getSceneDetail(sceneId);
+
+      // Extract the scene object from the response (API returns {scene: {...}})
+      final sceneData = response['scene'] as Map<String, dynamic>;
       final scene = Scene.fromJson(sceneData);
 
       Get.toNamed(
@@ -161,7 +164,7 @@ class LearningRecordController extends GetxController {
           'jsonFile': scene.dataFile,
           'imageItem': null,
           'images': <dynamic>[],
-          'scene': sceneData,
+          'scene': sceneData, // Pass the scene JSON (not the wrapper response)
           'sceneObject': scene,
         },
       );

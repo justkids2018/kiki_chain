@@ -36,8 +36,8 @@ class Scene {
 
   factory Scene.fromJson(Map<String, dynamic> json) {
     return Scene(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
       nameEn: json['nameEn'] as String? ?? json['name_en'] as String? ?? '',
       categoryId: json['categoryId'] as String? ?? json['category_id'] as String? ?? '',
       coverImage: json['coverImage'] as String? ?? json['cover_image'] as String? ?? '',

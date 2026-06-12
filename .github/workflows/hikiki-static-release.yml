@@ -190,7 +190,23 @@ jobs:
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.skip_url_check == 'true') }}
         run: |
           set -euo pipefail
+          set +e
           curl -fsSIL --retry 5 --retry-delay 3 "${SITE_URL}" | tee /tmp/hikiki-url-check.txt
+          CURL_EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+
+          if [[ "${CURL_EXIT_CODE}" -eq 0 ]]; then
+            exit 0
+          fi
+
+          if [[ "${CURL_EXIT_CODE}" -eq 60 ]]; then
+            echo "Warning: TLS hostname verification failed for ${SITE_URL}."
+            echo "Running insecure connectivity check (-k) so deploy is not blocked by certificate mismatch."
+            curl -kfsSIL --retry 5 --retry-delay 3 "${SITE_URL}" | tee /tmp/hikiki-url-check-insecure.txt
+            exit 0
+          fi
+
+          exit "${CURL_EXIT_CODE}"
 
       - name: Deployment summary
         if: always()

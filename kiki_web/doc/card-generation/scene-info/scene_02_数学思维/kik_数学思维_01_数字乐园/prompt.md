@@ -22,6 +22,15 @@
 - Color palette suggestion: 彩虹渐变、明亮色
 - The final image must fully use the square canvas, with no portrait crop, no landscape crop, no inner frame, no extra border, and no unused blank margin
 
+### Style Master Lock
+- Render everything as a premium miniature toy diorama.
+- Indoor Montessori learning room style.
+- Rounded educational toy objects.
+- Soft polished 3D materials.
+- Cute but elegant.
+- Like Apple-quality preschool product advertisement.
+- NOT realistic outdoor photography.
+
 ### II. Real Scene Requirement
 Create a complete, real 数字乐园 environment. The entire image IS this scene — there is no separate display table or product shelf.
 
@@ -44,35 +53,48 @@ Depth distribution:
 - Place some in background (still identifiable)
 - Avoid clustering all objects on one surface
 
-### III. 8 Target Vocabulary Objects
-- [shù zì yī] / 数字一 / Number One (/ˈnʌmbər wʌn/)
-- [shù zì èr] / 数字二 / Number Two (/ˈnʌmbər tuː/)
-- [shù zì sān] / 数字三 / Number Three (/ˈnʌmbər θriː/)
-- [shù zì sì] / 数字四 / Number Four (/ˈnʌmbər fɔːr/)
-- [shù zì wǔ] / 数字五 / Number Five (/ˈnʌmbər faɪv/)
-- [shù zì liù] / 数字六 / Number Six (/ˈnʌmbər sɪks/)
-- [shù zì qī] / 数字七 / Number Seven (/ˈnʌmbər ˈsɛvən/)
-- [shù zì bā] / 数字八 / Number Eight (/ˈnʌmbər eɪt/)
+Character baseline:
+- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
+- The scene must include exactly one cute white kitten
+- The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
+
+### III. 10 Target Vocabulary Objects
+- [yī] / 一 / One (/wʌn/)
+- [èr] / 二 / Two (/tuː/)
+- [sān] / 三 / Three (/θriː/)
+- [sì] / 四 / Four (/fɔːr/)
+- [wǔ] / 五 / Five (/faɪv/)
+- [liù] / 六 / Six (/sɪks/)
+- [qī] / 七 / Seven (/ˈsɛvən/)
+- [bā] / 八 / Eight (/eɪt/)
+- [jiǔ] / 九 / Nine (/naɪn/)
+- [shí] / 十 / Ten (/tɛn/)
 
 Object placement map:
-1. 数字一 (shù zì yī / Number One) — place naturally at a real-world position in this scene.
-2. 数字二 (shù zì èr / Number Two) — place naturally at a real-world position in this scene.
-3. 数字三 (shù zì sān / Number Three) — place naturally at a real-world position in this scene.
-4. 数字四 (shù zì sì / Number Four) — place naturally at a real-world position in this scene.
-5. 数字五 (shù zì wǔ / Number Five) — place naturally at a real-world position in this scene.
-6. 数字六 (shù zì liù / Number Six) — place naturally at a real-world position in this scene.
-7. 数字七 (shù zì qī / Number Seven) — place naturally at a real-world position in this scene.
-8. 数字八 (shù zì bā / Number Eight) — place naturally at a real-world position in this scene.
+1. 一 (yī / One) — place naturally at a real-world position in this scene.
+2. 二 (èr / Two) — place naturally at a real-world position in this scene.
+3. 三 (sān / Three) — place naturally at a real-world position in this scene.
+4. 四 (sì / Four) — place naturally at a real-world position in this scene.
+5. 五 (wǔ / Five) — place naturally at a real-world position in this scene.
+6. 六 (liù / Six) — place naturally at a real-world position in this scene.
+7. 七 (qī / Seven) — place naturally at a real-world position in this scene.
+8. 八 (bā / Eight) — place naturally at a real-world position in this scene.
+9. 九 (jiǔ / Nine) — place naturally at a real-world position in this scene.
+10. 十 (shí / Ten) — place naturally at a real-world position in this scene.
 
 Critical placement rules:
-- Exactly 8 target objects, 8 label cards, 8 arrows
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
+- Exactly 10 target objects, 10 label cards, 10 arrows
 - Every object must be clearly visible and identifiable
 - Small objects must still be enlarged enough for child recognition
 - Avoid heavy overlap that hides object identity
 - Keep directional separation when two nearby objects might be confused
 - No two objects should overlap so much that either becomes hard to identify
 
-### IV. Label Cards (exactly 8)
+### IV. Label Cards (exactly 10)
 Each object gets exactly one compact floating label card.
 
 Card style:
@@ -86,15 +108,17 @@ Line 1: [pinyin]
 Line 2: 汉字
 Line 3: english
 
-The 8 label cards must be:
-- [shù zì yī] / 数字一 / Number One
-- [shù zì èr] / 数字二 / Number Two
-- [shù zì sān] / 数字三 / Number Three
-- [shù zì sì] / 数字四 / Number Four
-- [shù zì wǔ] / 数字五 / Number Five
-- [shù zì liù] / 数字六 / Number Six
-- [shù zì qī] / 数字七 / Number Seven
-- [shù zì bā] / 数字八 / Number Eight
+The 10 label cards must be:
+- [yī] / 一 / One
+- [èr] / 二 / Two
+- [sān] / 三 / Three
+- [sì] / 四 / Four
+- [wǔ] / 五 / Five
+- [liù] / 六 / Six
+- [qī] / 七 / Seven
+- [bā] / 八 / Eight
+- [jiǔ] / 九 / Nine
+- [shí] / 十 / Ten
 
 Text rules:
 - Hanzi largest and boldest
@@ -109,7 +133,7 @@ Label placement for scattered objects:
 - No two labels should overlap
 - Keep labels from covering core object body
 
-### V. Arrows (exactly 8)
+### V. Arrows (exactly 10)
 Each label card connects to its object with one arrow.
 
 Arrow rules:
@@ -120,14 +144,16 @@ Arrow rules:
 - All arrows should share one consistent accent color family
 
 Arrow precision map:
-- 数字一 arrow -> lands on Number One object body (not nearby blank/background).
-- 数字二 arrow -> lands on Number Two object body (not nearby blank/background).
-- 数字三 arrow -> lands on Number Three object body (not nearby blank/background).
-- 数字四 arrow -> lands on Number Four object body (not nearby blank/background).
-- 数字五 arrow -> lands on Number Five object body (not nearby blank/background).
-- 数字六 arrow -> lands on Number Six object body (not nearby blank/background).
-- 数字七 arrow -> lands on Number Seven object body (not nearby blank/background).
-- 数字八 arrow -> lands on Number Eight object body (not nearby blank/background).
+- 一 arrow -> lands on One object body (not nearby blank/background).
+- 二 arrow -> lands on Two object body (not nearby blank/background).
+- 三 arrow -> lands on Three object body (not nearby blank/background).
+- 四 arrow -> lands on Four object body (not nearby blank/background).
+- 五 arrow -> lands on Five object body (not nearby blank/background).
+- 六 arrow -> lands on Six object body (not nearby blank/background).
+- 七 arrow -> lands on Seven object body (not nearby blank/background).
+- 八 arrow -> lands on Eight object body (not nearby blank/background).
+- 九 arrow -> lands on Nine object body (not nearby blank/background).
+- 十 arrow -> lands on Ten object body (not nearby blank/background).
 
 ### VI. Branding Badge
 - Top-right corner
@@ -143,11 +169,12 @@ Arrow precision map:
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
 - The scene must feel like a real environment, not a product display board
+- Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
 ### VIII. Pre-Final Self-Check
 Before final output, verify all checks:
 1. DIRTY TEXT SCAN: each card is exactly 3 lines [pinyin] / hanzi / english, no cite/reference artifacts
-2. COUNT CHECK: exactly 8 objects, 8 label cards, 8 arrows, no duplicates
+2. COUNT CHECK: exactly 10 objects, 10 label cards, 10 arrows, no duplicates
 3. MAPPING CHECK: every card matches the correct object and every arrow lands on that object body
 4. ARROW PRECISION: no floating arrows, no crossing, no ambiguous endpoints
 5. VISUAL CHECK: scene realism, object readability, label readability, full 1024x1024 canvas utilization

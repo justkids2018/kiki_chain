@@ -9,6 +9,8 @@
 - [ARROWS.md](./ARROWS.md)
 - [BRANDING_BADGE.md](./BRANDING_BADGE.md)
 - [CHARACTER_CAST.md](./CHARACTER_CAST.md)
+- [CANVAS_STYLE.md](./CANVAS_STYLE.md)
+- [QUALITY_GATE.md](./QUALITY_GATE.md)
 
 ## 职责边界
 
@@ -18,7 +20,7 @@
 
 - 场景背景
 - 展示面类型
-- 8 个目标词内容
+- N 个目标词内容
 - 场景氛围
 - 物体层布局
 

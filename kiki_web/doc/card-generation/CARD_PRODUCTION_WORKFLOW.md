@@ -10,8 +10,8 @@
 
 同目录固定文件：
 
-1. `<card_slug>.md`：给 Banana 的完整 Prompt（PRO）
-2. `prompt.md`：兼容入口（内容与上面一致）
+1. `<card_slug>.md`：给 Banana 的完整 Prompt（PRO），唯一可信来源
+2. `prompt.md`：兼容入口，必须与 `<card_slug>.md` 完全一致；若不一致，禁止使用 `prompt.md`
 3. `<card_slug>.png|jpg|webp`：生成并下载的图片
 4. `<card_slug>.json`：items_data 热区 JSON
 
@@ -31,7 +31,21 @@ python3 scripts/card_generation/generate_prompts_from_scenes.py
 
 1. 每个卡片目录都有 `<card_slug>.md`
 2. Prompt 是完整可复制版本，不依赖外部规则链接
-3. `scene-info/index.json` 已更新
+3. `prompt.md` 若存在，内容与 `<card_slug>.md` 完全一致
+4. `scene-info/index.json` 已更新
+
+### 1.3 词条数量门禁
+
+生图前必须从 `<card_slug>.md` 的 `### III. N Target Vocabulary Objects` 段读取词条数 `N`：
+
+1. 图片必须生成 `N` 个目标物体
+2. 图片必须生成 `N` 张标签卡片
+3. 图片必须生成 `N` 根箭头
+4. JSON 必须输出 `N` 个词条
+5. 图片中的每张标签卡片必须逐字来自 md 的 `### III` 词表行
+6. 图片中不得出现词表外标签词；额外场景物只能作为无标签背景
+
+禁止把 8 个当成默认值覆盖 md。当前允许 7/8/10 等不同数量，只要 md 声明数量、词条行数、标签数、箭头数完全一致。
 
 ## 2. 去 Google / Gemini（Banana）生成图片
 
@@ -46,6 +60,8 @@ python3 scripts/card_generation/generate_prompts_from_scenes.py
 1. 先生成第一版
 2. 重点检查：主体是否齐全、中文卡片是否可读、场景是否符合 Prompt
 3. 不满足就直接迭代重生，不要进入下一步
+4. 若只有 1-2 个箭头或对象错配，也必须在图片阶段重生或人工修正，不能寄希望于 JSON 热区修复
+5. 若图片出现 md 词表外的标签词、替换词或缺少 md 词条，直接判定失败并重生
 
 ### 2.3 下载与落盘
 
@@ -100,8 +116,8 @@ python3 scripts/card_generation/generate_prompts_from_scenes.py
 
 不通过处理：
 
-1. 回到 JSON 调整坐标
-2. 必要时回到图片生成环节重做图片
+1. 若只是坐标框偏差，回到 JSON 调整坐标
+2. 若图片本身箭头落点、标签映射、目标物体数量错误，必须回到图片生成环节重做图片
 
 ## 5. 上传 Admin（详情页添加）
 
@@ -134,7 +150,7 @@ python3 scripts/card_generation/generate_prompts_from_scenes.py
 
 单卡建议执行顺序：
 
-1. 打开该卡目录，复制 `<card_slug>.md`
+1. 打开该卡目录，复制 `<card_slug>.md`，不要复制 stale `prompt.md`
 2. Gemini(Banana) 生成并下载 `<card_slug>.jpg`
 3. 运行 `just-hotspot-generator` 产出 `<card_slug>.json`
 4. 用 `hotspot-preview.html` 打分，要求 >=89

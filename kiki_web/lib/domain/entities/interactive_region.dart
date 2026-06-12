@@ -38,10 +38,10 @@ class InteractiveRegion {
       textPinyin: json['text_pinyin'] ?? '',
       textEnglish: json['text_english'] ?? '',
       textPhonetic: json['text_phonetic'] ?? '',
-      audioCnKey: json['audio_cn_key'] ?? '',
-      audioCnUrl: json['audio_cn_url'] ?? '',
-      audioEnKey: json['audio_en_key'] ?? '',
-      audioEnUrl: json['audio_en_url'] ?? '',
+      audioCnKey: json['audio_cn_key'] ?? json['audioCnKey'] ?? '',
+      audioCnUrl: json['audio_cn_url'] ?? json['audioCnUrl'] ?? '',
+      audioEnKey: json['audio_en_key'] ?? json['audioEnKey'] ?? '',
+      audioEnUrl: json['audio_en_url'] ?? json['audioEnUrl'] ?? '',
       audioSourceType: (json['audio_source_type'] ??
               json['playback_type'] ??
               json['audio_mode'] ??

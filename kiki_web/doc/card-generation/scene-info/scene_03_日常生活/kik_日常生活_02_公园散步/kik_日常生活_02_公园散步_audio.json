@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "长椅",
+    "text_pinyin": "cháng yǐ",
+    "text_english": "Bench",
+    "text_phonetic": "/bɛntʃ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 20,
+            "y": 155
+          },
+          {
+            "x": 180,
+            "y": 155
+          },
+          {
+            "x": 20,
+            "y": 320
+          },
+          {
+            "x": 180,
+            "y": 320
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 28,
+            "y": 278
+          },
+          {
+            "x": 258,
+            "y": 278
+          },
+          {
+            "x": 28,
+            "y": 473
+          },
+          {
+            "x": 258,
+            "y": 473
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/长椅-9da7d4_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/长椅-9da7d4_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/bench-9da7d4_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/bench-9da7d4_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "喷泉",
+    "text_pinyin": "pēn quán",
+    "text_english": "Fountain",
+    "text_phonetic": "/ˈfaʊntən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 788,
+            "y": 163
+          },
+          {
+            "x": 925,
+            "y": 163
+          },
+          {
+            "x": 788,
+            "y": 295
+          },
+          {
+            "x": 925,
+            "y": 295
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 602,
+            "y": 208
+          },
+          {
+            "x": 812,
+            "y": 208
+          },
+          {
+            "x": 602,
+            "y": 493
+          },
+          {
+            "x": 812,
+            "y": 493
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/喷泉-ccdc6e_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/喷泉-ccdc6e_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/fountain-ccdc6e_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/fountain-ccdc6e_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "风筝",
+    "text_pinyin": "fēng zhēng",
+    "text_english": "Kite",
+    "text_phonetic": "/kaɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 379,
+            "y": 41
+          },
+          {
+            "x": 549,
+            "y": 41
+          },
+          {
+            "x": 379,
+            "y": 206
+          },
+          {
+            "x": 549,
+            "y": 206
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 562,
+            "y": 15
+          },
+          {
+            "x": 692,
+            "y": 15
+          },
+          {
+            "x": 562,
+            "y": 170
+          },
+          {
+            "x": 692,
+            "y": 170
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/风筝-afe099_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/风筝-afe099_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/kite-afe099_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/kite-afe099_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "小船",
+    "text_pinyin": "xiǎo chuán",
+    "text_english": "Boat",
+    "text_phonetic": "/boʊt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 828,
+            "y": 491
+          },
+          {
+            "x": 1013,
+            "y": 491
+          },
+          {
+            "x": 828,
+            "y": 661
+          },
+          {
+            "x": 1013,
+            "y": 661
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 774,
+            "y": 583
+          },
+          {
+            "x": 986,
+            "y": 583
+          },
+          {
+            "x": 774,
+            "y": 717
+          },
+          {
+            "x": 986,
+            "y": 717
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/小船-416985_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/小船-416985_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/boat-416985_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/boat-416985_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "鸽子",
+    "text_pinyin": "gē zi",
+    "text_english": "Pigeon",
+    "text_phonetic": "/ˈpɪdʒɪn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 56,
+            "y": 848
+          },
+          {
+            "x": 221,
+            "y": 848
+          },
+          {
+            "x": 56,
+            "y": 1011
+          },
+          {
+            "x": 221,
+            "y": 1011
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 153,
+            "y": 735
+          },
+          {
+            "x": 287,
+            "y": 735
+          },
+          {
+            "x": 153,
+            "y": 889
+          },
+          {
+            "x": 287,
+            "y": 889
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/鸽子-4ed028_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/鸽子-4ed028_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/pigeon-4ed028_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/pigeon-4ed028_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "冰淇淋车",
+    "text_pinyin": "bīng qí lín chē",
+    "text_english": "Ice Cream Truck",
+    "text_phonetic": "/aɪs kriːm trʌk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 4,
+            "y": 684
+          },
+          {
+            "x": 152,
+            "y": 684
+          },
+          {
+            "x": 4,
+            "y": 822
+          },
+          {
+            "x": 152,
+            "y": 822
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 40,
+            "y": 492
+          },
+          {
+            "x": 280,
+            "y": 492
+          },
+          {
+            "x": 40,
+            "y": 712
+          },
+          {
+            "x": 280,
+            "y": 712
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/冰淇淋车-34d8a4_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/冰淇淋车-34d8a4_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/ice-cream-truck-34d8a4_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/ice-cream-truck-34d8a4_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "滑板",
+    "text_pinyin": "huá bǎn",
+    "text_english": "Skateboard",
+    "text_phonetic": "/ˈskeɪtbɔːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 290,
+            "y": 885
+          },
+          {
+            "x": 450,
+            "y": 885
+          },
+          {
+            "x": 290,
+            "y": 1023
+          },
+          {
+            "x": 450,
+            "y": 1023
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 315,
+            "y": 815
+          },
+          {
+            "x": 505,
+            "y": 815
+          },
+          {
+            "x": 315,
+            "y": 925
+          },
+          {
+            "x": 505,
+            "y": 925
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/滑板-3de799_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/滑板-3de799_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/skateboard-3de799_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/skateboard-3de799_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "野餐垫",
+    "text_pinyin": "yě cān diàn",
+    "text_english": "Picnic Mat",
+    "text_phonetic": "/ˈpɪknɪk mæt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 576,
+            "y": 879
+          },
+          {
+            "x": 746,
+            "y": 879
+          },
+          {
+            "x": 576,
+            "y": 1017
+          },
+          {
+            "x": 746,
+            "y": 1017
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 682,
+            "y": 727
+          },
+          {
+            "x": 907,
+            "y": 727
+          },
+          {
+            "x": 682,
+            "y": 972
+          },
+          {
+            "x": 907,
+            "y": 972
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_02_公园散步/野餐垫-692291_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/野餐垫-692291_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_02_公园散步/picnic-mat-692291_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_02_公园散步/picnic-mat-692291_en.mp3"
+  }
+]

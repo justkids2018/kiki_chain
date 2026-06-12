@@ -1,7 +1,7 @@
 # 图片生成 Prompt — 真实场景版
 
 > 适合图书馆学习、厨房认知、公园观察、卧室整理等"强场景"主题。
-> 特点：8 个物品放在场景中各自真实的位置，而不是集中在一张桌子上。
+> 特点：N 个词表物品放在场景中各自真实的位置，而不是集中在一张桌子上。
 
 > 这份文件只负责"真实场景布局骨架"。
 > 标签卡片、文字样式、箭头、品牌角标必须引用同目录下的组件规则；生成前自检必须引用检查清单。
@@ -35,8 +35,8 @@
 
 **真实场景模式 vs 展示台模式：**
 
-旧模式会把 8 个物品集中放在一张展示桌上。
-本模板将 8 个物品放在场景中各自真实的位置——黑板挂墙上、课桌在地面、粉笔在黑板槽里、书包挂椅背。
+旧模式会把词表物品集中放在一张展示桌上。
+本模板将 N 个词表物品放在场景中各自真实的位置——黑板挂墙上、课桌在地面、粉笔在黑板槽里、书包挂椅背。
 
 这样做的教学目的：让小朋友看到"这个东西在真实环境里长什么样、放在哪里"。
 
@@ -84,8 +84,15 @@ Rules:
 - The scene must include exactly one cute white kitten
 - The two girls and the white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
 
-#### B. Object Placement — 8 vocabulary objects in their real-world positions
-Place exactly 8 target objects in the scene at the positions where they would naturally exist in real life.
+#### B. Object Placement — N vocabulary objects in their real-world positions
+Read the vocabulary list from the current card md. Place exactly N target objects in the scene at the positions where they would naturally exist in real life.
+
+**Closed vocabulary contract:**
+- The vocabulary list in the current card md is the only allowed learning target set.
+- Use exactly those N vocabulary items; do not substitute, rename, simplify, translate differently, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from the md: `[pinyin] / hanzi / english`.
+- Decorative scene props may exist only as unlabeled background elements. They must not receive label cards, arrows, or learning-object emphasis.
+- If any label or arrow points to an object that is not in the md vocabulary list, the image fails and must be regenerated.
 
 **Placement principle:**
 - Each object must sit where it would truly be found in this scene
@@ -110,7 +117,7 @@ Place exactly 8 target objects in the scene at the positions where they would na
 - The overall image should feel like a polished, slightly stylized photograph of a real scene — not a flat illustration or a product display
 
 ### IV. Shared Component Rules
-- Each of the 8 objects must receive one compact label card and one correct arrow
+- Each of the N objects must receive one compact label card and one correct arrow
 - The detailed component rules are maintained in separate files:
 - Always apply `components/LABEL_CARDS.md` for card body, border, thickness, and shadow rules
 - Always apply `components/TEXT_STYLE.md` for the three-line text structure, hierarchy, and scene-matched text color rules
@@ -129,6 +136,8 @@ Place exactly 8 target objects in the scene at the positions where they would na
 - Must be exactly 1024×1024 square composition
 - No giant title or banner
 - No unrelated decorative objects
+- No extra labeled objects outside the md vocabulary list
+- No substitute vocabulary objects, even if visually similar or contextually natural
 - No unified recoloring of all objects
 - No balloon-like inflation
 - No thin, flat, paper-like object rendering
@@ -142,7 +151,7 @@ Place exactly 8 target objects in the scene at the positions where they would na
 
 ### VI. Pre-Final Check
 - Before finalizing, always apply the full quality gate in this file's "Pre-Final Check"
-- At minimum, verify exact object count, exact label count, exact arrow count, no duplicates, no wrong pointing, and no dirty meta text
+- At minimum, verify closed vocabulary match, exact object count N, exact label count N, exact arrow count N, no duplicates, no wrong pointing, and no dirty meta text
 - If any item is duplicated, missing, mislabeled, visually ambiguous, or incorrectly pointed, regenerate the layout before producing the final image
 ```
 

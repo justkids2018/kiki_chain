@@ -12,10 +12,10 @@ import '../../core/di/service_locator.dart';
 import '../../utils/crypto_utils.dart';
 
 /// 认证控制器
-/// 
+///
 /// 负责处理登录、注册相关的业务逻辑
 /// 使用GetX状态管理，提供响应式的用户状态
-/// 
+///
 /// 创建时间: 2025年8月9日
 /// 最后修改: 2025年8月9日
 class AuthController extends GetxController {
@@ -24,26 +24,26 @@ class AuthController extends GetxController {
   AuthController({IAuthRepository? authRepository})
       : _authRepository =
             authRepository ?? ServiceLocator.instance.authRepository;
-  
+
   // 响应式状态
   final _currentUser = Rxn<User>();
   final _isLoggedIn = false.obs;
   final _isInitialized = false.obs;
-  
+
   // 表单控制器
   final loginFormKey = GlobalKey<FormState>();
   final registerFormKey = GlobalKey<FormState>();
-  
+
   // 登录表单字段
   final loginIdentifierController = TextEditingController();
   final loginPasswordController = TextEditingController();
-  
+
   // 注册表单字段
   final registerPhoneController = TextEditingController();
   final registerNicknameController = TextEditingController();
   final registerPasswordController = TextEditingController();
   final registerConfirmPasswordController = TextEditingController();
-  
+
   // 密码可见性控制
   final _loginPasswordVisible = false.obs;
   final _registerPasswordVisible = false.obs;
@@ -51,33 +51,34 @@ class AuthController extends GetxController {
 
   // 用户协议同意状态
   final _agreeToTerms = false.obs;
-  
+
   // Getters
   User? get currentUser => _currentUser.value;
   bool get isLoggedIn => _isLoggedIn.value;
   bool get isInitialized => _isInitialized.value;
   bool get loginPasswordVisible => _loginPasswordVisible.value;
   bool get registerPasswordVisible => _registerPasswordVisible.value;
-  bool get registerConfirmPasswordVisible => _registerConfirmPasswordVisible.value;
+  bool get registerConfirmPasswordVisible =>
+      _registerConfirmPasswordVisible.value;
   bool get agreeToTerms => _agreeToTerms.value;
 
   // Helper to get localizations
   AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;
-  
+
   @override
   void onInit() {
     super.onInit();
     _initializeAuthState();
 
-  // 测试默认手机号和密码
-  loginIdentifierController.text = '13800138003';
-  loginPasswordController.text = 'password123';
+    // 测试默认手机号和密码
+    loginIdentifierController.text = '13800138003';
+    loginPasswordController.text = 'password123';
 
     // 注册表单测试数据
-  registerPhoneController.text = '';
-  registerNicknameController.text = '';
-  registerPasswordController.text = '';
-  registerConfirmPasswordController.text = '';
+    registerPhoneController.text = '';
+    registerNicknameController.text = '';
+    registerPasswordController.text = '';
+    registerConfirmPasswordController.text = '';
   }
 
   @override
@@ -85,10 +86,10 @@ class AuthController extends GetxController {
     // 清理控制器
     loginIdentifierController.dispose();
     loginPasswordController.dispose();
-  registerPhoneController.dispose();
-  registerNicknameController.dispose();
-  registerPasswordController.dispose();
-  registerConfirmPasswordController.dispose();
+    registerPhoneController.dispose();
+    registerNicknameController.dispose();
+    registerPasswordController.dispose();
+    registerConfirmPasswordController.dispose();
     super.onClose();
   }
 
@@ -100,7 +101,7 @@ class AuthController extends GetxController {
   }
 
   /// 检查登录状态
-  /// 
+  ///
   /// 应用启动时检查是否已登录
   Future<void> _checkLoginStatus() async {
     try {
@@ -111,7 +112,8 @@ class AuthController extends GetxController {
         if (userInfo != null) {
           _currentUser.value = User.fromJson(userInfo);
           _isLoggedIn.value = true;
-          AppLogger.info('User already logged in: ${_currentUser.value?.nickname}');
+          AppLogger.info(
+              'User already logged in: ${_currentUser.value?.nickname}');
         }
       } else {
         RequestManager.instance.clearAuthToken();
@@ -120,20 +122,20 @@ class AuthController extends GetxController {
       AppLogger.error('Check login status failed', e);
     }
   }
-  
+
   /// 用户登录
-  /// 
+  ///
   /// 参数:
   /// - [identifier] 登录标识符（用户名或邮箱）
   /// - [password] 密码
-  /// 
+  ///
   /// 返回:
   /// - [bool] 登录是否成功
   Future<bool> login() async {
     if (!loginFormKey.currentState!.validate()) {
       return false;
     }
-    
+
     try {
       EasyLoading.show(status: _l10n.loggingIn);
 
@@ -159,21 +161,19 @@ class AuthController extends GetxController {
       // 导航到首页
       await _replaceRouteSafely('/home');
       return true;
-
     } on ApiResponseException catch (e) {
       // 处理所有异常（API响应、网络错误、认证错误等）
       String errorMessage = e.message;
 
       // 特殊处理需要重新认证的情况
       // if (e.needsReauth) {
-        // errorMessage = '登录已过期，请重新登录';
-        // 可以在这里执行重新认证逻辑
+      // errorMessage = '登录已过期，请重新登录';
+      // 可以在这里执行重新认证逻辑
       // }
 
       EasyLoading.showError(errorMessage);
       AppLogger.error('Login failed: ${e.message}', e);
       return false;
-
     } catch (e) {
       // 处理其他未知异常
       final errorMessage = _l10n.loginFailed;
@@ -182,7 +182,7 @@ class AuthController extends GetxController {
       return false;
     }
   }
-  
+
   /// 用户注册
   ///
   /// 包含表单验证，确保手机号、密码格式正确
@@ -225,7 +225,6 @@ class AuthController extends GetxController {
       // 导航到首页
       await _replaceRouteSafely('/home');
       return true;
-
     } on ApiResponseException catch (e) {
       // 处理所有异常（API响应、网络错误、认证错误等）
       String errorMessage = e.message;
@@ -235,7 +234,6 @@ class AuthController extends GetxController {
       EasyLoading.showError(errorMessage);
       AppLogger.error('Registration failed: ${e.message}', e);
       return false;
-
     } catch (e) {
       // 处理其他未知异常
       final errorMessage = _l10n.registerFailed;
@@ -244,9 +242,9 @@ class AuthController extends GetxController {
       return false;
     }
   }
-  
+
   /// 用户退出登录
-  /// 
+  ///
   /// 清除所有本地存储的用户信息和token
   /// 重置用户状态，导航回欢迎页
   Future<void> logout() async {
@@ -273,20 +271,32 @@ class AuthController extends GetxController {
       AppLogger.error('Logout failed', e);
     }
   }
-  
+
+  /// 更新本地缓存的用户总星星数
+  Future<void> updateUserStars(int totalStars) async {
+    final user = _currentUser.value;
+    if (user != null) {
+      final updatedUser = user.copyWith(totalStars: totalStars);
+      _currentUser.value = updatedUser;
+      await AppServices.instance.localStorage.setUserInfo(updatedUser.toJson());
+      AppLogger.info('AuthController: 更新本地用户总星星数为 $totalStars 颗星');
+    }
+  }
+
   /// 切换登录密码可见性
   void toggleLoginPasswordVisibility() {
     _loginPasswordVisible.value = !_loginPasswordVisible.value;
   }
-  
+
   /// 切换注册密码可见性
   void toggleRegisterPasswordVisibility() {
     _registerPasswordVisible.value = !_registerPasswordVisible.value;
   }
-  
+
   /// 切换确认密码可见性
   void toggleRegisterConfirmPasswordVisibility() {
-    _registerConfirmPasswordVisible.value = !_registerConfirmPasswordVisible.value;
+    _registerConfirmPasswordVisible.value =
+        !_registerConfirmPasswordVisible.value;
   }
 
   /// 设置用户协议同意状态
@@ -315,7 +325,7 @@ class AuthController extends GetxController {
 
     return null;
   }
-  
+
   /// 验证密码
   ///
   /// 参数:
@@ -340,7 +350,7 @@ class AuthController extends GetxController {
 
     return null;
   }
-  
+
   /// 验证昵称
   ///
   /// 参数:
@@ -388,7 +398,7 @@ class AuthController extends GetxController {
 
     return null;
   }
-  
+
   /// 验证手机号
   ///
   /// 参数:
@@ -412,10 +422,10 @@ class AuthController extends GetxController {
   }
 
   /// 验证确认密码
-  /// 
+  ///
   /// 参数:
   /// - [value] 输入的确认密码
-  /// 
+  ///
   /// 返回:
   /// - [String?] 验证错误信息，null表示验证通过
   String? validateConfirmPassword(String? value) {
@@ -429,14 +439,14 @@ class AuthController extends GetxController {
 
     return null;
   }
-  
+
   /// 清空登录表单
   void _clearLoginForm() {
     loginIdentifierController.clear();
     loginPasswordController.clear();
     _loginPasswordVisible.value = false;
   }
-  
+
   /// 清空注册表单
   void _clearRegisterForm() {
     registerPhoneController.clear();
@@ -446,7 +456,7 @@ class AuthController extends GetxController {
     _registerPasswordVisible.value = false;
     _registerConfirmPasswordVisible.value = false;
   }
-  
+
   /// 清空所有表单
   void _clearAllForms() {
     _clearLoginForm();
@@ -498,12 +508,22 @@ class AuthController extends GetxController {
 
   /// 检查是否为游客模式
   bool get isGuestMode {
-    return AppServices.instance.localStorage.getBool('is_guest_mode') ?? false;
+    try {
+      return AppServices.instance.localStorage.getBool('is_guest_mode') ??
+          false;
+    } catch (e) {
+      AppLogger.error('Check guest mode failed', e);
+      return false;
+    }
   }
 
   /// 获取游客ID
   String? get guestId {
-    return AppServices.instance.localStorage.getString('guest_id');
+    try {
+      return AppServices.instance.localStorage.getString('guest_id');
+    } catch (e) {
+      AppLogger.error('Get guest id failed', e);
+      return null;
+    }
   }
 }
-

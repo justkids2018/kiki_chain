@@ -1,1 +1,426 @@
-[]
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "听诊器",
+    "text_pinyin": "tīng zhěn qì",
+    "text_english": "Stethoscope",
+    "text_phonetic": "/ˈstɛθəskoʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 32,
+            "y": 126
+          },
+          {
+            "x": 224,
+            "y": 126
+          },
+          {
+            "x": 32,
+            "y": 233
+          },
+          {
+            "x": 224,
+            "y": 233
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 353,
+            "y": 338
+          },
+          {
+            "x": 588,
+            "y": 338
+          },
+          {
+            "x": 353,
+            "y": 518
+          },
+          {
+            "x": 588,
+            "y": 518
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "体温计",
+    "text_pinyin": "tǐ wēn jì",
+    "text_english": "Thermometer",
+    "text_phonetic": "/θərˈmɑːmɪtər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 652,
+            "y": 143
+          },
+          {
+            "x": 808,
+            "y": 143
+          },
+          {
+            "x": 652,
+            "y": 281
+          },
+          {
+            "x": 808,
+            "y": 281
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 688,
+            "y": 282
+          },
+          {
+            "x": 776,
+            "y": 282
+          },
+          {
+            "x": 688,
+            "y": 477
+          },
+          {
+            "x": 776,
+            "y": 477
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "药箱",
+    "text_pinyin": "yào xiāng",
+    "text_english": "Medicine Box",
+    "text_phonetic": "/ˈmɛdɪsɪn bɑːks/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 837,
+            "y": 218
+          },
+          {
+            "x": 996,
+            "y": 218
+          },
+          {
+            "x": 837,
+            "y": 359
+          },
+          {
+            "x": 996,
+            "y": 359
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 782,
+            "y": 368
+          },
+          {
+            "x": 1002,
+            "y": 368
+          },
+          {
+            "x": 782,
+            "y": 532
+          },
+          {
+            "x": 1002,
+            "y": 532
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "绷带",
+    "text_pinyin": "běng dài",
+    "text_english": "Bandage",
+    "text_phonetic": "/ˈbændɪdʒ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 884,
+            "y": 521
+          },
+          {
+            "x": 992,
+            "y": 521
+          },
+          {
+            "x": 884,
+            "y": 628
+          },
+          {
+            "x": 992,
+            "y": 628
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 853,
+            "y": 656
+          },
+          {
+            "x": 1013,
+            "y": 656
+          },
+          {
+            "x": 853,
+            "y": 756
+          },
+          {
+            "x": 1013,
+            "y": 756
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "病床",
+    "text_pinyin": "bìng chuáng",
+    "text_english": "Hospital Bed",
+    "text_phonetic": "/ˈhɑːspɪtl bɛd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 22,
+            "y": 477
+          },
+          {
+            "x": 190,
+            "y": 477
+          },
+          {
+            "x": 22,
+            "y": 613
+          },
+          {
+            "x": 190,
+            "y": 613
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 313
+          },
+          {
+            "x": 297,
+            "y": 313
+          },
+          {
+            "x": 0,
+            "y": 495
+          },
+          {
+            "x": 297,
+            "y": 495
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "注射器",
+    "text_pinyin": "zhù shè qì",
+    "text_english": "Syringe",
+    "text_phonetic": "/sɪˈrɪndʒ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 22,
+            "y": 768
+          },
+          {
+            "x": 168,
+            "y": 768
+          },
+          {
+            "x": 22,
+            "y": 890
+          },
+          {
+            "x": 168,
+            "y": 890
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 669
+          },
+          {
+            "x": 285,
+            "y": 669
+          },
+          {
+            "x": 0,
+            "y": 786
+          },
+          {
+            "x": 285,
+            "y": 786
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "医生包",
+    "text_pinyin": "yī shēng bāo",
+    "text_english": "Doctor Bag",
+    "text_phonetic": "/ˈdɑːktər bæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 193,
+            "y": 865
+          },
+          {
+            "x": 355,
+            "y": 865
+          },
+          {
+            "x": 193,
+            "y": 981
+          },
+          {
+            "x": 355,
+            "y": 981
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 285,
+            "y": 704
+          },
+          {
+            "x": 565,
+            "y": 704
+          },
+          {
+            "x": 285,
+            "y": 874
+          },
+          {
+            "x": 565,
+            "y": 874
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "口罩",
+    "text_pinyin": "kǒu zhào",
+    "text_english": "Mask",
+    "text_phonetic": "/mæsk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 564,
+            "y": 854
+          },
+          {
+            "x": 718,
+            "y": 854
+          },
+          {
+            "x": 564,
+            "y": 988
+          },
+          {
+            "x": 718,
+            "y": 988
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 562,
+            "y": 757
+          },
+          {
+            "x": 917,
+            "y": 757
+          },
+          {
+            "x": 562,
+            "y": 865
+          },
+          {
+            "x": 917,
+            "y": 865
+          }
+        ]
+      }
+    ]
+  }
+]

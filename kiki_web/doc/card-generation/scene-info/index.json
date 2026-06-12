@@ -236,5 +236,65 @@
     "image": "doc/card-generation/scene-info/scene_04_游乐场景/kik_游乐场景_06_沙滩乐园/kik_游乐场景_06_沙滩乐园.png",
     "json": "doc/card-generation/scene-info/scene_04_游乐场景/kik_游乐场景_06_沙滩乐园/kik_游乐场景_06_沙滩乐园.json",
     "source": "SCENES.md"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_01_家庭成员",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_01_家庭成员/kik_入学准备_01_家庭成员.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_02_身体动作",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_02_身体动作/kik_入学准备_02_身体动作.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_03_情绪礼貌",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_03_情绪礼貌/kik_入学准备_03_情绪礼貌.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_04_天气四季",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_04_天气四季/kik_入学准备_04_天气四季.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_05_空间方位",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_05_空间方位/kik_入学准备_05_空间方位.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
+  },
+  {
+    "scene_slug": "scene_05_入学准备",
+    "card_slug": "kik_入学准备_06_生活自理",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_入学准备/kik_入学准备_06_生活自理/kik_入学准备_06_生活自理.md",
+    "prompt": "",
+    "image": "",
+    "json": "",
+    "source": "3-6_school_readiness",
+    "status": "planned_md_only"
   }
 ]

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../domain/entities/interactive_region.dart';
@@ -10,6 +11,7 @@ class InteractiveImageView extends StatefulWidget {
   final List<InteractiveRegion> regions;
   final Function(InteractiveRegion) onRegionTap;
   final ValueChanged<Offset>? onRegionTapDown;
+  final VoidCallback? onBlankAreaTap;
   // Debug switch for region frame overlay. Keep default OFF in production.
   // Turn ON temporarily when validating click areas or diagnosing tap issues.
   final bool showRegionDebugFrames;
@@ -22,6 +24,7 @@ class InteractiveImageView extends StatefulWidget {
     required this.regions,
     required this.onRegionTap,
     this.onRegionTapDown,
+    this.onBlankAreaTap,
     this.showRegionDebugFrames = false,
   }) : super(key: key);
 
@@ -126,6 +129,10 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
                           AppLogger.debug(
                               'Region tapped(best-hit): ${hitRegion.text} at (${rect.left}, ${rect.top}) size: ${rect.width}x${rect.height}');
                           widget.onRegionTap(hitRegion);
+                        } else {
+                          // 点击了空白区域
+                          AppLogger.debug('Blank area tapped');
+                          widget.onBlankAreaTap?.call();
                         }
                       },
                       child: Stack(
@@ -149,12 +156,15 @@ class _InteractiveImageViewState extends State<InteractiveImageView>
   /// 构建图片组件，支持本地和网络图片
   Widget _buildImage(String imagePath, BuildContext context) {
     return imagePath.startsWith('http://') || imagePath.startsWith('https://')
-        ? Image.network(
-            imagePath,
+        ? CachedNetworkImage(
+            imageUrl: imagePath,
             fit: BoxFit.fill,
-            errorBuilder: (context, error, stackTrace) {
-              return _buildErrorWidget(context, imagePath);
-            },
+            useOldImageOnUrlChange: true,
+            fadeInDuration: Duration.zero,
+            fadeOutDuration: Duration.zero,
+            placeholder: (_, __) => const SizedBox.expand(),
+            errorWidget: (context, url, error) =>
+                _buildErrorWidget(context, imagePath),
           )
         : Image.asset(
             imagePath,

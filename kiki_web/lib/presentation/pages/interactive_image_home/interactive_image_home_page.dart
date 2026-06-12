@@ -1,10 +1,10 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/app_loading_widget.dart';
+import '../../widgets/animated_svg/animated_svg.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../design_ui/kiki_ui_kit.dart';
 
@@ -21,16 +21,12 @@ class InteractiveImageHomePage extends StatelessWidget {
           body: Container(
             decoration: KikiUiDecor.pageBackgroundDecor,
             child: SafeArea(
-              minimum: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+              minimum: const EdgeInsets.fromLTRB(15, 20, 10, 20),
               child: Stack(
                 children: [
                   Positioned.fill(
-                    top: 46,
+                    top: 60, // 向上移动分类列表（配合顶栏上移），使卡片整体上浮并减少中部空白空间
                     child: _buildCategoryList(controller),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: _buildFloatingHeader(context),
                   ),
                 ],
               ),
@@ -38,52 +34,6 @@ class InteractiveImageHomePage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  /// 悬浮毛玻璃标题
-  Widget _buildFloatingHeader(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(18),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: KikiUiColors.panel.withValues(alpha: 0.76),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.85),
-              width: 1.2,
-            ),
-            boxShadow: KikiUiShadows.floating,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Hi Kiki',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: KikiUiColors.brandGreen,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Builder(builder: (context) {
-                final loc = AppLocalizations.of(context)!;
-                return Text(
-                  loc.chooseSceneToStart,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: KikiUiColors.textSecondary,
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

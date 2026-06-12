@@ -1,2 +1,0 @@
-kiki_web/assets/tts_models/**/*.onnx filter=lfs diff=lfs merge=lfs -text
-kiki_web/assets/tts_models/**/*.far filter=lfs diff=lfs merge=lfs -text

@@ -16,6 +16,8 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  static const Duration _authInitializationTimeout = Duration(seconds: 4);
+
   @override
   void initState() {
     super.initState();
@@ -24,10 +26,12 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Future<void> _checkLoginStatus() async {
     final authController = Get.find<AuthController>();
-    while (!authController.isInitialized) {
+    final deadline = DateTime.now().add(_authInitializationTimeout);
+    while (!authController.isInitialized && DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
-    if (authController.isLoggedIn || authController.isGuestMode) {
+    if (!mounted || !authController.isInitialized) return;
+    if (authController.isLoggedIn) {
       Get.offAllNamed(AppConstants.routeHome);
     }
   }

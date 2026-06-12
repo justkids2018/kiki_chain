@@ -1,50 +1,90 @@
-# 马戏团 — 真实场景学习卡片 Prompt
+# 马戏团 — 组件化学习卡片 Prompt
 
 > 分类：游乐场景
 > 主题序号：4.5
 > 场景文件：kik_游乐场景_05_马戏团.png
 > 热区文件：kik_游乐场景_05_马戏团.json
+> 生成方式：card-promp-rule 组件化合成
 
 ---
 
 ```text
 **马戏团** (主题): Hi Kiki
 
-### I. Core Setup
+### I. Canvas & Style Lock
 - Target age: 3-6 years old
 - Format: exact square 1:1
 - Resolution: exact 1024x1024 pixels
-- View: slightly elevated 3/4 top-front view, looking into a real 马戏团 adventure environment
-- Style: realistic base with fuller, softer 3D volume enhancement
-- Keep real-world proportions and recognizable shapes
-- Do not over-inflate objects into balloon or gummy style
-- Keep the image realistic first, but forms should feel rounded, solid, and full-bodied
-- Color palette suggestion: 红色、金色、条纹
+- View: slightly elevated 3/4 top-front view
 - The final image must fully use the square canvas, with no portrait crop, no landscape crop, no inner frame, no extra border, and no unused blank margin
+- Render everything as a premium miniature toy diorama
+- Indoor Montessori learning room style
+- Rounded educational toy objects
+- Soft polished 3D materials
+- Warm contact shadows and soft highlights
+- Cute but elegant
+- Like Apple-quality preschool product advertisement
+- The scene may show a real-life or imaginative layout, but it must not look like a real photograph
+- If "real scene" conflicts with "premium miniature toy diorama", the toy diorama style has higher priority
+- NOT photorealistic documentary
+- NOT live-action people
+- NOT a normal real-world snapshot
 
-### II. Real Scene Requirement
-Create a complete, real 马戏团 environment. The entire image IS this scene — there is no separate display table or product shelf.
+### II. Scene Background
+Create a complete 马戏团 adventure play environment inside a cozy Montessori-style play world.
+The entire image IS this scene — there is no separate display table or product shelf.
 
-Scene elements:
-- Theme-matching immersive play scene
-- Foreground-midground-background depth composition
-- Props distributed across the environment naturally
-- Whimsical but readable realistic-stylized rendering
-- Clear visual hierarchy around 8 target objects
+Scene preset rules:
+- Create a complete imaginative adventure play environment that clearly matches the current theme.
+- The setting may be whimsical, but every target object must remain clear, tappable, and recognizable.
+- Render fantasy and adventure elements as premium rounded toy-diorama props.
+- Avoid dark, scary, chaotic, or realistic cinematic styling.
+
+Theme-specific scene elements:
+- A cheerful toy circus scene with tent and ring anchors
+- Tent, clown, balloon, drum, ticket, hoop, stage, and popcorn separated clearly
+- Use red, gold, and stripe accents without visual chaos
+- Keep clown friendly and non-scary
+
+General scene elements:
+- theme-matching immersive play scene
+- foreground-midground-background depth composition
+- props distributed across the environment naturally
+- whimsical but readable toy-diorama rendering
+- clear visual hierarchy around 8 target objects
 
 Scene atmosphere:
-- Fun, imaginative, and clearly navigable
+- Fun, imaginative, adventurous, sunny, cheerful, clearly navigable, and positive
+- Color palette suggestion: 红色、金色、条纹
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Natural light direction and contact shadows
 - No giant title text anywhere
 
 Depth distribution:
-- Place some objects in foreground (larger and clearer)
-- Place some in middle ground
-- Place some in background (still identifiable)
+- Foreground: 2-3 large and clear target objects
+- Middle ground: main character action and 3-4 target objects
+- Background: theme anchors, room anchors, and remaining objects
 - Avoid clustering all objects on one surface
 
-### III. 8 Target Vocabulary Objects
+### III. Character Cast
+The scene must include exactly two cute sister girls and exactly one cute white kitten:
+1. Older sister: 10 years old, long loose hair, cute and friendly.
+2. Younger sister: 4 years old, two ponytails, childlike, preferably wearing a dress.
+3. White kitten: cute, clearly visible, naturally integrated into the scene.
+
+Character rules:
+- The older sister, younger sister, and white kitten must be placed in different depth layers.
+- Character outfits must feel sunny, fresh, happy, cheerful, and positive.
+- Clothing colors should be bright but soft child-friendly colors: light blue, cream white, warm yellow, soft pink, mint green, coral orange, lavender purple, or fresh denim blue.
+- Outfit styling must be clean, light, lively, healthy, and friendly.
+- Outfit defaults to summer style, but can adapt naturally to the current adventure play scene.
+- Older sister outfit may vary among dress, overalls, light cardigan, preppy outerwear, or soft seasonal layers.
+- Younger sister outfit may vary among dress, pinafore dress, doll-collar top, knit vest dress, or soft seasonal layers.
+- Avoid all-black, gloomy, dirty, broken, aggressive streetwear, overly mature, or heavy adult styling.
+- Do not replace the sister pair or kitten with other characters.
+- Characters must not cover target objects, label cards, or arrow landing points.
+
+### IV. 8 Target Vocabulary Objects
 - [zhàng péng] / 帐篷 / Tent (/tɛnt/)
 - [xiǎo chǒu] / 小丑 / Clown (/klaʊn/)
 - [shī zi] / 狮子 / Lion (/ˈlaɪən/)
@@ -55,33 +95,44 @@ Depth distribution:
 - [bào mǐ huā] / 爆米花 / Popcorn (/ˈpɑːpkɔːrn/)
 
 Object placement map:
-1. 帐篷 (zhàng péng / Tent) — place naturally at a real-world position in this scene.
-2. 小丑 (xiǎo chǒu / Clown) — place naturally at a real-world position in this scene.
-3. 狮子 (shī zi / Lion) — place naturally at a real-world position in this scene.
-4. 杂技球 (zá jì qiú / Juggling Ball) — place naturally at a real-world position in this scene.
-5. 魔术帽 (mó shù mào / Magic Hat) — place naturally at a real-world position in this scene.
-6. 火圈 (huǒ quān / Fire Ring) — place naturally at a real-world position in this scene.
-7. 独轮车 (dú lún chē / Unicycle) — place naturally at a real-world position in this scene.
-8. 爆米花 (bào mǐ huā / Popcorn) — place naturally at a real-world position in this scene.
+1. 帐篷 (zhàng péng / Tent) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 小丑 (xiǎo chǒu / Clown) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 狮子 (shī zi / Lion) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 杂技球 (zá jì qiú / Juggling Ball) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 魔术帽 (mó shù mào / Magic Hat) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 火圈 (huǒ quān / Fire Ring) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 独轮车 (dú lún chē / Unicycle) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 爆米花 (bào mǐ huā / Popcorn) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Every object must be clearly visible and identifiable
-- Small objects must still be enlarged enough for child recognition
+- Small objects must be enlarged enough for child recognition and later hotspot annotation
 - Avoid heavy overlap that hides object identity
 - Keep directional separation when two nearby objects might be confused
 - No two objects should overlap so much that either becomes hard to identify
 
-### IV. Label Cards (exactly 8)
+Easy-confusion protection:
+- Ticket and stage must be separate.
+- Hoop and drum must not overlap.
+- Balloon and popcorn must be clearly different.
+- Clown must be friendly and not visually dominant over target objects.
+
+### V. Label Cards
 Each object gets exactly one compact floating label card.
 
 Card style:
 - Rounded rectangle with warm-white base
-- Gentle thickness and soft shadow
+- Gentle 3D thickness and soft shadow
 - Very thin low-contrast border
+- Consistent radius, border, padding, and shadow across all cards
 - Keep cards compact; do not cover object body
 
-Each card must contain exactly these 3 lines (no extra text):
+Each card must contain exactly these 3 lines and no extra text:
 Line 1: [pinyin]
 Line 2: 汉字
 Line 3: english
@@ -109,48 +160,51 @@ Label placement for scattered objects:
 - No two labels should overlap
 - Keep labels from covering core object body
 
-### V. Arrows (exactly 8)
-Each label card connects to its object with one arrow.
+### VI. Arrows
+Each label card connects to its object with exactly one arrow.
 
 Arrow rules:
-- Clean and short, prefer gentle curves
+- Exactly 8 arrows
+- Clean, short, precise, and gently curved
+- All arrows share one consistent soft blue accent color family
 - Arrowhead clearly visible
-- Must touch target object body (not nearby background)
+- Arrow must touch target object body, not nearby blank/background
 - Avoid crossing and ambiguous endpoints
-- All arrows should share one consistent accent color family
 
 Arrow precision map:
-- 帐篷 arrow -> lands on Tent object body (not nearby blank/background).
-- 小丑 arrow -> lands on Clown object body (not nearby blank/background).
-- 狮子 arrow -> lands on Lion object body (not nearby blank/background).
-- 杂技球 arrow -> lands on Juggling Ball object body (not nearby blank/background).
-- 魔术帽 arrow -> lands on Magic Hat object body (not nearby blank/background).
-- 火圈 arrow -> lands on Fire Ring object body (not nearby blank/background).
-- 独轮车 arrow -> lands on Unicycle object body (not nearby blank/background).
-- 爆米花 arrow -> lands on Popcorn object body (not nearby blank/background).
+- 帐篷 arrow -> lands on Tent object body.
+- 小丑 arrow -> lands on Clown object body.
+- 狮子 arrow -> lands on Lion object body.
+- 杂技球 arrow -> lands on Juggling Ball object body.
+- 魔术帽 arrow -> lands on Magic Hat object body.
+- 火圈 arrow -> lands on Fire Ring object body.
+- 独轮车 arrow -> lands on Unicycle object body.
+- 爆米花 arrow -> lands on Popcorn object body.
 
-### VI. Branding Badge
+### VII. Branding Badge
 - Top-right corner
 - One line only: Hi Kiki
-- Warm-white rounded badge with subtle depth
+- Warm-white rounded badge with subtle 3D depth
 - Low visual weight; must not dominate the scene
+- Must not become a large title
 
-### VII. Hard Constraints
+### VIII. Hard Constraints
 - Must be exactly 1024x1024 square composition
 - No large title/banner
 - No duplicated or missing vocabulary objects
 - No wrong label-object mapping
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
-- The scene must feel like a real environment, not a product display board
+- The scene must feel like a premium miniature toy diorama in an imaginative play setting, not a product display board and not a dark cinematic scene.
+- Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
-### VIII. Pre-Final Self-Check
+### IX. Pre-Final Self-Check
 Before final output, verify all checks:
 1. DIRTY TEXT SCAN: each card is exactly 3 lines [pinyin] / hanzi / english, no cite/reference artifacts
 2. COUNT CHECK: exactly 8 objects, 8 label cards, 8 arrows, no duplicates
 3. MAPPING CHECK: every card matches the correct object and every arrow lands on that object body
 4. ARROW PRECISION: no floating arrows, no crossing, no ambiguous endpoints
-5. VISUAL CHECK: scene realism, object readability, label readability, full 1024x1024 canvas utilization
+5. VISUAL CHECK: premium toy-diorama style, object readability, label readability, full 1024x1024 canvas utilization
 If any check fails, regenerate the layout before finalizing.
 ```
 

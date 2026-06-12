@@ -811,7 +811,7 @@
             const p = (input || '').trim();
             if (!p) return '';
             if (p.startsWith('http://') || p.startsWith('https://') || p.startsWith('file://')) return p;
-            if (p.startsWith('/')) return `file://${p}`;
+            if (p.startsWith('/')) return encodeURI(`file://${p}`);
             return p;
         }
 
@@ -1155,8 +1155,16 @@
             if (url.startsWith('http://') || url.startsWith('https://')) {
                 imageEl.crossOrigin = 'anonymous';
             }
-            imageEl.src = url;
-            await imageEl.decode();
+            try {
+                imageEl.src = url;
+                await imageEl.decode();
+            } catch (err) {
+                // Fallback for environments where local file URL needs explicit URI encoding.
+                const retryUrl = encodeURI(url);
+                if (retryUrl === url) throw err;
+                imageEl.src = retryUrl;
+                await imageEl.decode();
+            }
         }
 
         async function loadJson() {

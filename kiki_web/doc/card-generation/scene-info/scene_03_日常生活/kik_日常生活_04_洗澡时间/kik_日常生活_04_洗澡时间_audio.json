@@ -1,0 +1,401 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "浴缸",
+    "text_pinyin": "yù gāng",
+    "text_english": "Bathtub",
+    "text_phonetic": "/ˈbæθtʌb/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 107,
+            "y": 131
+          },
+          {
+            "x": 234,
+            "y": 131
+          },
+          {
+            "x": 107,
+            "y": 231
+          },
+          {
+            "x": 234,
+            "y": 231
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 296
+          },
+          {
+            "x": 253,
+            "y": 296
+          },
+          {
+            "x": 0,
+            "y": 480
+          },
+          {
+            "x": 253,
+            "y": 480
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/浴缸-dab80c_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/浴缸-dab80c_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/bathtub-dab80c_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/bathtub-dab80c_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "镜子",
+    "text_pinyin": "jìng zi",
+    "text_english": "Mirror",
+    "text_phonetic": "/ˈmɪrər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 645,
+            "y": 73
+          },
+          {
+            "x": 774,
+            "y": 73
+          },
+          {
+            "x": 645,
+            "y": 172
+          },
+          {
+            "x": 774,
+            "y": 172
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 823,
+            "y": 115
+          },
+          {
+            "x": 1005,
+            "y": 115
+          },
+          {
+            "x": 823,
+            "y": 322
+          },
+          {
+            "x": 1005,
+            "y": 322
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/镜子-a4011e_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/镜子-a4011e_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/mirror-a4011e_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/mirror-a4011e_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "牙刷",
+    "text_pinyin": "yá shuā",
+    "text_english": "Toothbrush",
+    "text_phonetic": "/ˈtuːθbrʌʃ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 795,
+            "y": 494
+          },
+          {
+            "x": 922,
+            "y": 494
+          },
+          {
+            "x": 795,
+            "y": 590
+          },
+          {
+            "x": 922,
+            "y": 590
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 810,
+            "y": 426
+          },
+          {
+            "x": 1005,
+            "y": 426
+          },
+          {
+            "x": 810,
+            "y": 466
+          },
+          {
+            "x": 1005,
+            "y": 466
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/牙刷-5b4d1b_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/牙刷-5b4d1b_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/toothbrush-5b4d1b_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/toothbrush-5b4d1b_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "洗发水",
+    "text_pinyin": "xǐ fà shuǐ",
+    "text_english": "Shampoo",
+    "text_phonetic": "/ʃæmˈpuː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 16,
+            "y": 567
+          },
+          {
+            "x": 143,
+            "y": 567
+          },
+          {
+            "x": 16,
+            "y": 666
+          },
+          {
+            "x": 143,
+            "y": 666
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 154,
+            "y": 500
+          },
+          {
+            "x": 255,
+            "y": 500
+          },
+          {
+            "x": 154,
+            "y": 716
+          },
+          {
+            "x": 255,
+            "y": 716
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/洗发水-733bbe_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/洗发水-733bbe_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/shampoo-733bbe_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/shampoo-733bbe_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "小鸭子",
+    "text_pinyin": "xiǎo yā zi",
+    "text_english": "Rubber Duck",
+    "text_phonetic": "/ˈrʌbər dʌk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 28,
+            "y": 851
+          },
+          {
+            "x": 155,
+            "y": 851
+          },
+          {
+            "x": 28,
+            "y": 977
+          },
+          {
+            "x": 155,
+            "y": 977
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 131,
+            "y": 737
+          },
+          {
+            "x": 310,
+            "y": 737
+          },
+          {
+            "x": 131,
+            "y": 883
+          },
+          {
+            "x": 310,
+            "y": 883
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/小鸭子-25653f_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/小鸭子-25653f_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/rubber-duck-25653f_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/rubber-duck-25653f_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "香皂",
+    "text_pinyin": "xiāng zào",
+    "text_english": "Soap",
+    "text_phonetic": "/soʊp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 455,
+            "y": 900
+          },
+          {
+            "x": 578,
+            "y": 900
+          },
+          {
+            "x": 455,
+            "y": 1020
+          },
+          {
+            "x": 578,
+            "y": 1020
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 344,
+            "y": 784
+          },
+          {
+            "x": 528,
+            "y": 784
+          },
+          {
+            "x": 344,
+            "y": 889
+          },
+          {
+            "x": 528,
+            "y": 889
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/香皂-9d3a1f_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/香皂-9d3a1f_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/soap-9d3a1f_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/soap-9d3a1f_en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "杯子",
+    "text_pinyin": "bēi zi",
+    "text_english": "Cup",
+    "text_phonetic": "/kʌp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 645,
+            "y": 887
+          },
+          {
+            "x": 760,
+            "y": 887
+          },
+          {
+            "x": 645,
+            "y": 1008
+          },
+          {
+            "x": 760,
+            "y": 1008
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 742,
+            "y": 746
+          },
+          {
+            "x": 920,
+            "y": 746
+          },
+          {
+            "x": 742,
+            "y": 919
+          },
+          {
+            "x": 920,
+            "y": 919
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/kik_日常生活_04_洗澡时间/杯子-f75dce_cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/杯子-f75dce_cn.mp3",
+    "audio_en_key": "kiki/audio/kik_日常生活_04_洗澡时间/cup-f75dce_en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/kik_日常生活_04_洗澡时间/cup-f75dce_en.mp3"
+  }
+]

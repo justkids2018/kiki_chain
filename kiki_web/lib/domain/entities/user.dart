@@ -14,6 +14,7 @@ class User {
   final String? avatar;
   final DateTime createdAt;
   final DateTime lastLoginAt;
+  final int totalStars;
 
   User({
     required this.id,
@@ -22,6 +23,7 @@ class User {
     this.avatar,
     required this.createdAt,
     required this.lastLoginAt,
+    this.totalStars = 0,
   });
 
   /// 从 JSON 创建 User 实例
@@ -37,6 +39,7 @@ class User {
       lastLoginAt: json['lastLoginAt'] != null
           ? DateTime.parse(json['lastLoginAt'])
           : DateTime.now(),
+      totalStars: json['totalStars'] as int? ?? json['total_stars'] as int? ?? 0,
     );
   }
 
@@ -49,6 +52,7 @@ class User {
       'avatar': avatar,
       'createdAt': createdAt.toIso8601String(),
       'lastLoginAt': lastLoginAt.toIso8601String(),
+      'totalStars': totalStars,
     };
   }
 
@@ -60,6 +64,7 @@ class User {
     String? avatar,
     DateTime? createdAt,
     DateTime? lastLoginAt,
+    int? totalStars,
   }) {
     return User(
       id: id ?? this.id,
@@ -68,12 +73,13 @@ class User {
       avatar: avatar ?? this.avatar,
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+      totalStars: totalStars ?? this.totalStars,
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, phone: $phone, nickname: $nickname, avatar: $avatar)';
+    return 'User(id: $id, phone: $phone, nickname: $nickname, avatar: $avatar, totalStars: $totalStars)';
   }
 
   @override
@@ -83,13 +89,15 @@ class User {
     return other is User &&
            other.id == id &&
            other.phone == phone &&
-           other.nickname == nickname;
+           other.nickname == nickname &&
+           other.totalStars == totalStars;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
            phone.hashCode ^
-           nickname.hashCode;
+           nickname.hashCode ^
+           totalStars.hashCode;
   }
 }

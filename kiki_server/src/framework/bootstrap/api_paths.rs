@@ -25,6 +25,12 @@ impl ApiPaths {
     pub const MOBILE_SCENE_SEARCH: &'static str = "/api/v1/mobile/scene/search";
     pub const MOBILE_SCENE_RECOMMENDATIONS: &'static str = "/api/v1/mobile/scene/recommendations";
 
+    // 移动端 - 学习进度
+    pub const MOBILE_LEARNING_PROGRESS: &'static str = "/api/v1/learning/progress/{user_id}/{scene_id}";
+    pub const MOBILE_LEARNING_SUBMIT: &'static str = "/api/v1/learning/progress/batch";
+    pub const MOBILE_LEARNING_SUMMARY: &'static str = "/api/v1/learning/user/{user_id}/summary";
+    pub const MOBILE_LEARNING_PROGRESS_LIST: &'static str = "/api/v1/learning/progress/user/{user_id}/all";
+
     // 管理端路由前缀
     pub const ADMIN_PREFIX: &'static str = "/api/v1/admin";
 

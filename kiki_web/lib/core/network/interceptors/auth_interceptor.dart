@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import '../../logging/app_logger.dart';
 import '../api_config.dart';
+import '../../../presentation/controllers/auth_controller.dart';
 
 /// 简化的认证拦截器
 /// 
@@ -48,6 +50,14 @@ class AuthInterceptor extends Interceptor {
         AppLogger.warning('🔑 认证失败，Token可能已过期');
       }
       clearToken();
+      
+      try {
+        if (Get.isRegistered<AuthController>()) {
+          Get.find<AuthController>().logout();
+        }
+      } catch (e) {
+        AppLogger.error('Failed to logout on 401', e);
+      }
     }
     
     handler.next(err);

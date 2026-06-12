@@ -1,114 +1,151 @@
-# 生日派对 — 真实场景学习卡片 Prompt
+# 生日派对 — 组件化学习卡片 Prompt
 
 > 分类：日常生活
 > 主题序号：3.3
 > 场景文件：kik_日常生活_03_生日派对.png
 > 热区文件：kik_日常生活_03_生日派对.json
+> 生成方式：card-promp-rule 组件化合成
 
 ---
 
 ```text
 **生日派对** (主题): Hi Kiki
 
-### I. Core Setup
+### I. Canvas & Style Lock
 - Target age: 3-6 years old
 - Format: exact square 1:1
 - Resolution: exact 1024x1024 pixels
-- View: slightly elevated 3/4 top-front view, looking into a real 生日派对 daily-life environment
-- Style: realistic base with fuller, softer 3D volume enhancement
-- Keep real-world proportions and recognizable shapes
-- Do not over-inflate objects into balloon or gummy style
-- Keep the image realistic first, but forms should feel rounded, solid, and full-bodied
-- Color palette suggestion: 糖果粉、金色
+- View: slightly elevated 3/4 top-front view
 - The final image must fully use the square canvas, with no portrait crop, no landscape crop, no inner frame, no extra border, and no unused blank margin
+- Render everything as a premium miniature toy diorama
+- Indoor Montessori learning room style
+- Rounded educational toy objects
+- Soft polished 3D materials
+- Warm contact shadows and soft highlights
+- Cute but elegant
+- Like Apple-quality preschool product advertisement
+- The scene may show a real-life or imaginative layout, but it must not look like a real photograph
+- If "real scene" conflicts with "premium miniature toy diorama", the toy diorama style has higher priority
+- NOT photorealistic documentary
+- NOT live-action people
+- NOT a normal real-world snapshot
 
-### Style Master Lock
-- Render everything as a premium miniature toy diorama.
-- Indoor Montessori learning room style.
-- Rounded educational toy objects.
-- Soft polished 3D materials.
-- Cute but elegant.
-- Like Apple-quality preschool product advertisement.
-- NOT realistic outdoor photography.
+### II. Scene Background
+Create a complete 生日派对 daily-life learning environment inside a cozy Montessori-style play world.
+The entire image IS this scene — there is no separate display table or product shelf.
 
-### II. Real Scene Requirement
-Create a complete, real 生日派对 environment. The entire image IS this scene — there is no separate display table or product shelf.
+Scene preset rules:
+- Create a complete daily-life learning environment that clearly matches the current theme.
+- The setting must feel familiar, clean, natural, and child-safe.
+- Use real-life object positions, but render them as premium rounded toy-diorama props.
+- Avoid making the image look like a real photograph of an actual public place or home.
 
-Scene elements:
-- Home/public setting matching the theme
-- Natural object placement in real use positions
-- Human-scale furniture and practical props
-- Simple and clean background separation
-- Comfortable warm light with realistic materials
+Theme-specific scene elements:
+- A warm toy birthday room with table, decorations, and party props
+- Cake and candles as central celebration anchors
+- Balloons, gifts, party hat, invitation card, and ribbon separated clearly
+- Keep party clutter controlled so each object remains tappable
+
+General scene elements:
+- home/public setting matching the theme
+- human-scale furniture and practical props rendered as toy-like miniatures
+- natural object placement in real use positions
+- simple clean background separation
+- comfortable warm indoor or outdoor light with soft toy materials
 
 Scene atmosphere:
-- Natural, familiar, and life-oriented
+- Natural, familiar, life-oriented, sunny, fresh, cheerful, and positive
+- Color palette suggestion: 糖果粉、金色
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Natural light direction and contact shadows
 - No giant title text anywhere
 
 Depth distribution:
-- Place some objects in foreground (larger and clearer)
-- Place some in middle ground
-- Place some in background (still identifiable)
+- Foreground: 2-3 large and clear target objects
+- Middle ground: main character action and 3-4 target objects
+- Background: theme anchors, room anchors, and remaining objects
 - Avoid clustering all objects on one surface
 
-Character baseline:
-- The scene must include exactly two cute sister girls: one 10-year-old older sister and one 4-year-old younger sister with two ponytails
-- The scene must include exactly one cute white kitten
-- The older sister, younger sister, and white kitten must be placed in different depth layers (foreground/midground/background) to reinforce spatial layering
+### III. Character Cast
+The scene must include exactly two cute sister girls and exactly one cute white kitten:
+1. Older sister: 10 years old, long loose hair, cute and friendly.
+2. Younger sister: 4 years old, two ponytails, childlike, preferably wearing a dress.
+3. White kitten: cute, clearly visible, naturally integrated into the scene.
 
-### III. 8 Target Vocabulary Objects
-- [dàn gāo] / 蛋糕 / Cake (/keɪk/)
+Character rules:
+- The older sister, younger sister, and white kitten must be placed in different depth layers.
+- Character outfits must feel sunny, fresh, happy, cheerful, and positive.
+- Clothing colors should be bright but soft child-friendly colors: light blue, cream white, warm yellow, soft pink, mint green, coral orange, lavender purple, or fresh denim blue.
+- Outfit styling must be clean, light, lively, healthy, and friendly.
+- Outfit defaults to summer style, but can adapt naturally to the current daily-life scene.
+- Older sister outfit may vary among dress, overalls, light cardigan, preppy outerwear, or soft seasonal layers.
+- Younger sister outfit may vary among dress, pinafore dress, doll-collar top, knit vest dress, or soft seasonal layers.
+- Avoid all-black, gloomy, dirty, broken, aggressive streetwear, overly mature, or heavy adult styling.
+- Do not replace the sister pair or kitten with other characters.
+- Characters must not cover target objects, label cards, or arrow landing points.
+
+### IV. 8 Target Vocabulary Objects
+- [shēng rì dàn gāo] / 生日蛋糕 / Birthday Cake (/ˈbɜːrθdeɪ keɪk/)
 - [là zhú] / 蜡烛 / Candle (/ˈkændl/)
 - [qì qiú] / 气球 / Balloon (/bəˈluːn/)
 - [lǐ wù] / 礼物 / Gift (/ɡɪft/)
 - [cǎi dài] / 彩带 / Ribbon (/ˈrɪbən/)
-- [mào zi] / 帽子 / Party Hat (/ˈpɑːrti hæt/)
-- [guǒ zhī] / 果汁 / Juice (/dʒuːs/)
-- [zhào xiàng jī] / 照相机 / Camera (/ˈkæmərə/)
+- [pài duì mào] / 派对帽 / Party Hat (/ˈpɑːrti hæt/)
+- [zhǐ bēi] / 纸杯 / Paper Cup (/ˈpeɪpər kʌp/)
+- [yāo qǐng kǎ] / 邀请卡 / Invitation Card (/ˌɪnvɪˈteɪʃən kɑːrd/)
 
 Object placement map:
-1. 蛋糕 (dàn gāo / Cake) — place naturally at a real-world position in this scene.
-2. 蜡烛 (là zhú / Candle) — place naturally at a real-world position in this scene.
-3. 气球 (qì qiú / Balloon) — place naturally at a real-world position in this scene.
-4. 礼物 (lǐ wù / Gift) — place naturally at a real-world position in this scene.
-5. 彩带 (cǎi dài / Ribbon) — place naturally at a real-world position in this scene.
-6. 帽子 (mào zi / Party Hat) — place naturally at a real-world position in this scene.
-7. 果汁 (guǒ zhī / Juice) — place naturally at a real-world position in this scene.
-8. 照相机 (zhào xiàng jī / Camera) — place naturally at a real-world position in this scene.
+1. 生日蛋糕 (shēng rì dàn gāo / Birthday Cake) — place as a clear, separate, toy-like target object in a natural position for this scene.
+2. 蜡烛 (là zhú / Candle) — place as a clear, separate, toy-like target object in a natural position for this scene.
+3. 气球 (qì qiú / Balloon) — place as a clear, separate, toy-like target object in a natural position for this scene.
+4. 礼物 (lǐ wù / Gift) — place as a clear, separate, toy-like target object in a natural position for this scene.
+5. 彩带 (cǎi dài / Ribbon) — place as a clear, separate, toy-like target object in a natural position for this scene.
+6. 派对帽 (pài duì mào / Party Hat) — place as a clear, separate, toy-like target object in a natural position for this scene.
+7. 纸杯 (zhǐ bēi / Paper Cup) — place as a clear, separate, toy-like target object in a natural position for this scene.
+8. 邀请卡 (yāo qǐng kǎ / Invitation Card) — place as a clear, separate, toy-like target object in a natural position for this scene.
 
 Critical placement rules:
+- CLOSED VOCABULARY SET: The vocabulary list in section III is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
+- Every label card must copy one exact vocabulary row from section III: [pinyin] / hanzi / english.
+- Extra scene props may appear only as unlabeled background elements; they must not receive labels, arrows, or learning-object emphasis.
+- If any label, arrow, or emphasized target object is not in section III, the image fails and must be regenerated.
 - Exactly 8 target objects, 8 label cards, 8 arrows
 - Every object must be clearly visible and identifiable
-- Small objects must still be enlarged enough for child recognition
+- Small objects must be enlarged enough for child recognition and later hotspot annotation
 - Avoid heavy overlap that hides object identity
 - Keep directional separation when two nearby objects might be confused
 - No two objects should overlap so much that either becomes hard to identify
 
-### IV. Label Cards (exactly 8)
+Easy-confusion protection:
+- Birthday cake and candle must be distinct if both are target objects.
+- Gift and invitation card must not overlap.
+- Balloon string and ribbon must not be confused.
+- Party hat should be a standalone cone hat, not a background decoration.
+
+### V. Label Cards
 Each object gets exactly one compact floating label card.
 
 Card style:
 - Rounded rectangle with warm-white base
-- Gentle thickness and soft shadow
+- Gentle 3D thickness and soft shadow
 - Very thin low-contrast border
+- Consistent radius, border, padding, and shadow across all cards
 - Keep cards compact; do not cover object body
 
-Each card must contain exactly these 3 lines (no extra text):
+Each card must contain exactly these 3 lines and no extra text:
 Line 1: [pinyin]
 Line 2: 汉字
 Line 3: english
 
 The 8 label cards must be:
-- [dàn gāo] / 蛋糕 / Cake
+- [shēng rì dàn gāo] / 生日蛋糕 / Birthday Cake
 - [là zhú] / 蜡烛 / Candle
 - [qì qiú] / 气球 / Balloon
 - [lǐ wù] / 礼物 / Gift
 - [cǎi dài] / 彩带 / Ribbon
-- [mào zi] / 帽子 / Party Hat
-- [guǒ zhī] / 果汁 / Juice
-- [zhào xiàng jī] / 照相机 / Camera
+- [pài duì mào] / 派对帽 / Party Hat
+- [zhǐ bēi] / 纸杯 / Paper Cup
+- [yāo qǐng kǎ] / 邀请卡 / Invitation Card
 
 Text rules:
 - Hanzi largest and boldest
@@ -123,49 +160,51 @@ Label placement for scattered objects:
 - No two labels should overlap
 - Keep labels from covering core object body
 
-### V. Arrows (exactly 8)
-Each label card connects to its object with one arrow.
+### VI. Arrows
+Each label card connects to its object with exactly one arrow.
 
 Arrow rules:
-- Clean and short, prefer gentle curves
+- Exactly 8 arrows
+- Clean, short, precise, and gently curved
+- All arrows share one consistent soft blue accent color family
 - Arrowhead clearly visible
-- Must touch target object body (not nearby background)
+- Arrow must touch target object body, not nearby blank/background
 - Avoid crossing and ambiguous endpoints
-- All arrows should share one consistent accent color family
 
 Arrow precision map:
-- 蛋糕 arrow -> lands on Cake object body (not nearby blank/background).
-- 蜡烛 arrow -> lands on Candle object body (not nearby blank/background).
-- 气球 arrow -> lands on Balloon object body (not nearby blank/background).
-- 礼物 arrow -> lands on Gift object body (not nearby blank/background).
-- 彩带 arrow -> lands on Ribbon object body (not nearby blank/background).
-- 帽子 arrow -> lands on Party Hat object body (not nearby blank/background).
-- 果汁 arrow -> lands on Juice object body (not nearby blank/background).
-- 照相机 arrow -> lands on Camera object body (not nearby blank/background).
+- 生日蛋糕 arrow -> lands on Birthday Cake object body.
+- 蜡烛 arrow -> lands on Candle object body.
+- 气球 arrow -> lands on Balloon object body.
+- 礼物 arrow -> lands on Gift object body.
+- 彩带 arrow -> lands on Ribbon object body.
+- 派对帽 arrow -> lands on Party Hat object body.
+- 纸杯 arrow -> lands on Paper Cup object body.
+- 邀请卡 arrow -> lands on Invitation Card object body.
 
-### VI. Branding Badge
+### VII. Branding Badge
 - Top-right corner
 - One line only: Hi Kiki
-- Warm-white rounded badge with subtle depth
+- Warm-white rounded badge with subtle 3D depth
 - Low visual weight; must not dominate the scene
+- Must not become a large title
 
-### VII. Hard Constraints
+### VIII. Hard Constraints
 - Must be exactly 1024x1024 square composition
 - No large title/banner
 - No duplicated or missing vocabulary objects
 - No wrong label-object mapping
 - No unrelated decorative objects that distract learning
 - No citation markers anywhere in label text
-- The scene must feel like a real environment, not a product display board
+- The scene must feel like a premium miniature toy diorama in a real daily-life setting, not a product display board and not a real-life photograph.
 - Every card must keep the fixed character baseline: one 10-year-old older sister + one 4-year-old younger sister with two ponytails + one cute white kitten
 
-### VIII. Pre-Final Self-Check
+### IX. Pre-Final Self-Check
 Before final output, verify all checks:
 1. DIRTY TEXT SCAN: each card is exactly 3 lines [pinyin] / hanzi / english, no cite/reference artifacts
 2. COUNT CHECK: exactly 8 objects, 8 label cards, 8 arrows, no duplicates
 3. MAPPING CHECK: every card matches the correct object and every arrow lands on that object body
 4. ARROW PRECISION: no floating arrows, no crossing, no ambiguous endpoints
-5. VISUAL CHECK: scene realism, object readability, label readability, full 1024x1024 canvas utilization
+5. VISUAL CHECK: premium toy-diorama style, object readability, label readability, full 1024x1024 canvas utilization
 If any check fails, regenerate the layout before finalizing.
 ```
 

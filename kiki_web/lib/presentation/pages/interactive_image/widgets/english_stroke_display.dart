@@ -107,7 +107,7 @@ class _EnglishStrokeDisplayState extends State<EnglishStrokeDisplay>
           fontWeight: FontWeight.w600,
           color: widget.fontColor,
           letterSpacing: 2,
-          fontFamily: 'Poppins', // Using Poppins for elegant look
+          fontFamily: 'Nunito', // Using Nunito for rounded friendly look
           height: 1.6,
         ),
       ),

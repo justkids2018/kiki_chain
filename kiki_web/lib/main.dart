@@ -18,21 +18,33 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化 GetStorage
-  await GetStorage.init();
+  try {
+    await GetStorage.init().timeout(const Duration(seconds: 3));
+  } catch (e) {
+    print('⚠️ GetStorage 初始化超时或失败，继续启动: $e');
+  }
 
   // 强制横屏方向
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+  try {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]).timeout(const Duration(seconds: 2));
+  } catch (e) {
+    print('⚠️ 横屏方向设置超时或失败，继续启动: $e');
+  }
 
   // 全局沉浸式：隐藏系统状态栏/通知栏
-  await _enableImmersiveMode();
+  try {
+    await _enableImmersiveMode().timeout(const Duration(seconds: 2));
+  } catch (e) {
+    print('⚠️ 沉浸式设置超时或失败，继续启动: $e');
+  }
 
   // 初始化应用程序
   print('💡 🚀 开始初始化应用服务...');
   try {
-    await AppInitializer.initialize();
+    await AppInitializer.initialize().timeout(const Duration(seconds: 6));
     print('✅ 应用初始化完成');
   } catch (e, stackTrace) {
     print('❌ 应用初始化失败: $e');

@@ -97,32 +97,77 @@ jobs:
           set -euo pipefail
           SERVER_IP="$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')"
           SSH_USER="$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')"
-          ALL_REMOTE_DIR="${PRODUCT_ALL_REMOTE_DIR:-${ALL_DEFAULT_REMOTE_DIR}}"
-          HIKIKI_REMOTE_DIR_VALUE="${HIKIKI_REMOTE_DIR:-${HIKIKI_DEFAULT_REMOTE_DIR}}"
+          ALL_REMOTE_DIR_INPUT="${PRODUCT_ALL_REMOTE_DIR:-}"
+          HIKIKI_REMOTE_DIR_INPUT="${HIKIKI_REMOTE_DIR:-}"
           RELEASE_ID="sha-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
 
           scp /tmp/product-all-static-site.tar.gz "${SSH_USER}@${SERVER_IP}:/tmp/product-all-static-site-${RELEASE_ID}.tar.gz"
           scp /tmp/hikiki-static-site.tar.gz "${SSH_USER}@${SERVER_IP}:/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz"
 
-          ssh "${SSH_USER}@${SERVER_IP}" "set -euo pipefail
-            deploy_site() {
-              local remote_dir=\"\$1\"
-              local remote_tar=\"\$2\"
-              local release_id=\"\$3\"
-              local release_dir=\"\${remote_dir}/releases/\${release_id}\"
-              mkdir -p \"\${release_dir}\"
-              tar -xzf \"\${remote_tar}\" -C \"\${release_dir}\"
-              rm -f \"\${remote_tar}\"
-              ln -sfn \"\${release_dir}\" \"\${remote_dir}/current\"
-              find \"\${remote_dir}/releases\" -mindepth 1 -maxdepth 1 -type d | sort | head -n -5 | xargs -r rm -rf
-              readlink -f \"\${remote_dir}/current\"
-            }
-            echo ALL_CURRENT=\$(deploy_site '${ALL_REMOTE_DIR}' '/tmp/product-all-static-site-${RELEASE_ID}.tar.gz' '${RELEASE_ID}')
-            echo HIKIKI_CURRENT=\$(deploy_site '${HIKIKI_REMOTE_DIR_VALUE}' '/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz' '${RELEASE_ID}')
-          " | tee /tmp/product-static-sites-current-paths.txt
+          ssh "${SSH_USER}@${SERVER_IP}" "bash -s" -- "${ALL_REMOTE_DIR_INPUT}" "${HIKIKI_REMOTE_DIR_INPUT}" "${RELEASE_ID}" <<'REMOTE_SCRIPT' | tee /tmp/product-static-sites-current-paths.txt
+          set -euo pipefail
+
+          ALL_REMOTE_DIR_INPUT="$1"
+          HIKIKI_REMOTE_DIR_INPUT="$2"
+          RELEASE_ID="$3"
+
+          resolve_remote_dir() {
+            local remote_dir_input="$1"
+            local default_leaf="$2"
+            local remote_dir
+
+            if [[ -n "${remote_dir_input}" ]]; then
+              remote_dir="${remote_dir_input}"
+            else
+              remote_dir="${HOME}/${default_leaf}"
+            fi
+
+            case "${remote_dir}" in
+              "~")
+                remote_dir="${HOME}"
+                ;;
+              "~/"*)
+                remote_dir="${HOME}/${remote_dir#~/}"
+                ;;
+            esac
+
+            printf '%s\n' "${remote_dir}"
+          }
+
+          deploy_site() {
+            local remote_dir="$1"
+            local remote_tar="$2"
+            local release_id="$3"
+            local release_dir="${remote_dir}/releases/${release_id}"
+            mkdir -p "${release_dir}"
+            tar -xzf "${remote_tar}" -C "${release_dir}"
+            rm -f "${remote_tar}"
+            ln -sfn "${release_dir}" "${remote_dir}/current"
+            release_dirs=()
+            while IFS= read -r release_dir; do
+              release_dirs+=("${release_dir}")
+            done < <(find "${remote_dir}/releases" -mindepth 1 -maxdepth 1 -type d | sort)
+            if ((${#release_dirs[@]} > 5)); then
+              printf '%s\0' "${release_dirs[@]:0:${#release_dirs[@]}-5}" | xargs -0 rm -rf
+            fi
+            readlink -f "${remote_dir}/current"
+          }
+
+          ALL_REMOTE_DIR="$(resolve_remote_dir "${ALL_REMOTE_DIR_INPUT}" "product_all_static")"
+          HIKIKI_REMOTE_DIR="$(resolve_remote_dir "${HIKIKI_REMOTE_DIR_INPUT}" "hikiki_static")"
+
+          echo "ALL_REMOTE_DIR=${ALL_REMOTE_DIR}"
+          echo "HIKIKI_REMOTE_DIR=${HIKIKI_REMOTE_DIR}"
+          ALL_CURRENT="$(deploy_site "${ALL_REMOTE_DIR}" "/tmp/product-all-static-site-${RELEASE_ID}.tar.gz" "${RELEASE_ID}")"
+          HIKIKI_CURRENT="$(deploy_site "${HIKIKI_REMOTE_DIR}" "/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz" "${RELEASE_ID}")"
+          echo "ALL_CURRENT=${ALL_CURRENT}"
+          echo "HIKIKI_CURRENT=${HIKIKI_CURRENT}"
+          REMOTE_SCRIPT
 
           ALL_CURRENT_PATH="$(grep '^ALL_CURRENT=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
           HIKIKI_CURRENT_PATH="$(grep '^HIKIKI_CURRENT=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
+          ALL_REMOTE_DIR="$(grep '^ALL_REMOTE_DIR=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
+          HIKIKI_REMOTE_DIR_VALUE="$(grep '^HIKIKI_REMOTE_DIR=' /tmp/product-static-sites-current-paths.txt | tail -n 1 | cut -d= -f2-)"
           echo "all_current_path=${ALL_CURRENT_PATH}" >> "$GITHUB_OUTPUT"
           echo "hikiki_current_path=${HIKIKI_CURRENT_PATH}" >> "$GITHUB_OUTPUT"
           echo "all_remote_dir=${ALL_REMOTE_DIR}" >> "$GITHUB_OUTPUT"

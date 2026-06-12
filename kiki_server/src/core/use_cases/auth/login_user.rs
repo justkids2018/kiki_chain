@@ -48,7 +48,9 @@ impl LoginUserUseCase {
         info!("用户登陆 {} ", "-----查询开始---------");
 
         // 2. 查找用户（通过手机号）
-        let user = self.find_user(&command.identifier).await?;
+        let user = self
+            .find_user(&command.identifier, &command.password)
+            .await?;
         info!("用户登陆 查询信息：{}", user.to_string());
 
         // 3. 更新时间戳并保存用户
@@ -78,13 +80,20 @@ impl LoginUserUseCase {
         if command.identifier.trim().is_empty() {
             return Err(DomainError::Validation("手机号不能为空".to_string()));
         }
+        if command.password.trim().is_empty() {
+            return Err(DomainError::Validation("密码不能为空".to_string()));
+        }
         Ok(())
     }
 
     /// 查找用户（通过手机号）
-    async fn find_user(&self, identifier: &str) -> Result<User> {
-        // 尝试作为手机号名查找
-        if let Some(user) = self.user_repository.find_by_phone(identifier).await? {
+    async fn find_user(&self, identifier: &str, password: &str) -> Result<User> {
+        // 使用手机号 + 密码进行校验
+        if let Some(user) = self
+            .user_repository
+            .find_by_phone_and_pwd(identifier, password)
+            .await?
+        {
             return Ok(user);
         }
 

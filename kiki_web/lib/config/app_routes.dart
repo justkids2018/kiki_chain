@@ -6,7 +6,6 @@ import '../presentation/pages/login_selector_page.dart';
 import '../presentation/pages/register/controllers/register_page_controller.dart';
 import '../presentation/pages/register/pages/register_page.dart';
 import '../presentation/pages/welcome_page.dart';
-import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_controller.dart';
 import '../presentation/pages/scene_list_page.dart';
@@ -17,10 +16,10 @@ import '../core/constants/app_constants.dart';
 class AppRoutes {
   /// 路由列表
   static final routes = [
-    // 启动欢迎页（应用入口，展示后自动检查登录状态）
+    // 应用入口直接进入欢迎页，iOS 仅保留原生 LaunchScreen，避免出现双闪屏。
     GetPage(
       name: '/',
-      page: () => const SplashPage(),
+      page: () => const WelcomePage(),
     ),
     // 欢迎页面（纯展示页）
     GetPage(
@@ -31,11 +30,6 @@ class AppRoutes {
     GetPage(
       name: AppConstants.routeLoginSelector,
       page: () => const LoginSelectorPage(),
-    ),
-    // 启动页兼容路由
-    GetPage(
-      name: '/splash',
-      page: () => const SplashPage(),
     ),
     // 主页面
     GetPage(

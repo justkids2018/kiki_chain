@@ -32,7 +32,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 | 参数名 | 类型 | 说明 |
 |--------|------|------|
-| code   | int  | 状态码 |
+| success | boolean | 操作是否成功 |
 | message | string | 响应消息 |
 | data.records | array | 学习记录列表 |
 | data.records[].sceneId | string | 场景ID |
@@ -46,7 +46,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ```json
 {
-  "code": 200,
+  "success": true,
   "message": "success",
   "data": {
     "records": [
@@ -60,6 +60,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
     ],
     "total": 10
   }
+}
+```
+
+**错误响应示例**：
+
+```json
+{
+  "success": false,
+  "errorcode": 401,
+  "message": "未授权"
 }
 ```
 
@@ -111,7 +121,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 | 参数名 | 类型 | 说明 |
 |--------|------|------|
-| code   | int  | 状态码 |
+| success | boolean | 操作是否成功 |
 | message | string | 响应消息 |
 | data.updated | boolean | 是否更新成功 |
 
@@ -119,11 +129,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ```json
 {
-  "code": 200,
+  "success": true,
   "message": "success",
   "data": {
     "updated": true
   }
+}
+```
+
+**错误响应示例**：
+
+```json
+{
+  "success": false,
+  "errorcode": 400,
+  "message": "参数错误"
 }
 ```
 

@@ -37,13 +37,21 @@ pub struct LoginResponse {
 #[derive(Debug, Deserialize)]
 pub struct RegisterRequest {
     pub uid: String,
+
+    #[serde(default)]
     pub name: String,
+
     pub email: String,
     pub phone: String,
     pub password: String,
 
-    #[serde(default)]
+    #[serde(default = "default_role_type")]
     pub role_type: i32,
+}
+
+/// 默认角色类型：普通用户
+fn default_role_type() -> i32 {
+    1
 }
 
 /// 注册响应

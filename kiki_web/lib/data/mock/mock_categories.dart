@@ -71,7 +71,7 @@ class MockCategories {
   /// 获取所有分类（模拟 API 响应）
   static Map<String, dynamic> getCategoriesResponse() {
     return {
-      "code": 200,
+      "success": true,
       "message": "成功",
       "data": {
         "total": categories.length,

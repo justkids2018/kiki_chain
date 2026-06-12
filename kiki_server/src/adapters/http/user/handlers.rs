@@ -33,7 +33,11 @@ pub async fn get_profile_handler(
         Ok(Some(user)) => {
             let dto = UserProfileDto {
                 uid: user.uid().to_string(),
-                name: user.name().to_string(),
+                name: if user.name().is_empty() {
+                    "暂无".to_string()
+                } else {
+                    user.name().to_string()
+                },
                 phone: user.phone().to_string(),
                 email: user.email().to_string(),
                 role_type: user.role_type(),

@@ -252,20 +252,17 @@ pub fn create_cors_layer(allowed_origins: Vec<String>) -> CorsLayer {
 ///
 /// 创建统一格式的错误响应JSON
 /// 创建时间: 2025-08-06
-/// 参数: status - HTTP状态码, error_code - 错误码, message - 错误消息
+/// 参数: status - HTTP状态码, _error_code - 错误码（保留参数以保持接口兼容性）, message - 错误消息
 /// 返回: JSON响应
 pub fn create_error_response(
     status: StatusCode,
-    error_code: &str,
+    _error_code: &str,
     message: &str,
 ) -> (StatusCode, Json<Value>) {
     let error_response = json!({
-        "error": {
-            "code": error_code,
-            "message": message,
-            "status": status.as_u16(),
-            "timestamp": chrono::Utc::now().to_rfc3339()
-        }
+        "success": false,
+        "errorcode": status.as_u16(),
+        "message": message
     });
 
     (status, Json(error_response))

@@ -128,3 +128,40 @@ pub async fn get_user_progress_list_handler(
         }
     }
 }
+
+/// GET /api/v1/learning/progress/phone/:phone/all
+pub async fn get_user_progress_by_phone_handler(
+    State(uc): State<Arc<GetUserProgressListUseCase>>,
+    State(user_repo): State<Arc<dyn crate::core::ports::UserRepository>>,
+    Path(phone): Path<String>,
+) -> Response {
+    info!("📚 [学习] 根据手机号获取所有场景进度: phone={}", phone);
+
+    // 先通过手机号查找用户
+    let user = match user_repo.find_by_phone(&phone).await {
+        Ok(Some(u)) => u,
+        Ok(None) => {
+            let r = ApiResponse::<serde_json::Value>::error(404, "用户不存在");
+            return (StatusCode::NOT_FOUND, Json(r)).into_response();
+        }
+        Err(e) => {
+            error!("❌ 查找用户失败: {}", e);
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("查找用户失败: {}", e));
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response();
+        }
+    };
+
+    let user_id = user.uid();
+
+    match uc.execute(user_id).await {
+        Ok(progresses) => {
+            let dtos: Vec<ProgressResponseDto> = progresses.iter().map(ProgressResponseDto::from).collect();
+            (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
+        }
+        Err(e) => {
+            error!("❌ 获取所有场景进度失败: {}", e);
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("获取所有场景进度失败: {}", e));
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
+        }
+    }
+}

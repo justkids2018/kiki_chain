@@ -2364,7 +2364,7 @@ class MockSceneItems {
     final items = getItemsBySceneId(sceneId);
 
     return {
-      "code": 200,
+      "success": true,
       "message": "成功",
       "data": {
         "scene_id": sceneId,

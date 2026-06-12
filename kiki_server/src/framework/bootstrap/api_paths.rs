@@ -42,6 +42,9 @@ impl ApiPaths {
     pub const ADMIN_USER_DETAIL: &'static str = "/api/v1/admin/users/{id}";
     pub const ADMIN_USER_UPDATE: &'static str = "/api/v1/admin/users/{id}/update";
 
+    // 管理端 - 学习记录
+    pub const ADMIN_LEARNING_BY_PHONE: &'static str = "/api/v1/admin/learning/phone/{phone}";
+
     // 管理端 - 反馈
     pub const ADMIN_FEEDBACK: &'static str = "/api/v1/admin/feedback";
     pub const ADMIN_FEEDBACK_UPDATE: &'static str = "/api/v1/admin/feedback/{id}/status";

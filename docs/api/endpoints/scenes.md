@@ -24,7 +24,7 @@ GET /api/v1/scenes/scene_01_bedroom
 
 | 参数名 | 类型 | 说明 |
 |--------|------|------|
-| code   | int  | 状态码，200 表示成功 |
+| success | boolean | 操作是否成功 |
 | message | string | 响应消息 |
 | data.scene | object | 场景对象（包装结构） |
 | data.scene.id | string | 场景ID |
@@ -38,7 +38,7 @@ GET /api/v1/scenes/scene_01_bedroom
 
 ```json
 {
-  "code": 200,
+  "success": true,
   "message": "success",
   "data": {
     "scene": {
@@ -50,6 +50,16 @@ GET /api/v1/scenes/scene_01_bedroom
       "dataFile": "/data/scenes/scene_01_bedroom.json"
     }
   }
+}
+```
+
+**错误响应示例**：
+
+```json
+{
+  "success": false,
+  "errorcode": 404,
+  "message": "场景不存在"
 }
 ```
 
@@ -95,7 +105,7 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 
 | 参数名 | 类型 | 说明 |
 |--------|------|------|
-| code   | int  | 状态码 |
+| success | boolean | 操作是否成功 |
 | message | string | 响应消息 |
 | data.scenes | array | 场景列表 |
 | data.total | int | 总数量 |
@@ -106,7 +116,7 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 
 ```json
 {
-  "code": 200,
+  "success": true,
   "message": "success",
   "data": {
     "scenes": [
@@ -122,6 +132,16 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
     "page": 1,
     "pageSize": 20
   }
+}
+```
+
+**错误响应示例**：
+
+```json
+{
+  "success": false,
+  "errorcode": 400,
+  "message": "参数错误"
 }
 ```
 

@@ -8,7 +8,6 @@ use axum::{
     routing::{get, patch, post, put},
     Json, Router,
 };
-use std::sync::Arc;
 use sqlx::Row;
 use tracing::info;
 
@@ -21,7 +20,6 @@ use crate::adapters::http::scene::{
     admin_list_scenes_handler, admin_update_category_handler,
     admin_update_scene_handler,
 };
-use crate::core::ports::UserRepository;
 use crate::framework::bootstrap::{api_paths::ApiPaths, AppState};
 use crate::shared::api_response::ApiResponse;
 
@@ -54,11 +52,16 @@ pub fn create_admin_routes(app_state: AppState) -> Router {
         )
         .route(
             ApiPaths::ADMIN_USER_DETAIL,
-            get(admin_get_user_detail_handler).with_state(app_state.user_repository.clone()),
+            get(admin_get_user_detail_handler).with_state(app_state.clone()),
         )
         .route(
             ApiPaths::ADMIN_USER_UPDATE,
             patch(admin_update_user_handler).with_state(app_state.clone()),
+        )
+        // ===== 学习记录 =====
+        .route(
+            ApiPaths::ADMIN_LEARNING_BY_PHONE,
+            get(admin_get_learning_by_phone_handler).with_state(app_state.clone()),
         )
         // ===== 反馈管理 =====
         .route(
@@ -137,12 +140,23 @@ async fn admin_get_users_handler(
     }
 }
 async fn admin_get_user_detail_handler(
-    State(repo): State<Arc<dyn UserRepository>>,
+    State(app_state): State<AppState>,
     Path(id): Path<String>,
 ) -> Response {
     info!("🔧 [管理端] 获取用户详情: {}", id);
-    match repo.find_by_uid(&id).await {
+
+    match app_state.user_repository.find_by_uid(&id).await {
         Ok(Some(user)) => {
+            // 查询用户星星数量
+            let total_stars = sqlx::query_scalar::<_, i32>(
+                "SELECT COALESCE(total_stars, 0) FROM user_score_summary WHERE user_id = $1"
+            )
+            .bind(user.uid())
+            .fetch_optional(&app_state.pool)
+            .await
+            .unwrap_or(Some(0))
+            .unwrap_or(0);
+
             let data = serde_json::json!({
                 "uid": user.uid(),
                 "name": user.name(),
@@ -150,6 +164,7 @@ async fn admin_get_user_detail_handler(
                 "email": user.email(),
                 "role_type": user.role_type(),
                 "is_vip": user.is_vip(),
+                "total_stars": total_stars,
                 "created_at": user.created_at().to_rfc3339()
             });
             (StatusCode::OK, Json(ApiResponse::success(data, "获取成功"))).into_response()
@@ -164,6 +179,121 @@ async fn admin_get_user_detail_handler(
         }
     }
 }
+
+// ===== 学习记录管理处理器 =====
+
+/// 根据手机号查询用户学习记录
+async fn admin_get_learning_by_phone_handler(
+    State(app_state): State<AppState>,
+    Path(phone): Path<String>,
+) -> Response {
+    info!("🔧 [管理端] 根据手机号查询学习记录: phone={}", phone);
+
+    // 1. 根据手机号查找用户
+    let user = match app_state.user_repository.find_by_phone(&phone).await {
+        Ok(Some(u)) => u,
+        Ok(None) => {
+            let r = ApiResponse::<serde_json::Value>::error(404, "用户不存在");
+            return (StatusCode::NOT_FOUND, Json(r)).into_response();
+        }
+        Err(e) => {
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("查找用户失败: {}", e));
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response();
+        }
+    };
+
+    let user_id = user.uid();
+
+    // 2. 查询用户的学习进度列表
+    let progress_rows = match sqlx::query(
+        r#"
+        SELECT
+            user_id, scene_id, total_regions, learned_count,
+            stars_earned, total_score, is_completed,
+            first_learned_at, last_learned_at, total_study_time,
+            created_at, updated_at
+        FROM user_scene_progress
+        WHERE user_id = $1
+        ORDER BY last_learned_at DESC
+        "#
+    )
+    .bind(user_id)
+    .fetch_all(&app_state.pool)
+    .await
+    {
+        Ok(rows) => rows,
+        Err(e) => {
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("查询学习记录失败: {}", e));
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response();
+        }
+    };
+
+    // 3. 查询用户总体统计
+    let summary = sqlx::query(
+        r#"
+        SELECT total_stars, total_score, completed_scenes, total_study_time, last_active_at
+        FROM user_score_summary
+        WHERE user_id = $1
+        "#
+    )
+    .bind(user_id)
+    .fetch_optional(&app_state.pool)
+    .await
+    .ok()
+    .flatten();
+
+    // 4. 组装响应数据
+    let progress_list: Vec<serde_json::Value> = progress_rows
+        .iter()
+        .map(|row| {
+            serde_json::json!({
+                "scene_id": row.get::<String, _>("scene_id"),
+                "total_regions": row.get::<i32, _>("total_regions"),
+                "learned_count": row.get::<i32, _>("learned_count"),
+                "stars_earned": row.get::<i32, _>("stars_earned"),
+                "total_score": row.get::<i32, _>("total_score"),
+                "is_completed": row.get::<bool, _>("is_completed"),
+                "first_learned_at": row.get::<Option<chrono::NaiveDateTime>, _>("first_learned_at")
+                    .map(|dt| dt.and_utc().to_rfc3339()),
+                "last_learned_at": row.get::<Option<chrono::NaiveDateTime>, _>("last_learned_at")
+                    .map(|dt| dt.and_utc().to_rfc3339()),
+                "total_study_time": row.get::<i32, _>("total_study_time"),
+            })
+        })
+        .collect();
+
+    let data = serde_json::json!({
+        "user": {
+            "uid": user.uid(),
+            "name": user.name(),
+            "phone": user.phone(),
+        },
+        "summary": summary.map(|row| {
+            serde_json::json!({
+                "total_stars": row.get::<i32, _>("total_stars"),
+                "total_score": row.get::<i32, _>("total_score"),
+                "completed_scenes": row.get::<i32, _>("completed_scenes"),
+                "total_study_time": row.get::<i32, _>("total_study_time"),
+                "last_active_at": row.get::<Option<chrono::NaiveDateTime>, _>("last_active_at")
+                    .map(|dt| dt.and_utc().to_rfc3339()),
+            })
+        }).unwrap_or_else(|| {
+            serde_json::json!({
+                "total_stars": 0,
+                "total_score": 0,
+                "completed_scenes": 0,
+                "total_study_time": 0,
+                "last_active_at": null,
+            })
+        }),
+        "progress_list": progress_list,
+    });
+
+    info!("✅ [管理端] 查询学习记录成功: user_id={}, 场景数={}", user_id, progress_list.len());
+    (StatusCode::OK, Json(ApiResponse::success(data, "获取成功"))).into_response()
+}
+
+// ===== 反馈管理处理器 =====
 
 /// 更新用户请求 DTO
 #[derive(Debug, serde::Deserialize)]

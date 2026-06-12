@@ -48,15 +48,15 @@ docs/api/
 
 | 参数名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
-| code   | int  | 状态码 | 200 |
+| success | boolean | 操作是否成功 | true |
 | message | string | 响应消息 | "success" |
-| data   | object | 响应数据 | {...} |
+| data | object | 响应数据 | {...} |
 
 **响应示例**：
 
 ```json
 {
-  "code": 200,
+  "success": true,
   "message": "success",
   "data": {
     "scene": {
@@ -97,13 +97,25 @@ docs/api/
 
 所有接口响应必须遵循统一格式：
 
+**成功响应**：
 ```json
 {
-  "code": 200,           // 状态码：200 成功，其他为错误码
-  "message": "success",  // 响应消息
-  "data": {}             // 业务数据
+  "success": true,       // 操作是否成功
+  "data": {},            // 业务数据
+  "message": "success"   // 响应消息
 }
 ```
+
+**失败响应**：
+```json
+{
+  "success": false,      // 操作是否成功
+  "errorcode": 404,      // 错误码（失败时存在）
+  "message": "错误描述"   // 错误消息
+}
+```
+
+> **注意**：HTTP 状态码根据错误码自动映射（200成功、400参数错误、401未授权、404不存在、500服务器错误等）
 
 ### 5. 文档维护责任
 

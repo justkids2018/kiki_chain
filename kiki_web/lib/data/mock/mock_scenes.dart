@@ -279,7 +279,7 @@ class MockScenes {
     final scenes = getScenesByCategory(categoryId);
 
     return {
-      "code": 200,
+      "success": true,
       "message": "成功",
       "data": {
         "categoryId": categoryId,
@@ -295,7 +295,8 @@ class MockScenes {
 
     if (scene == null) {
       return {
-        "code": 404,
+        "success": false,
+        "errorcode": 404,
         "message": "场景不存在",
         "data": null
       };
@@ -305,7 +306,7 @@ class MockScenes {
     final items = MockSceneItems.getItemsBySceneId(sceneId);
 
     return {
-      "code": 200,
+      "success": true,
       "message": "成功",
       "data": {
         "scene": scene.toJson(),

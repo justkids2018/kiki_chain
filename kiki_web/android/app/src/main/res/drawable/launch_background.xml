@@ -6,7 +6,7 @@
     <!-- Kiki welcome splash screen image -->
     <item>
         <bitmap
-            android:gravity="fill_vertical|center_horizontal"
+            android:gravity="center"
             android:src="@drawable/kiki_welcome" />
     </item>
 </layer-list>

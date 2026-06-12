@@ -195,37 +195,54 @@ start_frontend() {
 
 # 显示服务状态
 show_status() {
+    # 获取本机IP地址（优先局域网IP）
+    local LOCAL_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}' | head -1)
+
     echo ""
     echo "=========================================="
-    echo "  Hi Kiki 本地开发环境状态"
+    echo "  🚀 Hi Kiki 本地开发环境"
     echo "=========================================="
     echo ""
 
     # PostgreSQL
     if check_port 5432; then
-        echo -e "✅ PostgreSQL:  ${GREEN}运行中${NC} (http://localhost:5432)"
+        echo -e "✅ ${GREEN}PostgreSQL 数据库${NC}"
+        echo "   本机访问:  localhost:5432"
+        echo "   局域网访问: ${LOCAL_IP}:5432"
+        echo "   数据库名:  hikiki_db"
+        echo "   用户名:    postgres / postgres"
+        echo ""
     else
-        echo -e "❌ PostgreSQL:  ${RED}未运行${NC}"
+        echo -e "❌ ${RED}PostgreSQL: 未运行${NC}"
+        echo ""
     fi
 
     # Rust 后端
     if check_port 8081; then
-        echo -e "✅ Rust 后端:   ${GREEN}运行中${NC} (http://localhost:8081)"
-        echo "   健康检查:    http://localhost:8081/health"
+        echo -e "✅ ${GREEN}Rust 后端 API${NC}"
+        echo -e "   ${BLUE}本机访问:${NC}    http://localhost:8081"
+        echo -e "   ${BLUE}局域网访问:${NC}  http://${LOCAL_IP}:8081"
+        echo "   健康检查:  http://localhost:8081/health"
+        echo "   API文档:   http://localhost:8081/api/v1"
+        echo ""
     else
-        echo -e "❌ Rust 后端:   ${RED}未运行${NC}"
+        echo -e "❌ ${RED}Rust 后端: 未运行${NC}"
+        echo ""
     fi
 
     # Vue 前端
     if check_port 5173; then
-        echo -e "✅ Vue 前端:    ${GREEN}运行中${NC} (http://localhost:5173)"
-        echo "   管理后台:    http://localhost:5173/"
-        echo "   默认账号:    13900139002 / admin123"
+        echo -e "✅ ${GREEN}Vue 管理后台${NC}"
+        echo -e "   ${BLUE}本机访问:${NC}    http://localhost:5173"
+        echo -e "   ${BLUE}局域网访问:${NC}  http://${LOCAL_IP}:5173"
+        echo "   默认账号:  13900139002"
+        echo "   默认密码:  admin123"
+        echo ""
     else
-        echo -e "❌ Vue 前端:    ${RED}未运行${NC}"
+        echo -e "❌ ${RED}Vue 前端: 未运行${NC}"
+        echo ""
     fi
 
-    echo ""
     echo "=========================================="
     echo ""
 }

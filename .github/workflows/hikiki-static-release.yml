@@ -87,22 +87,22 @@ jobs:
           SERVER_IP="$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')"
           SSH_USER="$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')"
           REMOTE_DIR_INPUT="${HIKIKI_REMOTE_DIR:-}"
+          REMOTE_DIR="${REMOTE_DIR_INPUT:-${DEFAULT_REMOTE_DIR}}"
           RELEASE_ID="sha-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
           REMOTE_TAR="/tmp/hikiki-static-site-${RELEASE_ID}.tar.gz"
 
           scp /tmp/hikiki-static-site.tar.gz "${SSH_USER}@${SERVER_IP}:${REMOTE_TAR}"
-          ssh "${SSH_USER}@${SERVER_IP}" "bash -s" -- "${REMOTE_DIR_INPUT}" "${RELEASE_ID}" "${REMOTE_TAR}" <<'REMOTE_SCRIPT' | tee /tmp/hikiki-deploy-output.txt
+          ssh "${SSH_USER}@${SERVER_IP}" "bash -s" -- "${REMOTE_DIR}" "${RELEASE_ID}" "${REMOTE_TAR}" <<'REMOTE_SCRIPT' | tee /tmp/hikiki-deploy-output.txt
           set -euo pipefail
 
-          REMOTE_DIR_INPUT="$1"
+          if [[ "$#" -ne 3 ]]; then
+            echo "Remote script expected 3 args (REMOTE_DIR, RELEASE_ID, REMOTE_TAR), got $#" >&2
+            exit 2
+          fi
+
+          REMOTE_DIR="$1"
           RELEASE_ID="$2"
           REMOTE_TAR="$3"
-
-          if [[ -n "${REMOTE_DIR_INPUT}" ]]; then
-            REMOTE_DIR="${REMOTE_DIR_INPUT}"
-          else
-            REMOTE_DIR="${HOME}/hikiki_static"
-          fi
 
           case "${REMOTE_DIR}" in
             "~")

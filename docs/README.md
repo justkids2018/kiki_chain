@@ -1,20 +1,42 @@
 # Hi Kiki - 项目文档
 
-## 目录结构
+> 📖 **快速导航**：[文档索引与查找规则](./DOCS_INDEX.md)
+
+## 📋 文档目录说明
+
+**本目录（`docs/`）用于存放项目级共享文档，尤其是前后端契约。**
 
 ```
 docs/
-├── tts/               # TTS 与 sherpa_onnx 文档
-│   ├── README.md      # TTS 文档索引
-│   ├── flutter_sherpa_onnx_integration.md
-│   ├── tts_local_model_usage.md
-│   ├── tts_implementation_report.md
-│   └── tts_sherpa_onnx_optimization_plan.md
-└── database/          # 数据库设计与迁移
-    ├── init.sql       # 完整数据库初始化脚本
-    ├── schema.md      # 表结构设计文档
-    └── migrations/    # SQL 迁移文件
+├── DOCS_INDEX.md              # 📖 文档索引与查找指南（推荐阅读）
+│
+├── api/                       # ⭐ API 接口文档（前后端共享契约）
+│   ├── README.md             # API 文档编写规范
+│   ├── endpoints/            # 接口定义（前后端都看这里）
+│   │   ├── auth.md          # 认证相关接口
+│   │   ├── scenes.md        # 场景相关接口
+│   │   ├── learning.md      # 学习记录接口
+│   │   └── ...
+│   └── schemas/              # 数据模型定义
+│
+├── architecture/             # 整体架构设计
+├── deployment/               # 部署相关文档
+├── database/                 # 数据库设计与迁移
+├── tts/                      # TTS 与 sherpa_onnx 文档
+└── project-ops.md           # 项目运维说明
 ```
+
+## 🎯 文档分层原则
+
+| 文档类型 | 存放位置 | 说明 |
+|---------|---------|------|
+| **API 接口定义** | `docs/api/` | ⭐ 前后端共享契约，最重要 |
+| 后端实现文档 | `kiki_server/docs/` | 后端代码实现细节 |
+| 前端实现文档 | `kiki_web/docs/` | 前端代码实现细节 |
+| 整体架构 | `docs/architecture/` | 系统级架构设计 |
+| 部署运维 | `docs/deployment/` | 部署流程、配置 |
+
+**详细说明请查看：[文档索引指南](./DOCS_INDEX.md)**
 
 ## TTS 文档
 

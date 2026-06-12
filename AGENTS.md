@@ -19,19 +19,56 @@ For `kiki_web` implementation rules, follow `docs/architecture/kiki_web_flutter_
 
 ## Documentation Standards
 
-### 1. 文档目录统一规范
+### 1. 文档目录分层规范
 
-- **统一使用 `docs` 目录**：所有项目文档必须放在 `docs/` 目录下，不使用 `doc/` 目录
-- 项目级文档结构：
-  ```
-  docs/
-  ├── api/              # API 接口文档（重要）
-  ├── architecture/     # 架构设计文档
-  ├── deployment/       # 部署相关文档
-  ├── database/         # 数据库设计文档
-  └── ...               # 其他功能模块文档
-  ```
-- 子项目文档：`kiki_web/docs/`、`kiki_server/docs/` 遵循相同规范
+**核心原则：共享的放根目录，专属的放子项目**
+
+#### 1.1 根目录 `docs/` - 项目级共享文档
+
+用于存放**跨子项目的共享文档**，尤其是前后端契约：
+
+```
+docs/
+├── api/                        # ⭐ API 接口文档（前后端共享契约，最重要）
+│   ├── README.md              # API 文档规范
+│   ├── endpoints/             # 接口定义（前后端都看这里）
+│   └── schemas/               # 数据模型定义
+├── architecture/              # 整体架构设计文档
+├── deployment/                # 部署相关文档
+└── project-ops.md            # 项目运维文档
+```
+
+**重要**：`docs/api/` 是前后端的接口契约，任何接口变更必须在这里更新！
+
+#### 1.2 子项目 `{project}/docs/` - 专属实现文档
+
+用于存放**各子项目内部的实现细节**：
+
+```
+kiki_server/docs/              # 后端专属文档
+├── implementation/            # 后端实现细节
+├── database/                  # 数据库设计（物理层）
+└── ...
+
+kiki_web/docs/                # 前端专属文档  
+├── components/               # 组件文档
+├── state-management/         # 状态管理
+└── architecture/             # 前端架构（如 DDD 实现）
+
+kiki_admin/docs/              # 管理后台专属文档（如果有）
+```
+
+#### 1.3 文档查找规则（AI Agent 必读）
+
+**当你需要查找文档时，按以下优先级：**
+
+1. **API 接口文档** → `docs/api/endpoints/{module}.md`
+2. **后端实现细节** → `kiki_server/docs/`
+3. **前端实现细节** → `kiki_web/docs/`
+4. **整体架构设计** → `docs/architecture/`
+5. **部署运维相关** → `docs/deployment/` 或 `docs/project-ops.md`
+
+**禁止使用 `doc` 目录（单数形式），统一使用 `docs`（复数形式）**
 
 ### 2. API 文档强制要求
 

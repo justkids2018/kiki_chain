@@ -4,7 +4,6 @@ import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/app_loading_widget.dart';
-import '../../widgets/animated_svg/animated_svg.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../design_ui/kiki_ui_kit.dart';
 

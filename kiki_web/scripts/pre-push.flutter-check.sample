@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Sample git pre-push hook for kiki_web
+# Install with:
+#   cp scripts/pre-push.flutter-check.sample .git/hooks/pre-push
+#   chmod +x .git/hooks/pre-push
+
+if [[ -f "kiki_web/scripts/flutter_local_check.sh" ]]; then
+  (cd kiki_web && ./scripts/flutter_local_check.sh)
+elif [[ -f "scripts/flutter_local_check.sh" ]]; then
+  ./scripts/flutter_local_check.sh
+else
+  echo "flutter_local_check.sh not found" >&2
+  exit 1
+fi

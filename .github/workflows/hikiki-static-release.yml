@@ -22,7 +22,7 @@ env:
   SITE_DOMAIN: down.kiki.keepthinking.me
   SITE_URL: https://down.kiki.keepthinking.me/index.html
   DEFAULT_REMOTE_DIR: ~/hikiki_static
-  DEFAULT_TLS_CERT_DOMAIN: all.keepthinking.me
+  DEFAULT_TLS_CERT_DOMAIN: down.kiki.keepthinking.me
 
 jobs:
   deploy:

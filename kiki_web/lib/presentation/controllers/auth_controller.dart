@@ -99,10 +99,19 @@ class AuthController extends GetxController {
   /// 应用启动时检查是否已登录
   Future<void> _checkLoginStatus() async {
     try {
-      final token = await AppServices.instance.localStorage.getAccessToken();
+      final storage = AppServices.instance.localStorage;
+      final isLoggedInLocally = storage.isLoggedInLocally();
+      final token = await storage.getAccessToken();
+      if (!isLoggedInLocally) {
+        RequestManager.instance.clearAuthToken();
+        _currentUser.value = null;
+        _isLoggedIn.value = false;
+        return;
+      }
+
       if (token != null && token.isNotEmpty) {
         RequestManager.instance.setAuthToken(token);
-        final userInfo = AppServices.instance.localStorage.getUserInfo();
+        final userInfo = storage.getUserInfo();
         if (userInfo != null) {
           _currentUser.value = User.fromJson(userInfo);
           _isLoggedIn.value = true;
@@ -111,6 +120,8 @@ class AuthController extends GetxController {
         }
       } else {
         RequestManager.instance.clearAuthToken();
+        _currentUser.value = null;
+        _isLoggedIn.value = false;
       }
     } catch (e) {
       AppLogger.error('Check login status failed', e);
@@ -246,6 +257,7 @@ class AuthController extends GetxController {
       EasyLoading.show(status: _l10n.loggingOut);
 
       // 清除本地存储
+      await AppServices.instance.localStorage.setLoggedIn(false);
       await AppServices.instance.localStorage.clearUserData();
 
       // 重置状态

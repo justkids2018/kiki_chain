@@ -84,6 +84,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       await _localStorage.setString('user_id', user.id);
       await _localStorage.setUserInfo(user.toJson());
+      await _localStorage.setLoggedIn(true);
 
       AppLogger.info('✅ 用户登录成功: ${user.nickname}');
       return user;
@@ -149,6 +150,7 @@ class AuthRepositoryImpl implements IAuthRepository {
           final token = loginData['token'] as String?;
           if (token != null) {
             await _localStorage.setAccessToken(token);
+            await _localStorage.setLoggedIn(true);
             _requestManager.setAuthToken(token);
           }
         }
@@ -294,6 +296,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
   @override
   Future<bool> isLoggedIn() async {
+    if (!_localStorage.isLoggedInLocally()) return false;
     final token = await _localStorage.getAccessToken();
     return token != null && token.isNotEmpty;
   }

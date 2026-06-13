@@ -302,6 +302,16 @@ class LocalStorageService {
     return await getSecureString(AppConstants.keyRefreshToken);
   }
 
+  /// 存储本地登录状态
+  Future<bool> setLoggedIn(bool value) async {
+    return await setBool(AppConstants.keyIsLoggedIn, value);
+  }
+
+  /// 获取本地登录状态
+  bool isLoggedInLocally() {
+    return getBool(AppConstants.keyIsLoggedIn) ?? false;
+  }
+
   /// 存储用户信息
   Future<bool> setUserInfo(Map<String, dynamic> userInfo) async {
     return await setJson(AppConstants.keyUserInfo, userInfo);
@@ -314,11 +324,13 @@ class LocalStorageService {
 
   /// 清除认证相关数据
   Future<void> clearAuthData() async {
+    await setLoggedIn(false);
     await Future.wait([
       deleteSecureString(AppConstants.keyAccessToken),
       deleteSecureString(AppConstants.keyRefreshToken),
       remove(AppConstants.keyUserId),
       remove(AppConstants.keyUserInfo),
+      remove(AppConstants.keyIsLoggedIn),
       remove(AppConstants.keyChatDifyArguments),
     ]);
   }

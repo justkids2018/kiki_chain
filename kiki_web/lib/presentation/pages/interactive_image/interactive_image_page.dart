@@ -305,6 +305,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     final groupWidth =
         backButtonSize + backButtonImageGap + imageSize + panelGap + panelWidth;
     final layoutHeight = imageSize;
+    const contentLeft = backButtonSize + backButtonImageGap;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -314,21 +315,27 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
         child: Center(
           child: SizedBox(
             width: groupWidth,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                GlassBackButton(
-                  onTap: () => _handleBackNavigation(context),
-                  size: backButtonSize,
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  child: GlassBackButton(
+                    onTap: () => _handleBackNavigation(context),
+                    size: backButtonSize,
+                  ),
                 ),
-                const SizedBox(width: backButtonImageGap),
-                SizedBox(
+                Positioned(
+                  left: contentLeft,
+                  top: 0,
                   width: imageSize,
                   height: imageSize,
                   child: _buildLargeImageContainer(controller: controller),
                 ),
-                SizedBox(width: panelGap),
-                SizedBox(
+                Positioned(
+                  left: contentLeft + imageSize + panelGap,
+                  top: 0,
                   width: panelWidth,
                   height: panelHeight,
                   child: _buildCompactCharacterPanel(context, controller),

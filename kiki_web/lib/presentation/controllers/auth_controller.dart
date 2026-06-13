@@ -240,7 +240,7 @@ class AuthController extends GetxController {
   /// 用户退出登录
   ///
   /// 清除所有本地存储的用户信息和token
-  /// 重置用户状态，导航回欢迎页
+  /// 重置用户状态，导航回登录页
   Future<void> logout() async {
     try {
       EasyLoading.show(status: _l10n.loggingOut);
@@ -258,8 +258,8 @@ class AuthController extends GetxController {
       await EasyLoading.showSuccess(_l10n.loggedOut);
       AppLogger.info('User logged out successfully');
 
-      // 导航到欢迎页
-      await _replaceRouteSafely('/welcome');
+      // 导航到登录页
+      await _replaceRouteSafely('/login');
     } catch (e) {
       EasyLoading.showError(_l10n.logoutFailed);
       AppLogger.error('Logout failed', e);

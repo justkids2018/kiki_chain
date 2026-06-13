@@ -2,10 +2,9 @@ import 'package:get/get.dart';
 import 'package:kikichain/presentation/pages/interactive_image_home/interactive_image_home_page.dart';
 import '../presentation/pages/home_page.dart';
 import '../presentation/pages/login_page.dart';
-import '../presentation/pages/login_selector_page.dart';
 import '../presentation/pages/register/controllers/register_page_controller.dart';
 import '../presentation/pages/register/pages/register_page.dart';
-import '../presentation/pages/welcome_page.dart';
+import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_controller.dart';
 import '../presentation/pages/scene_list_page.dart';
@@ -16,20 +15,10 @@ import '../core/constants/app_constants.dart';
 class AppRoutes {
   /// 路由列表
   static final routes = [
-    // 应用入口直接进入欢迎页，iOS 仅保留原生 LaunchScreen，避免出现双闪屏。
+    // Flutter 启动页：只做认证状态分流，原生 LaunchScreen 只负责覆盖引擎启动白屏。
     GetPage(
       name: '/',
-      page: () => const WelcomePage(),
-    ),
-    // 欢迎页面（纯展示页）
-    GetPage(
-      name: AppConstants.routeWelcome,
-      page: () => const WelcomePage(),
-    ),
-    // 登录选择页面（独立页）
-    GetPage(
-      name: AppConstants.routeLoginSelector,
-      page: () => const LoginSelectorPage(),
+      page: () => const SplashPage(),
     ),
     // 主页面
     GetPage(

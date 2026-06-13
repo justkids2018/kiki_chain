@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>奇思蔓想 | 独立产品与 AI 创造</title>
-    <meta name="description" content="奇思蔓想是一个独立产品品牌，把个人的好奇心、独立思考和 AI 协作慢慢打磨成真实可用的产品。" />
+    <title>奇思蔓想 | 独立产品与 AI 协作</title>
+    <meta name="description" content="《奇思蔓想》是一个从个人出发的独立产品品牌，借助 AI 把想做的事做成具体产品。" />
     <style>
         :root {
             --bg: #f6efe4;
@@ -160,18 +160,18 @@
 
         h1 {
             margin: 16px 0 0;
-            max-width: 720px;
-            font-size: clamp(42px, 7.2vw, 82px);
-            line-height: 1.02;
+            max-width: 650px;
+            font-size: clamp(34px, 5.2vw, 58px);
+            line-height: 1.12;
             letter-spacing: 0;
         }
 
         .lead {
             margin: 18px 0 0;
-            max-width: 620px;
+            max-width: 560px;
             color: #4d586d;
-            font-size: clamp(15px, 1.8vw, 18px);
-            line-height: 1.78;
+            font-size: clamp(14px, 1.35vw, 16px);
+            line-height: 1.72;
         }
 
         .belief-card {
@@ -184,8 +184,8 @@
 
         .belief-card strong {
             display: block;
-            font-size: 18px;
-            line-height: 1.35;
+            font-size: 16px;
+            line-height: 1.45;
         }
 
         .belief-card p {
@@ -221,7 +221,7 @@
 
         .section-title h2 {
             margin: 0;
-            font-size: clamp(25px, 3.8vw, 40px);
+            font-size: clamp(22px, 2.8vw, 32px);
             line-height: 1.16;
         }
 
@@ -262,8 +262,9 @@
 
         .product-card.primary {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 150px;
+            grid-template-columns: minmax(0, 1fr) 104px;
             gap: 18px;
+            align-items: start;
             padding: clamp(22px, 4vw, 34px);
         }
 
@@ -274,6 +275,33 @@
 
         .product-card.secondary::before {
             background: var(--clay);
+        }
+
+        .product-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .product-index {
+            color: var(--green-deep);
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .product-kicker::after {
+            content: "";
+            width: 34px;
+            height: 1px;
+            background: rgba(31, 39, 55, 0.2);
+        }
+
+        .product-name {
+            color: var(--ink);
+            font-size: 16px;
+            font-weight: 950;
+            line-height: 1;
         }
 
         .product-label {
@@ -288,10 +316,15 @@
             color: #9b593d;
         }
 
+        .secondary .product-index {
+            color: #b76544;
+        }
+
         .product-card h3 {
-            margin: 10px 0 0;
-            font-size: clamp(28px, 4.5vw, 46px);
-            line-height: 1.08;
+            margin: 14px 0 0;
+            max-width: 360px;
+            font-size: clamp(18px, 2.1vw, 24px);
+            line-height: 1.28;
         }
 
         .product-card p {
@@ -302,11 +335,11 @@
         }
 
         .app-icon {
-            width: 124px;
-            height: 124px;
+            width: 96px;
+            height: 96px;
             justify-self: end;
-            align-self: start;
-            border-radius: 28px;
+            margin-top: 0;
+            border-radius: 24px;
             object-fit: cover;
             box-shadow: 0 18px 42px rgba(80, 58, 34, 0.18);
         }
@@ -444,13 +477,15 @@
             }
 
             h1 {
-                font-size: 36px;
-                line-height: 1.12;
+                max-width: 340px;
+                font-size: 30px;
+                line-height: 1.18;
             }
 
             .lead {
-                font-size: 14px;
-                line-height: 1.7;
+                max-width: 350px;
+                font-size: 13px;
+                line-height: 1.72;
             }
 
             .belief-card {
@@ -465,7 +500,7 @@
             }
 
             .section-title h2 {
-                font-size: 26px;
+                font-size: 23px;
             }
 
             .product-card {
@@ -479,15 +514,17 @@
             }
 
             .app-icon {
-                width: 82px;
-                height: 82px;
+                width: 86px;
+                height: 86px;
                 justify-self: start;
                 grid-row: 1;
-                border-radius: 18px;
+                margin-top: 0;
+                border-radius: 20px;
             }
 
             .product-card h3 {
-                font-size: 29px;
+                max-width: 260px;
+                font-size: 21px;
             }
 
             .product-card p {
@@ -564,32 +601,34 @@
         <section class="hero" aria-labelledby="pageTitle">
             <div>
                 <div class="eyebrow">独立产品品牌</div>
-                <h1 id="pageTitle">把自己的好奇心，慢慢做成产品。</h1>
-                <p class="lead">奇思蔓想是一个个人产品品牌。借助 AI 提高速度，也保留自己的判断、审美和长期热爱，做真实、好用、能持续长大的小产品。</p>
+                <h1 id="pageTitle">奇思蔓想</h1>
+                <p class="lead">从个人出发，做自己真正想做的产品。AI 让个体有了更大的想象空间，也让许多想法有机会被认真做出来。</p>
             </div>
 
             <aside class="belief-card" aria-label="品牌理念">
-                <strong>不追热点，不做模板。</strong>
-                <p>先从真实的问题出发，再慢慢把一个小产品打磨到舒服、清楚、可持续。</p>
+                <strong>把自己的观察、判断和兴趣，落到具体产品里。</strong>
+                <p>先从自己真正关心的问题开始，再把它做清楚、做稳定。</p>
                 <div class="belief-list">
-                    <div class="belief-item">独立思考，不被默认答案牵着走。</div>
-                    <div class="belief-item">用 AI 提高效率，但保留人的判断和审美。</div>
-                    <div class="belief-item">做自己愿意长期使用、长期迭代的产品。</div>
+                    <div class="belief-item">从个人经验出发，找到值得长期做的方向。</div>
+                    <div class="belief-item">用 AI 扩展能力，让想法更快变成作品。</div>
+                    <div class="belief-item">保留人的判断、审美和取舍。</div>
                 </div>
             </aside>
         </section>
 
         <section aria-labelledby="productsTitle">
             <div class="section-title">
-                <h2 id="productsTitle">正在生长的产品</h2>
-                <p>每个产品都保持一个清晰入口，适合 Web 浏览，也适合手机上快速了解。</p>
+                <h2 id="productsTitle">产品</h2>
             </div>
 
             <div class="products">
                 <article class="product-card primary">
                     <div>
-                        <div class="product-label">Children Learning</div>
-                        <h3>Hi Kiki</h3>
+                        <div class="product-kicker">
+                            <span class="product-index">01</span>
+                            <span class="product-name">Hi Kiki</span>
+                        </div>
+                        <h3>儿童场景识字与英语启蒙</h3>
                         <p>儿童场景识字与英语启蒙 App。孩子从生活和故事画面进入学习，在场景里认识汉字、英文和声音，家长可以看到每天的学习轨迹。</p>
                         <div class="clip-row">
                             <span class="clip">生活场景</span>
@@ -602,12 +641,15 @@
                             <a class="btn btn-secondary" href="https://img.keepthinking.me/download/hikiki/hikiki_app.apk">下载 Android 版</a>
                         </div>
                     </div>
-                    <img class="app-icon" src="img/app_icon.png" alt="Hi Kiki App Icon" />
+                    <img class="app-icon" src="img/app_icon.png" alt="Hi Kiki App Icon" data-root-src="/all/img/app_icon.png" />
                 </article>
 
                 <article class="product-card secondary">
-                    <div class="product-label">Personal Research</div>
-                    <h3>Just 60 小院</h3>
+                    <div class="product-kicker">
+                        <span class="product-index">02</span>
+                        <span class="product-name">Just 60 小院</span>
+                    </div>
+                    <h3>长期价值投资研究</h3>
                     <p>面向长期价值投资的个人研究产品。从公司研究、估值跟踪和复盘记录开始，把独立判断沉淀成稳定的研究系统。</p>
                     <div class="clip-row">
                         <span class="clip">长期主义</span>
@@ -622,18 +664,25 @@
         <section class="note-strip" aria-label="品牌原则">
             <div class="note-item">
                 <strong>个人出发</strong>
-                <span>不是大团队叙事，而是一个独立者持续做自己的产品。</span>
+                <span>从自己的观察和兴趣出发，做真正想做的产品。</span>
             </div>
             <div class="note-item">
                 <strong>AI 协作</strong>
-                <span>把 AI 当成创造杠杆，用来提高速度和表达质量。</span>
+                <span>AI 打开更大的想象空间，也提高完成作品的能力。</span>
             </div>
             <div class="note-item">
                 <strong>长期打磨</strong>
-                <span>小而清楚，先做对一个场景，再慢慢长大。</span>
+                <span>先把一个问题做清楚，再在使用中持续完善。</span>
             </div>
         </section>
     </main>
+    <script>
+        document.querySelectorAll('[data-root-src]').forEach((image) => {
+            if (window.location.protocol !== 'file:' && window.location.pathname === '/') {
+                image.src = image.getAttribute('data-root-src');
+            }
+        });
+    </script>
 </body>
 
 </html>

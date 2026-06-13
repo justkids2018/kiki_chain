@@ -17,17 +17,21 @@ class AppUpdateController extends GetxController {
   final RxBool hasLocalApk = false.obs;
   OverlayEntry? _updateOverlayEntry;
   OverlayEntry? _installOverlayEntry;
+  bool _isCheckingUpdate = false;
   bool _isUpdateDialogShowing = false;
   bool _isInstallDialogShowing = false;
 
-  /// 检查更新
-  Future<void> checkUpdateOnStartup({
-    bool forceCheck = false,
-    bool Function()? canShowDialog,
-  }) async {
+  /// 首页数据加载完成后检查更新。
+  Future<void> checkUpdateAfterHomeLoaded(
+      {bool Function()? canShowDialog}) async {
+    if (_isCheckingUpdate) {
+      return;
+    }
+
     try {
+      _isCheckingUpdate = true;
       isChecking.value = true;
-      final info = await _updateService.checkUpdate(forceCheck: forceCheck);
+      final info = await _updateService.checkUpdateIfDue();
 
       if (info != null) {
         if (canShowDialog != null && !canShowDialog()) {
@@ -43,6 +47,7 @@ class AppUpdateController extends GetxController {
       debugPrint('[AppUpdateController] 检查更新失败: $e');
     } finally {
       isChecking.value = false;
+      _isCheckingUpdate = false;
     }
   }
 

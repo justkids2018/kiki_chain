@@ -49,8 +49,8 @@ dependencies:
   path: ^1.9.0
 
   # APK 安装
-  open_file: ^3.3.2
-  
+  open_filex: ^4.7.0
+
   # Configuration
   # 使用内置的环境变量解析，无需额外依赖
   

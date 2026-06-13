@@ -87,19 +87,11 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     final controller = Get.find<InteractiveImageController>();
 
     return WillPopScope(
-      // 禁用 Android 返回键 / iOS 左滑手势（旧 API 兼容）
-      onWillPop: () async {
-        await _handleBackNavigation(context);
-        return false;
-      },
+      // 系统返回和侧滑返回只拦截，不自动返回；只允许页面返回按钮触发返回。
+      onWillPop: () async => false,
       child: PopScope(
-        // 禁用 iOS 边缘左滑返回（Flutter 3.12+ 新 API）
         canPop: false,
-        onPopInvokedWithResult: (didPop, result) async {
-          if (!didPop) {
-            await _handleBackNavigation(context);
-          }
-        },
+        onPopInvokedWithResult: (_, __) {},
         child: Scaffold(
           backgroundColor: const Color(0xFFF2F4F8),
           body: Stack(
@@ -142,8 +134,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         const SizedBox(height: 16),
                         Text(
                           'Debug: ${controller.getDiagnostics()}',
-                          style: const TextStyle(
-                              color: Colors.grey, fontSize: 12),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ],
                     ),
@@ -174,12 +166,18 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 );
               }),
-              // 顶部浮层：仅返回按钮
+              // 拦截左边缘横向滑动，避免系统侧滑返回抢走页面。
               Positioned(
-                top: 10,
                 left: 0,
-                right: 0,
-                child: _buildFloatingTopBar(context),
+                top: 0,
+                bottom: 0,
+                width: 32,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onHorizontalDragStart: (_) {},
+                  onHorizontalDragUpdate: (_) {},
+                  child: const SizedBox.expand(),
+                ),
               ),
             ],
           ),
@@ -204,7 +202,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       final box = starContext.findRenderObject() as RenderBox?;
       if (box != null && box.hasSize) {
         final offset = box.localToGlobal(Offset.zero);
-        targetPosition = offset + Offset(box.size.width / 2, box.size.height / 2);
+        targetPosition =
+            offset + Offset(box.size.width / 2, box.size.height / 2);
       }
     }
 
@@ -268,23 +267,6 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
     }
   }
 
-  // ─── 顶部栏（仅返回按钮）────────────────────────────────────────
-
-  Widget _buildFloatingTopBar(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            GlassBackButton(
-              onTap: () => _handleBackNavigation(context),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   // ─── 主布局 ───────────────────────────────────────────────────
 
   Widget _buildUnifiedLandscapeLayout(
@@ -297,23 +279,31 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
 
     final isCompactLandscape = screenSize.shortestSide < 700;
     final horizontalPadding = isCompactLandscape ? 8.0 : 24.0;
+    const backButtonSize = 40.0;
+    const backButtonImageGap = 10.0;
     final panelGap = (isCompactLandscape ? 10.0 : 20.0) + 15.0;
     final double panelWidthPreset = isCompactLandscape ? 300.0 : 320.0;
 
     final availableWidth = (screenSize.width - horizontalPadding * 2)
         .clamp(360.0, double.infinity);
     final panelMaxWidth =
-        (availableWidth - panelGap - 160).clamp(240.0, 360.0);
+        (availableWidth - backButtonSize - backButtonImageGap - panelGap - 160)
+            .clamp(240.0, 360.0);
     final panelWidth = panelWidthPreset.clamp(240.0, panelMaxWidth);
-    final imageMaxWidth =
-        (availableWidth - panelGap - panelWidth).clamp(160.0, double.infinity);
+    final imageMaxWidth = (availableWidth -
+            backButtonSize -
+            backButtonImageGap -
+            panelGap -
+            panelWidth)
+        .clamp(160.0, double.infinity);
     final maxLayoutHeight =
         (screenSize.height - mediaPadding.top - mediaPadding.bottom - 30)
             .clamp(320.0, double.infinity);
 
     final imageSize = imageMaxWidth.clamp(160.0, maxLayoutHeight);
     final panelHeight = imageSize;
-    final groupWidth = imageSize + panelGap + panelWidth;
+    final groupWidth =
+        backButtonSize + backButtonImageGap + imageSize + panelGap + panelWidth;
     final layoutHeight = imageSize;
 
     return Padding(
@@ -327,6 +317,11 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                GlassBackButton(
+                  onTap: () => _handleBackNavigation(context),
+                  size: backButtonSize,
+                ),
+                const SizedBox(width: backButtonImageGap),
                 SizedBox(
                   width: imageSize,
                   height: imageSize,
@@ -473,7 +468,8 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         width: 72,
                         height: 72,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00C37D).withValues(alpha: 0.08),
+                          color:
+                              const Color(0xFF00C37D).withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(

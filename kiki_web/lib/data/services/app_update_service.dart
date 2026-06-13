@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../models/app_update_info.dart';
 
@@ -28,8 +28,7 @@ class AppUpdateService {
       : _dio = dio ?? Dio(),
         _storage = storage ?? GetStorage();
 
-  /// 检查是否需要更新（每周一次）
-  Future<bool> shouldCheckUpdate() async {
+  Future<bool> _shouldCheckUpdate() async {
     final lastCheckTime = _storage.read<int>(_lastCheckTimeKey);
     if (lastCheckTime == null) {
       return true;
@@ -40,19 +39,15 @@ class AppUpdateService {
     return now.difference(lastCheck) >= _checkInterval;
   }
 
-  /// 更新最后检查时间
-  Future<void> updateLastCheckTime() async {
+  Future<void> _markCheckedNow() async {
     await _storage.write(
         _lastCheckTimeKey, DateTime.now().millisecondsSinceEpoch);
   }
 
-  /// 检查版本更新
-  ///
-  /// [forceCheck] 强制检查，忽略7天间隔限制（用于测试）
-  Future<AppUpdateInfo?> checkUpdate({bool forceCheck = false}) async {
+  /// 首页数据加载完成后调用：超过 7 天才请求远程版本信息。
+  Future<AppUpdateInfo?> checkUpdateIfDue() async {
     try {
-      // 检查是否需要更新（测试模式下跳过时间检查）
-      if (!forceCheck && !await shouldCheckUpdate()) {
+      if (!await _shouldCheckUpdate()) {
         debugPrint('[AppUpdate] 距离上次检查未满7天，跳过检查');
         return null;
       }
@@ -71,16 +66,8 @@ class AppUpdateService {
         final updateInfo = AppUpdateInfo.fromJson(response.data);
         debugPrint('[AppUpdate] 获取到版本信息: $updateInfo');
 
-        // 更新最后检查时间
-        await updateLastCheckTime();
+        await _markCheckedNow();
 
-        // 测试模式：忽略 updateStatus，总是返回更新信息
-        if (forceCheck) {
-          debugPrint('[AppUpdate] 测试模式：强制返回更新信息');
-          return updateInfo;
-        }
-
-        // 正常模式：检查是否需要更新
         if (updateInfo.updateStatus) {
           final currentVersionCode = await _getCurrentVersionCode();
           if (updateInfo.versionCode > currentVersionCode) {
@@ -253,8 +240,10 @@ class AppUpdateService {
 
       debugPrint('[AppUpdate] 准备安装 APK: $apkPath');
 
-      // 使用 open_file 插件打开 APK 文件进行安装
-      final result = await OpenFile.open(apkPath);
+      final result = await OpenFilex.open(
+        apkPath,
+        type: 'application/vnd.android.package-archive',
+      );
 
       if (result.type == ResultType.done) {
         debugPrint('[AppUpdate] APK 安装启动成功');

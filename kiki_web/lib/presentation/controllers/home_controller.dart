@@ -8,6 +8,8 @@ import '../../core/di/service_locator.dart';
 import '../../core/logging/app_logger.dart';
 import '../../data/services/learning/reward_service.dart';
 import '../../core/network/network_client.dart';
+import '../../core/constants/app_constants.dart';
+import 'app_update_controller.dart';
 import 'auth_controller.dart';
 
 /// 简化的首页控制器
@@ -36,6 +38,7 @@ class HomeController extends GetxController
   // 服务访问
   final IAuthRepository _authRepository;
   final ISceneRepository _sceneRepository;
+  bool _hasCheckedAppUpdate = false;
 
   @override
   void onInit() {
@@ -71,6 +74,7 @@ class HomeController extends GetxController
       categories.value = result;
 
       AppLogger.info('✅ Loaded ${result.length} categories');
+      _checkAppUpdateAfterHomeDataLoaded();
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to load categories', e, stackTrace);
       errorMessage.value = e.toString();
@@ -83,6 +87,23 @@ class HomeController extends GetxController
   Future<void> refreshCategories() async {
     await loadCategories();
   }
+
+  void _checkAppUpdateAfterHomeDataLoaded() {
+    if (_hasCheckedAppUpdate || categories.isEmpty || !_isOnHomeRoute) {
+      return;
+    }
+
+    _hasCheckedAppUpdate = true;
+    if (!Get.isRegistered<AppUpdateController>()) {
+      Get.put(AppUpdateController());
+    }
+
+    Get.find<AppUpdateController>().checkUpdateAfterHomeLoaded(
+      canShowDialog: () => !isClosed && _isOnHomeRoute,
+    );
+  }
+
+  bool get _isOnHomeRoute => Get.currentRoute == AppConstants.routeHome;
 
   /// 加载用户信息并同步服务器星星数据
   void _loadUserInfo() async {

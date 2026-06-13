@@ -50,8 +50,8 @@ const formRef = ref<FormInstance>()
 const loading = ref(false)
 
 const defaultTestCreds = {
-  identifier: '13900139002',
-  password: 'admin123'
+  identifier: '',
+  password: ''
 }
 
 const form = reactive({

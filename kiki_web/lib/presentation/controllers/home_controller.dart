@@ -11,7 +11,8 @@ import '../../core/network/network_client.dart';
 import 'auth_controller.dart';
 
 /// 简化的首页控制器
-class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   HomeController({
     IAuthRepository? authRepository,
     ISceneRepository? sceneRepository,
@@ -35,7 +36,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   // 服务访问
   final IAuthRepository _authRepository;
   final ISceneRepository _sceneRepository;
-  
+
   @override
   void onInit() {
     super.onInit();
@@ -82,7 +83,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   Future<void> refreshCategories() async {
     await loadCategories();
   }
-  
+
   /// 加载用户信息并同步服务器星星数据
   void _loadUserInfo() async {
     try {
@@ -93,7 +94,8 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
       // 如果用户已登录，从服务器拉取最新的总星星数进行同步
       if (user != null) {
         final authController = Get.find<AuthController>();
-        final rewardService = RewardService(httpClient: NetworkClient.instance.httpClient);
+        final rewardService =
+            RewardService(httpClient: NetworkClient.instance.httpClient);
         final serverStars = await rewardService.fetchUserTotalStars(user.id);
         if (serverStars != null) {
           await authController.updateUserStars(serverStars);
@@ -105,13 +107,13 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
       AppLogger.warning('HomeController: 加载/同步用户信息失败', e);
     }
   }
-  
+
   @override
   void onClose() {
     tabController.dispose();
     super.onClose();
   }
-  
+
   /// 切换tab
   void switchTab(int index) {
     if (index != currentIndex.value) {
@@ -119,7 +121,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
       currentIndex.value = index;
     }
   }
-  
+
   /// 登出
   void logout() async {
     try {

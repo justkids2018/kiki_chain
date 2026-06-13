@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> {
           const InteractiveImageHomePage(),
           Positioned(
             top: media.padding.top + 6, // 顶部上移至 6dp，减少上方留空
-            left: media.padding.left - 5, // 抵消 SVG 内部左侧 15dp 空白，使 LOGO 视觉边缘距离屏幕左边刚好 10dp
+            left: media.padding.left -
+                5, // 抵消 SVG 内部左侧 15dp 空白，使 LOGO 视觉边缘距离屏幕左边刚好 10dp
             right: media.padding.right + 10, // 使右侧按钮组距离屏幕右边刚好 10dp
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +47,8 @@ class _HomePageState extends State<HomePage> {
                   width: 240,
                   height: 80,
                   animate: true,
-                  animationType: SvgAnimationType.float, // 启用 Flutter 原生浮动动画，确保 100% 渲染成功，无 WebView 黑屏冲突
+                  animationType: SvgAnimationType
+                      .float, // 启用 Flutter 原生浮动动画，确保 100% 渲染成功，无 WebView 黑屏冲突
                 ),
                 // 右侧按钮组（保持垂直居中对齐）
                 Row(
@@ -56,7 +58,8 @@ class _HomePageState extends State<HomePage> {
                     _buildStarStatusButton(context),
                     const SizedBox(width: 15),
                     _buildSvgButton(
-                      assetPath: 'assets/images/hi_kiki_learning_record_button.svg',
+                      assetPath:
+                          'assets/images/hi_kiki_learning_record_button.svg',
                       onTap: () {
                         Get.to(() => const LearningRecordPage());
                       },
@@ -76,11 +79,13 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     // 统一顶栏
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 14, 20, 8),
                                       child: Row(
                                         children: [
                                           GlassBackButton(
-                                            onTap: () => Navigator.of(ctx).pop(),
+                                            onTap: () =>
+                                                Navigator.of(ctx).pop(),
                                           ),
                                           const SizedBox(width: 14),
                                           Text(

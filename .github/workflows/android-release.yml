@@ -170,7 +170,7 @@ jobs:
           import time
           from pathlib import Path
 
-          from qiniu import Auth, put_file, etag
+          from qiniu import Auth, CdnManager, put_file, etag
 
           ak = os.environ["QINIU_ACCESS_KEY"]
           sk = os.environ["QINIU_SECRET_KEY"]
@@ -225,6 +225,24 @@ jobs:
 
           urls = [upload_one(k) for k in keys]
           Path("qiniu-upload-urls.txt").write_text("\n".join(urls) + "\n", encoding="utf-8")
+
+          print("\nRefreshing Qiniu CDN cache...")
+          cdn_manager = CdnManager(q)
+          refresh_ret, refresh_info = cdn_manager.refresh_urls(urls)
+          if refresh_info.status_code != 200:
+            raise SystemExit(
+              "Qiniu CDN refresh failed: "
+              f"HTTP {refresh_info.status_code}: {refresh_info.text_body}"
+            )
+
+          Path("qiniu-cdn-refresh-result.txt").write_text(
+            f"status_code={refresh_info.status_code}\n"
+            f"response={refresh_ret}\n"
+            f"urls={urls}\n",
+            encoding="utf-8",
+          )
+          print(f"[SUCCESS] Qiniu CDN refresh submitted for {len(urls)} URL(s)")
+
           print("\nAll uploads completed successfully!")
           print("URLs:")
           for u in urls:
@@ -268,6 +286,14 @@ jobs:
             } >> build-summary.md
           fi
 
+          if [[ -f qiniu-cdn-refresh-result.txt ]]; then
+            {
+              echo
+              echo "## Qiniu CDN Refresh"
+              sed 's/^/- /' qiniu-cdn-refresh-result.txt
+            } >> build-summary.md
+          fi
+
           git log --oneline -n 15 >> build-summary.md
           cat build-summary.md >> "$GITHUB_STEP_SUMMARY"
 
@@ -297,4 +323,11 @@ jobs:
         with:
           name: ${{ steps.meta.outputs.artifact_prefix }}-qiniu-urls
           path: qiniu-upload-urls.txt
+          if-no-files-found: error
+
+      - name: Upload Qiniu CDN refresh artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.artifact_prefix }}-qiniu-cdn-refresh
+          path: qiniu-cdn-refresh-result.txt
           if-no-files-found: error

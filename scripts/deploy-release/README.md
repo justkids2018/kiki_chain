@@ -98,9 +98,18 @@ compose 不暴露 80/443，只使用：
 
 - backend: 127.0.0.1:${DEPLOY_BACKEND_HOST_PORT}
 - admin: 127.0.0.1:${DEPLOY_ADMIN_HOST_PORT}
-- postgres: 127.0.0.1:${DEPLOY_POSTGRES_HOST_PORT}
+- postgres: ${DEPLOY_POSTGRES_HOST_BIND:-127.0.0.1}:${DEPLOY_POSTGRES_HOST_PORT}
 
 你可以在宿主机现有 Nginx 上按域名反代到上述本地端口，实现“在已有项目上新增服务”。
+
+如果需要用本地 pgAdmin 连接远程 PostgreSQL，可以在 profile 中设置：
+
+```bash
+DEPLOY_POSTGRES_HOST_BIND="0.0.0.0"
+DEPLOY_POSTGRES_HOST_PORT="15432"
+```
+
+注意：开放 PostgreSQL 到公网前，必须在服务器安全组或防火墙中限制来源 IP，避免数据库端口对全网暴露。
 
 ## 服务器目录隔离（推荐）
 
@@ -118,6 +127,7 @@ compose 不暴露 80/443，只使用：
 - `step2-deploy.sh` 已内置冲突预检查：
 	1. 检查 stack 命名前缀
 	2. 检查目标 localhost 端口是否被其他 Docker 容器占用
+	3. 检查 `${DEPLOY_STACK_NAME}-postgres-1` 等同名容器是否仍由当前 Compose 项目管理
 
 ## 域名要不要写到后端
 

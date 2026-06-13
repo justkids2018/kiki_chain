@@ -1,85 +1,130 @@
-# Kiki 漫游 (Kiki Journey)
+# Kiki Chain
 
-> **AI 驱动的儿童中文学习平台**
-> 通过互动场景和沉浸式体验，让孩子快乐学习中文
+> Hi Kiki 产品工程仓库：移动端学习 App、Rust 后端、Vue 管理后台和产品官网静态页。
 
-[![Project Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![Sprint](https://img.shields.io/badge/sprint-1-blue.svg)]()
-[![Completion](https://img.shields.io/badge/completion-10%25-yellow.svg)]()
+Kiki Chain 当前服务于 **Hi Kiki**：一个面向儿童启蒙阶段的场景式识字与英语学习产品。孩子从生活、校园、故事和探索场景进入学习，在画面中认识汉字、英文词汇和声音；家长可以看到孩子的学习轨迹。
 
----
-
-## 📋 项目概览
-
-**Kiki 漫游**是一个创新的儿童中文学习应用，采用场景化、互动式的学习方式，让 3-8 岁儿童在游戏中自然习得中文。
-
-### 🎯 核心功能
-
-- **📱 互动场景学习**: 通过点击场景中的物品学习汉字、拼音、英文
-- **🎨 汉字笔画动画**: 动态展示汉字书写过程
-- **🔊 TTS 语音播放**: 标准中文发音，帮助孩子正确学习
-- **📊 学习进度跟踪**: 记录学习轨迹，激励持续学习
-- **🏆 成就系统**: 通过徽章和奖励增强学习动力
+本仓库同时包含品牌与产品介绍静态页，用于承载「奇思蔓想」个人产品品牌和 Hi Kiki 下载页。
 
 ---
 
-## 🏗️ 项目架构
+## 项目组成
 
-```
-kiki_chain/                          # 项目根目录
-├── 📱 kiki_web/                     # Flutter App (iOS/Android)
-│   └── 技术栈: Flutter 3.29.2 + GetX
-├── 💼 kiki_web_manager/             # Web 管理后台 (Flutter Web)
-│   └── 技术栈: Flutter Web + Admin UI
-└── 🔧 kiki_server/                  # Rust 后端 API
-    └── 技术栈: Rust + Actix-web + PostgreSQL
+```text
+kiki_chain/
+├── kiki_web/           # Flutter 移动端 App，Android / iOS
+├── kiki_server/        # Rust 后端 API 服务
+├── kiki_admin/         # Vue 3 管理后台
+├── kiki_product_html/  # 产品官网与下载页静态站
+├── docs/               # 项目级共享文档、API、架构、部署文档
+├── nginx/              # 生产反向代理配置
+├── scripts/            # 本地开发、发布部署脚本
+└── .github/workflows/  # CI、移动端打包、Docker、静态站发布
 ```
 
-### 🔗 三端职责
+### 子系统职责
 
-| 端 | 职责 | 技术栈 |
-|---|------|--------|
-| **App** | 儿童学习端，提供互动学习体验 | Flutter + GetX |
-| **Manager** | 内容管理后台，管理场景、物品、用户 | Flutter Web |
-| **Server** | API 服务，提供数据和业务逻辑 | Rust + DDD |
-
----
-
-## 📚 文档导航
-
-### 🌟 核心文档
-
-- **[📖 文档架构说明](./DOCUMENTATION_STRUCTURE.md)** - 文档组织架构和规范
-- **[🎯 任务看板](./tasks/TASK_BOARD.md)** - 当前开发任务和进度
-- **[🔄 AI 驱动开发流程](./docs/workflow/AI_DRIVEN_DEVELOPMENT.md)** - 开发工作流和协作方式
-- **[🤖 Agent 协作手册](./AGENT.md)** - 项目梳理、架构规则与本地启动约定
-- **[☁️ 云端部署手册](./CLOUD.md)** - 阿里云现状、服务器启动与腾讯云迁移占位
-
-### 📋 产品文档
-
-- **[产品需求分析](./docs/product/analysis/产品需求分析.md)** - 核心需求分析
-- **[商业分析报告](./docs/product/analysis/商业分析报告.md)** - 市场和商业模式分析
-
-### 🏗️ 技术文档
-
-- **[系统架构](./docs/architecture/)** - 系统总体架构设计
-- **[API 文档](./docs/api/)** - 接口规范和文档
-- **[App 文档](./kiki_web/doc/)** - Flutter App 技术文档
-- **[后端文档](./kiki_server/doc/)** - Rust 后端技术文档
-- **[管理后台文档](./kiki_web_manager/doc/)** - Web 管理后台文档
+| 子系统 | 目录 | 职责 | 主要技术 |
+|---|---|---|---|
+| 移动端 App | `kiki_web/` | 儿童学习端，负责场景学习、卡片互动、语音、笔顺、学习记录、更新提示 | Flutter, GetX, Dio, cached_network_image |
+| 后端 API | `kiki_server/` | 认证、用户、场景、卡片、资源、管理后台接口 | Rust, Axum, Tokio, SQLx, PostgreSQL |
+| 管理后台 | `kiki_admin/` | 内容运营与管理，包含场景、物品、热区、用户、统计等 | Vue 3, Vite, TypeScript, Element Plus, Pinia |
+| 产品静态站 | `kiki_product_html/` | 品牌页、Hi Kiki 下载页、版本 JSON 与静态资源 | HTML, CSS, GitHub Actions 静态发布 |
+| 部署层 | `docker-compose.prod.yml`, `nginx/` | 后端、管理后台、数据库、Nginx、证书续期 | Docker Compose, Nginx, Certbot |
 
 ---
 
-## 🚀 快速开始
+## 核心技术方案
 
-### 前置要求
+### 1. App 端技术方案
 
-- **Flutter**: 3.29.2 或更高
-- **Rust**: 1.70+ (后端开发)
-- **PostgreSQL**: 14+ (数据库)
-- **Node.js**: 18+ (工具链)
+`kiki_web` 是 Flutter App，主要面向 Android 和 iOS。
 
-### 开发 App
+核心选择：
+
+- **状态与路由**：GetX 负责页面路由、Controller 和响应式状态。
+- **网络访问**：Dio / http 访问后端 API。
+- **图片加载**：统一使用带缓存的图片组件，降低学习卡片和场景图加载抖动。
+- **本地存储**：shared_preferences、flutter_secure_storage、get_storage 保存轻量配置、认证和本地状态。
+- **学习交互**：学习卡片、互动图片、热区点击、音频播放、笔顺动画等由 Flutter UI 层实现。
+- **资源与发布**：App icon、启动图、音频、场景 JSON、字体和配置统一放在 `kiki_web/assets/` 和 `kiki_web/config/`。
+
+架构规则见：
+
+- [kiki_web Flutter 简化 DDD 架构](docs/architecture/kiki_web_flutter_simplified_ddd_architecture.md)
+- [kiki_web Flutter 简化 DDD 实施指南](docs/architecture/kiki_web_flutter_simplified_ddd_implementation_guide.md)
+
+App 端主要分层：
+
+```text
+presentation  -> 页面、Controller、Widget、用户交互
+domain        -> 实体、仓储抽象、业务规则
+data          -> DTO、数据源、仓储实现
+core          -> 网络、日志、异常、基础设施
+services      -> 跨功能技术服务
+utils         -> 无业务耦合工具
+```
+
+依赖方向以 `presentation -> domain -> data -> core/services` 为主，避免 UI 直接调用网络或存储。
+
+### 2. 后端技术方案
+
+`kiki_server` 是 Rust 后端服务。
+
+核心选择：
+
+- **Web 框架**：Axum 0.8。
+- **异步运行时**：Tokio。
+- **数据库访问**：SQLx + PostgreSQL。
+- **认证**：JWT + bcrypt。
+- **日志与观测**：tracing / tracing-subscriber。
+- **资源上传**：七牛云相关 SDK 与 HTTP 上传能力。
+- **部署**：Dockerfile + `docker-compose.prod.yml`。
+
+服务默认配合 PostgreSQL 数据库 `hikiki_db`，生产 Compose 中后端通过内部网络连接数据库和管理后台。
+
+### 3. 管理后台技术方案
+
+`kiki_admin` 是运营管理后台。
+
+核心选择：
+
+- **框架**：Vue 3 Composition API。
+- **构建工具**：Vite。
+- **语言**：TypeScript。
+- **UI**：Element Plus。
+- **状态管理**：Pinia。
+- **路由**：Vue Router。
+- **HTTP**：Axios。
+- **上传能力**：集成七牛 JS 上传相关依赖。
+
+后台主要用于维护学习内容和运营数据，包括场景分类、场景、场景物品、热区编辑、用户和统计等。
+
+### 4. 产品静态站技术方案
+
+`kiki_product_html` 是无需构建的静态站：
+
+- `all/`：奇思蔓想品牌与产品总览页。
+- `hikiki/`：Hi Kiki 下载页和版本信息。
+- `hikiki/hikik_version.json`：App 更新检查使用的版本信息。
+
+静态站通过 `.github/workflows/product-static-sites-release.yml` 发布到 `all.keepthinking.me`：
+
+- `/` 指向 `all/index.html`
+- `/hikiki/` 指向 `hikiki/index.html`
+
+---
+
+## 快速开始
+
+### 环境要求
+
+- Flutter SDK，Dart SDK `>=3.6.0 <4.0.0`
+- Rust stable toolchain
+- Node.js + npm
+- PostgreSQL 15 或 Docker
+
+### 启动移动端 App
 
 ```bash
 cd kiki_web
@@ -87,167 +132,114 @@ flutter pub get
 flutter run
 ```
 
-### 开发后端
+常用检查：
+
+```bash
+cd kiki_web
+flutter analyze
+```
+
+### 启动后端服务
 
 ```bash
 cd kiki_server
 cargo run
 ```
 
-### 开发管理后台
+常用检查：
 
 ```bash
-cd kiki_web_manager
-flutter pub get
-flutter run -d chrome
+cd kiki_server
+cargo test
 ```
 
----
-
-## 👥 团队协作
-
-本项目采用 **AI 驱动开发模式**：
-
-- **🤖 AI (Claude)**: 主要工程师 - 负责代码实现、架构设计、技术决策
-- **👨‍💼 产品经理**: 负责需求定义、功能规划、验收测试
-
-详见：[AI 驱动开发流程](./docs/workflow/AI_DRIVEN_DEVELOPMENT.md)
-
----
-
-## 📊 项目进度
-
-**当前 Sprint**: Sprint 1 (第 1-2 周)
-**完成率**: 10% (2/20 任务)
-
-### ✅ 已完成
-
-- [x] 项目初始化和基础架构
-- [x] 架构优化（合并 SceneDetailPage）
-
-### 🔥 进行中
-
-- 暂无进行中任务
-
-### 📝 待办
-
-- [ ] Mock 数据完善
-- [ ] 实现日常生活场景 (6个)
-- [ ] TTS 功能完善
-- [ ] UI/UX 优化
-
-查看完整进度：[任务看板](./tasks/TASK_BOARD.md)
-
----
-
-## 🤖 AI 驱动开发
-
-### Claude Code 使用方式
+### 启动管理后台
 
 ```bash
-# 1. 在根目录启动（推荐）
-cd /Users/qisd/Documents/development/chain/kiki_chain
+cd kiki_admin
+npm install
+npm run dev
+```
 
-# 2. 查看任务
-cat tasks/TASK_BOARD.md
+构建：
 
-# 3. 开发 App
-cd kiki_web
-# 进行开发...
+```bash
+cd kiki_admin
+npm run build
+```
 
-# 4. 开发后端
-cd ../kiki_server
-# 进行开发...
+### 预览产品静态页
 
-# 5. 开发管理后台
-cd ../kiki_web_manager
-# 进行开发...
+静态页可以直接用浏览器打开：
 
-# 6. 回到根目录更新任务
-cd ..
-# 更新任务状态
+```text
+kiki_product_html/all/index.html
+kiki_product_html/hikiki/index.html
 ```
 
 ---
 
-## 📦 项目结构
+## 部署与发布
 
-<details>
-<summary>点击展开完整项目结构</summary>
+### 生产 Docker 服务
 
-```
-kiki_chain/
-├── 📚 docs/                           # 共享文档
-│   ├── product/                       # 产品文档
-│   ├── architecture/                  # 架构设计
-│   ├── api/                           # API 文档
-│   ├── design/                        # 设计文档
-│   └── workflow/                      # 工作流程
-├── 🎯 tasks/                          # 任务管理
-│   ├── TASK_BOARD.md                 # 主任务看板
-│   ├── current_sprint/               # 当前 Sprint
-│   ├── backlog/                      # 待办任务
-│   ├── completed/                    # 已完成
-│   └── archive/                      # 历史归档
-├── 🤖 scripts/                        # 自动化脚本
-├── 📱 kiki_web/                       # Flutter App
-├── 💼 kiki_web_manager/               # Web 管理后台
-└── 🔧 kiki_server/                    # Rust 后端
-```
+生产环境通过根目录 `docker-compose.prod.yml` 编排：
 
-</details>
+- `postgres`：PostgreSQL 15
+- `backend`：Rust API
+- `admin`：Vue 管理后台
+- `nginx`：HTTPS 入口和反向代理
+- `certbot`：证书续期
 
----
+参考文档：
 
-## 🛠️ 技术栈
+- [部署文档](docs/deployment/README.md)
+- [正式部署流程](docs/deployment/kiki_chain_正式部署流程.md)
+- [部署 runbook](docs/deployment/deploy-release-runbook.md)
 
-### 前端 (App & Web)
+### GitHub Actions
 
-- **Flutter**: 3.29.2
-- **状态管理**: GetX
-- **网络**: Dio
-- **本地存储**: Hive
-- **多语言**: flutter_localizations
+当前主要 workflows：
 
-### 后端
-
-- **语言**: Rust
-- **框架**: Actix-web
-- **数据库**: PostgreSQL
-- **架构**: DDD (领域驱动设计)
-- **ORM**: Diesel / SeaORM
-
-### DevOps
-
-- **容器化**: Docker
-- **CI/CD**: GitHub Actions
-- **部署**: 待定
+- `ci-validate.yml`：基础校验
+- `android-release.yml`：Android 打包
+- `ios-release.yml`：iOS 打包
+- `docker-release.yml`：Docker 镜像发布
+- `product-static-sites-release.yml`：产品静态站发布
 
 ---
 
-## 📝 开发规范
+## 文档入口
 
-- **代码风格**: 遵循 Flutter 和 Rust 官方规范
-- **Git 提交**: 使用 Conventional Commits
-- **分支策略**: Git Flow
-- **文档更新**: 随代码同步更新
+项目文档遵循“共享文档放 `docs/`，子项目实现文档放各自目录”的规则。
 
----
+- [文档索引](docs/DOCS_INDEX.md)
+- [API 文档](docs/api/README.md)
+- [数据库文档](docs/database/README.md)
+- [部署文档](docs/deployment/README.md)
+- [TTS 文档](docs/tts/README.md)
+- [App 文档](kiki_web/docs/README.md)
+- [后端文档](kiki_server/docs/README.md)
 
-## 📄 License
+开发规范参考：
 
-Copyright © 2026 Kiki Journey Team. All rights reserved.
-
----
-
-## 📞 联系方式
-
-- **项目管理**: [查看任务看板](./tasks/TASK_BOARD.md)
-- **技术文档**: [文档中心](./docs/)
-- **问题反馈**: GitHub Issues
+- [API 开发规范](.ai/dev-prompts/api-development-standards.md)
+- [文档管理规范](.ai/dev-prompts/documentation-standards.md)
 
 ---
 
-**最后更新**: 2026-02-11
-**文档版本**: v2.0
-**维护者**: AI (Claude) + 产品经理
+## 开发约定
+
+- API 变更必须同步更新 `docs/api/`。
+- App 新功能遵循 `kiki_web` 项目自有的简化 DDD 分层。
+- 管理后台接口以共享 API 文档为前后端契约。
+- 静态产品页改动后，需要确认 `product-static-sites-release.yml` 的校验条件仍然满足。
+- 提交前至少运行与改动相关的最小校验，例如 `flutter analyze`、`cargo test`、`npm run build` 或静态页校验。
+
+---
+
+## 联系方式
+
+- 品牌与产品：奇思蔓想
+- 联系邮箱：justkids2018101@gmail.com
+

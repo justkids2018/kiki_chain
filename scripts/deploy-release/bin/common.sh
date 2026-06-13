@@ -43,6 +43,7 @@ load_profile() {
   REMOTE_DIR="$DEPLOY_REMOTE_DIR"
   STACK_NAME="$DEPLOY_STACK_NAME"
   COMPOSE_FILE="scripts/deploy-release/docker-compose.yml"
+  DEPLOY_POSTGRES_HOST_BIND="${DEPLOY_POSTGRES_HOST_BIND:-127.0.0.1}"
 }
 
 print_header() {
@@ -98,8 +99,20 @@ preflight_conflict_check() {
     echo -e "${GREEN}✅ Stack 命名符合前缀规范: $STACK_NAME${NC}"
   fi
 
+  local expected_names
+  expected_names=$(ssh "$SERVER" "for name in ${STACK_NAME}-postgres-1 ${STACK_NAME}-backend-1 ${STACK_NAME}-admin-1; do docker inspect \"\$name\" --format '{{.Name}} {{index .Config.Labels \"com.docker.compose.project\"}}/{{index .Config.Labels \"com.docker.compose.service\"}}' 2>/dev/null || true; done")
+
+  local unmanaged_names
+  unmanaged_names=$(printf '%s\n' "$expected_names" | awk -v stack="$STACK_NAME" '$0 != "" && $2 !~ "^" stack "/(postgres|backend|admin)$" { print }')
+  if [[ -n "$unmanaged_names" ]]; then
+    echo -e "${RED}❌ 存在同名但未被当前 Compose 项目管理的容器:${NC}"
+    echo "$unmanaged_names"
+    echo -e "${YELLOW}请先在服务器上确认这些容器是否可迁回 Compose 管理。Postgres 容器如需重建，必须保留 volume，禁止删除 volume。${NC}"
+    exit 1
+  fi
+
   local conflict_output
-  conflict_output=$(ssh "$SERVER" "docker ps --format '{{.Names}} {{.Ports}}' | grep -E '127.0.0.1:(${DEPLOY_ADMIN_HOST_PORT}|${DEPLOY_BACKEND_HOST_PORT}|${DEPLOY_POSTGRES_HOST_PORT})->' | grep -v '^${STACK_NAME}-' || true")
+  conflict_output=$(ssh "$SERVER" "docker ps --format '{{.Names}} {{.Ports}}' | grep -E '(${DEPLOY_ADMIN_HOST_PORT}|${DEPLOY_BACKEND_HOST_PORT}|${DEPLOY_POSTGRES_HOST_PORT})->' | grep -v '^${STACK_NAME}-' || true")
 
   if [[ -n "$conflict_output" ]]; then
     echo -e "${RED}❌ 端口冲突，以下容器已占用目标端口:${NC}"

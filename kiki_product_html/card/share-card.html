@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hi Kiki 扫码名片卡</title>
+    <style>
+        :root {
+            --cream: #fff8ec;
+            --paper: #fffdf8;
+            --ink: #253047;
+            --muted: #667085;
+            --green: #4da862;
+            --green-deep: #2f7d45;
+            --blue: #4c8fd9;
+            --coral: #ff856f;
+            --yellow: #ffd36c;
+            --line: rgba(37, 48, 71, 0.12);
+            --shadow: 0 28px 70px rgba(74, 54, 30, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            background: #e9edf2;
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            padding: 28px;
+        }
+
+        .poster-shell {
+            width: min(382px, calc(100vw - 28px));
+        }
+
+        .poster-frame {
+            position: relative;
+            overflow: visible;
+        }
+
+        .poster {
+            position: relative;
+            width: 900px;
+            overflow: hidden;
+            border-radius: 56px;
+            background:
+                radial-gradient(circle at 18% 7%, rgba(255, 211, 108, 0.34), transparent 280px),
+                radial-gradient(circle at 88% 10%, rgba(76, 143, 217, 0.13), transparent 340px),
+                radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.78), transparent 470px),
+                linear-gradient(180deg, #fffaf2 0%, var(--cream) 62%, #f6ecdf 100%);
+            box-shadow: var(--shadow);
+            transform-origin: top left;
+        }
+
+        .poster::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 42%),
+                radial-gradient(circle at 54% 48%, rgba(255, 255, 255, 0.64), transparent 420px);
+            pointer-events: none;
+        }
+
+        .poster::after {
+            content: "";
+            position: absolute;
+            left: 52px;
+            right: 52px;
+            top: 500px;
+            height: 560px;
+            border-radius: 48px;
+            background:
+                radial-gradient(circle at 28% 24%, rgba(77, 168, 98, 0.2), transparent 250px),
+                radial-gradient(circle at 70% 58%, rgba(76, 143, 217, 0.2), transparent 300px),
+                linear-gradient(rgba(255, 248, 236, 0.2), rgba(255, 248, 236, 0.55));
+            filter: blur(18px);
+            opacity: 0.34;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .poster-inner {
+            position: relative;
+            z-index: 1;
+            padding: 62px 62px 54px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .app-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            box-shadow: 0 14px 30px rgba(74, 54, 30, 0.18);
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 32px;
+            line-height: 1.05;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .headline {
+            margin: 40px 0 0;
+            max-width: 760px;
+            font-size: 58px;
+            line-height: 1.1;
+            letter-spacing: 0;
+            font-weight: 950;
+        }
+
+        .headline em {
+            display: inline;
+            color: var(--green-deep);
+            font-style: normal;
+        }
+
+        .headline-line {
+            display: block;
+        }
+
+        .subhead {
+            margin: 16px 0 0;
+            max-width: 620px;
+            color: #465066;
+            font-size: 24px;
+            line-height: 1.52;
+            font-weight: 700;
+        }
+
+        .stage {
+            position: relative;
+            margin: 50px auto 0;
+            width: 774px;
+            height: 484px;
+        }
+
+        .star {
+            position: absolute;
+            right: -8px;
+            top: -76px;
+            z-index: 4;
+            width: 132px;
+            height: 132px;
+            color: #ffc247;
+            filter: drop-shadow(0 16px 22px rgba(178, 117, 14, 0.23));
+            transform: rotate(12deg);
+        }
+
+        .star svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .scene-card {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border: 10px solid rgba(255, 255, 255, 0.82);
+            border-radius: 40px;
+            background: var(--paper);
+            box-shadow: 0 28px 60px rgba(74, 54, 30, 0.2);
+            transform: rotate(-2.2deg);
+        }
+
+        .scene-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 34%, rgba(37, 48, 71, 0.5) 100%);
+        }
+
+        .scene-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scene-caption {
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            bottom: 24px;
+            z-index: 2;
+            color: #fff;
+            width: fit-content;
+            max-width: calc(100% - 56px);
+            border: 1px solid rgba(255, 255, 255, 0.26);
+            border-radius: 20px;
+            background: rgba(20, 28, 42, 0.52);
+            box-shadow: 0 12px 30px rgba(10, 16, 28, 0.24);
+            padding: 16px 18px 15px;
+            backdrop-filter: blur(8px);
+        }
+
+        .scene-caption strong {
+            display: block;
+            font-size: 28px;
+            line-height: 1.15;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .scene-caption span {
+            display: block;
+            margin-top: 9px;
+            font-size: 17px;
+            line-height: 1.35;
+            font-weight: 700;
+            opacity: 0.92;
+        }
+
+        .tag-sticker {
+            position: absolute;
+            right: -24px;
+            bottom: -22px;
+            z-index: 5;
+            border-radius: 22px 22px 22px 6px;
+            background: linear-gradient(145deg, #6db7ea, #4c8fd9);
+            color: #fff;
+            padding: 16px 18px;
+            font-size: 20px;
+            line-height: 1;
+            font-weight: 900;
+            transform: rotate(-8deg);
+            box-shadow: 0 16px 28px rgba(76, 143, 217, 0.28);
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 46px;
+        }
+
+        .chip {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 253, 248, 0.72);
+            padding: 12px 17px;
+            color: #435065;
+            font-size: 20px;
+            line-height: 1;
+            font-weight: 800;
+        }
+
+        .bottom {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: 1fr 266px;
+            gap: 24px;
+            align-items: center;
+            border: 1px solid rgba(37, 48, 71, 0.1);
+            border-radius: 34px;
+            background: rgba(255, 253, 248, 0.84);
+            box-shadow: 0 22px 50px rgba(74, 54, 30, 0.12);
+            padding: 22px;
+        }
+
+        .download-copy {
+            min-width: 0;
+        }
+
+        .download-copy strong {
+            display: block;
+            font-size: 36px;
+            line-height: 1.16;
+            font-weight: 950;
+        }
+
+        .download-copy span {
+            display: block;
+            margin-top: 12px;
+            color: #4f5a6d;
+            font-size: 20px;
+            line-height: 1.42;
+            font-weight: 700;
+        }
+
+        .value-list {
+            display: grid;
+            gap: 9px;
+            margin: 16px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .value-list li {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #435065;
+            font-size: 19px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .value-list li::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            flex: 0 0 auto;
+            border-radius: 999px;
+            background: var(--green);
+            box-shadow: 0 0 0 5px rgba(77, 168, 98, 0.12);
+        }
+
+        .qr-card {
+            border: 1px solid rgba(37, 48, 71, 0.08);
+            border-radius: 28px;
+            background: #fff;
+            padding: 16px;
+        }
+
+        .qr-card img {
+            width: 100%;
+            border-radius: 20px;
+            background: #fff;
+        }
+
+        .qr-card p {
+            margin: 12px 0 0;
+            color: #465066;
+            font-size: 15px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .tools {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .tool-button {
+            min-height: 42px;
+            flex: 1;
+            border: 1px solid rgba(37, 48, 71, 0.12);
+            border-radius: 999px;
+            background: #fffdf8;
+            color: var(--ink);
+            font: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(74, 54, 30, 0.08);
+        }
+
+        .tool-button.primary {
+            border-color: transparent;
+            background: linear-gradient(180deg, #58b76c 0%, #317f48 100%);
+            color: #fff;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 14px;
+            }
+
+            .poster-shell {
+                width: min(100%, 390px);
+            }
+
+            .tools {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="poster-shell">
+        <div class="poster-frame">
+            <article id="shareCard" class="poster" aria-label="Hi Kiki 扫码下载分享卡">
+                <div class="poster-inner">
+                    <header class="brand-row">
+                        <img class="app-icon" src="./app_icon.png" alt="Hi Kiki icon" />
+                        <div class="brand-text">
+                            <strong>Hi Kiki</strong>
+                            <span>儿童场景识字与英语启蒙</span>
+                        </div>
+                    </header>
+
+                    <h1 class="headline">
+                        <span class="headline-line">日常生活场景学习，</span>
+                        <span class="headline-line"><em>中英文一起启蒙。</em></span>
+                    </h1>
+                    <p class="subhead">通过真实生活画面，点一点、听一听，认识中文和英文。</p>
+
+                    <section class="stage" aria-label="应用画面">
+                        <div class="star" aria-hidden="true">
+                            <svg viewBox="0 0 120 120" role="presentation" focusable="false">
+                                <path fill="currentColor" d="M60 7.5 74.3 42l37.2 3-28.3 24.2 8.6 36.3L60 86.1l-31.8 19.4 8.6-36.3L8.5 45l37.2-3L60 7.5Z" />
+                                <path fill="rgba(255,255,255,0.32)" d="M60 18.5 70.8 44.7 99 47 77.5 65.3 84 92.8 60 78.1 36 92.8l6.5-27.5L21 47l28.2-2.3L60 18.5Z" />
+                            </svg>
+                        </div>
+                        <div class="scene-card">
+                            <img src="./2.jpg" alt="Hi Kiki 场景学习画面" />
+                            <div class="scene-caption">
+                                <strong>点场景，听发音</strong>
+                                <span>中文、拼音、英文一起认。</span>
+                            </div>
+                        </div>
+                        <div class="tag-sticker" aria-hidden="true">Hi Kiki</div>
+                    </section>
+
+                    <div class="chips" aria-label="产品特点">
+                        <span class="chip">3-6 岁</span>
+                        <span class="chip">中文识字</span>
+                        <span class="chip">英语启蒙</span>
+                        <span class="chip">入学准备</span>
+                        <span class="chip">学习记录</span>
+                    </div>
+
+                    <footer class="bottom">
+                        <div class="download-copy">
+                            <strong>免费领取体验</strong>
+                            <ul class="value-list">
+                                <li>免费体验完整场景</li>
+                                <li>免费领取 VIP 体验</li>
+                                <li>Pad 大屏学习效果更佳</li>
+                            </ul>
+                        </div>
+                        <div class="qr-card">
+                            <img src="./hikiki_download_qr.png" alt="扫码打开 Hi Kiki 下载页" />
+                            <p>all.keepthinking.me/hikiki</p>
+                        </div>
+                    </footer>
+                </div>
+            </article>
+        </div>
+
+        <div class="tools" aria-label="导出工具">
+            <button class="tool-button primary" type="button" id="downloadPng">下载卡片 PNG</button>
+            <button class="tool-button" type="button" id="openDownload">打开下载页</button>
+        </div>
+    </div>
+
+    <script src="./html2canvas.min.js"></script>
+    <script>
+        const card = document.getElementById('shareCard');
+        const shell = document.querySelector('.poster-shell');
+        const frame = document.querySelector('.poster-frame');
+
+        const fitCard = () => {
+            const shellWidth = shell.clientWidth;
+            const scale = shellWidth / 900;
+            card.style.transform = `scale(${scale})`;
+            card.style.width = '900px';
+            const naturalHeight = card.scrollHeight;
+            frame.style.height = `${Math.round(naturalHeight * scale)}px`;
+        };
+
+        window.addEventListener('resize', fitCard);
+        fitCard();
+
+        const waitForImages = async () => {
+            const images = Array.from(card.querySelectorAll('img'));
+            await Promise.all(images.map((image) => {
+                if (image.complete && image.naturalWidth > 0) {
+                    return Promise.resolve();
+                }
+                return new Promise((resolve, reject) => {
+                    image.addEventListener('load', resolve, { once: true });
+                    image.addEventListener('error', () => reject(new Error(`图片加载失败：${image.getAttribute('src') || image.alt}`)), { once: true });
+                });
+            }));
+        };
+
+        const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error('图片内联失败'));
+            reader.readAsDataURL(blob);
+        });
+
+        const inlineCardImages = async () => {
+            const images = Array.from(card.querySelectorAll('img'));
+            const restores = [];
+
+            await Promise.all(images.map(async (image) => {
+                const originalSrc = image.getAttribute('src');
+                if (!originalSrc || originalSrc.startsWith('data:')) {
+                    return;
+                }
+
+                const response = await fetch(image.src, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`图片读取失败：${originalSrc}`);
+                }
+
+                const dataUrl = await blobToDataUrl(await response.blob());
+                restores.push(() => image.setAttribute('src', originalSrc));
+                image.setAttribute('src', dataUrl);
+            }));
+
+            await waitForImages();
+            return () => restores.forEach((restore) => restore());
+        };
+
+        const saveCanvas = (canvas) => new Promise((resolve, reject) => {
+            if (!canvas.toBlob) {
+                window.open(canvas.toDataURL('image/png'), '_blank');
+                resolve();
+                return;
+            }
+
+            canvas.toBlob((blob) => {
+                if (!blob) {
+                    window.open(canvas.toDataURL('image/png'), '_blank');
+                    resolve();
+                    return;
+                }
+
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.download = 'hi-kiki-share-card.png';
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                resolve();
+            }, 'image/png');
+        });
+
+        document.getElementById('openDownload').addEventListener('click', () => {
+            window.open('https://all.keepthinking.me/hikiki/', '_blank', 'noopener,noreferrer');
+        });
+
+        document.getElementById('downloadPng').addEventListener('click', async () => {
+            if (!window.html2canvas) {
+                alert('截图工具加载失败，请刷新后重试。');
+                return;
+            }
+            const previousTransform = card.style.transform;
+            const previousFrameHeight = frame.style.height;
+            let restoreImages = null;
+            card.style.transform = 'none';
+            frame.style.height = 'auto';
+
+            try {
+                await waitForImages();
+                restoreImages = await inlineCardImages();
+                const exportHeight = card.scrollHeight;
+                const canvas = await html2canvas(card, {
+                    width: 900,
+                    height: exportHeight,
+                    windowWidth: 900,
+                    windowHeight: exportHeight,
+                    scale: 1,
+                    backgroundColor: null,
+                    allowTaint: false,
+                    useCORS: true,
+                    imageTimeout: 15000,
+                    logging: false
+                });
+                await saveCanvas(canvas);
+            } catch (error) {
+                console.error(error);
+                const message = error && error.message ? error.message : String(error);
+                alert(`生成图片失败：${message}\n\n如果你是直接打开本地 HTML，请用本地预览地址打开后再下载。`);
+            } finally {
+                if (restoreImages) {
+                    restoreImages();
+                }
+                card.style.transform = previousTransform;
+                frame.style.height = previousFrameHeight;
+                fitCard();
+            }
+        });
+    </script>
+</body>
+
+</html>

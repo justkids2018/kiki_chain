@@ -15,7 +15,8 @@ class LearningRecordPage extends StatefulWidget {
 class _LearningRecordPageState extends State<LearningRecordPage>
     with SingleTickerProviderStateMixin {
   late final LearningRecordController _controller;
-  final RxString _selectedMonth = ''.obs;
+  final RxString _viewMode = 'week'.obs; // 'week' or 'month'
+  final Rx<DateTime?> _selectedDate = Rx<DateTime?>(null); // For month view day selection
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
 
@@ -28,13 +29,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
       duration: const Duration(milliseconds: 450),
     );
     _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
-
-    ever(_controller.activeMonths, (List<String> months) {
-      if (months.isNotEmpty && _selectedMonth.value.isEmpty) {
-        _selectedMonth.value = months.first;
-        _fadeCtrl.forward();
-      }
-    });
+    _fadeCtrl.forward();
   }
 
   @override
@@ -134,57 +129,21 @@ class _LearningRecordPageState extends State<LearningRecordPage>
           ),
         ),
 
-        // ── 2. Month Pill Selector ───────────────────────────────
+        // ── 2. Week/Month Toggle ───────────────────────────────
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: _buildMonthPills(),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+            child: _buildViewModeToggle(),
           ),
         ),
 
-        // ── 3. Section title "X月 学习轨迹" ─────────────────────
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-            child: Obx(() => _buildSectionTitle()),
-          ),
-        ),
-
-        // ── 4. Week dot cards ────────────────────────────────────
+        // ── 3. Content based on view mode ─────────────────────
         Obx(() {
-          final month = _selectedMonth.value;
-          if (month.isEmpty) return const SliverToBoxAdapter(child: SizedBox());
-
-          final weekMap = _controller.groupedRecords[month] ?? {};
-          final sorted =
-              weekMap.keys.toList()..sort((a, b) => b.compareTo(a));
-
-          if (sorted.isEmpty) {
-            return SliverToBoxAdapter(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Text(
-                    '$month 暂无学习记录',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: const Color(0xFF5A3A15).withOpacity(0.4)),
-                  ),
-                ),
-              ),
-            );
+          if (_viewMode.value == 'month') {
+            return SliverToBoxAdapter(child: _buildMonthView());
+          } else {
+            return SliverToBoxAdapter(child: _buildWeekView());
           }
-
-          return SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, i) =>
-                    _buildWeekCard(sorted[i], weekMap[sorted[i]]!),
-                childCount: sorted.length,
-              ),
-            ),
-          );
         }),
       ],
     );
@@ -209,7 +168,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
       {'icon': Icons.calendar_today_rounded, 'value': '$days', 'label': '打卡天数'},
       {'icon': Icons.star_rounded,            'value': '$stars', 'label': '获得星星'},
       {'icon': Icons.timer_outlined,          'value': '$mins',  'label': '学习分钟'},
-      {'icon': Icons.touch_app_outlined,      'value': '$clicks','label': '次交互'},
+      {'icon': Icons.touch_app_outlined,      'value': '$clicks','label': '词语'},
     ];
 
     return Container(
@@ -318,77 +277,316 @@ class _LearningRecordPageState extends State<LearningRecordPage>
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  MONTH PILLS
+  //  MONTH PILLS (removed - no longer needed)
   // ═══════════════════════════════════════════════════════════════
 
-  Widget _buildMonthPills() {
+  // ═══════════════════════════════════════════════════════════════
+  //  VIEW MODE TOGGLE (Week / Month)
+  // ═══════════════════════════════════════════════════════════════
+
+  Widget _buildViewModeToggle() {
     return Obx(() {
-      final selectedMonth = _selectedMonth.value;
-      return SizedBox(
-        height: 48,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          itemCount: _controller.activeMonths.length,
-          itemBuilder: (_, i) {
-            final month = _controller.activeMonths[i];
-            final selected = selectedMonth == month;
-            return GestureDetector(
-              onTap: () {
-                _selectedMonth.value = month;
-                _fadeCtrl
-                  ..reset()
-                  ..forward();
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: selected
-                      ? const Color(0xFF6DBF4A)
-                      : Colors.white.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(999),
-                  border: Border.all(
-                    color: selected
-                        ? const Color(0xFF52A836)
-                        : const Color(0xFFDDD0BC),
-                    width: 1.5,
-                  ),
-                  boxShadow: selected
-                      ? [
-                          BoxShadow(
-                            color: const Color(0xFF6DBF4A).withOpacity(0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          )
-                        ]
-                      : [],
-                ),
-                child: Text(
-                  month,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Fredoka',
-                    color: selected ? Colors.white : const Color(0xFF7A4A22),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+      final isWeek = _viewMode.value == 'week';
+      return Row(
+        children: [
+          _buildToggleButton('周', isWeek, () => _viewMode.value = 'week'),
+          const SizedBox(width: 8),
+          _buildToggleButton('月', !isWeek, () => _viewMode.value = 'month'),
+        ],
       );
     });
   }
 
+  Widget _buildToggleButton(String label, bool selected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? const Color(0xFF6DBF4A)
+              : Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: selected
+                ? const Color(0xFF52A836)
+                : const Color(0xFFDDD0BC),
+            width: 1.5,
+          ),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF6DBF4A).withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  )
+                ]
+              : [],
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            fontFamily: 'Fredoka',
+            color: selected ? Colors.white : const Color(0xFF7A4A22),
+          ),
+        ),
+      ),
+    );
+  }
+
   // ═══════════════════════════════════════════════════════════════
-  //  SECTION TITLE
+  //  MONTH VIEW (Calendar + Scene List)
   // ═══════════════════════════════════════════════════════════════
 
-  Widget _buildSectionTitle() {
-    final month = _selectedMonth.value;
-    if (month.isEmpty) return const SizedBox();
+  Widget _buildMonthView() {
+    final now = DateTime.now();
+    final currentMonth = now.month;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section title
+          _buildSectionTitle2('$currentMonth月学习轨迹'),
+          const SizedBox(height: 12),
+
+          // Calendar grid
+          _buildMonthCalendar(now),
+          const SizedBox(height: 20),
+
+          // Scene list based on selected date
+          Obx(() => _buildMonthSceneList()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthCalendar(DateTime month) {
+    final firstDay = DateTime(month.year, month.month, 1);
+    final lastDay = DateTime(month.year, month.month + 1, 0);
+    final startWeekday = firstDay.weekday; // 1=Monday, 7=Sunday
+    final daysInMonth = lastDay.day;
+
+    // Calculate total cells needed (including leading empty cells)
+    final totalCells = startWeekday - 1 + daysInMonth;
+    final rows = (totalCells / 7).ceil();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.96),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE8DECA), width: 1.2),
+      ),
+      child: Column(
+        children: [
+          // Weekday headers
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: ['一', '二', '三', '四', '五', '六', '日']
+                .map((d) => SizedBox(
+                      width: 28,
+                      child: Text(
+                        d,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+
+          // Calendar grid
+          ...List.generate(rows, (row) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(7, (col) {
+                  final cellIndex = row * 7 + col;
+                  final dayNumber = cellIndex - (startWeekday - 2);
+
+                  if (dayNumber < 1 || dayNumber > daysInMonth) {
+                    return const SizedBox(width: 28, height: 28);
+                  }
+
+                  final date = DateTime(month.year, month.month, dayNumber);
+                  return _buildCalendarDay(date);
+                }),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendarDay(DateTime date) {
+    final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    final records = _controller.dailyRecords[dateKey] ?? [];
+    final hasActivity = records.isNotEmpty;
+    final stars = records.fold<int>(0, (s, p) => s + p.starsEarned);
+    final now = DateTime.now();
+    final isToday = date.year == now.year && date.month == now.month && date.day == now.day;
+    final isFuture = date.isAfter(now);
+
+    final isSelected = _selectedDate.value != null &&
+        _selectedDate.value!.year == date.year &&
+        _selectedDate.value!.month == date.month &&
+        _selectedDate.value!.day == date.day;
+
+    // Color scale
+    final Color bgColor = isFuture
+        ? const Color(0xFFF0EBE3)
+        : !hasActivity
+            ? const Color(0xFFFFFBF5)
+            : stars == 1
+                ? const Color(0xFFC6E9A7)
+                : stars >= 2
+                    ? const Color(0xFF88D45D)
+                    : const Color(0xFF4DB81C);
+
+    return GestureDetector(
+      onTap: () {
+        if (!isFuture && hasActivity) {
+          _selectedDate.value = isSelected ? null : date;
+        }
+      },
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          color: bgColor,
+          shape: BoxShape.circle,
+          border: isToday
+              ? Border.all(color: const Color(0xFF4DB81C), width: 2)
+              : isSelected
+                  ? Border.all(color: const Color(0xFF52A836), width: 2.5)
+                  : null,
+        ),
+        child: Center(
+          child: hasActivity && (stars >= 3 || isSelected)
+              ? const Icon(Icons.star_rounded, size: 12, color: Colors.white)
+              : Text(
+                  '${date.day}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                    color: hasActivity
+                        ? const Color(0xFF5A3A15)
+                        : Colors.grey[400],
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthSceneList() {
+    final selectedDate = _selectedDate.value;
+
+    List<SceneProgress> scenes;
+    String title;
+
+    if (selectedDate == null) {
+      // Show all current month scenes
+      final now = DateTime.now();
+      final currentMonthKey = '${now.month}月';
+      final weekMap = _controller.groupedRecords[currentMonthKey] ?? {};
+      scenes = weekMap.values.expand((list) => list).toList();
+      title = '本月全部学习记录';
+    } else {
+      // Show selected day scenes
+      final dateKey = '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
+      scenes = _controller.dailyRecords[dateKey] ?? [];
+      title = '${selectedDate.month}月${selectedDate.day}日 学习记录';
+    }
+
+    if (scenes.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(40),
+        child: Center(
+          child: Text(
+            selectedDate == null ? '本月暂无学习记录' : '当天暂无学习记录',
+            style: TextStyle(
+              fontSize: 14,
+              color: const Color(0xFF5A3A15).withOpacity(0.4),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle2(title),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: scenes.map((scene) => _buildSceneCompactCard(scene)).toList(),
+        ),
+        const SizedBox(height: 32),
+      ],
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  WEEK VIEW (Current week learning)
+  // ═══════════════════════════════════════════════════════════════
+
+  Widget _buildWeekView() {
+    final now = DateTime.now();
+    final currentMonthKey = '${now.month}月';
+
+    // Find current week's records
+    final weekMap = _controller.groupedRecords[currentMonthKey] ?? {};
+
+    // Calculate current week range
+    final monday = now.subtract(Duration(days: now.weekday - 1));
+    final sunday = monday.add(const Duration(days: 6));
+    final currentWeekRange = '${monday.month}月${monday.day}日 - ${sunday.month}月${sunday.day}日';
+
+    final weekProgresses = weekMap[currentWeekRange] ?? [];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle2('本周学习轨迹'),
+          const SizedBox(height: 12),
+          if (weekProgresses.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(40),
+              child: Center(
+                child: Text(
+                  '本周暂无学习记录',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: const Color(0xFF5A3A15).withOpacity(0.4),
+                  ),
+                ),
+              ),
+            )
+          else
+            _buildWeekCard(currentWeekRange, weekProgresses),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle2(String title) {
     return Row(
       children: [
         Container(
@@ -405,7 +603,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
         ),
         const SizedBox(width: 10),
         Text(
-          '$month 学习轨迹',
+          title,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w900,
@@ -419,7 +617,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  WEEK DOT CARD  (full-width)
+  //  WEEK DOT CARD  (full-width with grid scenes)
   // ═══════════════════════════════════════════════════════════════
 
   Widget _buildWeekCard(String weekRange, List<SceneProgress> progresses) {
@@ -458,7 +656,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
         children: [
           // ── Header ──────────────────────────────────────────────
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 14),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
             decoration: BoxDecoration(
               color: const Color(0xFFFBF8F2),
               borderRadius:
@@ -475,12 +673,12 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                 Row(
                   children: [
                     const Icon(Icons.date_range_rounded,
-                        size: 15, color: Color(0xFF6DBF4A)),
-                    const SizedBox(width: 7),
+                        size: 13, color: Color(0xFF6DBF4A)),
+                    const SizedBox(width: 6),
                     Text(
                       weekRange,
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.w800,
                         color: Color(0xFF7A4A22),
                         letterSpacing: 0.2,
@@ -490,7 +688,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                     // Star chip
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: weekStars > 0
                             ? const Color(0xFFFFD65A).withOpacity(0.15)
@@ -506,15 +704,15 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.star_rounded,
-                              size: 14,
+                              size: 12,
                               color: weekStars > 0
                                   ? const Color(0xFFFFB800)
                                   : Colors.grey[400]),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 3),
                           Text(
                             '$weekStars 颗',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: weekStars > 0
                                   ? const Color(0xFF7A4A22)
@@ -526,20 +724,22 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
 
-                // 7-day dot row (full width)
+                // 7-day dot row
                 _buildDotRow(monday, dayMap),
               ],
             ),
           ),
 
-          // ── Scene items ─────────────────────────────────────────
+          // ── Scene items (3 per row) ─────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 14),
-            child: Column(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: progresses
-                  .map((p) => _buildSceneItem(p))
+                  .map((p) => _buildSceneCompactCard(p))
                   .toList(),
             ),
           ),
@@ -584,21 +784,21 @@ class _LearningRecordPageState extends State<LearningRecordPage>
             children: [
               // Dot circle
               Container(
-                width: 36,
-                height: 36,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
                   color: dotColor,
                   shape: BoxShape.circle,
                   border: isToday
                       ? Border.all(
-                          color: const Color(0xFF4DB81C), width: 2.5)
+                          color: const Color(0xFF4DB81C), width: 2)
                       : null,
                   boxShadow: hasActivity
                       ? [
                           BoxShadow(
                             color: dotColor.withOpacity(0.5),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
                           )
                         ]
                       : null,
@@ -607,10 +807,10 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                     ? Center(
                         child: stars >= 3
                             ? const Icon(Icons.star_rounded,
-                                size: 16, color: Colors.white)
+                                size: 12, color: Colors.white)
                             : Container(
-                                width: 8,
-                                height: 8,
+                                width: 6,
+                                height: 6,
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                   shape: BoxShape.circle,
@@ -619,12 +819,12 @@ class _LearningRecordPageState extends State<LearningRecordPage>
                       )
                     : null,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               // Weekday label
               Text(
                 labels[i],
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: hasActivity
                       ? const Color(0xFF5A3A15)
@@ -635,7 +835,7 @@ class _LearningRecordPageState extends State<LearningRecordPage>
               Text(
                 '${day.day}',
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 9,
                   color: isToday
                       ? const Color(0xFF4DB81C)
                       : Colors.grey[400],
@@ -650,125 +850,103 @@ class _LearningRecordPageState extends State<LearningRecordPage>
     );
   }
 
-  // ── Scene item row ─────────────────────────────────────────────
+  // ── Scene compact card (3 per row) ─────────────────────────────────────────
 
-  Widget _buildSceneItem(SceneProgress p) {
+  Widget _buildSceneCompactCard(SceneProgress p) {
     final d = (p.lastLearnedAt ?? p.firstLearnedAt ?? DateTime.now()).toLocal();
     final dow = _weekdayStr(d.weekday);
-    final dateStr = '${d.month}月${d.day}日';
+    final dateStr = '${d.month}/${d.day}';
     final name = _getSceneName(p.sceneId);
     final mins = (p.totalStudyTime / 60).ceil();
 
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(12),
       onTap: () => _controller.continueLearning(p.sceneId),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-        child: Row(
+      child: Container(
+        width: (MediaQuery.of(context).size.width - 56) / 3, // 3 cards per row with spacing
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.96),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE8DECA).withOpacity(0.7), width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Day badge
-            Container(
-              width: 64,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F0E6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: const Color(0xFFDDD0BC).withOpacity(0.7)),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    dow,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF7A4A22),
-                    ),
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                  Text(
-                    dateStr,
-                    style: TextStyle(
-                      fontSize: 8.5,
-                      color: const Color(0xFF7A4A22).withOpacity(0.5),
-                    ),
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 14),
-
-            // Scene name + stats
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+            // Top row: Scene name + Stars
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF5A3A15),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      _miniChip(Icons.timer_outlined, '$mins 分钟'),
-                      const SizedBox(width: 10),
-                      _miniChip(
-                          Icons.touch_app_outlined, '${p.learnedCount} 次'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Stars
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(
-                3,
-                (si) => Icon(
-                  Icons.star_rounded,
-                  size: 18,
-                  color: si < p.starsEarned
-                      ? const Color(0xFFFFB800)
-                      : Colors.grey[300],
                 ),
+                const SizedBox(width: 4),
+                // Stars (horizontal)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                    3,
+                    (si) => Icon(
+                      Icons.star_rounded,
+                      size: 12,
+                      color: si < p.starsEarned
+                          ? const Color(0xFFFFB800)
+                          : Colors.grey[300],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 3),
+            // Date
+            Text(
+              '$dow $dateStr',
+              style: TextStyle(
+                fontSize: 9,
+                color: const Color(0xFF7A4A22).withOpacity(0.5),
               ),
             ),
-            const SizedBox(width: 6),
-            Icon(Icons.chevron_right_rounded,
-                size: 20, color: Colors.grey[350]),
+            const SizedBox(height: 6),
+            // Stats row (horizontal)
+            Row(
+              children: [
+                _miniChip(Icons.timer_outlined, '$mins\'', 9),
+                const SizedBox(width: 8),
+                _miniChip(Icons.touch_app_outlined, '${p.learnedCount}词', 9),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _miniChip(IconData icon, String text) {
+  // ── Scene row item (removed) ─────────────────────────────────────────
+
+  Widget _miniChip(IconData icon, String text, [double fontSize = 11]) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 11, color: Colors.grey[430]),
-        const SizedBox(width: 3),
+        Icon(icon, size: 10, color: Colors.grey[430]),
+        const SizedBox(width: 2),
         Text(
           text,
-          style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+          style: TextStyle(fontSize: fontSize, color: Colors.grey[500]),
         ),
       ],
     );
   }
+
 
   // ═══════════════════════════════════════════════════════════════
   //  EMPTY / ERROR

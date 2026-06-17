@@ -245,7 +245,8 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
   },
   {
     "scene_slug": "scene_05_入学准备",
@@ -255,7 +256,8 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
   },
   {
     "scene_slug": "scene_05_入学准备",
@@ -265,7 +267,8 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
   },
   {
     "scene_slug": "scene_05_入学准备",
@@ -275,7 +278,8 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
   },
   {
     "scene_slug": "scene_05_入学准备",
@@ -285,7 +289,8 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
   },
   {
     "scene_slug": "scene_05_入学准备",
@@ -295,6 +300,139 @@
     "image": "",
     "json": "",
     "source": "3-6_school_readiness",
-    "status": "planned_md_only"
+    "status": "deprecated",
+    "note": "已被 scene_05_中国节日 替换；保留作历史参考"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_01_端午节",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_01_端午节/kik_中国节日_01_端午节.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_01_端午节/kik_中国节日_01_端午节.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_01_端午节/kik_中国节日_01_端午节.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Dragon Boat Festival"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_02_中秋节",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_02_中秋节/kik_中国节日_02_中秋节.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_02_中秋节/kik_中国节日_02_中秋节.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_02_中秋节/kik_中国节日_02_中秋节.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Mid-Autumn Festival"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_03_重阳节",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_03_重阳节/kik_中国节日_03_重阳节.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_03_重阳节/kik_中国节日_03_重阳节.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_03_重阳节/kik_中国节日_03_重阳节.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Double Ninth Festival"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_04_冬至",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_04_冬至/kik_中国节日_04_冬至.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_04_冬至/kik_中国节日_04_冬至.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_04_冬至/kik_中国节日_04_冬至.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Winter Solstice"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_05_春节",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_05_春节/kik_中国节日_05_春节.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_05_春节/kik_中国节日_05_春节.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_05_春节/kik_中国节日_05_春节.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Spring Festival"
+  },
+  {
+    "scene_slug": "scene_05_中国节日",
+    "card_slug": "kik_中国节日_06_元宵节",
+    "prompt_md": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_06_元宵节/kik_中国节日_06_元宵节.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_06_元宵节/kik_中国节日_06_元宵节.png",
+    "json": "doc/card-generation/scene-info/scene_05_中国节日/kik_中国节日_06_元宵节/kik_中国节日_06_元宵节.json",
+    "source": "3-6_chinese_festivals",
+    "status": "planned_md_only",
+    "note_en": "Lantern Festival"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_07_教室角落",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_07_教室角落/kik_晨光乐趣_07_教室角落.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_07_教室角落/kik_晨光乐趣_07_教室角落.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_07_教室角落/kik_晨光乐趣_07_教室角落.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Classroom Corner"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_08_图书角",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_08_图书角/kik_晨光乐趣_08_图书角.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_08_图书角/kik_晨光乐趣_08_图书角.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_08_图书角/kik_晨光乐趣_08_图书角.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Reading Corner"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_09_午餐时间",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_09_午餐时间/kik_晨光乐趣_09_午餐时间.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_09_午餐时间/kik_晨光乐趣_09_午餐时间.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_09_午餐时间/kik_晨光乐趣_09_午餐时间.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Lunch Time"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_10_午睡时光",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_10_午睡时光/kik_晨光乐趣_10_午睡时光.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_10_午睡时光/kik_晨光乐趣_10_午睡时光.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_10_午睡时光/kik_晨光乐趣_10_午睡时光.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Nap Time"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_11_音乐律动",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_11_音乐律动/kik_晨光乐趣_11_音乐律动.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_11_音乐律动/kik_晨光乐趣_11_音乐律动.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_11_音乐律动/kik_晨光乐趣_11_音乐律动.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Music & Movement"
+  },
+  {
+    "scene_slug": "scene_01_晨光乐趣",
+    "card_slug": "kik_晨光乐趣_12_放学回家",
+    "prompt_md": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_12_放学回家/kik_晨光乐趣_12_放学回家.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_12_放学回家/kik_晨光乐趣_12_放学回家.png",
+    "json": "doc/card-generation/scene-info/scene_01_晨光乐趣/kik_晨光乐趣_12_放学回家/kik_晨光乐趣_12_放学回家.json",
+    "source": "3-6_morning_joy_extension",
+    "status": "planned_md_only",
+    "note_en": "Going Home"
   }
 ]

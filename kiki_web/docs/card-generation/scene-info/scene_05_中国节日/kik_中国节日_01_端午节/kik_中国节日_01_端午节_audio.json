@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "粽子",
+    "text_pinyin": "zòng zi",
+    "text_english": "Zongzi",
+    "text_phonetic": "/ˈzɔŋziː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 52,
+            "y": 843
+          },
+          {
+            "x": 187,
+            "y": 843
+          },
+          {
+            "x": 52,
+            "y": 957
+          },
+          {
+            "x": 187,
+            "y": 957
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 43,
+            "y": 582
+          },
+          {
+            "x": 444,
+            "y": 582
+          },
+          {
+            "x": 43,
+            "y": 833
+          },
+          {
+            "x": 444,
+            "y": 833
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/粽子-8c74a4-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E7%B2%BD%E5%AD%90-8c74a4-cn.mp3",
+    "audio_en_key": "kiki/audio/zongzi-8c74a4-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/zongzi-8c74a4-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "龙舟",
+    "text_pinyin": "lóng zhōu",
+    "text_english": "Dragon Boat",
+    "text_phonetic": "/ˈdræɡən boʊt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 769,
+            "y": 526
+          },
+          {
+            "x": 983,
+            "y": 526
+          },
+          {
+            "x": 769,
+            "y": 631
+          },
+          {
+            "x": 983,
+            "y": 631
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 549,
+            "y": 529
+          },
+          {
+            "x": 756,
+            "y": 529
+          },
+          {
+            "x": 549,
+            "y": 652
+          },
+          {
+            "x": 756,
+            "y": 652
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/龙舟-0889c8-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E9%BE%99%E8%88%9F-0889c8-cn.mp3",
+    "audio_en_key": "kiki/audio/dragon-boat-0889c8-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/dragon-boat-0889c8-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "艾草",
+    "text_pinyin": "ài cǎo",
+    "text_english": "Mugwort",
+    "text_phonetic": "/ˈmʌɡwɜːrt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 173,
+            "y": 40
+          },
+          {
+            "x": 291,
+            "y": 40
+          },
+          {
+            "x": 173,
+            "y": 146
+          },
+          {
+            "x": 291,
+            "y": 146
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 22,
+            "y": 7
+          },
+          {
+            "x": 165,
+            "y": 7
+          },
+          {
+            "x": 22,
+            "y": 298
+          },
+          {
+            "x": 165,
+            "y": 298
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/艾草-0fb188-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%89%BE%E8%8D%89-0fb188-cn.mp3",
+    "audio_en_key": "kiki/audio/mugwort-0fb188-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/mugwort-0fb188-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "香包",
+    "text_pinyin": "xiāng bāo",
+    "text_english": "Sachet",
+    "text_phonetic": "/sæˈʃeɪ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 881,
+            "y": 337
+          },
+          {
+            "x": 1007,
+            "y": 337
+          },
+          {
+            "x": 881,
+            "y": 438
+          },
+          {
+            "x": 1007,
+            "y": 438
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 568,
+            "y": 329
+          },
+          {
+            "x": 676,
+            "y": 329
+          },
+          {
+            "x": 568,
+            "y": 484
+          },
+          {
+            "x": 676,
+            "y": 484
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/香包-0148c8-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E9%A6%99%E5%8C%85-0148c8-cn.mp3",
+    "audio_en_key": "kiki/audio/sachet-0148c8-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/sachet-0148c8-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "五彩绳",
+    "text_pinyin": "wǔ cǎi shéng",
+    "text_english": "Five-color String",
+    "text_phonetic": "/faɪv ˈkʌlər strɪŋ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 411,
+            "y": 849
+          },
+          {
+            "x": 592,
+            "y": 849
+          },
+          {
+            "x": 411,
+            "y": 960
+          },
+          {
+            "x": 592,
+            "y": 960
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 491,
+            "y": 715
+          },
+          {
+            "x": 673,
+            "y": 715
+          },
+          {
+            "x": 491,
+            "y": 807
+          },
+          {
+            "x": 673,
+            "y": 807
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/五彩绳-6027d7-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E4%BA%94%E5%BD%A9%E7%BB%B3-6027d7-cn.mp3",
+    "audio_en_key": "kiki/audio/five-color-string-6027d7-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/five-color-string-6027d7-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "咸蛋",
+    "text_pinyin": "xián dàn",
+    "text_english": "Salted Egg",
+    "text_phonetic": "/ˈsɔːltɪd ɛɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 813,
+            "y": 876
+          },
+          {
+            "x": 974,
+            "y": 876
+          },
+          {
+            "x": 813,
+            "y": 1010
+          },
+          {
+            "x": 974,
+            "y": 1010
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 693,
+            "y": 767
+          },
+          {
+            "x": 894,
+            "y": 767
+          },
+          {
+            "x": 693,
+            "y": 880
+          },
+          {
+            "x": 894,
+            "y": 880
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/咸蛋-1cb022-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%92%B8%E8%9B%8B-1cb022-cn.mp3",
+    "audio_en_key": "kiki/audio/salted-egg-1cb022-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/salted-egg-1cb022-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "菖蒲",
+    "text_pinyin": "chāng pú",
+    "text_english": "Calamus",
+    "text_phonetic": "/ˈkæləməs/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 14,
+            "y": 389
+          },
+          {
+            "x": 116,
+            "y": 389
+          },
+          {
+            "x": 14,
+            "y": 493
+          },
+          {
+            "x": 116,
+            "y": 493
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 116,
+            "y": 315
+          },
+          {
+            "x": 221,
+            "y": 315
+          },
+          {
+            "x": 116,
+            "y": 564
+          },
+          {
+            "x": 221,
+            "y": 564
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/菖蒲-96f611-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%8F%96%E8%92%B2-96f611-cn.mp3",
+    "audio_en_key": "kiki/audio/calamus-96f611-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/calamus-96f611-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "鼓槌",
+    "text_pinyin": "gǔ chuí",
+    "text_english": "Drumsticks",
+    "text_phonetic": "/ˈdrʌmstɪks/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 878,
+            "y": 674
+          },
+          {
+            "x": 1007,
+            "y": 674
+          },
+          {
+            "x": 878,
+            "y": 766
+          },
+          {
+            "x": 1007,
+            "y": 766
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 761,
+            "y": 640
+          },
+          {
+            "x": 886,
+            "y": 640
+          },
+          {
+            "x": 761,
+            "y": 713
+          },
+          {
+            "x": 886,
+            "y": 713
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/鼓槌-089cb8-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E9%BC%93%E6%A7%8C-089cb8-cn.mp3",
+    "audio_en_key": "kiki/audio/drumsticks-089cb8-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/drumsticks-089cb8-en.mp3"
+  }
+]

@@ -49,7 +49,7 @@ Theme-specific scene elements:
 - Five-color silk strings tied on wrists or laid on the table
 - Salted duck egg cracked open showing orange yolk
 - Calamus leaves bundled with mugwort by the door
-- A small ceramic cup of warm yellow realgar wine on the table
+- A pair of small red wooden drumsticks beside the toy dragon boat, suggesting dragon boat race drumming
 
 General scene elements:
 - theme-matching immersive Chinese festival scene
@@ -60,7 +60,7 @@ General scene elements:
 
 Scene atmosphere:
 - Warm, festive, family-loving, peaceful, traditional, clearly navigable, and positive
-- Color palette suggestion: 竹叶绿、雄黄黄、艾草青、暖木棕
+- Color palette suggestion: 粽叶绿、菖蒲青、艾草青、暖木棕
 - Subtle depth-of-field: center sharper, far edges slightly softer
 - Soft warm daylight from a window or doorway, with traditional paper lantern accents
 - No giant title text anywhere
@@ -68,7 +68,7 @@ Scene atmosphere:
 Depth distribution:
 - Foreground: 2-3 large and clear target objects (zongzi pile, dragon boat, salted egg)
 - Middle ground: main character action and 3-4 target objects (sachet, five-color string, mugwort bundle)
-- Background: theme anchors, room anchors, and remaining objects (calamus by door, realgar wine cup on shelf)
+- Background: theme anchors, room anchors, and remaining objects (calamus by door, drumsticks beside the dragon boat)
 - Avoid clustering all objects on one surface
 
 ### III. Character Cast
@@ -94,7 +94,7 @@ Character rules:
 - [wǔ cǎi shéng] / 五彩绳 / Five-color String (/faɪv ˈkʌlər strɪŋ/)
 - [xián dàn] / 咸蛋 / Salted Egg (/ˈsɔːltɪd ɛɡ/)
 - [chāng pú] / 菖蒲 / Calamus (/ˈkæləməs/)
-- [xióng huáng jiǔ] / 雄黄酒 / Realgar Wine (/ˈriːælɡɑːr waɪn/)
+- [gǔ chuí] / 鼓槌 / Drumsticks (/ˈdrʌmstɪks/)
 
 Object placement map:
 1. 粽子 (zòng zi / Zongzi) — pile of bamboo-leaf-wrapped triangular zongzi as the foreground hero on a plate or in a bamboo steamer.
@@ -104,7 +104,7 @@ Object placement map:
 5. 五彩绳 (wǔ cǎi shéng / Five-color String) — bright five-color braided silk string tied on a wrist or laid on the table.
 6. 咸蛋 (xián dàn / Salted Egg) — salted duck egg cracked open showing orange yolk on a small plate.
 7. 菖蒲 (chāng pú / Calamus) — bundle of long sword-shaped calamus leaves bound with mugwort by the door frame.
-8. 雄黄酒 (xióng huáng jiǔ / Realgar Wine) — small ceramic cup of warm yellow realgar wine on a side shelf, clearly child-safe-looking.
+8. 鼓槌 (gǔ chuí / Drumsticks) — pair of small red wooden drumsticks placed beside the toy dragon boat, clearly separate from the boat body.
 
 Critical placement rules:
 - CLOSED VOCABULARY SET: The vocabulary list in section IV is the only allowed learning target set. Use exactly those listed items; do not substitute, rename, simplify, merge, split, or add target items.
@@ -122,7 +122,7 @@ Easy-confusion protection:
 - 粽子 and 咸蛋 must be visually distinct: 粽子 wrapped in bamboo leaves with triangular shape; 咸蛋 cracked white shell showing orange yolk on a plate.
 - 艾草 and 菖蒲 must be separated visually: 艾草 = grey-green soft leaves; 菖蒲 = long sword-shaped vivid green leaves.
 - 香包 and 五彩绳 must not be merged: 香包 = pouch with embroidery; 五彩绳 = braided five-color string only.
-- 雄黄酒 cup must look like a small ceramic cup, not a wine glass; child-safe presentation.
+- 鼓槌 and 龙舟 must not be merged: 鼓槌 = two small red wooden sticks placed beside the boat; 龙舟 = carved boat body with dragon head.
 
 ### V. Label Cards
 Each object gets exactly one compact floating label card.
@@ -147,7 +147,7 @@ The 8 label cards must be:
 - [wǔ cǎi shéng] / 五彩绳 / Five-color String
 - [xián dàn] / 咸蛋 / Salted Egg
 - [chāng pú] / 菖蒲 / Calamus
-- [xióng huáng jiǔ] / 雄黄酒 / Realgar Wine
+- [gǔ chuí] / 鼓槌 / Drumsticks
 
 Text rules:
 - Hanzi largest and boldest
@@ -181,7 +181,7 @@ Arrow precision map:
 - 五彩绳 arrow -> lands on the five-color silk string body.
 - 咸蛋 arrow -> lands on the salted egg yolk area.
 - 菖蒲 arrow -> lands on the calamus leaf bundle.
-- 雄黄酒 arrow -> lands on the realgar wine cup body.
+- 鼓槌 arrow -> lands on the pair of red wooden drumsticks.
 
 ### VII. Branding Badge
 - Top-right corner

@@ -36,7 +36,7 @@ The entire image IS this scene — there is no separate display table or product
 
 Scene preset rules:
 - Create a warm, cozy Winter Solstice home scene combining a kitchen / dining area and a window showing soft snow.
-- Keep cultural symbols readable: dumplings (jiaozi), tangyuan, scarf, gloves, warm stove, cotton jacket, snowflake, hot tea.
+- Keep cultural symbols readable: dumplings (jiaozi), tangyuan, scarf, gloves, warm stove, cotton jacket, snowman, hot tea.
 - Render festival props as premium rounded toy-diorama items.
 - Avoid dark, scary, chaotic, or realistic cinematic styling. Snow scene must stay bright and cozy, not bleak.
 
@@ -48,7 +48,7 @@ Theme-specific scene elements:
 - A pair of small knitted gloves on the table
 - A small toy-style warm stove (electric heater or charcoal stove) glowing softly
 - A small folded cotton jacket on a chair
-- A large snowflake decoration hanging by the window or floating outside
+- A small rounded toy snowman outside the bright window
 - A small ceramic cup of hot tea with steam
 
 General scene elements:
@@ -68,7 +68,7 @@ Scene atmosphere:
 Depth distribution:
 - Foreground: 2-3 large and clear target objects (dumplings plate, tangyuan bowl, hot tea)
 - Middle ground: main character action and 3-4 target objects (scarf on chair, gloves on table, cotton jacket folded)
-- Background: theme anchors, room anchors, and remaining objects (warm stove, snowflake by window)
+- Background: theme anchors, room anchors, and remaining objects (warm stove, snowman by window)
 - Avoid clustering all objects on one surface
 
 ### III. Character Cast
@@ -93,7 +93,7 @@ Character rules:
 - [shǒu tào] / 手套 / Gloves (/ɡlʌvz/)
 - [nuǎn lú] / 暖炉 / Warm Stove (/wɔːrm stoʊv/)
 - [mián ǎo] / 棉袄 / Cotton Jacket (/ˈkɒtn ˈdʒækɪt/)
-- [xuě huā] / 雪花 / Snowflake (/ˈsnoʊfleɪk/)
+- [xuě rén] / 雪人 / Snowman (/ˈsnoʊmæn/)
 - [rè chá] / 热茶 / Hot Tea (/hɒt tiː/)
 
 Object placement map:
@@ -103,7 +103,7 @@ Object placement map:
 4. 手套 (shǒu tào / Gloves) — pair of small knitted gloves placed on the table.
 5. 暖炉 (nuǎn lú / Warm Stove) — small toy-style warm stove or electric heater glowing gently in the corner.
 6. 棉袄 (mián ǎo / Cotton Jacket) — a small folded cotton jacket placed on a chair or sofa.
-7. 雪花 (xuě huā / Snowflake) — large stylized snowflake decoration hanging by the window or floating just outside the glass.
+7. 雪人 (xuě rén / Snowman) — small rounded toy snowman visible outside the bright window, with a clear head and body.
 8. 热茶 (rè chá / Hot Tea) — small ceramic cup of hot tea with visible steam.
 
 Critical placement rules:
@@ -122,7 +122,7 @@ Easy-confusion protection:
 - 饺子 (crescent shape, on plate, steam) and 汤圆 (round white balls, in soup, in bowl) must look clearly different in shape, container, and presentation.
 - 围巾 and 棉袄 must be visually distinct: 围巾 = long thin knitted strip; 棉袄 = folded thicker padded jacket; do not show them stacked together.
 - 暖炉 must look child-friendly and clearly toy-style, with no scary open flame; ideally a small stylized heater glowing softly.
-- 雪花 stands as a single clear stylized hexagonal snowflake, not a generic blob of snow on the ground.
+- 雪人 must be a small rounded snowman with clear head and body, not a generic blob of snow and not a flat snowflake decoration.
 - 热茶 cup must have visible steam and be clearly different from the porcelain Chang'e style; here it is a simple cozy mug.
 
 ### V. Label Cards
@@ -147,7 +147,7 @@ The 8 label cards must be:
 - [shǒu tào] / 手套 / Gloves
 - [nuǎn lú] / 暖炉 / Warm Stove
 - [mián ǎo] / 棉袄 / Cotton Jacket
-- [xuě huā] / 雪花 / Snowflake
+- [xuě rén] / 雪人 / Snowman
 - [rè chá] / 热茶 / Hot Tea
 
 Text rules:
@@ -181,7 +181,7 @@ Arrow precision map:
 - 手套 arrow -> lands on the glove body.
 - 暖炉 arrow -> lands on the warm stove body.
 - 棉袄 arrow -> lands on the folded cotton jacket body.
-- 雪花 arrow -> lands on the snowflake decoration body.
+- 雪人 arrow -> lands on the snowman body.
 - 热茶 arrow -> lands on the hot tea cup body.
 
 ### VII. Branding Badge

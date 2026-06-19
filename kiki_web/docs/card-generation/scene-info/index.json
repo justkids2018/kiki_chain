@@ -434,5 +434,82 @@
     "source": "3-6_morning_joy_extension",
     "status": "planned_md_only",
     "note_en": "Going Home"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_01_球场开赛",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_01_球场开赛/kik_世界足球节_01_球场开赛.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_01_球场开赛/kik_世界足球节_01_球场开赛.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_01_球场开赛/kik_世界足球节_01_球场开赛.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Kickoff"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_02_训练时间",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_02_训练时间/kik_世界足球节_02_训练时间.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_02_训练时间/kik_世界足球节_02_训练时间.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_02_训练时间/kik_世界足球节_02_训练时间.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Training Time"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_03_观赛派对",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_03_观赛派对/kik_世界足球节_03_观赛派对.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_03_观赛派对/kik_世界足球节_03_观赛派对.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_03_观赛派对/kik_世界足球节_03_观赛派对.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Watching Party"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_04_颁奖时刻",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_04_颁奖时刻/kik_世界足球节_04_颁奖时刻.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_04_颁奖时刻/kik_世界足球节_04_颁奖时刻.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_04_颁奖时刻/kik_世界足球节_04_颁奖时刻.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Award Moment"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_05_球迷广场",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_05_球迷广场/kik_世界足球节_05_球迷广场.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_05_球迷广场/kik_世界足球节_05_球迷广场.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_05_球迷广场/kik_世界足球节_05_球迷广场.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Fan Square"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_06_守门练习",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_06_守门练习/kik_世界足球节_06_守门练习.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_06_守门练习/kik_世界足球节_06_守门练习.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_06_守门练习/kik_世界足球节_06_守门练习.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Goalkeeper Practice"
+  },
+  {
+    "scene_slug": "scene_06_世界足球节",
+    "card_slug": "kik_世界足球节_07_足球现场",
+    "prompt_md": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_07_足球现场/kik_世界足球节_07_足球现场.md",
+    "prompt": "",
+    "image": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_07_足球现场/kik_世界足球节_07_足球现场.png",
+    "json": "doc/card-generation/scene-info/scene_06_世界足球节/kik_世界足球节_07_足球现场/kik_世界足球节_07_足球现场.json",
+    "source": "3-6_world_soccer_festival",
+    "status": "planned_md_only",
+    "note_en": "Live Soccer Scene"
   }
 ]

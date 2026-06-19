@@ -36,7 +36,7 @@ The entire image IS this scene — there is no separate display table or product
 
 Scene preset rules:
 - Create a warm, festive Chinese New Year home scene full of red, gold, and family joy.
-- Keep cultural symbols readable: red envelope, lantern, couplets, firecrackers (toy-style only), dumplings, fu character, new-year picture, lion dance toy.
+- Keep cultural symbols readable: red envelope, lantern, couplets, firecrackers (toy-style only), rice cake, fu character, new-year picture, lion dance toy.
 - Render festival props as premium rounded toy-diorama items.
 - Avoid dark, scary, chaotic, or realistic cinematic styling. Firecrackers must be presented as decorative toy clusters, never as exploding flames.
 
@@ -47,7 +47,7 @@ Theme-specific scene elements:
 - A small stack of red-and-gold red envelopes on a tea tray as foreground hero
 - A pair of round red-and-gold lanterns hanging from the ceiling or doorway
 - A toy-style decorative firecracker cluster (red paper rolls, no flame, no smoke) hanging on the wall
-- A plate of crescent-shaped dumplings with light steam
+- A plate of sliced golden-white rice cake pieces with soft steam
 - A New-Year picture (年画) of a chubby happy baby holding a fish on the wall
 - A small cute lion-dance toy figurine on the floor or low table
 
@@ -66,7 +66,7 @@ Scene atmosphere:
 - No giant title text anywhere
 
 Depth distribution:
-- Foreground: 2-3 large and clear target objects (red envelopes, dumplings, lion dance toy)
+- Foreground: 2-3 large and clear target objects (red envelopes, rice cake, lion dance toy)
 - Middle ground: main character action and 3-4 target objects (lanterns, firecracker decoration, fu character on door)
 - Background: theme anchors, room anchors, and remaining objects (couplets, new-year picture)
 - Avoid clustering all objects on one surface
@@ -91,7 +91,7 @@ Character rules:
 - [dēng long] / 灯笼 / Lantern (/ˈlæntərn/)
 - [duì lián] / 对联 / Couplets (/ˈkʌplɪts/)
 - [biān pào] / 鞭炮 / Firecracker (/ˈfaɪərkrækər/)
-- [jiǎo zi] / 饺子 / Dumpling (/ˈdʌmplɪŋ/)
+- [nián gāo] / 年糕 / Rice Cake (/raɪs keɪk/)
 - [fú zì] / 福字 / Fu Character (/fuː ˈkærəktər/)
 - [nián huà] / 年画 / New-Year Picture (/njuː jɪər ˈpɪktʃər/)
 - [wǔ shī] / 舞狮 / Lion Dance Toy (/ˈlaɪən dæns tɔɪ/)
@@ -101,7 +101,7 @@ Object placement map:
 2. 灯笼 (dēng long / Lantern) — pair of round red-and-gold lanterns hanging from the ceiling or doorway.
 3. 对联 (duì lián / Couplets) — pair of vertical red couplets with golden Chinese characters on both sides of the door.
 4. 鞭炮 (biān pào / Firecracker) — toy-style decorative cluster of red paper firecracker rolls hanging on the wall (no flame, no smoke).
-5. 饺子 (jiǎo zi / Dumpling) — plate of crescent dumplings with light steam.
+5. 年糕 (nián gāo / Rice Cake) — plate of sliced golden-white rice cake pieces with light steam.
 6. 福字 (fú zì / Fu Character) — large gold "福" character on red square paper, displayed inverted on the door panel.
 7. 年画 (nián huà / New-Year Picture) — traditional New-Year picture of a chubby happy baby holding a big fish, hung on the wall.
 8. 舞狮 (wǔ shī / Lion Dance Toy) — small cute lion-dance toy figurine (one head, no scary teeth) on the floor or low table.
@@ -125,6 +125,7 @@ Easy-confusion protection:
 - 年画 must be a clearly framed wall picture of a chubby happy baby holding a fish, not abstract red art.
 - 舞狮 must be a single small toy lion head figurine, not multiple lions, not in a violent pose; cute style only.
 - 鞭炮 visualization is decorative-only: no fire, no smoke, no flame.
+- 年糕 must look like sliced sticky rice cake pieces on a plate, not crescent dumplings and not a generic cake.
 
 ### V. Label Cards
 Each object gets exactly one compact floating label card.
@@ -146,7 +147,7 @@ The 8 label cards must be:
 - [dēng long] / 灯笼 / Lantern
 - [duì lián] / 对联 / Couplets
 - [biān pào] / 鞭炮 / Firecracker
-- [jiǎo zi] / 饺子 / Dumpling
+- [nián gāo] / 年糕 / Rice Cake
 - [fú zì] / 福字 / Fu Character
 - [nián huà] / 年画 / New-Year Picture
 - [wǔ shī] / 舞狮 / Lion Dance Toy
@@ -180,7 +181,7 @@ Arrow precision map:
 - 灯笼 arrow -> lands on the round lantern body.
 - 对联 arrow -> lands on one of the two vertical couplets strips.
 - 鞭炮 arrow -> lands on the firecracker decoration cluster.
-- 饺子 arrow -> lands on the dumpling plate body.
+- 年糕 arrow -> lands on the rice cake plate body.
 - 福字 arrow -> lands on the inverted gold 福 character.
 - 年画 arrow -> lands on the New-Year picture frame body.
 - 舞狮 arrow -> lands on the lion-dance toy head.

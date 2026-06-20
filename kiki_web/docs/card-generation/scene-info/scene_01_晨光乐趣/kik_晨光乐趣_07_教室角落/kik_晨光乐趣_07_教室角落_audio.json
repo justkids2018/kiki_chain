@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "柜子",
+    "text_pinyin": "guì zi",
+    "text_english": "Cabinet",
+    "text_phonetic": "/ˈkæbɪnət/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 425,
+            "y": 776
+          },
+          {
+            "x": 528,
+            "y": 776
+          },
+          {
+            "x": 425,
+            "y": 866
+          },
+          {
+            "x": 528,
+            "y": 866
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 406,
+            "y": 554
+          },
+          {
+            "x": 656,
+            "y": 554
+          },
+          {
+            "x": 406,
+            "y": 740
+          },
+          {
+            "x": 656,
+            "y": 740
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/柜子-ee193c-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%9F%9C%E5%AD%90-ee193c-cn.mp3",
+    "audio_en_key": "kiki/audio/cabinet-ee193c-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/cabinet-ee193c-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "椅子",
+    "text_pinyin": "yǐ zi",
+    "text_english": "Chair",
+    "text_phonetic": "/tʃɛr/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 897,
+            "y": 858
+          },
+          {
+            "x": 1000,
+            "y": 858
+          },
+          {
+            "x": 897,
+            "y": 951
+          },
+          {
+            "x": 1000,
+            "y": 951
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 800,
+            "y": 557
+          },
+          {
+            "x": 961,
+            "y": 557
+          },
+          {
+            "x": 800,
+            "y": 892
+          },
+          {
+            "x": 961,
+            "y": 892
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/椅子-fa8d5b-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%A4%85%E5%AD%90-fa8d5b-cn.mp3",
+    "audio_en_key": "kiki/audio/chair-fa8d5b-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/chair-fa8d5b-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "白板",
+    "text_pinyin": "bái bǎn",
+    "text_english": "Whiteboard",
+    "text_phonetic": "/ˈwaɪtbɔːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 168,
+            "y": 59
+          },
+          {
+            "x": 283,
+            "y": 59
+          },
+          {
+            "x": 168,
+            "y": 149
+          },
+          {
+            "x": 283,
+            "y": 149
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 362,
+            "y": 30
+          },
+          {
+            "x": 728,
+            "y": 30
+          },
+          {
+            "x": 362,
+            "y": 273
+          },
+          {
+            "x": 728,
+            "y": 273
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/白板-6820b2-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E7%99%BD%E6%9D%BF-6820b2-cn.mp3",
+    "audio_en_key": "kiki/audio/whiteboard-6820b2-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/whiteboard-6820b2-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "板擦",
+    "text_pinyin": "bǎn cā",
+    "text_english": "Eraser",
+    "text_phonetic": "/ɪˈreɪsər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 254,
+            "y": 245
+          },
+          {
+            "x": 356,
+            "y": 245
+          },
+          {
+            "x": 254,
+            "y": 335
+          },
+          {
+            "x": 356,
+            "y": 335
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 390,
+            "y": 318
+          },
+          {
+            "x": 450,
+            "y": 318
+          },
+          {
+            "x": 390,
+            "y": 350
+          },
+          {
+            "x": 450,
+            "y": 350
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/板擦-7f0757-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%9D%BF%E6%93%A6-7f0757-cn.mp3",
+    "audio_en_key": "kiki/audio/eraser-7f0757-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/eraser-7f0757-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "卷笔刀",
+    "text_pinyin": "juǎn bǐ dāo",
+    "text_english": "Sharpener",
+    "text_phonetic": "/ˈʃɑːrpənər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 584,
+            "y": 358
+          },
+          {
+            "x": 715,
+            "y": 358
+          },
+          {
+            "x": 584,
+            "y": 448
+          },
+          {
+            "x": 715,
+            "y": 448
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 599,
+            "y": 453
+          },
+          {
+            "x": 670,
+            "y": 453
+          },
+          {
+            "x": 599,
+            "y": 548
+          },
+          {
+            "x": 670,
+            "y": 548
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/卷笔刀-6dc19a-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%8D%B7%E7%AC%94%E5%88%80-6dc19a-cn.mp3",
+    "audio_en_key": "kiki/audio/sharpener-6dc19a-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/sharpener-6dc19a-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "文具盒",
+    "text_pinyin": "wén jù hé",
+    "text_english": "Pencil Case",
+    "text_phonetic": "/ˈpɛnsl keɪs/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 265,
+            "y": 368
+          },
+          {
+            "x": 395,
+            "y": 368
+          },
+          {
+            "x": 265,
+            "y": 456
+          },
+          {
+            "x": 395,
+            "y": 456
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 439,
+            "y": 385
+          },
+          {
+            "x": 529,
+            "y": 385
+          },
+          {
+            "x": 439,
+            "y": 504
+          },
+          {
+            "x": 529,
+            "y": 504
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/文具盒-d838b3-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%96%87%E5%85%B7%E7%9B%92-d838b3-cn.mp3",
+    "audio_en_key": "kiki/audio/pencil-case-d838b3-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/pencil-case-d838b3-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "地球仪",
+    "text_pinyin": "dì qiú yí",
+    "text_english": "Globe",
+    "text_phonetic": "/ɡloʊb/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 884,
+            "y": 370
+          },
+          {
+            "x": 1006,
+            "y": 370
+          },
+          {
+            "x": 884,
+            "y": 453
+          },
+          {
+            "x": 1006,
+            "y": 453
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 742,
+            "y": 313
+          },
+          {
+            "x": 829,
+            "y": 313
+          },
+          {
+            "x": 742,
+            "y": 531
+          },
+          {
+            "x": 829,
+            "y": 531
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/地球仪-a63907-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%9C%B0%E7%90%83%E4%BB%AA-a63907-cn.mp3",
+    "audio_en_key": "kiki/audio/globe-a63907-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/globe-a63907-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "挂钟",
+    "text_pinyin": "guà zhōng",
+    "text_english": "Wall Clock",
+    "text_phonetic": "/wɔːl klɒk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 912,
+            "y": 94
+          },
+          {
+            "x": 1023,
+            "y": 94
+          },
+          {
+            "x": 912,
+            "y": 187
+          },
+          {
+            "x": 1023,
+            "y": 187
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 755,
+            "y": 62
+          },
+          {
+            "x": 866,
+            "y": 62
+          },
+          {
+            "x": 755,
+            "y": 235
+          },
+          {
+            "x": 866,
+            "y": 235
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/挂钟-9a3dd8-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%8C%82%E9%92%9F-9a3dd8-cn.mp3",
+    "audio_en_key": "kiki/audio/wall-clock-9a3dd8-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/wall-clock-9a3dd8-en.mp3"
+  }
+]

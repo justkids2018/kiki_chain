@@ -66,7 +66,8 @@ class InteractiveImageController extends GetxController {
   final List<Map<String, dynamic>> _sessionLearnedRegions = [];
 
   /// 会话开始时间（用于第 3 颗星时间门槛 ≥30 秒）
-  DateTime? _sessionStartTime;
+  DateTime? _sessionStartTime; // 学习开始时间（首次点击词条时记录）
+  bool _hasStartedLearning = false; // 是否已开始学习
 
   // ─── 路由参数 ─────────────────────────────────────────────────
   late String _jsonFilePath;
@@ -212,7 +213,10 @@ class InteractiveImageController extends GetxController {
     try {
       errorMessage.value = null;
       loadingProgress.value = 0.1;
-      _sessionStartTime = DateTime.now();
+      // 移除这里的时间记录，改为首次点击时记录
+      // _sessionStartTime = DateTime.now();
+      _sessionStartTime = null;
+      _hasStartedLearning = false;
 
       // 重置状态以支持控制器复用
       regions.clear();
@@ -456,6 +460,13 @@ class InteractiveImageController extends GetxController {
       return;
     }
 
+    // 首次点击词条时，记录学习开始时间
+    if (!_hasStartedLearning) {
+      _sessionStartTime = DateTime.now();
+      _hasStartedLearning = true;
+      AppLogger.info('🕐 学习开始计时: $_sessionStartTime');
+    }
+
     final regionId = region.text;
     final total = vocabularyRegions.map((r) => r.text).toSet().length;
 
@@ -515,9 +526,11 @@ class InteractiveImageController extends GetxController {
         .saveLearnedRegionIds(_userId, sceneId, Set.from(_learnedRegionIds))
         .then((_) {
       if (!_isServerSyncEnabled) return;
-      final studyTime = DateTime.now()
-          .difference(_sessionStartTime ?? DateTime.now())
-          .inSeconds;
+      // 计算学习时间：如果没有开始学习（没有点击词条），时间为0
+      final studyTime = _sessionStartTime != null
+          ? DateTime.now().difference(_sessionStartTime!).inSeconds
+          : 0;
+      AppLogger.info('📊 本次学习时长: $studyTime 秒');
       _rewardService.submitProgressToServer(
         userId: _userId,
         sceneId: sceneId,
@@ -548,9 +561,11 @@ class InteractiveImageController extends GetxController {
         return true;
       }
 
-      final studyTime = DateTime.now()
-          .difference(_sessionStartTime ?? DateTime.now())
-          .inSeconds;
+      // 计算学习时间：如果没有开始学习（没有点击词条），时间为0
+      final studyTime = _sessionStartTime != null
+          ? DateTime.now().difference(_sessionStartTime!).inSeconds
+          : 0;
+      AppLogger.info('📊 本次学习时长: $studyTime 秒 (开始时间: $_sessionStartTime)');
 
       final submitStars = _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
 

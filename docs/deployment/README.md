@@ -19,6 +19,13 @@
 - 迁移文件管理
 - 部署场景与故障排查
 
+### [iOS TestFlight 发布手册](./ios-testflight-release.md)
+iOS 测试发布流程，包括：
+- GitHub Actions IPA 签名打包
+- TestFlight 自动上传
+- Apple 证书、Profile 和 App Store Connect Secrets 配置
+- 本地 iOS 编译预检
+
 ## 🚀 快速开始
 
 ### 自动部署（推荐）

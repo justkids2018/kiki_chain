@@ -336,6 +336,18 @@
                 <button id="shrinkSelectedBtn" class="secondary">一键缩小</button>
             </div>
 
+            <div class="toolbar">
+                <input id="rectXInput" type="number" min="0" max="1023" placeholder="x" />
+                <input id="rectYInput" type="number" min="0" max="1023" placeholder="y" />
+            </div>
+            <div class="toolbar">
+                <input id="rectWInput" type="number" min="24" max="1024" placeholder="w" />
+                <input id="rectHInput" type="number" min="24" max="1024" placeholder="h" />
+            </div>
+            <div class="toolbar single">
+                <button id="applyRectBtn" class="secondary">应用坐标/尺寸</button>
+            </div>
+
             <div class="toolbar single">
                 <button id="downloadJsonBtn" class="secondary">下载修改后 JSON</button>
             </div>
@@ -407,6 +419,11 @@
         const endEditBtn = document.getElementById('endEditBtn');
         const growSelectedBtn = document.getElementById('growSelectedBtn');
         const shrinkSelectedBtn = document.getElementById('shrinkSelectedBtn');
+        const rectXInput = document.getElementById('rectXInput');
+        const rectYInput = document.getElementById('rectYInput');
+        const rectWInput = document.getElementById('rectWInput');
+        const rectHInput = document.getElementById('rectHInput');
+        const applyRectBtn = document.getElementById('applyRectBtn');
         const revertEditsBtn = document.getElementById('revertEditsBtn');
         const downloadJsonBtn = document.getElementById('downloadJsonBtn');
         const copyJsonBtn = document.getElementById('copyJsonBtn');
@@ -433,6 +450,7 @@
         endEditBtn.addEventListener('click', () => setEditMode(false));
         growSelectedBtn.addEventListener('click', () => resizeSelectedRegion(8));
         shrinkSelectedBtn.addEventListener('click', () => resizeSelectedRegion(-8));
+        applyRectBtn.addEventListener('click', applyRectInputs);
         revertEditsBtn.addEventListener('click', revertToOriginalCoords);
         downloadJsonBtn.addEventListener('click', downloadEditedJson);
         copyJsonBtn.addEventListener('click', copyEditedJson);
@@ -445,6 +463,7 @@
         let hasUnsavedChanges = false;
         let selectedRegionIndex = -1;
         let activeDrag = null;
+        let hoverResizeHandle = null;
         let lastValidationLines = [];
 
         function typeColor(type) {
@@ -491,6 +510,7 @@
         function updateSelectedHint(extraMessage = '') {
             if (!flatRegions.length || selectedRegionIndex < 0 || selectedRegionIndex >= flatRegions.length) {
                 selectedHintEl.textContent = '未选中热区（点击画布或表格可选中热区）。';
+                clearRectInputs();
                 return;
             }
 
@@ -503,6 +523,7 @@
             const pairKey = `${idx}|${itemId}|${regionType}|${text}`;
             const msg = extraMessage ? `；${extraMessage}` : '';
             selectedHintEl.textContent = `已选中：index=${idx}，id=${itemId}，type=${regionType}，text=${text}，rect=${rect.minX},${rect.minY}→${rect.maxX},${rect.maxY}，key=${pairKey}${msg}`;
+            syncRectInputs(rect);
         }
 
         function updateEditButtonsState() {
@@ -514,9 +535,56 @@
             const hasSelected = selectedRegionIndex >= 0 && selectedRegionIndex < flatRegions.length;
             growSelectedBtn.disabled = !editMode || !hasSelected;
             shrinkSelectedBtn.disabled = !editMode || !hasSelected;
+            applyRectBtn.disabled = !editMode || !hasSelected;
+            [rectXInput, rectYInput, rectWInput, rectHInput].forEach(input => {
+                input.disabled = !editMode || !hasSelected;
+            });
             revertEditsBtn.disabled = !hasUnsavedChanges;
             copyJsonBtn.disabled = !currentJsonData;
             downloadJsonBtn.disabled = !currentJsonData;
+        }
+
+        function syncRectInputs(rect) {
+            rectXInput.value = rect.minX;
+            rectYInput.value = rect.minY;
+            rectWInput.value = rect.w;
+            rectHInput.value = rect.h;
+        }
+
+        function clearRectInputs() {
+            [rectXInput, rectYInput, rectWInput, rectHInput].forEach(input => {
+                input.value = '';
+            });
+        }
+
+        function applyRectInputs() {
+            if (!editMode) {
+                showMessage({ ok: false, msg: '请先点击“开始编辑（启用拖拽）”。' });
+                return;
+            }
+            if (selectedRegionIndex < 0 || selectedRegionIndex >= flatRegions.length) {
+                showMessage({ ok: false, msg: '请先选中一个热区。' });
+                return;
+            }
+
+            const x = Number(rectXInput.value);
+            const y = Number(rectYInput.value);
+            const w = Number(rectWInput.value);
+            const h = Number(rectHInput.value);
+            if (![x, y, w, h].every(Number.isFinite)) {
+                showMessage({ ok: false, msg: '坐标和尺寸必须是数字。' });
+                return;
+            }
+            if (w < 24 || h < 24) {
+                showMessage({ ok: false, msg: '宽高不能小于 24px。' });
+                return;
+            }
+
+            const minX = clamp(Math.round(x), 0, 1022);
+            const minY = clamp(Math.round(y), 0, 1022);
+            const maxX = clamp(Math.round(minX + w), minX + 1, 1023);
+            const maxY = clamp(Math.round(minY + h), minY + 1, 1023);
+            applyRegionRect(flatRegions[selectedRegionIndex], minX, minY, maxX, maxY);
         }
 
         function applyRegionRect(region, minX, minY, maxX, maxY) {
@@ -603,6 +671,75 @@
                 { x: minX, y: maxY },
                 { x: maxX, y: maxY }
             ];
+        }
+
+        function selectedHandlePoints(rect) {
+            const midX = (rect.minX + rect.maxX) / 2;
+            const midY = (rect.minY + rect.maxY) / 2;
+            return [
+                { name: 'nw', x: rect.minX, y: rect.minY },
+                { name: 'n', x: midX, y: rect.minY },
+                { name: 'ne', x: rect.maxX, y: rect.minY },
+                { name: 'e', x: rect.maxX, y: midY },
+                { name: 'se', x: rect.maxX, y: rect.maxY },
+                { name: 's', x: midX, y: rect.maxY },
+                { name: 'sw', x: rect.minX, y: rect.maxY },
+                { name: 'w', x: rect.minX, y: midY }
+            ];
+        }
+
+        function cursorForHandle(handle) {
+            return {
+                nw: 'nwse-resize',
+                se: 'nwse-resize',
+                ne: 'nesw-resize',
+                sw: 'nesw-resize',
+                n: 'ns-resize',
+                s: 'ns-resize',
+                e: 'ew-resize',
+                w: 'ew-resize'
+            }[handle] || 'grab';
+        }
+
+        function hitTestResizeHandle(point, rect) {
+            if (!editMode || selectedRegionIndex < 0) return null;
+            const cssW = Math.max(1, imageEl.clientWidth || 1);
+            const tolerance = Math.max(8, Math.round(10 * imageEl.naturalWidth / cssW));
+            for (const h of selectedHandlePoints(rect)) {
+                if (Math.abs(point.x - h.x) <= tolerance && Math.abs(point.y - h.y) <= tolerance) {
+                    return h.name;
+                }
+            }
+            return null;
+        }
+
+        function resizeRectByHandle(originRect, handle, dx, dy) {
+            let { minX, minY, maxX, maxY } = originRect;
+            if (handle.includes('w')) minX += dx;
+            if (handle.includes('e')) maxX += dx;
+            if (handle.includes('n')) minY += dy;
+            if (handle.includes('s')) maxY += dy;
+
+            const minSize = 24;
+            minX = clamp(Math.round(minX), 0, 1023);
+            minY = clamp(Math.round(minY), 0, 1023);
+            maxX = clamp(Math.round(maxX), 0, 1023);
+            maxY = clamp(Math.round(maxY), 0, 1023);
+
+            if (maxX - minX < minSize) {
+                if (handle.includes('w')) minX = maxX - minSize;
+                else maxX = minX + minSize;
+            }
+            if (maxY - minY < minSize) {
+                if (handle.includes('n')) minY = maxY - minSize;
+                else maxY = minY + minSize;
+            }
+
+            minX = clamp(minX, 0, 1023 - minSize);
+            minY = clamp(minY, 0, 1023 - minSize);
+            maxX = clamp(maxX, minX + minSize, 1023);
+            maxY = clamp(maxY, minY + minSize, 1023);
+            return { minX, minY, maxX, maxY };
         }
 
         function syncRegionToSource(region) {
@@ -1009,6 +1146,16 @@
                     ctx.setLineDash([5, 3]);
                     ctx.strokeRect(x - 1, y - 1, w + 2, h + 2);
                     ctx.setLineDash([]);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 2;
+                    for (const handle of selectedHandlePoints(rect)) {
+                        const hx = handle.x * sx;
+                        const hy = handle.y * sy;
+                        ctx.fillRect(hx - 4, hy - 4, 8, 8);
+                        ctx.strokeRect(hx - 4, hy - 4, 8, 8);
+                    }
                 }
 
                 ctx.fillStyle = color;
@@ -1067,19 +1214,22 @@
             if (!editMode) {
                 drawOverlay();
                 renderTable(flatRegions);
-                updateSelectedHint('已选中，点击“开始编辑”后可拖拽与放大/缩小');
+                updateSelectedHint('已选中，点击“开始编辑”后可拖拽、拉边角、改宽高');
                 updateActionButtonsState();
                 return;
             }
 
             const rect = normalizeRect(flatRegions[index].coordinate);
+            const handle = index === selectedRegionIndex ? hitTestResizeHandle(point, rect) : null;
             activeDrag = {
+                mode: handle ? 'resize' : 'move',
+                handle,
                 index,
                 startX: point.x,
                 startY: point.y,
                 originRect: rect
             };
-            canvas.style.cursor = 'grabbing';
+            canvas.style.cursor = handle ? cursorForHandle(handle) : 'grabbing';
             drawOverlay();
             renderTable(flatRegions);
             updateSelectedHint();
@@ -1098,12 +1248,21 @@
             const dy = point.y - activeDrag.startY;
 
             const rect = activeDrag.originRect;
-            const minX = clamp(Math.round(rect.minX + dx), 0, 1023 - rect.w);
-            const minY = clamp(Math.round(rect.minY + dy), 0, 1023 - rect.h);
-            const maxX = minX + rect.w;
-            const maxY = minY + rect.h;
+            let nextRect;
+            if (activeDrag.mode === 'resize' && activeDrag.handle) {
+                nextRect = resizeRectByHandle(rect, activeDrag.handle, dx, dy);
+            } else {
+                const minX = clamp(Math.round(rect.minX + dx), 0, 1023 - rect.w);
+                const minY = clamp(Math.round(rect.minY + dy), 0, 1023 - rect.h);
+                nextRect = {
+                    minX,
+                    minY,
+                    maxX: minX + rect.w,
+                    maxY: minY + rect.h
+                };
+            }
 
-            region.coordinate = toRectCoordinate(minX, minY, maxX, maxY);
+            region.coordinate = toRectCoordinate(nextRect.minX, nextRect.minY, nextRect.maxX, nextRect.maxY);
             syncRegionToSource(region);
             hasUnsavedChanges = true;
             updateEditHint();
@@ -1118,6 +1277,21 @@
             activeDrag = null;
             if (editMode) canvas.style.cursor = 'grab';
             refreshValidation();
+        }
+
+        function onCanvasMouseMove(event) {
+            if (activeDrag || !editMode || selectedRegionIndex < 0 || selectedRegionIndex >= flatRegions.length) return;
+            const point = getPointerImageCoord(event);
+            if (!point) return;
+            const rect = normalizeRect(flatRegions[selectedRegionIndex].coordinate);
+            const handle = hitTestResizeHandle(point, rect);
+            hoverResizeHandle = handle;
+            if (handle) {
+                canvas.style.cursor = cursorForHandle(handle);
+                return;
+            }
+            const hit = hitTestRegionIndex(point.x, point.y);
+            canvas.style.cursor = hit >= 0 ? 'grab' : 'default';
         }
 
         function scheduleOverlayDrawRetry(maxAttempts = 24) {
@@ -1403,6 +1577,7 @@
         });
 
         canvas.addEventListener('mousedown', onCanvasMouseDown);
+        canvas.addEventListener('mousemove', onCanvasMouseMove);
         window.addEventListener('mousemove', onWindowMouseMove);
         window.addEventListener('mouseup', onWindowMouseUp);
 

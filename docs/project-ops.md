@@ -43,3 +43,20 @@ Whenever a new database migration is created or updated, it must be synchronized
 Before committing and pushing any frontend modifications:
 - Always run `flutter test` to ensure all regression tests pass successfully.
 - Run `flutter analyze` to verify code quality.
+
+---
+
+## 🖥️ Local Development Environment Scripts
+
+Project-level local development scripts live under `scripts/local_dev/`.
+When a user asks to start, stop, migrate, check status, or view logs for the local development environment, **use these scripts directly** instead of typing ad-hoc commands.
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `scripts/local_dev/start.sh` | Start local dev env (PostgreSQL + Rust backend + Vue frontend) | `./scripts/local_dev/start.sh` |
+| `scripts/local_dev/stop.sh` | Stop all local services | `./scripts/local_dev/stop.sh` |
+| `scripts/local_dev/migrate.sh` | Run local DB incremental migrations | `./scripts/local_dev/migrate.sh` |
+| `scripts/local_dev/status.sh` | Check service status | `./scripts/local_dev/status.sh` |
+| `scripts/local_dev/logs.sh` | View service logs (all / backend / frontend) | `./scripts/local_dev/logs.sh [backend\|frontend]` |
+
+> **Note:** `start.sh` automatically detects running services to avoid double-starting, boots PostgreSQL via Docker, applies local DB migrations, then starts the Rust backend (`cargo run`) and Vue frontend (`npm run dev`).

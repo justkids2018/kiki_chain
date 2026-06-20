@@ -24,6 +24,7 @@ Routing map:
 - Unified deployment + domain/TLS onboarding -> just-deploy-release
 - Generate requirement/logic/api docs from code -> just-feature-doc-generator
 - Generate hotspot JSON from image + MD -> just-hotspot-generator
+- Card vocab + role design (selecting 8 words / dedup / character cast Mimi-Yuki-Kiki-Jack) -> just-card-vocab-design
 - Card production full chain (Prompt to Admin) -> just-card-to-json-workflow
 - Card JSON text to audio + Qiniu upload -> just-card-audio-qiniu-workflow
 - Design review before coding -> just-plan-eng-review
@@ -49,6 +50,8 @@ Use these phrases as strong routing signals in addition to semantic intent.
 	- Trigger words: 根据代码出文档, 反向生成功能文档, 梳理功能逻辑, 生成接口文档, 需求文档整理
 - `just-hotspot-generator`
 	- Trigger words: 图片生成热区, 自动标注热区, 根据图片生成JSON, 生成items_data, 1024x1024坐标, card/object热区
+- `just-card-vocab-design`
+	- Trigger words: 卡片词条, 选词, 换词, 查重, 去重, 一样的词, 重复词, 生成新卡, 新场景卡片, 词表设计, vocab, 8个词, 八个词条, 角色搭配, 谁出场, 出场组合, Jack出不出, 男孩女孩搭配
 - `just-card-to-json-workflow`
 	- Trigger words: 卡片全流程, 从prompt到admin, 图片+md生成json, 图片转json再校验, 只给目录跑流程, 目录到json校验, 89分门槛, 学习卡片workflow, 学习卡片生产流程, 学习法卡片workflow, 卡片生成并上传, 一张卡从出图到提交
 - `just-card-audio-qiniu-workflow`

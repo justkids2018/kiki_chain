@@ -10,6 +10,11 @@ on:
         description: "Base version (first 3 parts), e.g. 1.0.0 or 0.001.00"
         required: false
         type: string
+      upload_to_testflight:
+        description: "Upload the signed IPA to TestFlight"
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: write
@@ -23,6 +28,7 @@ jobs:
     env:
       BASE_VERSION_DEFAULT: ${{ vars.IOS_BASE_VERSION || '1.0.0' }}
       IOS_EXPORT_METHOD: ${{ vars.IOS_EXPORT_METHOD || 'app-store' }}
+      UPLOAD_TO_TESTFLIGHT: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.upload_to_testflight == 'true' }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     defaults:
@@ -171,6 +177,53 @@ jobs:
             --build-number "${{ steps.meta.outputs.build_num_dec }}" \
             --export-options-plist "$RUNNER_TEMP/ExportOptions.plist"
 
+      - name: Locate IPA
+        id: ipa
+        run: |
+          set -euo pipefail
+          IPA_PATH=$(find kiki_web/build/ios/ipa -maxdepth 1 -name '*.ipa' -print -quit)
+          if [[ -z "${IPA_PATH}" ]]; then
+            echo "No IPA found under kiki_web/build/ios/ipa"
+            exit 1
+          fi
+          echo "path=${IPA_PATH}" >> "$GITHUB_OUTPUT"
+          echo "IPA_PATH=${IPA_PATH}" >> "$GITHUB_ENV"
+
+      - name: Upload IPA to TestFlight
+        if: env.UPLOAD_TO_TESTFLIGHT == 'true'
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
+        run: |
+          set -euo pipefail
+
+          decode_base64() {
+            if base64 --help >/dev/null 2>&1; then
+              base64 --decode
+            else
+              base64 -D
+            fi
+          }
+
+          if [[ -z "${APP_STORE_CONNECT_API_KEY_ID}" || -z "${APP_STORE_CONNECT_API_ISSUER_ID}" || -z "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" ]]; then
+            echo "Missing required App Store Connect upload secrets."
+            echo "Please set: APP_STORE_CONNECT_API_KEY_ID, APP_STORE_CONNECT_API_ISSUER_ID, APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64"
+            exit 1
+          fi
+
+          ASC_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          ASC_KEY_PATH="${ASC_KEY_DIR}/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          mkdir -p "${ASC_KEY_DIR}"
+          echo "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" | decode_base64 > "${ASC_KEY_PATH}"
+          chmod 600 "${ASC_KEY_PATH}"
+
+          xcrun altool --upload-app \
+            --type ios \
+            --file "${IPA_PATH}" \
+            --apiKey "${APP_STORE_CONNECT_API_KEY_ID}" \
+            --apiIssuer "${APP_STORE_CONNECT_API_ISSUER_ID}"
+
       - name: Create and push build tag
         run: |
           set -euo pipefail
@@ -194,6 +247,7 @@ jobs:
           - Bundle ID (from profile): ${BUNDLE_ID}
           - Provisioning Profile: ${PROFILE_NAME} (${PROFILE_UUID})
           - Export method: ${IOS_EXPORT_METHOD}
+          - TestFlight upload enabled: ${UPLOAD_TO_TESTFLIGHT}
           - Branch: ${{ steps.meta.outputs.branch_name }}
           - Tag: ${{ steps.meta.outputs.tag_name }}
           - Workflow trigger: ${{ github.event_name }}
@@ -234,3 +288,4 @@ jobs:
           if [[ -n "${PROFILE_UUID:-}" ]]; then
             rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/${PROFILE_UUID}.mobileprovision" || true
           fi
+          rm -f "$HOME/.appstoreconnect/private_keys/AuthKey_"*.p8 || true

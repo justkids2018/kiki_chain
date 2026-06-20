@@ -1,0 +1,426 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "龙舟",
+    "text_pinyin": "lóng zhōu",
+    "text_english": "Dragon Boat",
+    "text_phonetic": "/ˈdræɡən boʊt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 226,
+            "y": 109
+          },
+          {
+            "x": 423,
+            "y": 109
+          },
+          {
+            "x": 226,
+            "y": 221
+          },
+          {
+            "x": 423,
+            "y": 221
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 263,
+            "y": 268
+          },
+          {
+            "x": 432,
+            "y": 268
+          },
+          {
+            "x": 263,
+            "y": 612
+          },
+          {
+            "x": 432,
+            "y": 612
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "船桨",
+    "text_pinyin": "chuán jiǎng",
+    "text_english": "Paddle",
+    "text_phonetic": "/ˈpædl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 339,
+            "y": 839
+          },
+          {
+            "x": 468,
+            "y": 839
+          },
+          {
+            "x": 339,
+            "y": 945
+          },
+          {
+            "x": 468,
+            "y": 945
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 108,
+            "y": 819
+          },
+          {
+            "x": 315,
+            "y": 819
+          },
+          {
+            "x": 108,
+            "y": 1014
+          },
+          {
+            "x": 315,
+            "y": 1014
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "大鼓",
+    "text_pinyin": "dà gǔ",
+    "text_english": "Drum",
+    "text_phonetic": "/drʌm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 466,
+            "y": 239
+          },
+          {
+            "x": 595,
+            "y": 239
+          },
+          {
+            "x": 466,
+            "y": 344
+          },
+          {
+            "x": 595,
+            "y": 344
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 438,
+            "y": 440
+          },
+          {
+            "x": 573,
+            "y": 440
+          },
+          {
+            "x": 438,
+            "y": 563
+          },
+          {
+            "x": 573,
+            "y": 563
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "赛旗",
+    "text_pinyin": "sài qí",
+    "text_english": "Race Flag",
+    "text_phonetic": "/reɪs flæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 128,
+            "y": 469
+          },
+          {
+            "x": 256,
+            "y": 469
+          },
+          {
+            "x": 128,
+            "y": 566
+          },
+          {
+            "x": 256,
+            "y": 566
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 11,
+            "y": 367
+          },
+          {
+            "x": 153,
+            "y": 367
+          },
+          {
+            "x": 11,
+            "y": 516
+          },
+          {
+            "x": 153,
+            "y": 516
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "号码牌",
+    "text_pinyin": "hào mǎ pái",
+    "text_english": "Number Plate",
+    "text_phonetic": "/ˈnʌmbər pleɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 717,
+            "y": 500
+          },
+          {
+            "x": 852,
+            "y": 500
+          },
+          {
+            "x": 717,
+            "y": 602
+          },
+          {
+            "x": 852,
+            "y": 602
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 568,
+            "y": 493
+          },
+          {
+            "x": 683,
+            "y": 493
+          },
+          {
+            "x": 568,
+            "y": 585
+          },
+          {
+            "x": 683,
+            "y": 585
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "浮标",
+    "text_pinyin": "fú biāo",
+    "text_english": "Buoy",
+    "text_phonetic": "/bɔɪ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 636,
+            "y": 658
+          },
+          {
+            "x": 754,
+            "y": 658
+          },
+          {
+            "x": 636,
+            "y": 757
+          },
+          {
+            "x": 754,
+            "y": 757
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 504,
+            "y": 638
+          },
+          {
+            "x": 599,
+            "y": 638
+          },
+          {
+            "x": 504,
+            "y": 777
+          },
+          {
+            "x": 599,
+            "y": 777
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "终点线",
+    "text_pinyin": "zhōng diǎn xiàn",
+    "text_english": "Finish Line",
+    "text_phonetic": "/ˈfɪnɪʃ laɪn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 698,
+            "y": 110
+          },
+          {
+            "x": 897,
+            "y": 110
+          },
+          {
+            "x": 698,
+            "y": 223
+          },
+          {
+            "x": 897,
+            "y": 223
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 621,
+            "y": 227
+          },
+          {
+            "x": 901,
+            "y": 227
+          },
+          {
+            "x": 621,
+            "y": 301
+          },
+          {
+            "x": 901,
+            "y": 301
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "奖杯",
+    "text_pinyin": "jiǎng bēi",
+    "text_english": "Trophy",
+    "text_phonetic": "/ˈtroʊfi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 583,
+            "y": 798
+          },
+          {
+            "x": 707,
+            "y": 798
+          },
+          {
+            "x": 583,
+            "y": 901
+          },
+          {
+            "x": 707,
+            "y": 901
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 767,
+            "y": 673
+          },
+          {
+            "x": 972,
+            "y": 673
+          },
+          {
+            "x": 767,
+            "y": 931
+          },
+          {
+            "x": 972,
+            "y": 931
+          }
+        ]
+      }
+    ]
+  }
+]

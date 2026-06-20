@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "龙舟",
+    "text_pinyin": "lóng zhōu",
+    "text_english": "Dragon Boat",
+    "text_phonetic": "/ˈdræɡən boʊt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 226,
+            "y": 109
+          },
+          {
+            "x": 423,
+            "y": 109
+          },
+          {
+            "x": 226,
+            "y": 221
+          },
+          {
+            "x": 423,
+            "y": 221
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 263,
+            "y": 268
+          },
+          {
+            "x": 432,
+            "y": 268
+          },
+          {
+            "x": 263,
+            "y": 612
+          },
+          {
+            "x": 432,
+            "y": 612
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/龙舟-0c8a1b-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E9%BE%99%E8%88%9F-0c8a1b-cn.mp3",
+    "audio_en_key": "kiki/audio/dragon-boat-0c8a1b-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/dragon-boat-0c8a1b-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "船桨",
+    "text_pinyin": "chuán jiǎng",
+    "text_english": "Paddle",
+    "text_phonetic": "/ˈpædl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 339,
+            "y": 839
+          },
+          {
+            "x": 468,
+            "y": 839
+          },
+          {
+            "x": 339,
+            "y": 945
+          },
+          {
+            "x": 468,
+            "y": 945
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 108,
+            "y": 819
+          },
+          {
+            "x": 315,
+            "y": 819
+          },
+          {
+            "x": 108,
+            "y": 1014
+          },
+          {
+            "x": 315,
+            "y": 1014
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/船桨-c18627-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%88%B9%E6%A1%A8-c18627-cn.mp3",
+    "audio_en_key": "kiki/audio/paddle-c18627-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/paddle-c18627-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "大鼓",
+    "text_pinyin": "dà gǔ",
+    "text_english": "Drum",
+    "text_phonetic": "/drʌm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 466,
+            "y": 239
+          },
+          {
+            "x": 595,
+            "y": 239
+          },
+          {
+            "x": 466,
+            "y": 344
+          },
+          {
+            "x": 595,
+            "y": 344
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 438,
+            "y": 440
+          },
+          {
+            "x": 573,
+            "y": 440
+          },
+          {
+            "x": 438,
+            "y": 563
+          },
+          {
+            "x": 573,
+            "y": 563
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/大鼓-77f45e-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%A4%A7%E9%BC%93-77f45e-cn.mp3",
+    "audio_en_key": "kiki/audio/drum-77f45e-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/drum-77f45e-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "赛旗",
+    "text_pinyin": "sài qí",
+    "text_english": "Race Flag",
+    "text_phonetic": "/reɪs flæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 128,
+            "y": 469
+          },
+          {
+            "x": 256,
+            "y": 469
+          },
+          {
+            "x": 128,
+            "y": 566
+          },
+          {
+            "x": 256,
+            "y": 566
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 11,
+            "y": 367
+          },
+          {
+            "x": 153,
+            "y": 367
+          },
+          {
+            "x": 11,
+            "y": 516
+          },
+          {
+            "x": 153,
+            "y": 516
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/赛旗-421333-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%B5%9B%E6%97%97-421333-cn.mp3",
+    "audio_en_key": "kiki/audio/race-flag-421333-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/race-flag-421333-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "号码牌",
+    "text_pinyin": "hào mǎ pái",
+    "text_english": "Number Plate",
+    "text_phonetic": "/ˈnʌmbər pleɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 717,
+            "y": 500
+          },
+          {
+            "x": 852,
+            "y": 500
+          },
+          {
+            "x": 717,
+            "y": 602
+          },
+          {
+            "x": 852,
+            "y": 602
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 568,
+            "y": 493
+          },
+          {
+            "x": 683,
+            "y": 493
+          },
+          {
+            "x": 568,
+            "y": 585
+          },
+          {
+            "x": 683,
+            "y": 585
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/号码牌-5977d0-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%8F%B7%E7%A0%81%E7%89%8C-5977d0-cn.mp3",
+    "audio_en_key": "kiki/audio/number-plate-5977d0-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/number-plate-5977d0-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "浮标",
+    "text_pinyin": "fú biāo",
+    "text_english": "Buoy",
+    "text_phonetic": "/bɔɪ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 636,
+            "y": 658
+          },
+          {
+            "x": 754,
+            "y": 658
+          },
+          {
+            "x": 636,
+            "y": 757
+          },
+          {
+            "x": 754,
+            "y": 757
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 504,
+            "y": 638
+          },
+          {
+            "x": 599,
+            "y": 638
+          },
+          {
+            "x": 504,
+            "y": 777
+          },
+          {
+            "x": 599,
+            "y": 777
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/浮标-91ec64-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%B5%AE%E6%A0%87-91ec64-cn.mp3",
+    "audio_en_key": "kiki/audio/buoy-91ec64-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/buoy-91ec64-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "终点线",
+    "text_pinyin": "zhōng diǎn xiàn",
+    "text_english": "Finish Line",
+    "text_phonetic": "/ˈfɪnɪʃ laɪn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 698,
+            "y": 110
+          },
+          {
+            "x": 897,
+            "y": 110
+          },
+          {
+            "x": 698,
+            "y": 223
+          },
+          {
+            "x": 897,
+            "y": 223
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 621,
+            "y": 227
+          },
+          {
+            "x": 901,
+            "y": 227
+          },
+          {
+            "x": 621,
+            "y": 301
+          },
+          {
+            "x": 901,
+            "y": 301
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/终点线-f71695-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E7%BB%88%E7%82%B9%E7%BA%BF-f71695-cn.mp3",
+    "audio_en_key": "kiki/audio/finish-line-f71695-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/finish-line-f71695-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "奖杯",
+    "text_pinyin": "jiǎng bēi",
+    "text_english": "Trophy",
+    "text_phonetic": "/ˈtroʊfi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 583,
+            "y": 798
+          },
+          {
+            "x": 707,
+            "y": 798
+          },
+          {
+            "x": 583,
+            "y": 901
+          },
+          {
+            "x": 707,
+            "y": 901
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 767,
+            "y": 673
+          },
+          {
+            "x": 972,
+            "y": 673
+          },
+          {
+            "x": 767,
+            "y": 931
+          },
+          {
+            "x": 972,
+            "y": 931
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/奖杯-bae663-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%A5%96%E6%9D%AF-bae663-cn.mp3",
+    "audio_en_key": "kiki/audio/trophy-bae663-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/trophy-bae663-en.mp3"
+  }
+]

@@ -1,0 +1,426 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "绘本",
+    "text_pinyin": "huì běn",
+    "text_english": "Picture Book",
+    "text_phonetic": "/ˈpɪktʃər bʊk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 351,
+            "y": 842
+          },
+          {
+            "x": 492,
+            "y": 842
+          },
+          {
+            "x": 351,
+            "y": 963
+          },
+          {
+            "x": 492,
+            "y": 963
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 309,
+            "y": 642
+          },
+          {
+            "x": 703,
+            "y": 642
+          },
+          {
+            "x": 309,
+            "y": 838
+          },
+          {
+            "x": 703,
+            "y": 838
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "书架",
+    "text_pinyin": "shū jià",
+    "text_english": "Bookshelf",
+    "text_phonetic": "/ˈbʊkʃɛlf/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 72,
+            "y": 48
+          },
+          {
+            "x": 211,
+            "y": 48
+          },
+          {
+            "x": 72,
+            "y": 143
+          },
+          {
+            "x": 211,
+            "y": 143
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 24,
+            "y": 72
+          },
+          {
+            "x": 364,
+            "y": 72
+          },
+          {
+            "x": 24,
+            "y": 502
+          },
+          {
+            "x": 364,
+            "y": 502
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "抱枕",
+    "text_pinyin": "bào zhěn",
+    "text_english": "Cushion",
+    "text_phonetic": "/ˈkʊʃən/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 34,
+            "y": 855
+          },
+          {
+            "x": 169,
+            "y": 855
+          },
+          {
+            "x": 34,
+            "y": 982
+          },
+          {
+            "x": 169,
+            "y": 982
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 672
+          },
+          {
+            "x": 286,
+            "y": 672
+          },
+          {
+            "x": 0,
+            "y": 859
+          },
+          {
+            "x": 286,
+            "y": 859
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "地毯",
+    "text_pinyin": "dì tǎn",
+    "text_english": "Carpet",
+    "text_phonetic": "/ˈkɑːrpɪt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 591,
+            "y": 885
+          },
+          {
+            "x": 725,
+            "y": 885
+          },
+          {
+            "x": 591,
+            "y": 1009
+          },
+          {
+            "x": 725,
+            "y": 1009
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 503,
+            "y": 867
+          },
+          {
+            "x": 859,
+            "y": 867
+          },
+          {
+            "x": 503,
+            "y": 1021
+          },
+          {
+            "x": 859,
+            "y": 1021
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "台灯",
+    "text_pinyin": "tái dēng",
+    "text_english": "Table Lamp",
+    "text_phonetic": "/ˈteɪbl læmp/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 907,
+            "y": 293
+          },
+          {
+            "x": 1023,
+            "y": 293
+          },
+          {
+            "x": 907,
+            "y": 415
+          },
+          {
+            "x": 1023,
+            "y": 415
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 763,
+            "y": 257
+          },
+          {
+            "x": 930,
+            "y": 257
+          },
+          {
+            "x": 763,
+            "y": 440
+          },
+          {
+            "x": 930,
+            "y": 440
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "书签",
+    "text_pinyin": "shū qiān",
+    "text_english": "Bookmark",
+    "text_phonetic": "/ˈbʊkmɑːrk/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 905,
+            "y": 572
+          },
+          {
+            "x": 1019,
+            "y": 572
+          },
+          {
+            "x": 905,
+            "y": 670
+          },
+          {
+            "x": 1019,
+            "y": 670
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 818,
+            "y": 474
+          },
+          {
+            "x": 949,
+            "y": 474
+          },
+          {
+            "x": 818,
+            "y": 573
+          },
+          {
+            "x": 949,
+            "y": 573
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "贴纸",
+    "text_pinyin": "tiē zhǐ",
+    "text_english": "Sticker",
+    "text_phonetic": "/ˈstɪkər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 874,
+            "y": 838
+          },
+          {
+            "x": 1018,
+            "y": 838
+          },
+          {
+            "x": 874,
+            "y": 966
+          },
+          {
+            "x": 1018,
+            "y": 966
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 727,
+            "y": 679
+          },
+          {
+            "x": 967,
+            "y": 679
+          },
+          {
+            "x": 727,
+            "y": 821
+          },
+          {
+            "x": 967,
+            "y": 821
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "海报",
+    "text_pinyin": "hǎi bào",
+    "text_english": "Poster",
+    "text_phonetic": "/ˈpoʊstər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 824,
+            "y": 107
+          },
+          {
+            "x": 944,
+            "y": 107
+          },
+          {
+            "x": 824,
+            "y": 203
+          },
+          {
+            "x": 944,
+            "y": 203
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 596,
+            "y": 18
+          },
+          {
+            "x": 774,
+            "y": 18
+          },
+          {
+            "x": 596,
+            "y": 289
+          },
+          {
+            "x": 774,
+            "y": 289
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -18,7 +18,7 @@ class SubscriptionPlanTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isYearly = product.period == SubscriptionPeriod.yearly;
     final title = isYearly ? '年支付' : '月支付';
-    final subtitle = isYearly ? '长期学习更划算' : '低门槛体验';
+    final note = product.trialDays > 0 ? '${product.trialDays} 天试用' : '立即生效';
 
     return Material(
       color: Colors.transparent,
@@ -26,7 +26,7 @@ class SubscriptionPlanTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         onTap: isBusy ? null : onTap,
         child: Ink(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: product.isRecommended
                 ? const Color(0xFFFFF7D8)
@@ -52,8 +52,8 @@ class SubscriptionPlanTile extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 34,
+                    height: 34,
                     decoration: BoxDecoration(
                       color: product.isRecommended
                           ? const Color(0xFFFFE08A)
@@ -91,84 +91,102 @@ class SubscriptionPlanTile extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 19,
+                  fontSize: 18,
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1F2937),
                 ),
               ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF6B7280),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                product.displayPrice,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFF111827),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 34,
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    product.displayPrice,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF111827),
+                      height: 1,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                product.trialDays > 0 ? '${product.trialDays} 天免费试用' : '立即生效',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black.withOpacity(0.58),
-                  fontWeight: FontWeight.w700,
-                ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 14,
+                    color: product.isRecommended
+                        ? const Color(0xFF8A4A00)
+                        : const Color(0xFF2F6BFF),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: Text(
+                      note,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black.withOpacity(0.58),
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
               const Spacer(),
-              Container(
-                height: 42,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: product.isRecommended
-                      ? const Color(0xFFFFC857)
-                      : const Color(0xFF2F6BFF),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (isBusy)
-                      const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
+              SizedBox(
+                height: 38,
+                width: double.infinity,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: product.isRecommended
+                        ? const Color(0xFFFFC857)
+                        : const Color(0xFF2F6BFF),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isBusy)
+                        const SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      else
+                        Icon(
+                          Icons.lock_open_rounded,
+                          size: 16,
+                          color: product.isRecommended
+                              ? const Color(0xFF4B2800)
+                              : Colors.white,
                         ),
-                      )
-                    else
-                      Icon(
-                        Icons.lock_open_rounded,
-                        size: 17,
-                        color: product.isRecommended
-                            ? const Color(0xFF4B2800)
-                            : Colors.white,
+                      const SizedBox(width: 5),
+                      Text(
+                        isBusy ? '处理中' : '开通',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: product.isRecommended
+                              ? const Color(0xFF4B2800)
+                              : Colors.white,
+                        ),
                       ),
-                    const SizedBox(width: 6),
-                    Text(
-                      isBusy ? '处理中' : '开通',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                        color: product.isRecommended
-                            ? const Color(0xFF4B2800)
-                            : Colors.white,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

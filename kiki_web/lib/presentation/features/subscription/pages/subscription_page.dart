@@ -33,33 +33,15 @@ class SubscriptionPage extends StatelessWidget {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 620),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 58, 24, 24),
+                        padding: const EdgeInsets.fromLTRB(24, 46, 24, 24),
                         child: Obx(() {
                           final products = controller.products;
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              const Text(
-                                'KKVIP',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xFF111827),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                '解锁第二个及之后的全部主题',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF4B5563),
-                                ),
-                              ),
-                              const SizedBox(height: 24),
+                              const _VipAvatarHeader(),
+                              const SizedBox(height: 26),
                               Row(
                                 children: [
                                   const Expanded(
@@ -89,7 +71,7 @@ class SubscriptionPage extends StatelessWidget {
                                       ((constraints.maxWidth - 14) / 2)
                                           .clamp(156.0, 248.0);
                                   return SizedBox(
-                                    height: 236,
+                                    height: 222,
                                     child: ListView.separated(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: products.length,
@@ -136,6 +118,85 @@ class SubscriptionPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _VipAvatarHeader extends StatelessWidget {
+  const _VipAvatarHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 104,
+        height: 104,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFFE08A), Color(0xFFFFB340)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.10),
+                      blurRadius: 18,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.white),
+                    child: Image.asset(
+                      'assets/icon/app_icon.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -4,
+              bottom: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 9,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC857),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.12),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  'VIP',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF4B2800),
+                    height: 1,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

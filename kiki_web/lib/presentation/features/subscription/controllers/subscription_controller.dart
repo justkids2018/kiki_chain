@@ -105,6 +105,8 @@ class SubscriptionController extends GetxController {
 
   void selectProduct(SubscriptionProduct product) {
     selectedProduct.value = product;
+    selectedProduct.refresh();
+    update();
   }
 
   void selectPaymentOption(PaymentOption option) {

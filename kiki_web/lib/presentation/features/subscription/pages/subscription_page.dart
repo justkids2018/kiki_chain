@@ -22,6 +22,7 @@ class SubscriptionPage extends StatelessWidget {
             child: SafeArea(
               child: Stack(
                 children: [
+                  const Positioned.fill(child: _BotanicalBackdrop()),
                   const Positioned(left: 16, top: 12, child: GlassBackButton()),
                   Center(
                     child: ConstrainedBox(
@@ -110,6 +111,7 @@ class _PlanSection extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1F2937),
+                  fontFamily: 'Fredoka',
                 ),
               ),
             ),
@@ -189,7 +191,7 @@ class _PaymentPanel extends StatelessWidget {
           _PaymentMethodSelector(controller: controller),
           const SizedBox(height: 20),
           SizedBox(
-            height: 52,
+            height: 58,
             child: ElevatedButton(
               onPressed: controller.isPaying.value
                   ? null
@@ -199,6 +201,11 @@ class _PaymentPanel extends StatelessWidget {
                 backgroundColor: const Color(0xFFFFC857),
                 disabledBackgroundColor: const Color(0xFFE5E7EB),
                 foregroundColor: const Color(0xFF4B2800),
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Fredoka',
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -215,8 +222,10 @@ class _PaymentPanel extends StatelessWidget {
                   : Text(
                       price.isEmpty ? '确认支付' : '确认并支付 $price',
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w900,
+                        fontFamily: 'Fredoka',
+                        height: 1.1,
                       ),
                     ),
             ),
@@ -235,6 +244,57 @@ class _PaymentPanel extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _BotanicalBackdrop extends StatelessWidget {
+  const _BotanicalBackdrop();
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Stack(
+        children: const [
+          Positioned(
+            left: 78,
+            bottom: 34,
+            child: _BackdropLeaf(size: 72, turns: -0.18),
+          ),
+          Positioned(
+            right: 96,
+            top: 36,
+            child: _BackdropLeaf(size: 60, turns: 0.16),
+          ),
+          Positioned(
+            right: 210,
+            bottom: 46,
+            child: _BackdropLeaf(size: 42, turns: -0.08),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BackdropLeaf extends StatelessWidget {
+  final double size;
+  final double turns;
+
+  const _BackdropLeaf({
+    required this.size,
+    required this.turns,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: turns,
+      child: Icon(
+        Icons.eco_rounded,
+        size: size,
+        color: const Color(0xFF6DBF4A).withOpacity(0.055),
       ),
     );
   }
@@ -278,6 +338,7 @@ class _SubscriptionBrandHeader extends StatelessWidget {
               fontWeight: FontWeight.w900,
               color: Color(0xFF1F2937),
               height: 1.1,
+              fontFamily: 'Fredoka',
             ),
           ),
         ),
@@ -365,6 +426,7 @@ class _PaymentMethodButton extends StatelessWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
                   color: const Color(0xFF1F2937),
+                  fontFamily: 'Fredoka',
                 ),
               ),
               const Spacer(),

@@ -20,11 +20,13 @@ class SubscriptionPlanTile extends StatelessWidget {
     final title = isYearly ? '年付' : '月包';
     final priceParts = _splitDisplayPrice(product.displayPrice);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onTap,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: AnimatedScale(
+        scale: isSelected ? 1.0 : 0.985,
+        duration: const Duration(milliseconds: 160),
+        curve: Curves.easeOutCubic,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -90,6 +92,7 @@ class SubscriptionPlanTile extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                       color: Color(0xFF1F2937),
                       height: 1.05,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -141,11 +144,11 @@ class SubscriptionPlanTile extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFF6F9C),
+                    color: const Color(0xFF5F9F57),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFF6F9C).withOpacity(0.22),
+                        color: const Color(0xFF5F9F57).withOpacity(0.18),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),

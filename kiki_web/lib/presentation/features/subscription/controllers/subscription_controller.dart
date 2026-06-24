@@ -25,6 +25,7 @@ class SubscriptionController extends GetxController {
   final Rxn<VipEntitlement> entitlement = Rxn<VipEntitlement>();
   final Rxn<SubscriptionProduct> selectedProduct = Rxn<SubscriptionProduct>();
   final Rxn<PaymentOption> selectedPaymentOption = Rxn<PaymentOption>();
+  bool _hasUserSelectedProduct = false;
 
   late final ClientPaymentContext paymentContext;
 
@@ -104,6 +105,7 @@ class SubscriptionController extends GetxController {
   }
 
   void selectProduct(SubscriptionProduct product) {
+    _hasUserSelectedProduct = true;
     selectedProduct.value = product;
     selectedProduct.refresh();
     update();
@@ -166,14 +168,18 @@ class SubscriptionController extends GetxController {
   void _ensureDefaultSelection() {
     if (products.isEmpty) return;
     final selected = selectedProduct.value;
-    if (selected != null &&
+    if (_hasUserSelectedProduct &&
+        selected != null &&
         products.any((product) => product.productId == selected.productId)) {
       return;
     }
 
     selectedProduct.value = products.firstWhere(
-      (product) => product.isRecommended,
-      orElse: () => products.first,
+      (product) => product.period == SubscriptionPeriod.yearly,
+      orElse: () => products.firstWhere(
+        (product) => product.isRecommended,
+        orElse: () => products.first,
+      ),
     );
     selectedPaymentOption.value ??= paymentOptions.first;
   }

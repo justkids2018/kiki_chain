@@ -19,6 +19,8 @@ class SubscriptionPlanTile extends StatelessWidget {
     final isYearly = product.period == SubscriptionPeriod.yearly;
     final title = isYearly ? '年付' : '月包';
     final priceParts = _splitDisplayPrice(product.displayPrice);
+    final priceFontSize = isYearly ? 38.0 : 30.0;
+    final unitFontSize = isYearly ? 16.0 : 14.0;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -105,10 +107,10 @@ class SubscriptionPlanTile extends StatelessWidget {
                         Text(
                           priceParts.amount,
                           maxLines: 1,
-                          style: const TextStyle(
-                            fontSize: 38,
+                          style: TextStyle(
+                            fontSize: priceFontSize,
                             fontWeight: FontWeight.w900,
-                            color: Color(0xFF111827),
+                            color: const Color(0xFF111827),
                             height: 0.95,
                             fontFamily: 'Fredoka',
                           ),
@@ -119,10 +121,10 @@ class SubscriptionPlanTile extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 3),
                             child: Text(
                               priceParts.unit,
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: unitFontSize,
                                 fontWeight: FontWeight.w900,
-                                color: Color(0xFF6B5B4B),
+                                color: const Color(0xFF6B5B4B),
                               ),
                             ),
                           ),

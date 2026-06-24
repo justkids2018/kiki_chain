@@ -317,9 +317,9 @@ class _SubscriptionBrandHeader extends StatelessWidget {
           height: 38,
           padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFF2C7),
+            color: const Color(0xFFF8F8F6),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFFFC857), width: 1),
+            border: Border.all(color: const Color(0xFFD8D2C8), width: 1),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(6),

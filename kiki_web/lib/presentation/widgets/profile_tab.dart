@@ -288,87 +288,66 @@ class ProfileTab extends StatelessWidget {
 
   Widget _buildVipStatus(AuthController authController) {
     final isVip = authController.isVipActive;
-    final vipExpireAt = authController.currentUser?.vipExpireAt;
-    final expireText = vipExpireAt == null
-        ? ''
-        : '${vipExpireAt.year}.${vipExpireAt.month.toString().padLeft(2, '0')}.${vipExpireAt.day.toString().padLeft(2, '0')} 到期';
 
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: isVip ? const Color(0xFFFFF2C7) : const Color(0xFFF3F4F6),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isVip ? const Color(0xFFFFC857) : const Color(0xFFE5E7EB),
-              width: 1,
+    if (!isVip) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          height: 32,
+          child: ElevatedButton.icon(
+            onPressed: () => Get.toNamed(AppConstants.routeSubscription),
+            icon: const Icon(Icons.workspace_premium_rounded, size: 15),
+            label: const Text('充值'),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: const Color(0xFFFFC857),
+              foregroundColor: const Color(0xFF4B2800),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                isVip
-                    ? Icons.workspace_premium_rounded
-                    : Icons.lock_outline_rounded,
-                size: 15,
-                color:
-                    isVip ? const Color(0xFF9A5A00) : const Color(0xFF6B7280),
-              ),
-              const SizedBox(width: 5),
-              Text(
-                isVip ? 'VIP 已开通' : '非 VIP',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                  color:
-                      isVip ? const Color(0xFF6F3F00) : const Color(0xFF4B5563),
-                ),
-              ),
-            ],
           ),
         ),
-        if (isVip && expireText.isNotEmpty) ...[
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              expireText,
-              style: const TextStyle(
+      );
+    }
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF2C7),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: const Color(0xFFFFC857),
+            width: 1,
+          ),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.workspace_premium_rounded,
+              size: 15,
+              color: Color(0xFF9A5A00),
+            ),
+            SizedBox(width: 5),
+            Text(
+              'VIP',
+              style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF9B8F84),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-        if (!isVip) ...[
-          const SizedBox(width: 8),
-          SizedBox(
-            height: 32,
-            child: ElevatedButton(
-              onPressed: () => Get.toNamed(AppConstants.routeSubscription),
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: const Color(0xFFFFC857),
-                foregroundColor: const Color(0xFF4B2800),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                '充值',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                ),
+                fontWeight: FontWeight.w900,
+                color: Color(0xFF6F3F00),
               ),
             ),
-          ),
-        ],
-      ],
+          ],
+        ),
+      ),
     );
   }
 

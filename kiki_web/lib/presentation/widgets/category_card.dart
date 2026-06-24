@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../generated/app_localizations.dart';
@@ -64,15 +63,15 @@ class CategoryCard extends StatelessWidget {
               // 渐变遮罩
               _buildGradientOverlay(),
 
+              if (isLocked) _buildDimOverlay(),
+
               // 内容区域
               _buildContent(),
 
               // NEW 标签
               if (category.isNew) _buildNewBadge(),
 
-              if (requiresVip) _buildVipBadge(),
-
-              if (isLocked) _buildLockedOverlay(),
+              if (isLocked) _buildUnlockRibbon(),
             ],
           ),
         ),
@@ -201,42 +200,36 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  /// 构建信息标签（毛玻璃效果）
+  /// 构建信息标签
   Widget _buildInfoChip({required IconData icon, required String text}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.grey.withValues(alpha: 0.3), // 灰色毛玻璃
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.32),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.18),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 12, // 符合最小尺寸要求
+            color: Colors.white,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 12, // 符合项目规范最小字号 12px
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 12, // 符合最小尺寸要求
-                color: Colors.white,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 12, // 符合项目规范最小字号 12px
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -269,76 +262,65 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildVipBadge() {
-    return Positioned(
-      top: 14,
-      left: 14,
-      child: _AnimatedVipBadge(isLocked: isLocked),
-    );
-  }
-
-  Widget _buildLockedOverlay() {
+  Widget _buildDimOverlay() {
     return Positioned.fill(
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.24),
+          color: Colors.grey.shade900.withValues(alpha: 0.42),
+          backgroundBlendMode: BlendMode.saturation,
         ),
-        child: Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-              child: Container(
-                width: 132,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 14,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.86),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.62),
-                    width: 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.18),
-                      blurRadius: 18,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.lock_open_rounded,
-                      size: 26,
-                      color: Color(0xFFB7791F),
-                    ),
-                    SizedBox(height: 7),
-                    Text(
-                      '开通 VIP',
-                      style: TextStyle(
-                        color: Color(0xFF2E2A27),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      '解锁主题',
-                      style: TextStyle(
-                        color: Color(0xFF6B5B4B),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
+      ),
+    );
+  }
+
+  Widget _buildUnlockRibbon() {
+    return Positioned(
+      right: -32,
+      bottom: 28,
+      child: Transform.rotate(
+        angle: -0.72,
+        child: Container(
+          width: 128,
+          height: 30,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFD772), Color(0xFFFFB238)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.symmetric(
+              horizontal: BorderSide(
+                color: Colors.white.withValues(alpha: 0.58),
+                width: 1,
               ),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.24),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.lock_rounded,
+                size: 13,
+                color: Color(0xFF4E2A00),
+              ),
+              SizedBox(width: 4),
+              Text(
+                '解锁',
+                style: TextStyle(
+                  color: Color(0xFF4E2A00),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -361,107 +343,5 @@ class CategoryCard extends StatelessWidget {
       default:
         return Colors.grey.shade300;
     }
-  }
-}
-
-class _AnimatedVipBadge extends StatefulWidget {
-  final bool isLocked;
-
-  const _AnimatedVipBadge({required this.isLocked});
-
-  @override
-  State<_AnimatedVipBadge> createState() => _AnimatedVipBadgeState();
-}
-
-class _AnimatedVipBadgeState extends State<_AnimatedVipBadge>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _motion;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
-    )..repeat(reverse: true);
-    _motion = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOutCubic,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _motion,
-      builder: (context, child) {
-        final value = (_motion.value - 0.5) * 0.24;
-        return Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.0012)
-            ..rotateY(value)
-            ..rotateZ(value * 0.20),
-          child: Transform.translate(
-            offset: Offset(0, -2 * _motion.value),
-            child: child,
-          ),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFFE08A), Color(0xFFFFB340)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.72),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF8A4A00).withValues(alpha: 0.32),
-              blurRadius: 14,
-              offset: const Offset(0, 8),
-            ),
-            BoxShadow(
-              color: Colors.white.withValues(alpha: 0.45),
-              blurRadius: 1,
-              offset: const Offset(0, -1),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.workspace_premium_rounded,
-              size: 16,
-              color: Color(0xFF5F3300),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              widget.isLocked ? 'VIP 解锁' : 'VIP',
-              style: const TextStyle(
-                color: Color(0xFF4B2800),
-                fontSize: 12,
-                fontWeight: FontWeight.w900,
-                height: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

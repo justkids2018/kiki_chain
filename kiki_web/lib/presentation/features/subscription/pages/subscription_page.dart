@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../design_ui/kiki_ui_kit.dart';
+import '../../../../domain/entities/subscription.dart';
 import '../../../widgets/glass_back_button.dart';
 import '../controllers/subscription_controller.dart';
 import '../widgets/subscription_plan_tile.dart';
@@ -24,15 +25,15 @@ class SubscriptionPage extends StatelessWidget {
                   const Positioned(left: 16, top: 12, child: GlassBackButton()),
                   Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 760),
+                      constraints: const BoxConstraints(maxWidth: 820),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 62, 24, 24),
+                        padding: const EdgeInsets.fromLTRB(28, 58, 28, 28),
                         child: Obx(() {
                           final products = controller.products;
                           return LayoutBuilder(
                             builder: (context, constraints) {
                               final useLandscapeLayout =
-                                  constraints.maxWidth >= 620;
+                                  constraints.maxWidth >= 680;
                               if (!useLandscapeLayout) {
                                 return SingleChildScrollView(
                                   child: Column(
@@ -54,15 +55,15 @@ class SubscriptionPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    flex: 6,
+                                    flex: 7,
                                     child: _PlanSection(
                                       controller: controller,
                                       products: products,
                                     ),
                                   ),
-                                  const SizedBox(width: 24),
+                                  const SizedBox(width: 26),
                                   Expanded(
-                                    flex: 4,
+                                    flex: 5,
                                     child: _PaymentPanel(
                                       controller: controller,
                                     ),
@@ -87,7 +88,7 @@ class SubscriptionPage extends StatelessWidget {
 
 class _PlanSection extends StatelessWidget {
   final SubscriptionController controller;
-  final List<dynamic> products;
+  final List<SubscriptionProduct> products;
 
   const _PlanSection({
     required this.controller,
@@ -104,33 +105,27 @@ class _PlanSection extends StatelessWidget {
           children: [
             const Expanded(
               child: Text(
-                '选择套餐',
+                '选择 VIP 套餐',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1F2937),
                 ),
               ),
             ),
-            if (controller.isLoading.value)
-              const SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2.2),
-              ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         LayoutBuilder(
           builder: (context, constraints) {
             final cardWidth =
-                ((constraints.maxWidth - 14) / 2).clamp(160.0, 230.0);
+                ((constraints.maxWidth - 16) / 2).clamp(170.0, 238.0);
             return SizedBox(
-              height: 182,
+              height: 188,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                separatorBuilder: (_, __) => const SizedBox(width: 16),
                 itemBuilder: (context, index) {
                   final product = products[index];
                   return SizedBox(
@@ -167,11 +162,11 @@ class _PaymentPanel extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.82),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE7DFD4), width: 1),
+        border: Border.all(color: const Color(0xFFE9DEC9), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 16,
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
@@ -183,16 +178,16 @@ class _PaymentPanel extends StatelessWidget {
           const Text(
             '支付方式',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w900,
               color: Color(0xFF1F2937),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _PaymentMethodSelector(controller: controller),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           SizedBox(
-            height: 48,
+            height: 52,
             child: ElevatedButton(
               onPressed: controller.isPaying.value
                   ? null
@@ -216,9 +211,9 @@ class _PaymentPanel extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      price.isEmpty ? '确认支付' : '确认支付 $price',
+                      price.isEmpty ? '确认支付' : '确认并支付 $price',
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -226,9 +221,9 @@ class _PaymentPanel extends StatelessWidget {
           ),
           if (controller.errorMessage.value.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 12),
               child: Text(
-                '价格会在支付时再次校验',
+                '支付前会再次校验价格',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
@@ -287,38 +282,65 @@ class _PaymentMethodButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Ink(
-          height: 42,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFFFF2C7) : Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFFFFC857)
+                  ? const Color(0xFF48C774)
                   : const Color(0xFFE5E7EB),
-              width: isSelected ? 1.5 : 1,
+              width: isSelected ? 1.6 : 1,
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Icon(
-                Icons.chat_bubble_rounded,
-                size: 18,
-                color: isSelected
-                    ? const Color(0xFF8A4A00)
-                    : const Color(0xFF6B7280),
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF48C774).withOpacity(0.16),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.chat_bubble_rounded,
+                  size: 18,
+                  color: Color(0xFF2BA84A),
+                ),
               ),
-              const SizedBox(width: 7),
+              const SizedBox(width: 10),
               Text(
                 option.label,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w900,
-                  color: isSelected
-                      ? const Color(0xFF4B2800)
-                      : const Color(0xFF374151),
+                  color: const Color(0xFF1F2937),
                 ),
+              ),
+              const Spacer(),
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? const Color(0xFF48C774)
+                        : const Color(0xFFD1D5DB),
+                    width: 2,
+                  ),
+                ),
+                child: isSelected
+                    ? const Center(
+                        child: Icon(
+                          Icons.circle,
+                          size: 12,
+                          color: Color(0xFF48C774),
+                        ),
+                      )
+                    : null,
               ),
             ],
           ),

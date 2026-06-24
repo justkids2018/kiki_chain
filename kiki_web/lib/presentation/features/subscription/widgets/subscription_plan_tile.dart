@@ -17,7 +17,7 @@ class SubscriptionPlanTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isYearly = product.period == SubscriptionPeriod.yearly;
-    final title = isYearly ? '年支付' : '月支付';
+    final title = isYearly ? '年付' : '月包';
 
     return Material(
       color: Colors.transparent,
@@ -27,23 +27,23 @@ class SubscriptionPlanTile extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: product.isRecommended
-                ? const Color(0xFFFFF7D8)
-                : Colors.white.withOpacity(0.92),
+            color: isSelected
+                ? const Color(0xFFFFF4CF)
+                : Colors.white.withOpacity(0.94),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
-                  ? const Color(0xFF2F6BFF)
-                  : product.isRecommended
-                      ? const Color(0xFFFFC857)
-                      : const Color(0xFFE5E7EB),
-              width: isSelected ? 2 : (product.isRecommended ? 1.4 : 1),
+                  ? const Color(0xFFFFC857)
+                  : const Color(0xFFE5E7EB),
+              width: isSelected ? 2 : 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
+                color: isSelected
+                    ? const Color(0xFFFFC857).withOpacity(0.22)
+                    : Colors.black.withOpacity(0.05),
+                blurRadius: isSelected ? 20 : 14,
+                offset: const Offset(0, 7),
               ),
             ],
           ),
@@ -57,12 +57,12 @@ class SubscriptionPlanTile extends StatelessWidget {
                   height: 22,
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? const Color(0xFF2F6BFF)
+                        ? const Color(0xFFFFC857)
                         : Colors.transparent,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFF2F6BFF)
+                          ? const Color(0xFFFFC857)
                           : const Color(0xFFD1D5DB),
                       width: 2,
                     ),
@@ -71,7 +71,7 @@ class SubscriptionPlanTile extends StatelessWidget {
                       ? const Icon(
                           Icons.check_rounded,
                           size: 15,
-                          color: Colors.white,
+                          color: Color(0xFF4B2800),
                         )
                       : null,
                 ),
@@ -80,14 +80,14 @@ class SubscriptionPlanTile extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1F2937),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               SizedBox(
-                height: 42,
+                height: 46,
                 child: FittedBox(
                   alignment: Alignment.centerLeft,
                   fit: BoxFit.scaleDown,
@@ -95,7 +95,7 @@ class SubscriptionPlanTile extends StatelessWidget {
                     product.displayPrice,
                     maxLines: 1,
                     style: const TextStyle(
-                      fontSize: 34,
+                      fontSize: 38,
                       fontWeight: FontWeight.w900,
                       color: Color(0xFF111827),
                       height: 1,

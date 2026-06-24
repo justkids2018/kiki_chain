@@ -266,8 +266,7 @@ class CategoryCard extends StatelessWidget {
     return Positioned.fill(
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.grey.shade900.withValues(alpha: 0.42),
-          backgroundBlendMode: BlendMode.saturation,
+          color: const Color(0xFF2B2B2B).withValues(alpha: 0.38),
         ),
       ),
     );

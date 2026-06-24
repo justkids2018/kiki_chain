@@ -14,6 +14,7 @@ kiki_admin/.vite/
 
 # IDE
 .idea/
+.claude/settings.local.json
 
 # Environment secrets (keep templates)
 .env.local

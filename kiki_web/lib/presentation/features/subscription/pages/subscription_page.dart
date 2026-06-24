@@ -71,7 +71,7 @@ class SubscriptionPage extends StatelessWidget {
                                       ((constraints.maxWidth - 14) / 2)
                                           .clamp(156.0, 248.0);
                                   return SizedBox(
-                                    height: 222,
+                                    height: 178,
                                     child: ListView.separated(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: products.length,

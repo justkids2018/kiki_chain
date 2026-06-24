@@ -118,7 +118,7 @@ class SubscriptionPlanTile extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const Spacer(),
               Row(
                 children: [
                   Icon(
@@ -141,53 +141,36 @@ class SubscriptionPlanTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ],
-              ),
-              const Spacer(),
-              SizedBox(
-                height: 38,
-                width: double.infinity,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: product.isRecommended
-                        ? const Color(0xFFFFC857)
-                        : const Color(0xFF2F6BFF),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (isBusy)
-                        const SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: product.isRecommended
+                          ? const Color(0xFFFFC857)
+                          : const Color(0xFFEAF0FF),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: isBusy
+                        ? const SizedBox(
+                            width: 13,
+                            height: 13,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text(
+                            '开通',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                              color: product.isRecommended
+                                  ? const Color(0xFF4B2800)
+                                  : const Color(0xFF2F6BFF),
+                            ),
                           ),
-                        )
-                      else
-                        Icon(
-                          Icons.lock_open_rounded,
-                          size: 16,
-                          color: product.isRecommended
-                              ? const Color(0xFF4B2800)
-                              : Colors.white,
-                        ),
-                      const SizedBox(width: 5),
-                      Text(
-                        isBusy ? '处理中' : '开通',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: product.isRecommended
-                              ? const Color(0xFF4B2800)
-                              : Colors.white,
-                        ),
-                      ),
-                    ],
                   ),
-                ),
+                ],
               ),
             ],
           ),

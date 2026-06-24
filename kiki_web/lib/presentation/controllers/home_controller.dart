@@ -52,6 +52,9 @@ class HomeController extends GetxController
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         currentIndex.value = tabController.index;
+        if (tabController.index == 1) {
+          _refreshCurrentUserFromServer();
+        }
       }
     });
 
@@ -146,6 +149,7 @@ class HomeController extends GetxController
           vipExpireAt: result.vipExpireAt,
         );
         currentUser.value = authController.currentUser;
+        await _refreshCurrentUserFromServer();
       } catch (_) {}
     }
   }
@@ -170,9 +174,7 @@ class HomeController extends GetxController
   /// 加载用户信息并同步服务器星星数据
   void _loadUserInfo() async {
     try {
-      // 从认证仓库获取当前用户信息
-      final user = await _authRepository.getCurrentUser();
-      currentUser.value = user;
+      final user = await _refreshCurrentUserFromServer();
 
       // 如果用户已登录，从服务器拉取最新的总星星数进行同步
       if (user != null) {
@@ -191,6 +193,20 @@ class HomeController extends GetxController
     }
   }
 
+  Future<User?> _refreshCurrentUserFromServer() async {
+    try {
+      final authController = Get.find<AuthController>();
+      final user = authController.isLoggedIn
+          ? await authController.refreshCurrentUser()
+          : await _authRepository.getCurrentUser();
+      currentUser.value = user;
+      return user;
+    } catch (e) {
+      AppLogger.warning('HomeController: 刷新用户信息失败', e);
+      return currentUser.value;
+    }
+  }
+
   @override
   void onClose() {
     tabController.dispose();
@@ -202,6 +218,9 @@ class HomeController extends GetxController
     if (index != currentIndex.value) {
       tabController.animateTo(index);
       currentIndex.value = index;
+    }
+    if (index == 1) {
+      _refreshCurrentUserFromServer();
     }
   }
 

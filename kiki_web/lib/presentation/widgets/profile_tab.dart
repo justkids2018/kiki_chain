@@ -244,7 +244,10 @@ class ProfileTab extends StatelessWidget {
                 icon: Icons.person,
                 color: const Color(0xFF7CB342),
                 title: localizations.myInfo,
-                onTap: () => Get.to(() => const MyInfoPage()),
+                onTap: () async {
+                  await authController.refreshCurrentUser();
+                  Get.to(() => const MyInfoPage());
+                },
               ),
               _ProfileMenuData(
                 icon: Icons.shield,
@@ -295,7 +298,10 @@ class ProfileTab extends StatelessWidget {
         child: SizedBox(
           height: 32,
           child: ElevatedButton.icon(
-            onPressed: () => Get.toNamed(AppConstants.routeSubscription),
+            onPressed: () async {
+              await Get.toNamed(AppConstants.routeSubscription);
+              await authController.refreshCurrentUser();
+            },
             icon: const Icon(Icons.workspace_premium_rounded, size: 15),
             label: const Text('充值'),
             style: ElevatedButton.styleFrom(

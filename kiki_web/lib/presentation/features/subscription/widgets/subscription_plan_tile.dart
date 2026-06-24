@@ -18,7 +18,6 @@ class SubscriptionPlanTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isYearly = product.period == SubscriptionPeriod.yearly;
     final title = isYearly ? '年支付' : '月支付';
-    final note = product.trialDays > 0 ? '${product.trialDays} 天试用' : '立即生效';
 
     return Material(
       color: Colors.transparent,
@@ -51,75 +50,44 @@ class SubscriptionPlanTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      color: product.isRecommended
-                          ? const Color(0xFFFFE08A)
-                          : const Color(0xFFEAF0FF),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      isYearly
-                          ? Icons.workspace_premium_rounded
-                          : Icons.calendar_month_rounded,
-                      color: product.isRecommended
-                          ? const Color(0xFF8A4A00)
-                          : const Color(0xFF2F6BFF),
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color(0xFF2F6BFF)
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF2F6BFF)
+                          : const Color(0xFFD1D5DB),
+                      width: 2,
                     ),
                   ),
-                  const Spacer(),
-                  if (isSelected)
-                    Container(
-                      width: 22,
-                      height: 22,
-                      margin: const EdgeInsets.only(right: 6),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF2F6BFF),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.check_rounded,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  if (product.isRecommended)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFC857),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text(
-                        '推荐',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF5A3300),
-                        ),
-                      ),
-                    ),
-                ],
+                  child: isSelected
+                      ? const Icon(
+                          Icons.check_rounded,
+                          size: 15,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
               ),
-              const SizedBox(height: 14),
+              const Spacer(),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w900,
                   color: Color(0xFF1F2937),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               SizedBox(
-                height: 34,
+                height: 42,
                 child: FittedBox(
                   alignment: Alignment.centerLeft,
                   fit: BoxFit.scaleDown,
@@ -127,7 +95,7 @@ class SubscriptionPlanTile extends StatelessWidget {
                     product.displayPrice,
                     maxLines: 1,
                     style: const TextStyle(
-                      fontSize: 28,
+                      fontSize: 34,
                       fontWeight: FontWeight.w900,
                       color: Color(0xFF111827),
                       height: 1,
@@ -136,30 +104,6 @@ class SubscriptionPlanTile extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_rounded,
-                    size: 14,
-                    color: product.isRecommended
-                        ? const Color(0xFF8A4A00)
-                        : const Color(0xFF2F6BFF),
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      note,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black.withOpacity(0.58),
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

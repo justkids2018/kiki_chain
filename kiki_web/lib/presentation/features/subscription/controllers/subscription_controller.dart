@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
@@ -94,50 +93,12 @@ class SubscriptionController extends GetxController {
   }
 
   List<PaymentOption> get paymentOptions {
-    if (paymentContext.platform == 'ios') {
-      return const [
-        PaymentOption(
-          channel: PaymentChannel.appleIap,
-          label: 'Apple Pay',
-          platform: 'ios',
-          distributionChannel: 'app_store',
-          icon: Icons.phone_iphone_rounded,
-        ),
-      ];
-    }
-
-    if (paymentContext.platform == 'android') {
-      if (paymentContext.region == 'global') {
-        return const [
-          PaymentOption(
-            channel: PaymentChannel.googlePlayBilling,
-            label: 'Google Play',
-            region: 'global',
-            platform: 'android',
-            distributionChannel: 'google_play',
-            icon: Icons.shop_rounded,
-          ),
-        ];
-      }
-
-      return const [
-        PaymentOption(
-          channel: PaymentChannel.wechatPay,
-          label: '微信支付',
-          platform: 'android',
-          distributionChannel: 'direct_apk',
-          icon: Icons.chat_bubble_rounded,
-        ),
-      ];
-    }
-
     return const [
       PaymentOption(
         channel: PaymentChannel.wechatPay,
         label: '微信支付',
-        platform: 'web',
-        distributionChannel: 'web',
-        icon: Icons.chat_bubble_rounded,
+        platform: 'android',
+        distributionChannel: 'direct_apk',
       ),
     ];
   }
@@ -216,7 +177,6 @@ class PaymentOption {
   final String region;
   final String platform;
   final String distributionChannel;
-  final IconData icon;
 
   const PaymentOption({
     required this.channel,
@@ -224,6 +184,5 @@ class PaymentOption {
     this.region = 'cn',
     required this.platform,
     required this.distributionChannel,
-    required this.icon,
   });
 }

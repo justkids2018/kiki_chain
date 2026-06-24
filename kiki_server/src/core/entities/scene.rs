@@ -35,6 +35,8 @@ pub struct Scene {
     pub display_order: i32,
     pub is_new: bool,
     pub is_visible: bool,
+    pub is_free: Option<bool>,
+    pub requires_vip: Option<bool>,
     pub items_data: Option<serde_json::Value>, // JSON 数组，存储场景物品数据
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,

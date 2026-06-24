@@ -5,9 +5,11 @@ import '../network/network_client.dart';
 import '../../data/services/local_storage_service.dart';
 import '../../data/services/user_service.dart';
 import '../../data/services/api/scene_api_service.dart';
+import '../../data/services/api/subscription_api_service.dart';
 import '../di/service_locator.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../../domain/repositories/i_scene_repository.dart';
+import '../../domain/repositories/i_subscription_repository.dart';
 import 'package:get/get.dart';
 
 /// 应用服务 - 统一管理所有业务服务
@@ -24,6 +26,7 @@ class AppServices {
   UserService? _userService;
   IAuthRepository? _authRepository;
   ISceneRepository? _sceneRepository;
+  ISubscriptionRepository? _subscriptionRepository;
 
   bool _initialized = false;
 
@@ -73,6 +76,8 @@ class AppServices {
       // 4. 注册API服务到GetX
       print('🔌 开始注册API服务...');
       Get.put(SceneApiService(httpClient: NetworkClient.instance.httpClient));
+      Get.put(SubscriptionApiService(
+          httpClient: NetworkClient.instance.httpClient));
       print('✅ API服务注册完成');
 
       // 5. 初始化业务服务（懒加载，使用时再创建）
@@ -116,6 +121,12 @@ class AppServices {
     return _sceneRepository!;
   }
 
+  /// 订阅仓库
+  ISubscriptionRepository get subscriptionRepository {
+    _subscriptionRepository ??= ServiceLocator.instance.subscriptionRepository;
+    return _subscriptionRepository!;
+  }
+
   /// 允许覆盖认证仓库实例（例如测试场景）
   void setAuthRepository(IAuthRepository repository) {
     _authRepository = repository;
@@ -128,6 +139,12 @@ class AppServices {
     ServiceLocator.instance.setSceneRepository(repository);
   }
 
+  /// 允许覆盖订阅仓库实例（例如测试场景）
+  void setSubscriptionRepository(ISubscriptionRepository repository) {
+    _subscriptionRepository = repository;
+    ServiceLocator.instance.setSubscriptionRepository(repository);
+  }
+
   void resetAuthRepository() {
     _authRepository = null;
     ServiceLocator.instance.resetAuthRepository();
@@ -136,6 +153,11 @@ class AppServices {
   void resetSceneRepository() {
     _sceneRepository = null;
     ServiceLocator.instance.resetSceneRepository();
+  }
+
+  void resetSubscriptionRepository() {
+    _subscriptionRepository = null;
+    ServiceLocator.instance.resetSubscriptionRepository();
   }
 
   /// 检查初始化状态
@@ -147,8 +169,10 @@ class AppServices {
     _userService = null;
     _authRepository = null;
     _sceneRepository = null;
+    _subscriptionRepository = null;
     ServiceLocator.instance.resetAuthRepository();
     ServiceLocator.instance.resetSceneRepository();
+    ServiceLocator.instance.resetSubscriptionRepository();
     _initialized = false;
   }
 }

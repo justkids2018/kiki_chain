@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../design_ui/kiki_ui_kit.dart';
 import '../../theme/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import 'app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
 import '../pages/profile_feature/about_page.dart';
@@ -224,6 +225,8 @@ class ProfileTab extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          _buildVipStatus(authController),
                         ],
                       );
                     },
@@ -280,6 +283,92 @@ class ProfileTab extends StatelessWidget {
           _buildLogoutButton(authController),
         ],
       ),
+    );
+  }
+
+  Widget _buildVipStatus(AuthController authController) {
+    final isVip = authController.isVipActive;
+    final vipExpireAt = authController.currentUser?.vipExpireAt;
+    final expireText = vipExpireAt == null
+        ? ''
+        : '${vipExpireAt.year}.${vipExpireAt.month.toString().padLeft(2, '0')}.${vipExpireAt.day.toString().padLeft(2, '0')} 到期';
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: isVip ? const Color(0xFFFFF2C7) : const Color(0xFFF3F4F6),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isVip ? const Color(0xFFFFC857) : const Color(0xFFE5E7EB),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isVip
+                    ? Icons.workspace_premium_rounded
+                    : Icons.lock_outline_rounded,
+                size: 15,
+                color:
+                    isVip ? const Color(0xFF9A5A00) : const Color(0xFF6B7280),
+              ),
+              const SizedBox(width: 5),
+              Text(
+                isVip ? 'VIP 已开通' : '非 VIP',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color:
+                      isVip ? const Color(0xFF6F3F00) : const Color(0xFF4B5563),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (isVip && expireText.isNotEmpty) ...[
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              expireText,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF9B8F84),
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+        if (!isVip) ...[
+          const SizedBox(width: 8),
+          SizedBox(
+            height: 32,
+            child: ElevatedButton(
+              onPressed: () => Get.toNamed(AppConstants.routeSubscription),
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: const Color(0xFFFFC857),
+                foregroundColor: const Color(0xFF4B2800),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                '充值',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 

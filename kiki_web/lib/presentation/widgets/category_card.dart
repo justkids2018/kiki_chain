@@ -10,11 +10,15 @@ import '../../generated/app_localizations.dart';
 class CategoryCard extends StatelessWidget {
   final SceneCategory category;
   final VoidCallback? onTap;
+  final bool requiresVip;
+  final bool isLocked;
 
   const CategoryCard({
     Key? key,
     required this.category,
     this.onTap,
+    this.requiresVip = false,
+    this.isLocked = false,
   }) : super(key: key);
 
   @override
@@ -65,6 +69,10 @@ class CategoryCard extends StatelessWidget {
 
               // NEW 标签
               if (category.isNew) _buildNewBadge(),
+
+              if (requiresVip) _buildVipBadge(),
+
+              if (isLocked) _buildLockedOverlay(),
             ],
           ),
         ),
@@ -77,7 +85,7 @@ class CategoryCard extends StatelessWidget {
     // 如果封面图片为空或无效，直接显示占位符
     if (category.coverImage.isEmpty ||
         (!category.coverImage.startsWith('http://') &&
-         !category.coverImage.startsWith('https://'))) {
+            !category.coverImage.startsWith('https://'))) {
       return Container(
         color: _getCategoryColor(),
         child: Center(
@@ -261,6 +269,82 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
+  Widget _buildVipBadge() {
+    return Positioned(
+      top: 14,
+      left: 14,
+      child: _AnimatedVipBadge(isLocked: isLocked),
+    );
+  }
+
+  Widget _buildLockedOverlay() {
+    return Positioned.fill(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.24),
+        ),
+        child: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+              child: Container(
+                width: 132,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.86),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.62),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.18),
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_open_rounded,
+                      size: 26,
+                      color: Color(0xFFB7791F),
+                    ),
+                    SizedBox(height: 7),
+                    Text(
+                      '开通 VIP',
+                      style: TextStyle(
+                        color: Color(0xFF2E2A27),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      '解锁主题',
+                      style: TextStyle(
+                        color: Color(0xFF6B5B4B),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// 根据分类获取主题色
   Color _getCategoryColor() {
     switch (category.id) {
@@ -277,5 +361,107 @@ class CategoryCard extends StatelessWidget {
       default:
         return Colors.grey.shade300;
     }
+  }
+}
+
+class _AnimatedVipBadge extends StatefulWidget {
+  final bool isLocked;
+
+  const _AnimatedVipBadge({required this.isLocked});
+
+  @override
+  State<_AnimatedVipBadge> createState() => _AnimatedVipBadgeState();
+}
+
+class _AnimatedVipBadgeState extends State<_AnimatedVipBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _motion;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    )..repeat(reverse: true);
+    _motion = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _motion,
+      builder: (context, child) {
+        final value = (_motion.value - 0.5) * 0.24;
+        return Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.identity()
+            ..setEntry(3, 2, 0.0012)
+            ..rotateY(value)
+            ..rotateZ(value * 0.20),
+          child: Transform.translate(
+            offset: Offset(0, -2 * _motion.value),
+            child: child,
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFFFE08A), Color(0xFFFFB340)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.72),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF8A4A00).withValues(alpha: 0.32),
+              blurRadius: 14,
+              offset: const Offset(0, 8),
+            ),
+            BoxShadow(
+              color: Colors.white.withValues(alpha: 0.45),
+              blurRadius: 1,
+              offset: const Offset(0, -1),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.workspace_premium_rounded,
+              size: 16,
+              color: Color(0xFF5F3300),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              widget.isLocked ? 'VIP 解锁' : 'VIP',
+              style: const TextStyle(
+                color: Color(0xFF4B2800),
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                height: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

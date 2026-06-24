@@ -18,18 +18,31 @@ impl ApiPaths {
     pub const MOBILE_USER_PROFILE: &'static str = "/api/v1/mobile/user/profile";
     pub const MOBILE_FEEDBACK: &'static str = "/api/v1/mobile/feedback";
 
+    // 移动端 - 订阅与支付渠道
+    pub const MOBILE_SUBSCRIPTION_CHANNEL_RESOLVE: &'static str =
+        "/api/v1/mobile/subscriptions/channel/resolve";
+    pub const MOBILE_SUBSCRIPTION_PRODUCTS: &'static str = "/api/v1/mobile/subscriptions/products";
+    pub const MOBILE_SUBSCRIPTION_ENTITLEMENT: &'static str =
+        "/api/v1/mobile/subscriptions/entitlement";
+    pub const MOBILE_SUBSCRIPTION_ORDERS: &'static str = "/api/v1/mobile/subscriptions/orders";
+    pub const MOBILE_SUBSCRIPTION_ORDER_CONFIRM: &'static str =
+        "/api/v1/mobile/subscriptions/orders/{order_id}/confirm";
+
     // 移动端 - 场景
     pub const MOBILE_SCENE_CATEGORIES: &'static str = "/api/v1/mobile/scene/categories";
-    pub const MOBILE_SCENE_BY_CATEGORY: &'static str = "/api/v1/mobile/scene/categories/{category_id}/scenes";
+    pub const MOBILE_SCENE_BY_CATEGORY: &'static str =
+        "/api/v1/mobile/scene/categories/{category_id}/scenes";
     pub const MOBILE_SCENE_DETAIL: &'static str = "/api/v1/mobile/scene/{scene_id}";
     pub const MOBILE_SCENE_SEARCH: &'static str = "/api/v1/mobile/scene/search";
     pub const MOBILE_SCENE_RECOMMENDATIONS: &'static str = "/api/v1/mobile/scene/recommendations";
 
     // 移动端 - 学习进度
-    pub const MOBILE_LEARNING_PROGRESS: &'static str = "/api/v1/learning/progress/{user_id}/{scene_id}";
+    pub const MOBILE_LEARNING_PROGRESS: &'static str =
+        "/api/v1/learning/progress/{user_id}/{scene_id}";
     pub const MOBILE_LEARNING_SUBMIT: &'static str = "/api/v1/learning/progress/batch";
     pub const MOBILE_LEARNING_SUMMARY: &'static str = "/api/v1/learning/user/{user_id}/summary";
-    pub const MOBILE_LEARNING_PROGRESS_LIST: &'static str = "/api/v1/learning/progress/user/{user_id}/all";
+    pub const MOBILE_LEARNING_PROGRESS_LIST: &'static str =
+        "/api/v1/learning/progress/user/{user_id}/all";
 
     // 管理端路由前缀
     pub const ADMIN_PREFIX: &'static str = "/api/v1/admin";

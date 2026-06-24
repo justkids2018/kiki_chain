@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::core::entities::{Scene, SceneCategory, SceneDetail, SceneItem};
+use serde::{Deserialize, Serialize};
 
 // ===== 响应 DTOs =====
 
@@ -32,6 +32,9 @@ pub struct SceneDto {
     #[serde(rename = "order")]
     pub display_order: i32,
     pub is_new: bool,
+    pub is_free: bool,
+    pub requires_vip: bool,
+    pub is_locked: bool,
     pub items_data: Option<serde_json::Value>, // JSON 数组
 }
 
@@ -161,6 +164,17 @@ impl From<&SceneCategory> for SceneCategoryDto {
 
 impl From<&Scene> for SceneDto {
     fn from(s: &Scene) -> Self {
+        Self::from_scene_with_index(s, None, false)
+    }
+}
+
+impl SceneDto {
+    pub fn from_scene_with_index(s: &Scene, index: Option<usize>, user_is_vip: bool) -> Self {
+        let index_is_free = index.map(|i| i == 0).unwrap_or(s.display_order <= 1);
+        let is_free = s.is_free.unwrap_or(index_is_free);
+        let requires_vip = s.requires_vip.unwrap_or(!is_free);
+        let is_locked = requires_vip && !user_is_vip;
+
         Self {
             id: s.id.clone(),
             category_id: s.category_id.clone(),
@@ -174,6 +188,9 @@ impl From<&Scene> for SceneDto {
             item_count: s.item_count,
             display_order: s.display_order,
             is_new: s.is_new,
+            is_free,
+            requires_vip,
+            is_locked,
             items_data: s.items_data.clone(),
         }
     }

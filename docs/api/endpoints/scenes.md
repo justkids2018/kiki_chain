@@ -151,3 +151,58 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 |--------|------|----------|
 | 401 | 未授权 | 需要重新登录 |
 | 400 | 参数错误 | 检查请求参数格式 |
+
+---
+
+## 移动端按分类获取场景列表
+
+**接口描述**：获取移动端某个分类下的场景列表，并返回 VIP 付费墙字段。
+
+**请求方式**：GET
+
+**接口路径**：`/api/v1/mobile/scene/categories/{category_id}/scenes`
+
+**认证**：无需认证。接口返回场景的付费属性，客户端结合本地/服务端用户权益计算最终锁定态。
+
+**路径参数**：
+
+| 参数名 | 类型 | 必填 | 说明 | 示例 |
+|--------|------|------|------|------|
+| category_id | string | 是 | 分类 ID | `cat_001` |
+
+**响应参数补充**：
+
+| 参数名 | 类型 | 说明 |
+|--------|------|------|
+| data[].is_free | boolean | 是否免费卡。首页/列表展示顺序第 1 张为 true |
+| data[].requires_vip | boolean | 是否需要 VIP |
+| data[].is_locked | boolean | 是否锁定。公开接口默认按非 VIP 计算，登录用户客户端应结合权益重算 |
+
+**响应示例**：
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "scene_001",
+      "category_id": "cat_001",
+      "name": "回家",
+      "order": 1,
+      "is_free": true,
+      "requires_vip": false,
+      "is_locked": false
+    },
+    {
+      "id": "scene_002",
+      "category_id": "cat_001",
+      "name": "除夕",
+      "order": 2,
+      "is_free": false,
+      "requires_vip": true,
+      "is_locked": true
+    }
+  ],
+  "message": "获取成功"
+}
+```

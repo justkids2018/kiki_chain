@@ -61,6 +61,21 @@ class AuthController extends GetxController {
   bool get registerConfirmPasswordVisible =>
       _registerConfirmPasswordVisible.value;
   bool get agreeToTerms => _agreeToTerms.value;
+  bool get isVipActive => _currentUser.value?.isVipActive ?? false;
+
+  void applyVipEntitlement({
+    required bool isVip,
+    DateTime? vipExpireAt,
+  }) {
+    final user = _currentUser.value;
+    if (user == null) return;
+    final updated = user.copyWith(
+      isVip: isVip,
+      vipExpireAt: vipExpireAt,
+    );
+    _currentUser.value = updated;
+    AppServices.instance.localStorage.setUserInfo(updated.toJson());
+  }
 
   // Helper to get localizations
   AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;

@@ -1,8 +1,8 @@
-use std::sync::Arc;
-use chrono::Utc;
 use crate::core::entities::{Scene, SceneCategory, SceneDetail};
 use crate::core::errors::{DomainError, Result};
 use crate::core::ports::SceneRepository;
+use chrono::Utc;
+use std::sync::Arc;
 
 // ===== Commands =====
 
@@ -91,17 +91,33 @@ impl AdminSceneUseCase {
     }
 
     pub async fn update_category(&self, cmd: UpdateCategoryCommand) -> Result<SceneCategory> {
-        let mut category = self.repo
-            .find_category_by_id(&cmd.id).await?
+        let mut category = self
+            .repo
+            .find_category_by_id(&cmd.id)
+            .await?
             .ok_or_else(|| DomainError::NotFound(format!("分类不存在: {}", cmd.id)))?;
 
-        if let Some(name) = cmd.name { category.name = name; }
-        if let Some(icon) = cmd.icon { category.icon = Some(icon); }
-        if let Some(img) = cmd.cover_image { category.cover_image = Some(img); }
-        if let Some(desc) = cmd.description { category.description = Some(desc); }
-        if let Some(order) = cmd.display_order { category.display_order = order; }
-        if let Some(is_new) = cmd.is_new { category.is_new = is_new; }
-        if let Some(visible) = cmd.is_visible { category.is_visible = visible; }
+        if let Some(name) = cmd.name {
+            category.name = name;
+        }
+        if let Some(icon) = cmd.icon {
+            category.icon = Some(icon);
+        }
+        if let Some(img) = cmd.cover_image {
+            category.cover_image = Some(img);
+        }
+        if let Some(desc) = cmd.description {
+            category.description = Some(desc);
+        }
+        if let Some(order) = cmd.display_order {
+            category.display_order = order;
+        }
+        if let Some(is_new) = cmd.is_new {
+            category.is_new = is_new;
+        }
+        if let Some(visible) = cmd.is_visible {
+            category.is_visible = visible;
+        }
         category.updated_at = Utc::now();
 
         self.repo.save_category(&category).await?;
@@ -176,6 +192,8 @@ impl AdminSceneUseCase {
             display_order: cmd.display_order,
             is_new: cmd.is_new,
             is_visible: true,
+            is_free: None,
+            requires_vip: None,
             items_data: cmd.items_data,
             created_at: now,
             updated_at: now,
@@ -185,19 +203,40 @@ impl AdminSceneUseCase {
     }
 
     pub async fn update_scene(&self, cmd: UpdateSceneCommand) -> Result<Scene> {
-        let detail = self.repo.find_scene_detail(&cmd.id).await?
+        let detail = self
+            .repo
+            .find_scene_detail(&cmd.id)
+            .await?
             .ok_or_else(|| DomainError::NotFound(format!("场景不存在: {}", cmd.id)))?;
         let mut scene = detail.scene;
 
-        if let Some(name) = cmd.name { scene.name = name; }
-        if let Some(name_en) = cmd.name_en { scene.name_en = Some(name_en); }
-        if let Some(img) = cmd.cover_image { scene.cover_image = Some(img); }
-        if let Some(img) = cmd.interactive_image { scene.interactive_image = Some(img); }
-        if let Some(desc) = cmd.description { scene.description = Some(desc); }
-        if let Some(ctx) = cmd.context { scene.context = Some(ctx); }
-        if let Some(order) = cmd.display_order { scene.display_order = order; }
-        if let Some(is_new) = cmd.is_new { scene.is_new = is_new; }
-        if let Some(visible) = cmd.is_visible { scene.is_visible = visible; }
+        if let Some(name) = cmd.name {
+            scene.name = name;
+        }
+        if let Some(name_en) = cmd.name_en {
+            scene.name_en = Some(name_en);
+        }
+        if let Some(img) = cmd.cover_image {
+            scene.cover_image = Some(img);
+        }
+        if let Some(img) = cmd.interactive_image {
+            scene.interactive_image = Some(img);
+        }
+        if let Some(desc) = cmd.description {
+            scene.description = Some(desc);
+        }
+        if let Some(ctx) = cmd.context {
+            scene.context = Some(ctx);
+        }
+        if let Some(order) = cmd.display_order {
+            scene.display_order = order;
+        }
+        if let Some(is_new) = cmd.is_new {
+            scene.is_new = is_new;
+        }
+        if let Some(visible) = cmd.is_visible {
+            scene.is_visible = visible;
+        }
 
         // 更新 items_data 和 item_count
         if let Some(items_data) = cmd.items_data {

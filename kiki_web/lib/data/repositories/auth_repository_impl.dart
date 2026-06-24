@@ -80,6 +80,8 @@ class AuthRepositoryImpl implements IAuthRepository {
         avatar: null,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
+        isVip: data['is_vip'] as bool? ?? false,
+        vipExpireAt: _parseOptionalDate(data['vip_expire_at']),
       );
 
       await _localStorage.setString('user_id', user.id);
@@ -136,6 +138,8 @@ class AuthRepositoryImpl implements IAuthRepository {
         avatar: null,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
+        isVip: data['is_vip'] as bool? ?? false,
+        vipExpireAt: _parseOptionalDate(data['vip_expire_at']),
       );
 
       await _localStorage.setString('user_id', user.id);
@@ -168,6 +172,11 @@ class AuthRepositoryImpl implements IAuthRepository {
         statusCode: 500,
       );
     }
+  }
+
+  DateTime? _parseOptionalDate(dynamic value) {
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
   }
 
   @override

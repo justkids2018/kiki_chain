@@ -1,4 +1,5 @@
 pub mod scene;
+pub mod subscription;
 
 pub use scene::{Scene, SceneCategory, SceneDetail, SceneItem};
 

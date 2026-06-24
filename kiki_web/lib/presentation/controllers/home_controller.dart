@@ -11,6 +11,7 @@ import '../../core/network/network_client.dart';
 import '../../core/constants/app_constants.dart';
 import 'app_update_controller.dart';
 import 'auth_controller.dart';
+import '../../domain/entities/subscription.dart';
 
 /// 简化的首页控制器
 class HomeController extends GetxController
@@ -86,6 +87,67 @@ class HomeController extends GetxController
   /// 刷新分类列表
   Future<void> refreshCategories() async {
     await loadCategories();
+  }
+
+  /// 首页主题层 VIP 策略：第一个主题免费，其余主题需要 VIP。
+  bool categoryRequiresVip(int index) => index > 0;
+
+  bool categoryIsLocked(int index) =>
+      categoryRequiresVip(index) && !isVipActive;
+
+  bool get isVipActive {
+    if (currentUser.value?.isVipActive == true) {
+      return true;
+    }
+
+    try {
+      return Get.find<AuthController>().isVipActive;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> openCategory(SceneCategory category, int index) async {
+    if (categoryIsLocked(index)) {
+      await _openSubscription();
+      return;
+    }
+
+    Get.toNamed(
+      AppConstants.routeSceneList,
+      arguments: category,
+    );
+  }
+
+  Future<void> _openSubscription() async {
+    try {
+      final authController = Get.find<AuthController>();
+      if (!authController.isLoggedIn) {
+        Get.snackbar(
+          '请先登录',
+          '登录后即可开通 VIP 解锁主题',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        Get.toNamed(AppConstants.routeLogin);
+        return;
+      }
+    } catch (_) {
+      Get.toNamed(AppConstants.routeLogin);
+      return;
+    }
+
+    final result = await Get.toNamed(AppConstants.routeSubscription);
+    if (result is VipEntitlement && result.isVip) {
+      try {
+        final authController = Get.find<AuthController>();
+        authController.applyVipEntitlement(
+          isVip: result.isVip,
+          vipExpireAt: result.vipExpireAt,
+        );
+        currentUser.value = authController.currentUser;
+      } catch (_) {}
+    }
   }
 
   void _checkAppUpdateAfterHomeDataLoaded() {

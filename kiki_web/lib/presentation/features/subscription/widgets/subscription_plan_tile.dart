@@ -4,13 +4,13 @@ import '../../../../domain/entities/subscription.dart';
 
 class SubscriptionPlanTile extends StatelessWidget {
   final SubscriptionProduct product;
-  final bool isBusy;
+  final bool isSelected;
   final VoidCallback onTap;
 
   const SubscriptionPlanTile({
     Key? key,
     required this.product,
-    required this.isBusy,
+    required this.isSelected,
     required this.onTap,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class SubscriptionPlanTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: isBusy ? null : onTap,
+        onTap: onTap,
         child: Ink(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -33,10 +33,12 @@ class SubscriptionPlanTile extends StatelessWidget {
                 : Colors.white.withOpacity(0.92),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: product.isRecommended
-                  ? const Color(0xFFFFC857)
-                  : const Color(0xFFE5E7EB),
-              width: product.isRecommended ? 1.4 : 1,
+              color: isSelected
+                  ? const Color(0xFF2F6BFF)
+                  : product.isRecommended
+                      ? const Color(0xFFFFC857)
+                      : const Color(0xFFE5E7EB),
+              width: isSelected ? 2 : (product.isRecommended ? 1.4 : 1),
             ),
             boxShadow: [
               BoxShadow(
@@ -70,6 +72,21 @@ class SubscriptionPlanTile extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
+                  if (isSelected)
+                    Container(
+                      width: 22,
+                      height: 22,
+                      margin: const EdgeInsets.only(right: 6),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF2F6BFF),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check_rounded,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                    ),
                   if (product.isRecommended)
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -140,35 +157,6 @@ class SubscriptionPlanTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: product.isRecommended
-                          ? const Color(0xFFFFC857)
-                          : const Color(0xFFEAF0FF),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: isBusy
-                        ? const SizedBox(
-                            width: 13,
-                            height: 13,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(
-                            '开通',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              color: product.isRecommended
-                                  ? const Color(0xFF4B2800)
-                                  : const Color(0xFF2F6BFF),
-                            ),
-                          ),
                   ),
                 ],
               ),

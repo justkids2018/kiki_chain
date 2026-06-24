@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
@@ -23,6 +24,8 @@ class SubscriptionController extends GetxController {
   final RxString errorMessage = ''.obs;
   final Rxn<ProductsResult> productsResult = Rxn<ProductsResult>();
   final Rxn<VipEntitlement> entitlement = Rxn<VipEntitlement>();
+  final Rxn<SubscriptionProduct> selectedProduct = Rxn<SubscriptionProduct>();
+  final Rxn<PaymentOption> selectedPaymentOption = Rxn<PaymentOption>();
 
   late final ClientPaymentContext paymentContext;
 
@@ -61,6 +64,8 @@ class SubscriptionController extends GetxController {
   void onInit() {
     super.onInit();
     paymentContext = ClientPaymentContext.current();
+    selectedPaymentOption.value = paymentOptions.first;
+    _ensureDefaultSelection();
     load();
   }
 
@@ -74,6 +79,7 @@ class SubscriptionController extends GetxController {
         distributionChannel: paymentContext.distributionChannel,
       );
       productsResult.value = result;
+      _ensureDefaultSelection();
       try {
         entitlement.value = await _subscriptionRepository.getEntitlement();
       } catch (_) {
@@ -87,18 +93,85 @@ class SubscriptionController extends GetxController {
     }
   }
 
+  List<PaymentOption> get paymentOptions {
+    if (paymentContext.platform == 'ios') {
+      return const [
+        PaymentOption(
+          channel: PaymentChannel.appleIap,
+          label: 'Apple Pay',
+          platform: 'ios',
+          distributionChannel: 'app_store',
+          icon: Icons.phone_iphone_rounded,
+        ),
+      ];
+    }
+
+    if (paymentContext.platform == 'android') {
+      if (paymentContext.region == 'global') {
+        return const [
+          PaymentOption(
+            channel: PaymentChannel.googlePlayBilling,
+            label: 'Google Play',
+            region: 'global',
+            platform: 'android',
+            distributionChannel: 'google_play',
+            icon: Icons.shop_rounded,
+          ),
+        ];
+      }
+
+      return const [
+        PaymentOption(
+          channel: PaymentChannel.wechatPay,
+          label: '微信支付',
+          platform: 'android',
+          distributionChannel: 'direct_apk',
+          icon: Icons.chat_bubble_rounded,
+        ),
+      ];
+    }
+
+    return const [
+      PaymentOption(
+        channel: PaymentChannel.wechatPay,
+        label: '微信支付',
+        platform: 'web',
+        distributionChannel: 'web',
+        icon: Icons.chat_bubble_rounded,
+      ),
+    ];
+  }
+
+  void selectProduct(SubscriptionProduct product) {
+    selectedProduct.value = product;
+  }
+
+  void selectPaymentOption(PaymentOption option) {
+    selectedPaymentOption.value = option;
+  }
+
+  Future<void> subscribeSelected() async {
+    final product = selectedProduct.value;
+    if (product == null) {
+      EasyLoading.showToast('请选择套餐');
+      return;
+    }
+    await subscribe(product);
+  }
+
   Future<void> subscribe(SubscriptionProduct product) async {
     if (isPaying.value) return;
 
     try {
       isPaying.value = true;
       EasyLoading.show(status: '正在创建订单...');
+      final paymentOption = selectedPaymentOption.value ?? paymentOptions.first;
 
       final order = await _subscriptionRepository.createOrder(
         productId: product.productId,
-        region: paymentContext.region,
-        platform: paymentContext.platform,
-        distributionChannel: paymentContext.distributionChannel,
+        region: paymentOption.region,
+        platform: paymentOption.platform,
+        distributionChannel: paymentOption.distributionChannel,
       );
 
       EasyLoading.show(status: '正在拉起支付...');
@@ -126,4 +199,31 @@ class SubscriptionController extends GetxController {
       isPaying.value = false;
     }
   }
+
+  void _ensureDefaultSelection() {
+    if (products.isEmpty) return;
+    selectedProduct.value ??= products.firstWhere(
+      (product) => product.isRecommended,
+      orElse: () => products.first,
+    );
+    selectedPaymentOption.value ??= paymentOptions.first;
+  }
+}
+
+class PaymentOption {
+  final PaymentChannel channel;
+  final String label;
+  final String region;
+  final String platform;
+  final String distributionChannel;
+  final IconData icon;
+
+  const PaymentOption({
+    required this.channel,
+    required this.label,
+    this.region = 'cn',
+    required this.platform,
+    required this.distributionChannel,
+    required this.icon,
+  });
 }

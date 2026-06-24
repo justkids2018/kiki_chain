@@ -83,15 +83,56 @@ class SubscriptionPage extends StatelessWidget {
                                           width: cardWidth,
                                           child: SubscriptionPlanTile(
                                             product: product,
-                                            isBusy: controller.isPaying.value,
-                                            onTap: () =>
-                                                controller.subscribe(product),
+                                            isSelected: controller
+                                                    .selectedProduct
+                                                    .value
+                                                    ?.productId ==
+                                                product.productId,
+                                            onTap: () => controller
+                                                .selectProduct(product),
                                           ),
                                         );
                                       },
                                     ),
                                   );
                                 },
+                              ),
+                              const SizedBox(height: 16),
+                              _PaymentMethodSelector(controller: controller),
+                              const SizedBox(height: 14),
+                              SizedBox(
+                                height: 46,
+                                child: ElevatedButton(
+                                  onPressed: controller.isPaying.value
+                                      ? null
+                                      : controller.subscribeSelected,
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    backgroundColor: const Color(0xFFFFC857),
+                                    disabledBackgroundColor:
+                                        const Color(0xFFE5E7EB),
+                                    foregroundColor: const Color(0xFF4B2800),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: controller.isPaying.value
+                                      ? const SizedBox(
+                                          width: 18,
+                                          height: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.2,
+                                            color: Color(0xFF4B2800),
+                                          ),
+                                        )
+                                      : const Text(
+                                          '开通 VIP',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                ),
                               ),
                               if (controller.errorMessage.value.isNotEmpty)
                                 Padding(
@@ -118,6 +159,105 @@ class SubscriptionPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _PaymentMethodSelector extends StatelessWidget {
+  final SubscriptionController controller;
+
+  const _PaymentMethodSelector({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final options = controller.paymentOptions;
+    final selected = controller.selectedPaymentOption.value;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '支付方式',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w900,
+            color: Color(0xFF1F2937),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            for (final option in options)
+              _PaymentMethodButton(
+                option: option,
+                isSelected: selected?.channel == option.channel,
+                onTap: () => controller.selectPaymentOption(option),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _PaymentMethodButton extends StatelessWidget {
+  final PaymentOption option;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _PaymentMethodButton({
+    required this.option,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Ink(
+          height: 42,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFFFFF2C7) : Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFFFFC857)
+                  : const Color(0xFFE5E7EB),
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                option.icon,
+                size: 18,
+                color: isSelected
+                    ? const Color(0xFF8A4A00)
+                    : const Color(0xFF6B7280),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                option.label,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  color: isSelected
+                      ? const Color(0xFF4B2800)
+                      : const Color(0xFF374151),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

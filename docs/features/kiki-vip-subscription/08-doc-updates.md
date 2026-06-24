@@ -15,9 +15,8 @@
 
 ## Production Setup Still Needed
 
-- Apply `kiki_server/migrations/006_subscription_commercialization.sql`.
+- Apply `kiki_server/database/migrations/007_subscription_commercialization.sql`.
 - Configure Apple IAP product IDs and App Store Server validation.
 - Configure WeChat Pay merchant credentials and payment callback.
 - Configure Google Play Billing credentials if publishing global Android on Google Play.
 - Decide final region source, for example server profile, app build flavor, or remote config.
-

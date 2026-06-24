@@ -119,6 +119,16 @@ jobs:
             echo "Either commit the backend env file or provide DEPLOY_QINIU_* via workflow env/secrets."
             exit 1
           fi
+          if [[ ! -f kiki_server/database/init.sql ]]; then
+            echo "Missing kiki_server/database/init.sql in checkout."
+            echo "Database initialization SQL must be committed with the backend database fact source."
+            exit 1
+          fi
+          if [[ ! -d kiki_server/database/migrations ]]; then
+            echo "Missing kiki_server/database/migrations in checkout."
+            echo "Database migrations must live under kiki_server/database/migrations."
+            exit 1
+          fi
 
       - name: Setup SSH
         env:

@@ -18,7 +18,7 @@
 ## Task 02: Backend Persistence And Routes
 
 - Files:
-  - `kiki_server/migrations/006_subscription_commercialization.sql`
+  - `kiki_server/database/migrations/007_subscription_commercialization.sql`
   - `kiki_server/src/adapters/persistence/...`
   - `kiki_server/src/framework/bootstrap/...`
 - Work:

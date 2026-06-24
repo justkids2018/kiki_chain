@@ -11,9 +11,7 @@
 - docker-compose.yml
 - admin/
 - server/
-- db/
-- db/init.sql
-- db/migrations/
+- db/                                  # 历史兼容目录，不再新增业务 SQL
 - profiles/tencent.env
 - profiles/aliyun.env
 - profiles/example.env
@@ -92,7 +90,7 @@ Step1 会把部署产物统一写入：
 
 - `admin/`: 管理端相关部署资产（镜像由 compose 引用）
 - `server/`: 后端相关部署资产（镜像由 compose 引用）
-- `db/`: 数据库初始化与迁移 SQL
+- `kiki_server/database/`: 数据库初始化与迁移事实源（Step2 会同步并执行）
 
 compose 不暴露 80/443，只使用：
 
@@ -141,6 +139,8 @@ DEPLOY_POSTGRES_HOST_PORT="15432"
 - 日常发布不需要把线上数据每次同步回本地。
 - 只有在“需要改表结构”时才做 migration，且要先备份线上库再执行。
 - 禁止在生产执行 down -v（会删除数据库卷）。
+- 新增数据库迁移只允许放在 `kiki_server/database/migrations/`。
+- `scripts/deploy-release/db/` 仅为历史兼容目录，不再新增业务 SQL。
 
 在正式流程中，step2 已内置：
 
@@ -160,4 +160,4 @@ DEPLOY_POSTGRES_HOST_PORT="15432"
 
 1. 先用 deploy-release 完成一次灰度部署并验证
 2. 通过域名切流验证稳定性
-3. 再删除旧 deploy 目录
+3. 确认无引用后再删除旧 deploy/database 目录

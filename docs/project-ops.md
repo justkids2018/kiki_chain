@@ -6,6 +6,11 @@ This document details project-specific operational guidelines and rules that AI 
 
 ## 💾 Database Migrations
 
+> Database execution sources are consolidated into `kiki_server/database/`.
+> Read `docs/engineering/database-system.md` before changing database files.
+> Legacy database paths are kept temporarily for compatibility and must not
+> receive new executable SQL.
+
 ### 1. PostgreSQL Compatibility
 - The local development and production backend database is **PostgreSQL**.
 - All SQL migrations must strictly use PostgreSQL-compatible syntax. 
@@ -16,16 +21,20 @@ This document details project-specific operational guidelines and rules that AI 
   - Do NOT use `ON DUPLICATE KEY UPDATE` (use `ON CONFLICT (...) DO UPDATE SET ...` instead).
   - Do NOT specify `ENGINE=InnoDB` or character sets/collations inside the table definition.
 
-### 2. Migration Placement & Sync Rule
-Whenever a new database migration is created or updated, it must be synchronized across two directories:
-1. **Local Development**: `kiki_server/migrations/`
-   - Used for local database setup, testing, and debugging.
-2. **Production Deployment**: `scripts/deploy-release/db/migrations/`
-   - Used by the automated release workflow (`db-release.sh` called by `step2-deploy.sh`).
-   - Must use sequential version numbering (e.g., `005_create_learning_tables.sql`).
-   
-> [!IMPORTANT]
-> If a migration SQL is not added to `scripts/deploy-release/db/migrations/`, it **will be skipped** during production deployment, causing the server backend to fail on startup or crash during database queries.
+### 2. Migration Placement Rule
+The target single source of truth is:
+
+```text
+kiki_server/database/
+├── init.sql
+└── migrations/
+```
+
+Current rule:
+
+- New database migrations must only be added under `kiki_server/database/migrations/`.
+- `docs/database/`, `kiki_server/migrations/`, and `scripts/deploy-release/db/` must not receive new executable SQL.
+- CI should block duplicate migration versions and old-path additions.
 
 ---
 
@@ -55,8 +64,8 @@ When a user asks to start, stop, migrate, check status, or view logs for the loc
 |--------|---------|-------|
 | `scripts/local_dev/start.sh` | Start local dev env (PostgreSQL + Rust backend + Vue frontend) | `./scripts/local_dev/start.sh` |
 | `scripts/local_dev/stop.sh` | Stop all local services | `./scripts/local_dev/stop.sh` |
-| `scripts/local_dev/migrate.sh` | Run local DB incremental migrations | `./scripts/local_dev/migrate.sh` |
+| `scripts/local_dev/migrate.sh` | Complete local DB baseline and run incremental migrations | `./scripts/local_dev/migrate.sh` |
 | `scripts/local_dev/status.sh` | Check service status | `./scripts/local_dev/status.sh` |
 | `scripts/local_dev/logs.sh` | View service logs (all / backend / frontend) | `./scripts/local_dev/logs.sh [backend\|frontend]` |
 
-> **Note:** `start.sh` automatically detects running services to avoid double-starting, boots PostgreSQL via Docker, applies local DB migrations, then starts the Rust backend (`cargo run`) and Vue frontend (`npm run dev`).
+> **Note:** `start.sh` automatically detects running services to avoid double-starting, boots PostgreSQL via Docker, completes the local DB baseline and migrations, then starts the Rust backend (`cargo run`) and Vue frontend (`npm run dev`).

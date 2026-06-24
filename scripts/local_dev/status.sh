@@ -12,6 +12,17 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+DOCKER_DESKTOP_BIN="/Applications/Docker.app/Contents/Resources/bin"
+
+configure_docker_cli() {
+    if ! command -v docker &> /dev/null && [ -x "$DOCKER_DESKTOP_BIN/docker" ]; then
+        export PATH="$DOCKER_DESKTOP_BIN:$PATH"
+    fi
+}
+
+postgres_container_running() {
+    docker ps --format '{{.Names}}' 2>/dev/null | grep -q "^hikiki_postgres_local$"
+}
 
 # 检查端口是否被占用
 check_port() {
@@ -38,12 +49,17 @@ show_status() {
     echo ""
 
     # PostgreSQL
-    if check_port 5432; then
+    if postgres_container_running; then
         local pid=$(get_pid_by_port 5432)
         echo -e "✅ PostgreSQL:  ${GREEN}运行中${NC} (http://localhost:5432)"
         echo "   进程 PID:    $pid"
         echo "   数据库:      hikiki_db"
         echo "   用户名:      postgres"
+    elif check_port 5432; then
+        local pid=$(get_pid_by_port 5432)
+        echo -e "⚠️  PostgreSQL:  ${YELLOW}5432 被占用，但项目容器未确认${NC}"
+        echo "   进程 PID:    $pid"
+        echo "   项目容器:    hikiki_postgres_local 未运行或 Docker CLI 不可用"
     else
         echo -e "❌ PostgreSQL:  ${RED}未运行${NC}"
     fi
@@ -95,6 +111,7 @@ show_status() {
 
 # 主函数
 main() {
+    configure_docker_cli
     show_status
 }
 

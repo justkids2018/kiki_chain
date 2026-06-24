@@ -211,7 +211,7 @@ GitHub Actions → 推送镜像到 GHCR (latest 标签)
 
 **目录结构**：
 ```
-scripts/deploy-release/db/
+kiki_server/database/
 ├── init.sql                    # 初始化脚本（只执行一次）
 └── migrations/
     ├── 001_add_user_profile.sql

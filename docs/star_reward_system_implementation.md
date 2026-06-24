@@ -300,7 +300,7 @@ InteractiveImageController({
 ## 📚 项目文件清单
 
 ### 数据库
-- `kiki_server/migrations/001_create_learning_tables.sql`
+- `kiki_server/database/migrations/005_create_learning_tables.sql`
 
 ### 后端 (Rust)
 - `kiki_server/src/core/domain/learning/models.rs`

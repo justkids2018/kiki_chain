@@ -328,7 +328,7 @@ cargo build
 
 - [完整实施文档](./star_reward_system_implementation.md)
 - [API接口文档](./star_reward_system_implementation.md#-api接口文档)
-- [数据库设计](../kiki_server/migrations/001_create_learning_tables.sql)
+- [数据库设计](../kiki_server/database/migrations/005_create_learning_tables.sql)
 
 ---
 

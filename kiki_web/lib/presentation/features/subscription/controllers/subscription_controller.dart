@@ -163,7 +163,13 @@ class SubscriptionController extends GetxController {
 
   void _ensureDefaultSelection() {
     if (products.isEmpty) return;
-    selectedProduct.value ??= products.firstWhere(
+    final selected = selectedProduct.value;
+    if (selected != null &&
+        products.any((product) => product.productId == selected.productId)) {
+      return;
+    }
+
+    selectedProduct.value = products.firstWhere(
       (product) => product.isRecommended,
       orElse: () => products.first,
     );

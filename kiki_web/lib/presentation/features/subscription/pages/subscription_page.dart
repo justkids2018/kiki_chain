@@ -155,7 +155,7 @@ class _PaymentPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedProduct = controller.selectedProduct.value;
-    final price = selectedProduct?.displayPrice ?? '';
+    final price = _formatPayAmount(selectedProduct?.displayPrice ?? '');
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -175,6 +175,8 @@ class _PaymentPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const _SubscriptionBrandHeader(),
+          const SizedBox(height: 16),
           const Text(
             '支付方式',
             style: TextStyle(
@@ -234,6 +236,52 @@ class _PaymentPanel extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+String _formatPayAmount(String displayPrice) {
+  if (displayPrice.isEmpty) return '';
+  return displayPrice.split('/').first.trim();
+}
+
+class _SubscriptionBrandHeader extends StatelessWidget {
+  const _SubscriptionBrandHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 38,
+          height: 38,
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFF2C7),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFFFC857), width: 1),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.asset(
+              'assets/icon/app_icon.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Expanded(
+          child: Text(
+            'Hi Kiki VIP',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF1F2937),
+              height: 1.1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

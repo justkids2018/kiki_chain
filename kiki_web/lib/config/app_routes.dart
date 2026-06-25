@@ -7,6 +7,7 @@ import '../presentation/pages/register/pages/register_page.dart';
 import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_controller.dart';
+import '../presentation/features/writing_practice/pages/writing_practice_page.dart';
 import '../presentation/pages/scene_list_page.dart';
 import '../presentation/features/subscription/pages/subscription_page.dart';
 import '../presentation/controllers/home_controller.dart';
@@ -53,6 +54,10 @@ class AppRoutes {
           () => InteractiveImageController(),
         );
       }),
+    ),
+    GetPage(
+      name: AppConstants.routeWritingPractice,
+      page: () => const WritingPracticePage(),
     ),
     // 互动图片首页
     GetPage(

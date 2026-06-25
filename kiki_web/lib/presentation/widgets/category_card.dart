@@ -54,25 +54,27 @@ class CategoryCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16), // 圆角裁剪（从24改成16）
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // 背景图片
-              _buildCoverImage(),
+          child: RepaintBoundary(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // 背景图片
+                _buildCoverImage(),
 
-              // 渐变遮罩
-              _buildGradientOverlay(),
+                // 渐变遮罩
+                _buildGradientOverlay(),
 
-              if (isLocked) _buildDimOverlay(),
+                if (isLocked) _buildDimOverlay(),
 
-              // 内容区域
-              _buildContent(),
+                // 内容区域
+                _buildContent(),
 
-              // NEW 标签
-              if (category.isNew) _buildNewBadge(),
+                // NEW 标签
+                if (category.isNew) _buildNewBadge(),
 
-              if (isLocked) _buildUnlockRibbon(),
-            ],
+                if (isLocked) _buildUnlockRibbon(),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,34 +99,42 @@ class CategoryCard extends StatelessWidget {
     }
 
     return Positioned.fill(
-      child: Image.network(
-        category.coverImage,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: _getCategoryColor().withValues(alpha: 0.3),
-            child: Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                color: Colors.white,
-              ),
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          // 如果图片加载失败，显示占位符
-          return Container(
-            color: _getCategoryColor(),
-            child: Center(
-              child: Text(
-                category.icon,
-                style: const TextStyle(fontSize: 120),
-              ),
-            ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final dpr = MediaQuery.of(context).devicePixelRatio;
+          final cacheWidth = (constraints.maxWidth * dpr).round();
+          final cacheHeight = (constraints.maxHeight * dpr).round();
+          return Image.network(
+            category.coverImage,
+            fit: BoxFit.cover,
+            cacheWidth: cacheWidth > 0 ? cacheWidth : null,
+            cacheHeight: cacheHeight > 0 ? cacheHeight : null,
+            filterQuality: FilterQuality.low,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                color: _getCategoryColor().withValues(alpha: 0.3),
+                child: const Center(
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              // 如果图片加载失败，显示占位符
+              return Container(
+                color: _getCategoryColor(),
+                child: Center(
+                  child: Text(
+                    category.icon,
+                    style: const TextStyle(fontSize: 120),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

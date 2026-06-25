@@ -88,6 +88,8 @@ dependencies:
   # dify_flutter: ^1.0.3
   just_audio: ^0.9.39
   stroke_order_animator: ^3.3.1
+  printing: ^5.14.3
+  pdf: ^3.11.3
   cached_network_image: ^3.3.1
   flutter_svg: ^2.0.10
   crypto: ^3.0.3
@@ -144,6 +146,9 @@ flutter:
         - asset: assets/fonts/Fredoka-Regular.ttf
         - asset: assets/fonts/Fredoka-SemiBold.ttf
           weight: 600
+    - family: ARPLKaitiMGB
+      fonts:
+        - asset: assets/fonts/AR-PL-KaitiM-GB.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

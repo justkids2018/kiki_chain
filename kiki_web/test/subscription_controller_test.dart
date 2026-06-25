@@ -14,6 +14,10 @@ void main() {
 
     expect(controller.isFreeSubscriptionPeriod, isTrue);
     expect(controller.primaryActionText, '免费订阅 ¥0');
+    expect(
+      controller.freeSubscriptionNoticeText,
+      '限时体验：2026年8月1日前免费开通 VIP',
+    );
   });
 
   test('primary action keeps original payment text from 2026-08-01', () {
@@ -26,6 +30,7 @@ void main() {
 
     expect(controller.isFreeSubscriptionPeriod, isFalse);
     expect(controller.primaryActionText, '确认并支付 ¥88');
+    expect(controller.freeSubscriptionNoticeText, isEmpty);
   });
 }
 

@@ -40,6 +40,11 @@ class SubscriptionController extends GetxController {
   bool get isFreeSubscriptionPeriod =>
       _now().isBefore(_freeSubscriptionDeadline);
 
+  String get freeSubscriptionNoticeText {
+    if (!isFreeSubscriptionPeriod) return '';
+    return '限时体验：2026年8月1日前免费开通 VIP';
+  }
+
   String get primaryActionText {
     if (isFreeSubscriptionPeriod) {
       return '免费订阅 ¥0';

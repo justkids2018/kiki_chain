@@ -187,6 +187,12 @@ class _PaymentPanel extends StatelessWidget {
           const SizedBox(height: 14),
           _PaymentMethodSelector(controller: controller),
           const SizedBox(height: 20),
+          if (controller.freeSubscriptionNoticeText.isNotEmpty) ...[
+            _FreeSubscriptionNotice(
+              text: controller.freeSubscriptionNoticeText,
+            ),
+            const SizedBox(height: 12),
+          ],
           SizedBox(
             height: 58,
             child: ElevatedButton(
@@ -240,6 +246,48 @@ class _PaymentPanel extends StatelessWidget {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FreeSubscriptionNotice extends StatelessWidget {
+  const _FreeSubscriptionNotice({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF8E7),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFFC8E6B8),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.eco_rounded,
+            size: 16,
+            color: Color(0xFF4E9F2E),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF37651F),
+                height: 1.25,
+              ),
+            ),
+          ),
         ],
       ),
     );

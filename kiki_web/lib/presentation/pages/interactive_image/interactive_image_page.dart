@@ -472,7 +472,7 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                         ),
                       ),
                       child: const Icon(
-                        Icons.edit_note_rounded,
+                        Icons.print_rounded,
                         size: 20,
                         color: Color(0xFF16A34A),
                       ),

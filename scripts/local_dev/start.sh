@@ -24,6 +24,7 @@ SERVER_DIR="$PROJECT_ROOT/kiki_server"
 ADMIN_DIR="$PROJECT_ROOT/kiki_admin"
 MIGRATE_SCRIPT="$PROJECT_ROOT/scripts/local_dev/migrate.sh"
 DOCKER_DESKTOP_BIN="/Applications/Docker.app/Contents/Resources/bin"
+HOMEBREW_BIN="/opt/homebrew/bin"
 
 # 日志函数
 log_info() {
@@ -54,6 +55,13 @@ check_command() {
 configure_docker_cli() {
     if ! command -v docker &> /dev/null && [ -x "$DOCKER_DESKTOP_BIN/docker" ]; then
         export PATH="$DOCKER_DESKTOP_BIN:$PATH"
+    fi
+}
+
+configure_local_cli() {
+    configure_docker_cli
+    if { ! command -v node &> /dev/null || ! command -v npm &> /dev/null; } && [ -d "$HOMEBREW_BIN" ]; then
+        export PATH="$HOMEBREW_BIN:$PATH"
     fi
 }
 
@@ -274,7 +282,7 @@ main() {
     echo "🚀 启动 Hi Kiki 本地开发环境..."
     echo ""
 
-    configure_docker_cli
+    configure_local_cli
 
     # 启动各个服务
     start_postgres || log_warning "PostgreSQL 启动失败，继续尝试启动其他服务..."

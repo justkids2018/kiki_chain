@@ -71,7 +71,14 @@ class AuthController extends GetxController {
   }) {
     final user = _currentUser.value;
     if (user == null) return;
-    final updated = user.copyWith(
+    final updated = User(
+      id: user.id,
+      phone: user.phone,
+      nickname: user.nickname,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
+      lastLoginAt: user.lastLoginAt,
+      totalStars: user.totalStars,
       isVip: isVip,
       vipExpireAt: vipExpireAt,
     );

@@ -159,6 +159,15 @@ class HomeController extends GetxController
       currentUser.refresh();
       update();
       await _refreshCurrentUserFromServer();
+      if (currentUser.value?.isVipActive != true) {
+        authController.applyVipEntitlement(
+          isVip: entitlement.isVip,
+          vipExpireAt: entitlement.vipExpireAt,
+        );
+        currentUser.value = authController.currentUser;
+        currentUser.refresh();
+        update();
+      }
     } catch (e, stackTrace) {
       AppLogger.warning(
         'HomeController: 刷新订阅权益后首页状态失败',

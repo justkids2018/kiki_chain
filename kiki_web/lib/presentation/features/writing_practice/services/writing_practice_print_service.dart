@@ -171,17 +171,6 @@ Future<Uint8List> _buildPracticePdf(
                         color: PdfColor.fromHex('#C62828'),
                       ),
                     ),
-                    pw.Align(
-                      alignment: pw.Alignment.centerRight,
-                      child: pw.Text(
-                        '正楷：文鼎简中楷',
-                        style: pw.TextStyle(
-                          font: cjkFont,
-                          fontSize: 9,
-                          color: PdfColor.fromHex('#8A8A8A'),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 pw.SizedBox(height: 18),

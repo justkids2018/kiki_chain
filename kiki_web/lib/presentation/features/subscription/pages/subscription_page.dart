@@ -156,9 +156,6 @@ class _PaymentPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedProduct = controller.selectedProduct.value;
-    final price = _formatPayAmount(selectedProduct?.displayPrice ?? '');
-
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -220,7 +217,7 @@ class _PaymentPanel extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      price.isEmpty ? '确认支付' : '确认并支付 $price',
+                      controller.primaryActionText,
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
@@ -298,11 +295,6 @@ class _BackdropLeaf extends StatelessWidget {
       ),
     );
   }
-}
-
-String _formatPayAmount(String displayPrice) {
-  if (displayPrice.isEmpty) return '';
-  return displayPrice.split('/').first.trim();
 }
 
 class _SubscriptionBrandHeader extends StatelessWidget {

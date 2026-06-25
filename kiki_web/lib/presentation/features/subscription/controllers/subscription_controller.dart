@@ -6,17 +6,22 @@ import '../../../../core/logging/app_logger.dart';
 import '../../../../core/services/payment/payment_manager.dart';
 import '../../../../domain/entities/subscription.dart';
 import '../../../../domain/repositories/i_subscription_repository.dart';
+import '../../../controllers/auth_controller.dart';
+import '../../../controllers/home_controller.dart';
 
 class SubscriptionController extends GetxController {
   SubscriptionController({
     ISubscriptionRepository? subscriptionRepository,
     PaymentManager? paymentManager,
+    DateTime Function()? now,
   })  : _subscriptionRepository = subscriptionRepository ??
             ServiceLocator.instance.subscriptionRepository,
-        _paymentManager = paymentManager ?? PaymentManager();
+        _paymentManager = paymentManager ?? PaymentManager(),
+        _now = now ?? DateTime.now;
 
   final ISubscriptionRepository _subscriptionRepository;
   final PaymentManager _paymentManager;
+  final DateTime Function() _now;
 
   final RxBool isLoading = false.obs;
   final RxBool isPaying = false.obs;
@@ -28,6 +33,21 @@ class SubscriptionController extends GetxController {
   bool _hasUserSelectedProduct = false;
 
   late final ClientPaymentContext paymentContext;
+
+  static final DateTime _freeSubscriptionDeadline =
+      DateTime(2026, 8, 1);
+
+  bool get isFreeSubscriptionPeriod =>
+      _now().isBefore(_freeSubscriptionDeadline);
+
+  String get primaryActionText {
+    if (isFreeSubscriptionPeriod) {
+      return '免费订阅 ¥0';
+    }
+    final product = selectedProduct.value;
+    final price = _formatPayAmount(product?.displayPrice ?? '');
+    return price.isEmpty ? '确认支付' : '确认并支付 $price';
+  }
 
   List<SubscriptionProduct> get products {
     final remoteProducts = productsResult.value?.products ?? const [];
@@ -139,22 +159,30 @@ class SubscriptionController extends GetxController {
         distributionChannel: paymentOption.distributionChannel,
       );
 
-      EasyLoading.show(status: '正在拉起支付...');
-      final paymentResult =
-          await _paymentManager.pay(order: order, product: product);
+      String? purchaseToken;
+      if (isFreeSubscriptionPeriod) {
+        EasyLoading.show(status: '正在开通免费订阅...');
+        purchaseToken = 'free_before_2026_08_01_${order.orderId}';
+      } else {
+        EasyLoading.show(status: '正在拉起支付...');
+        final paymentResult =
+            await _paymentManager.pay(order: order, product: product);
 
-      if (!paymentResult.success) {
-        EasyLoading.showError(paymentResult.message);
-        return;
+        if (!paymentResult.success) {
+          EasyLoading.showError(paymentResult.message);
+          return;
+        }
+        purchaseToken = paymentResult.purchaseToken;
       }
 
       EasyLoading.show(status: '正在确认权益...');
       final vip = await _subscriptionRepository.confirmOrder(
         orderId: order.orderId,
-        purchaseToken: paymentResult.purchaseToken,
+        purchaseToken: purchaseToken,
         sandbox: true,
       );
       entitlement.value = vip;
+      await _syncVipEntitlement(vip);
       EasyLoading.showSuccess('VIP 已解锁');
       Get.back(result: vip);
     } catch (e, stackTrace) {
@@ -182,6 +210,36 @@ class SubscriptionController extends GetxController {
       ),
     );
     selectedPaymentOption.value ??= paymentOptions.first;
+  }
+
+  Future<void> _syncVipEntitlement(VipEntitlement vip) async {
+    if (!vip.isVip) return;
+
+    try {
+      final authController = Get.find<AuthController>();
+      authController.applyVipEntitlement(
+        isVip: vip.isVip,
+        vipExpireAt: vip.vipExpireAt,
+      );
+    } catch (e, stackTrace) {
+      AppLogger.warning('Failed to sync VIP to auth controller', e, stackTrace);
+    }
+
+    if (!Get.isRegistered<HomeController>()) return;
+    try {
+      await Get.find<HomeController>().refreshAfterSubscription(vip);
+    } catch (e, stackTrace) {
+      AppLogger.warning(
+        'Failed to refresh home after subscription',
+        e,
+        stackTrace,
+      );
+    }
+  }
+
+  String _formatPayAmount(String displayPrice) {
+    if (displayPrice.isEmpty) return '';
+    return displayPrice.split('/').first.trim();
   }
 }
 

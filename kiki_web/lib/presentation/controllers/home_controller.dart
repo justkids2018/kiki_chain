@@ -142,15 +142,29 @@ class HomeController extends GetxController
 
     final result = await Get.toNamed(AppConstants.routeSubscription);
     if (result is VipEntitlement && result.isVip) {
-      try {
-        final authController = Get.find<AuthController>();
-        authController.applyVipEntitlement(
-          isVip: result.isVip,
-          vipExpireAt: result.vipExpireAt,
-        );
-        currentUser.value = authController.currentUser;
-        await _refreshCurrentUserFromServer();
-      } catch (_) {}
+      await refreshAfterSubscription(result);
+    }
+  }
+
+  Future<void> refreshAfterSubscription(VipEntitlement entitlement) async {
+    if (!entitlement.isVip) return;
+
+    try {
+      final authController = Get.find<AuthController>();
+      authController.applyVipEntitlement(
+        isVip: entitlement.isVip,
+        vipExpireAt: entitlement.vipExpireAt,
+      );
+      currentUser.value = authController.currentUser;
+      currentUser.refresh();
+      update();
+      await _refreshCurrentUserFromServer();
+    } catch (e, stackTrace) {
+      AppLogger.warning(
+        'HomeController: 刷新订阅权益后首页状态失败',
+        e,
+        stackTrace,
+      );
     }
   }
 

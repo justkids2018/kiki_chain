@@ -143,6 +143,9 @@ class _FakeAuthRepository implements IAuthRepository {
   Future<String?> refreshAccessToken() async => null;
 
   @override
+  Future<User?> refreshCurrentUser() async => null;
+
+  @override
   Future<User?> register(
     String phone,
     String password, {

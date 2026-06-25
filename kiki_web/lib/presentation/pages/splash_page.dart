@@ -13,12 +13,16 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
   static const Duration _fadeInDuration = Duration(milliseconds: 600);
   static const Duration _stayDuration = Duration(milliseconds: 1000);
   static const Duration _authInitializationTimeout = Duration(seconds: 4);
   static const String _welcomeImagePath = 'assets/images/kiki_welcome.png';
   static const Color _splashBackgroundColor = Color(0xFFEBCDB2);
+  static const double _logoShortSideFactor = 0.84;
+  static const double _logoHorizontalPadding = 32.0;
+  static const double _logoMaxWidth = 600.0;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -84,24 +88,33 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    // 获取屏幕尺寸
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: ColoredBox(
         color: _splashBackgroundColor,
-        child: Center(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SizedBox(
-              width: screenWidth * 0.7, // 图片宽度为屏幕宽度的70%
-              child: Image.asset(
-                _welcomeImagePath,
-                fit: BoxFit.contain,
-                alignment: Alignment.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final shortestSide = constraints.biggest.shortestSide;
+            final availableWidth =
+                (constraints.maxWidth - _logoHorizontalPadding)
+                    .clamp(0.0, _logoMaxWidth);
+            final logoWidth = (shortestSide * _logoShortSideFactor)
+                .clamp(0.0, availableWidth)
+                .toDouble();
+
+            return Center(
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SizedBox(
+                  width: logoWidth,
+                  child: Image.asset(
+                    _welcomeImagePath,
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center,
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

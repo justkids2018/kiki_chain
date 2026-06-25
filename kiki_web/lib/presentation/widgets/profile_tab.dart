@@ -244,10 +244,7 @@ class ProfileTab extends StatelessWidget {
                 icon: Icons.person,
                 color: const Color(0xFF7CB342),
                 title: localizations.myInfo,
-                onTap: () async {
-                  await authController.refreshCurrentUser();
-                  Get.to(() => const MyInfoPage());
-                },
+                onTap: () => Get.to(() => const MyInfoPage()),
               ),
               _ProfileMenuData(
                 icon: Icons.shield,

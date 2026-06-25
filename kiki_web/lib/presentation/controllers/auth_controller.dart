@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -164,6 +166,7 @@ class AuthController extends GetxController {
           _isLoggedIn.value = true;
           AppLogger.info(
               'User already logged in: ${_currentUser.value?.nickname}');
+          unawaited(refreshCurrentUser());
         }
       } else {
         RequestManager.instance.clearAuthToken();

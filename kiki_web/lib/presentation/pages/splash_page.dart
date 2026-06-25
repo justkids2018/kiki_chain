@@ -15,14 +15,14 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
-  static const Duration _fadeInDuration = Duration(milliseconds: 600);
-  static const Duration _stayDuration = Duration(milliseconds: 1000);
+  static const Duration _fadeInDuration = Duration(milliseconds: 180);
+  static const Duration _stayDuration = Duration(milliseconds: 520);
   static const Duration _authInitializationTimeout = Duration(seconds: 4);
   static const String _welcomeImagePath = 'assets/images/kiki_welcome.png';
   static const Color _splashBackgroundColor = Color(0xFFEBCDB2);
-  static const double _logoShortSideFactor = 0.84;
-  static const double _logoHorizontalPadding = 32.0;
-  static const double _logoMaxWidth = 600.0;
+  static const double _logoShortSideFactor = 0.92;
+  static const double _logoHorizontalPadding = 20.0;
+  static const double _logoMaxWidth = 680.0;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -34,13 +34,13 @@ class _SplashPageState extends State<SplashPage>
       vsync: this,
       duration: _fadeInDuration,
     );
-    // 从0.3开始渐入到1.0，避免从完全透明开始的"闪"感
+    // 从较高透明度开始，避免 Flutter 层闪屏像慢启动动画。
     _fadeAnimation = Tween<double>(
-      begin: 0.3,
+      begin: 0.82,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
+      curve: Curves.easeOutCubic,
     ));
     _animationController.forward();
     _checkLoginStatus();
@@ -59,15 +59,11 @@ class _SplashPageState extends State<SplashPage>
     final authReady = await _waitAuthInitialization(authController);
     if (!mounted) return;
 
-    // 等待渐入动画完成 + 停留1秒
+    // Flutter 层闪屏只做短暂停留，原生启动页已经承担冷启动遮罩。
     await Future.wait([
       _animationController.forward(),
       Future.delayed(_fadeInDuration + _stayDuration),
     ]);
-    if (!mounted) return;
-
-    // 开始渐出动画
-    await _animationController.reverse();
     if (!mounted) return;
 
     // 已登录用户直接进入首页，未登录用户直接进入登录页。

@@ -46,9 +46,8 @@ class _HomePageState extends State<HomePage> {
                   assetPath: 'assets/images/hi_kiki_title_animated.svg',
                   width: 240,
                   height: 80,
-                  animate: true,
-                  animationType: SvgAnimationType
-                      .float, // 启用 Flutter 原生浮动动画，确保 100% 渲染成功，无 WebView 黑屏冲突
+                  animate: false,
+                  animationType: SvgAnimationType.none,
                 ),
                 // 右侧按钮组（保持垂直居中对齐）
                 Row(
@@ -151,8 +150,8 @@ class _HomePageState extends State<HomePage> {
               assetPath: 'assets/images/hi_kiki_star_icon.svg',
               width: 26,
               height: 26,
-              animate: true,
-              animationType: SvgAnimationType.pulse,
+              animate: false,
+              animationType: SvgAnimationType.none,
             ),
             const SizedBox(width: 5),
             // 数字：金色，与星星呼应
@@ -186,8 +185,8 @@ class _HomePageState extends State<HomePage> {
             assetPath: assetPath,
             width: 48,
             height: 48,
-            animate: true,
-            animationType: SvgAnimationType.float,
+            animate: false,
+            animationType: SvgAnimationType.none,
           ),
           Positioned.fill(
             child: Material(

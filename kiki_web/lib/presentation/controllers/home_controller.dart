@@ -11,6 +11,7 @@ import '../../core/network/network_client.dart';
 import '../../core/constants/app_constants.dart';
 import 'app_update_controller.dart';
 import 'auth_controller.dart';
+import '../../domain/entities/subscription.dart';
 
 /// 简化的首页控制器
 class HomeController extends GetxController
@@ -51,6 +52,9 @@ class HomeController extends GetxController
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         currentIndex.value = tabController.index;
+        if (tabController.index == 1) {
+          _refreshCurrentUserFromServer();
+        }
       }
     });
 
@@ -88,6 +92,91 @@ class HomeController extends GetxController
     await loadCategories();
   }
 
+  /// 首页主题层 VIP 策略：第一个主题免费，其余主题需要 VIP。
+  bool categoryRequiresVip(int index) => index > 0;
+
+  bool categoryIsLocked(int index) =>
+      categoryRequiresVip(index) && !isVipActive;
+
+  bool get isVipActive {
+    if (currentUser.value?.isVipActive == true) {
+      return true;
+    }
+
+    try {
+      return Get.find<AuthController>().isVipActive;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> openCategory(SceneCategory category, int index) async {
+    if (categoryIsLocked(index)) {
+      await _openSubscription();
+      return;
+    }
+
+    Get.toNamed(
+      AppConstants.routeSceneList,
+      arguments: category,
+    );
+  }
+
+  Future<void> _openSubscription() async {
+    try {
+      final authController = Get.find<AuthController>();
+      if (!authController.isLoggedIn) {
+        Get.snackbar(
+          '请先登录',
+          '登录后即可开通 VIP 解锁主题',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        Get.toNamed(AppConstants.routeLogin);
+        return;
+      }
+    } catch (_) {
+      Get.toNamed(AppConstants.routeLogin);
+      return;
+    }
+
+    final result = await Get.toNamed(AppConstants.routeSubscription);
+    if (result is VipEntitlement && result.isVip) {
+      await refreshAfterSubscription(result);
+    }
+  }
+
+  Future<void> refreshAfterSubscription(VipEntitlement entitlement) async {
+    if (!entitlement.isVip) return;
+
+    try {
+      final authController = Get.find<AuthController>();
+      authController.applyVipEntitlement(
+        isVip: entitlement.isVip,
+        vipExpireAt: entitlement.vipExpireAt,
+      );
+      currentUser.value = authController.currentUser;
+      currentUser.refresh();
+      update();
+      await _refreshCurrentUserFromServer();
+      if (currentUser.value?.isVipActive != true) {
+        authController.applyVipEntitlement(
+          isVip: entitlement.isVip,
+          vipExpireAt: entitlement.vipExpireAt,
+        );
+        currentUser.value = authController.currentUser;
+        currentUser.refresh();
+        update();
+      }
+    } catch (e, stackTrace) {
+      AppLogger.warning(
+        'HomeController: 刷新订阅权益后首页状态失败',
+        e,
+        stackTrace,
+      );
+    }
+  }
+
   void _checkAppUpdateAfterHomeDataLoaded() {
     if (_hasCheckedAppUpdate || categories.isEmpty || !_isOnHomeRoute) {
       return;
@@ -108,9 +197,7 @@ class HomeController extends GetxController
   /// 加载用户信息并同步服务器星星数据
   void _loadUserInfo() async {
     try {
-      // 从认证仓库获取当前用户信息
-      final user = await _authRepository.getCurrentUser();
-      currentUser.value = user;
+      final user = await _refreshCurrentUserFromServer();
 
       // 如果用户已登录，从服务器拉取最新的总星星数进行同步
       if (user != null) {
@@ -129,6 +216,20 @@ class HomeController extends GetxController
     }
   }
 
+  Future<User?> _refreshCurrentUserFromServer() async {
+    try {
+      final authController = Get.find<AuthController>();
+      final user = authController.isLoggedIn
+          ? await authController.refreshCurrentUser()
+          : await _authRepository.getCurrentUser();
+      currentUser.value = user;
+      return user;
+    } catch (e) {
+      AppLogger.warning('HomeController: 刷新用户信息失败', e);
+      return currentUser.value;
+    }
+  }
+
   @override
   void onClose() {
     tabController.dispose();
@@ -140,6 +241,9 @@ class HomeController extends GetxController
     if (index != currentIndex.value) {
       tabController.animateTo(index);
       currentIndex.value = index;
+    }
+    if (index == 1) {
+      _refreshCurrentUserFromServer();
     }
   }
 

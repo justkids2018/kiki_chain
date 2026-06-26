@@ -15,6 +15,8 @@ class User {
   final DateTime createdAt;
   final DateTime lastLoginAt;
   final int totalStars;
+  final bool isVip;
+  final DateTime? vipExpireAt;
 
   User({
     required this.id,
@@ -24,6 +26,8 @@ class User {
     required this.createdAt,
     required this.lastLoginAt,
     this.totalStars = 0,
+    this.isVip = false,
+    this.vipExpireAt,
   });
 
   /// 从 JSON 创建 User 实例
@@ -39,8 +43,23 @@ class User {
       lastLoginAt: json['lastLoginAt'] != null
           ? DateTime.parse(json['lastLoginAt'])
           : DateTime.now(),
-      totalStars: json['totalStars'] as int? ?? json['total_stars'] as int? ?? 0,
+      totalStars:
+          json['totalStars'] as int? ?? json['total_stars'] as int? ?? 0,
+      isVip: json['isVip'] as bool? ?? json['is_vip'] as bool? ?? false,
+      vipExpireAt:
+          _parseOptionalDate(json['vipExpireAt'] ?? json['vip_expire_at']),
     );
+  }
+
+  static DateTime? _parseOptionalDate(dynamic value) {
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
+  }
+
+  bool get isVipActive {
+    if (!isVip) return false;
+    final expireAt = vipExpireAt;
+    return expireAt == null || DateTime.now().isBefore(expireAt);
   }
 
   /// 转换为 JSON
@@ -53,6 +72,8 @@ class User {
       'createdAt': createdAt.toIso8601String(),
       'lastLoginAt': lastLoginAt.toIso8601String(),
       'totalStars': totalStars,
+      'isVip': isVip,
+      'vipExpireAt': vipExpireAt?.toIso8601String(),
     };
   }
 
@@ -65,6 +86,8 @@ class User {
     DateTime? createdAt,
     DateTime? lastLoginAt,
     int? totalStars,
+    bool? isVip,
+    DateTime? vipExpireAt,
   }) {
     return User(
       id: id ?? this.id,
@@ -74,12 +97,14 @@ class User {
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
       totalStars: totalStars ?? this.totalStars,
+      isVip: isVip ?? this.isVip,
+      vipExpireAt: vipExpireAt ?? this.vipExpireAt,
     );
   }
 
   @override
   String toString() {
-    return 'User(id: $id, phone: $phone, nickname: $nickname, avatar: $avatar, totalStars: $totalStars)';
+    return 'User(id: $id, phone: $phone, nickname: $nickname, avatar: $avatar, totalStars: $totalStars, isVip: $isVip)';
   }
 
   @override
@@ -87,17 +112,17 @@ class User {
     if (identical(this, other)) return true;
 
     return other is User &&
-           other.id == id &&
-           other.phone == phone &&
-           other.nickname == nickname &&
-           other.totalStars == totalStars;
+        other.id == id &&
+        other.phone == phone &&
+        other.nickname == nickname &&
+        other.totalStars == totalStars;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-           phone.hashCode ^
-           nickname.hashCode ^
-           totalStars.hashCode;
+        phone.hashCode ^
+        nickname.hashCode ^
+        totalStars.hashCode;
   }
 }

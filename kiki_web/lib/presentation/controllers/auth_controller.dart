@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -29,6 +31,7 @@ class AuthController extends GetxController {
   final _currentUser = Rxn<User>();
   final _isLoggedIn = false.obs;
   final _isInitialized = false.obs;
+  final _isRefreshingCurrentUser = false.obs;
 
   // 表单控制器
   final loginFormKey = GlobalKey<FormState>();
@@ -61,6 +64,52 @@ class AuthController extends GetxController {
   bool get registerConfirmPasswordVisible =>
       _registerConfirmPasswordVisible.value;
   bool get agreeToTerms => _agreeToTerms.value;
+  bool get isVipActive => _currentUser.value?.isVipActive ?? false;
+  bool get isRefreshingCurrentUser => _isRefreshingCurrentUser.value;
+
+  void applyVipEntitlement({
+    required bool isVip,
+    DateTime? vipExpireAt,
+  }) {
+    final user = _currentUser.value;
+    if (user == null) return;
+    final updated = User(
+      id: user.id,
+      phone: user.phone,
+      nickname: user.nickname,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
+      lastLoginAt: user.lastLoginAt,
+      totalStars: user.totalStars,
+      isVip: isVip,
+      vipExpireAt: vipExpireAt,
+    );
+    _currentUser.value = updated;
+    AppServices.instance.localStorage.setUserInfo(updated.toJson());
+  }
+
+  /// 强制从服务端刷新当前用户信息，用于 VIP 权益变化后的状态同步。
+  Future<User?> refreshCurrentUser() async {
+    if (!_isLoggedIn.value || _isRefreshingCurrentUser.value) {
+      return _currentUser.value;
+    }
+
+    try {
+      _isRefreshingCurrentUser.value = true;
+      final user = await _authRepository.refreshCurrentUser();
+      if (user != null) {
+        _currentUser.value = user;
+        _isLoggedIn.value = true;
+        AppLogger.info('Current user refreshed: ${user.nickname}');
+      }
+      return _currentUser.value;
+    } catch (e, stackTrace) {
+      AppLogger.warning('Refresh current user failed', e, stackTrace);
+      return _currentUser.value;
+    } finally {
+      _isRefreshingCurrentUser.value = false;
+    }
+  }
 
   // Helper to get localizations
   AppLocalizations get _l10n => AppLocalizations.of(Get.context!)!;
@@ -117,6 +166,7 @@ class AuthController extends GetxController {
           _isLoggedIn.value = true;
           AppLogger.info(
               'User already logged in: ${_currentUser.value?.nickname}');
+          unawaited(refreshCurrentUser());
         }
       } else {
         RequestManager.instance.clearAuthToken();

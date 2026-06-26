@@ -23,8 +23,7 @@ services:
       - "log_min_duration_statement=1000"
     volumes:
       - hikiki_pgdata:/var/lib/postgresql/data
-      - ./docs/database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
-      - ./kiki_server/migrations/002_scene_tables.sql:/docker-entrypoint-initdb.d/02_scene_tables.sql:ro
+      - ./kiki_server/database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
     ports:
       - "5432:5432"
     networks:

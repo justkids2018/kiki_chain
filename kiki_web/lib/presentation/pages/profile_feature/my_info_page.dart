@@ -10,8 +10,6 @@ class MyInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final auth = Get.find<AuthController>();
-    final user = auth.currentUser;
-
     String displayOrNone(String? value) {
       final text = value?.trim() ?? '';
       return text.isEmpty ? localizations.noneValue : text;
@@ -23,25 +21,37 @@ class MyInfoPage extends StatelessWidget {
           : value.toLocal().toString();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.myInfo),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          _infoTile(localizations.userId, displayOrNone(user?.id)),
-          _infoTile(localizations.nickname, displayOrNone(user?.nickname)),
-          _infoTile(localizations.phoneNumber, displayOrNone(user?.phone)),
-          _infoTile(localizations.registeredAt, dateOrNone(user?.createdAt)),
-          _infoTile(localizations.lastLogin, dateOrNone(user?.lastLoginAt)),
-          const SizedBox(height: 12),
-          Text(
-            localizations.profileReadonlyHint,
-            style: const TextStyle(color: Color(0xFF7A6A5B), fontSize: 13),
+    return Obx(
+      () {
+        final user = auth.currentUser;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(localizations.myInfo),
           ),
-        ],
-      ),
+          body: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              _infoTile(localizations.userId, displayOrNone(user?.id)),
+              _infoTile(localizations.nickname, displayOrNone(user?.nickname)),
+              _infoTile(localizations.phoneNumber, displayOrNone(user?.phone)),
+              _infoTile(
+                localizations.registeredAt,
+                dateOrNone(user?.createdAt),
+              ),
+              _infoTile(localizations.lastLogin, dateOrNone(user?.lastLoginAt)),
+              const SizedBox(height: 12),
+              Text(
+                localizations.profileReadonlyHint,
+                style: const TextStyle(
+                  color: Color(0xFF7A6A5B),
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

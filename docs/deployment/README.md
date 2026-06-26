@@ -19,6 +19,13 @@
 - 迁移文件管理
 - 部署场景与故障排查
 
+### [自动部署与数据库迁移审计](./automated-deployment-database-migration-audit.md)
+GitHub 自动部署链路与数据库迁移执行范围审计，包括：
+- push 到 GitHub 后的腾讯云自动部署流程
+- 自动迁移实际读取的目录
+- 数据库旧路径与目标事实源漂移风险
+- 数据库变更发布前检查清单
+
 ### [iOS TestFlight 发布手册](./ios-testflight-release.md)
 iOS 测试发布流程，包括：
 - GitHub Actions IPA 签名打包

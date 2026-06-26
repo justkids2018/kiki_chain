@@ -23,6 +23,8 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SERVER_DIR="$PROJECT_ROOT/kiki_server"
 ADMIN_DIR="$PROJECT_ROOT/kiki_admin"
 MIGRATE_SCRIPT="$PROJECT_ROOT/scripts/local_dev/migrate.sh"
+DOCKER_DESKTOP_BIN="/Applications/Docker.app/Contents/Resources/bin"
+HOMEBREW_BIN="/opt/homebrew/bin"
 
 # 日志函数
 log_info() {
@@ -50,6 +52,23 @@ check_command() {
     return 0
 }
 
+configure_docker_cli() {
+    if ! command -v docker &> /dev/null && [ -x "$DOCKER_DESKTOP_BIN/docker" ]; then
+        export PATH="$DOCKER_DESKTOP_BIN:$PATH"
+    fi
+}
+
+configure_local_cli() {
+    configure_docker_cli
+    if { ! command -v node &> /dev/null || ! command -v npm &> /dev/null; } && [ -d "$HOMEBREW_BIN" ]; then
+        export PATH="$HOMEBREW_BIN:$PATH"
+    fi
+}
+
+postgres_container_running() {
+    docker ps --format '{{.Names}}' 2>/dev/null | grep -q "^hikiki_postgres_local$"
+}
+
 # 检查端口是否被占用
 check_port() {
     local port=$1
@@ -64,9 +83,15 @@ check_port() {
 start_postgres() {
     log_info "检查 PostgreSQL 数据库..."
 
-    if check_port 5432; then
-        log_success "PostgreSQL 已在运行 (端口 5432)"
+    if postgres_container_running; then
+        log_success "PostgreSQL 容器已在运行 (hikiki_postgres_local)"
         return 0
+    fi
+
+    if check_port 5432; then
+        log_warning "端口 5432 已被占用，但项目数据库容器未运行"
+        log_warning "请确认占用者，或停止冲突服务后重新执行本脚本"
+        return 1
     fi
 
     log_warning "PostgreSQL 未运行，正在启动..."
@@ -84,13 +109,13 @@ start_postgres() {
         docker start hikiki_postgres_local
     else
         log_info "创建并启动 PostgreSQL 容器..."
-        docker-compose -f docker-compose.local.yml up -d postgres
+        docker compose -f docker-compose.local.yml up -d postgres
     fi
 
     # 等待数据库就绪
     log_info "等待 PostgreSQL 就绪..."
     for i in {1..30}; do
-        if check_port 5432; then
+        if postgres_container_running; then
             log_success "PostgreSQL 启动成功！"
             return 0
         fi
@@ -205,12 +230,16 @@ show_status() {
     echo ""
 
     # PostgreSQL
-    if check_port 5432; then
+    if postgres_container_running; then
         echo -e "✅ ${GREEN}PostgreSQL 数据库${NC}"
         echo "   本机访问:  localhost:5432"
         echo "   局域网访问: ${LOCAL_IP}:5432"
         echo "   数据库名:  hikiki_db"
         echo "   用户名:    postgres / postgres"
+        echo ""
+    elif check_port 5432; then
+        echo -e "⚠️  ${YELLOW}PostgreSQL: 5432 被占用，但不是项目容器${NC}"
+        echo "   项目容器:  hikiki_postgres_local 未运行或 Docker CLI 不可用"
         echo ""
     else
         echo -e "❌ ${RED}PostgreSQL: 未运行${NC}"
@@ -253,13 +282,15 @@ main() {
     echo "🚀 启动 Hi Kiki 本地开发环境..."
     echo ""
 
+    configure_local_cli
+
     # 启动各个服务
     start_postgres || log_warning "PostgreSQL 启动失败，继续尝试启动其他服务..."
 
-    # PostgreSQL 可用时自动执行本地增量迁移（与线上迁移目录保持一致）
-    if check_port 5432; then
+    # PostgreSQL 可用时自动补齐数据库结构并执行增量迁移（与线上事实源保持一致）
+    if postgres_container_running; then
         if [ -x "$MIGRATE_SCRIPT" ]; then
-            log_info "执行本地数据库增量迁移..."
+            log_info "补齐本地数据库结构并执行增量迁移..."
             "$MIGRATE_SCRIPT" || log_warning "本地数据库迁移失败，请检查迁移脚本输出"
         else
             log_warning "未找到可执行迁移脚本: $MIGRATE_SCRIPT"
@@ -273,7 +304,7 @@ main() {
     show_status
 
     # 检查是否所有服务都启动成功
-    if check_port 5432 && check_port 8081 && check_port 5173; then
+    if postgres_container_running && check_port 8081 && check_port 5173; then
         log_success "所有服务启动成功！🎉"
         echo ""
         echo "📝 日志文件:"

@@ -32,6 +32,9 @@ abstract class IAuthRepository {
   /// 获取当前用户信息
   Future<User?> getCurrentUser();
 
+  /// 从服务端刷新当前用户信息，并更新本地缓存
+  Future<User?> refreshCurrentUser();
+
   /// 更新用户信息
   Future<User?> updateUserInfo(Map<String, dynamic> userData);
 

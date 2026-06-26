@@ -10,7 +10,8 @@
 | 后端实现细节 | `kiki_server/docs/` | 后端代码实现说明 |
 | 前端实现细节 | `kiki_web/docs/` | 前端代码实现说明 |
 | 整体架构设计 | `docs/architecture/` | 系统级架构文档 |
-| 数据库设计 | `kiki_server/docs/database/` | 数据库表结构、关系 |
+| 工程体系规则 | `docs/engineering/` | 目录归属、数据库、部署、CI、Agent 协作 |
+| 数据库事实源 | `kiki_server/database/` | 数据库初始化、迁移、schema 快照 |
 | 部署运维 | `docs/deployment/` | 部署流程、配置 |
 | API 文档规范 | `docs/api/README.md` | 如何编写 API 文档 |
 
@@ -33,13 +34,28 @@ kiki_chain/                         # 项目根目录
 │   │   ├── system-overview.md
 │   │   └── ...
 │   │
+│   ├── engineering/              # 工程体系规则
+│   │   ├── README.md
+│   │   ├── project-structure.md
+│   │   ├── database-system.md
+│   │   ├── api-contracts.md
+│   │   ├── deployment-system.md
+│   │   ├── local-development.md
+│   │   ├── ci-quality-gates.md
+│   │   └── agent-collaboration.md
+│   │
 │   ├── deployment/               # 部署文档
 │   └── project-ops.md           # 项目运维说明
 │
 ├── kiki_server/                   # 后端项目
+│   ├── database/                 # 数据库事实源
+│   │   ├── init.sql
+│   │   ├── migrations/
+│   │   ├── seeds/
+│   │   └── snapshots/
+│   │
 │   ├── docs/                     # 后端专属文档
 │   │   ├── implementation/      # 实现细节
-│   │   ├── database/            # 数据库设计
 │   │   └── api/                 # 后端 API 实现说明（非契约）
 │   └── ...
 │
@@ -69,13 +85,21 @@ kiki_chain/                         # 项目根目录
 
 - 后端如何实现某个接口 → `kiki_server/docs/implementation/`
 - 前端如何调用接口 → `kiki_web/docs/`
-- 数据库表结构 → `kiki_server/docs/database/`
+- 数据库初始化、迁移、schema 快照 → 目标事实源 `kiki_server/database/`
 
 ### 规则 3：架构设计 → 看范围
 
 - **系统级架构**（前后端如何协作）→ `docs/architecture/`
 - **前端架构**（DDD、状态管理）→ `kiki_web/docs/architecture/`
 - **后端架构**（分层、模块）→ `kiki_server/docs/architecture/`
+
+### 规则 4：工程体系 → docs/engineering/
+
+- 目录归属 → `docs/engineering/project-structure.md`
+- 数据库事实源 → `docs/engineering/database-system.md`
+- 部署体系 → `docs/engineering/deployment-system.md`
+- CI 门禁 → `docs/engineering/ci-quality-gates.md`
+- 多 Agent 协作 → `docs/engineering/agent-collaboration.md`
 
 ## 📝 常见场景示例
 
@@ -125,5 +149,7 @@ cat kiki_web/docs/{feature}.md                    # 前端使用
 - "查看前端如何使用" → 去 `kiki_web/docs/`
 - "查看整体架构" → 去 `docs/architecture/`
 - "更新 API 文档" → 更新 `docs/api/endpoints/`
+- "判断文件放哪里/迁移数据库目录/改部署脚本/加 CI 门禁" → 先读 `docs/engineering/README.md`
+- "查看或新增数据库初始化/迁移/schema 快照" → 目标事实源是 `kiki_server/database/`
 
 **记住：API 文档是唯一真理来源，实现必须遵循文档！**

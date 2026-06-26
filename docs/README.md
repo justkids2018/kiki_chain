@@ -20,8 +20,8 @@ docs/
 │   └── schemas/              # 数据模型定义
 │
 ├── architecture/             # 整体架构设计
+├── engineering/              # 工程体系规则（结构、数据库、部署、CI、Agent）
 ├── deployment/               # 部署相关文档
-├── database/                 # 数据库设计与迁移
 ├── tts/                      # TTS 与 sherpa_onnx 文档
 └── project-ops.md           # 项目运维说明
 ```
@@ -34,7 +34,9 @@ docs/
 | 后端实现文档 | `kiki_server/docs/` | 后端代码实现细节 |
 | 前端实现文档 | `kiki_web/docs/` | 前端代码实现细节 |
 | 整体架构 | `docs/architecture/` | 系统级架构设计 |
+| 工程体系 | `docs/engineering/` | 目录归属、数据库、部署、CI、Agent 协作规则 |
 | 部署运维 | `docs/deployment/` | 部署流程、配置 |
+| 数据库事实源 | `kiki_server/database/` | 数据库初始化、迁移、schema 快照归属 |
 
 **详细说明请查看：[文档索引指南](./DOCS_INDEX.md)**
 
@@ -59,6 +61,17 @@ docs/
 - `db-release.sh` — 数据库备份 + 增量迁移
 - `status.sh` — 运行状态检查
 - `check-remote-layout.sh` — 远端目录整洁度检查
+
+## 工程体系
+
+当前项目已经跑通 GitHub Actions + GHCR + deploy-release 发布链路。结构优化必须先保活、再迁移、最后删除旧路径。
+
+- **[工程体系入口](./engineering/README.md)** — 总入口
+- **[项目结构与事实源](./engineering/project-structure.md)** — 文件归属和禁止重复事实源
+- **[数据库体系](./engineering/database-system.md)** — 数据库目标事实源和迁移规则
+- **[部署体系](./engineering/deployment-system.md)** — 云厂商 profile 与发布职责边界
+- **[CI 与质量门禁](./engineering/ci-quality-gates.md)** — 防止旧路径复活和迁移遗漏
+- **[多 Agent 协作规则](./engineering/agent-collaboration.md)** — Claude/Codex/Copilot 入口规则
 
 ## 各端项目
 

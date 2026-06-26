@@ -46,8 +46,9 @@ class SceneListController extends GetxController {
       final result = await _sceneRepository.getScenesByCategory(category.id);
 
       // 防御式过滤：即便后端异常返回了其他分类数据，也只显示当前分类。
-      scenes.value =
+      final visibleScenes =
           result.where((scene) => scene.categoryId == category.id).toList();
+      scenes.value = visibleScenes;
 
       await _restoreLastSelectedSceneIndex();
 

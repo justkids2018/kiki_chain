@@ -11,6 +11,20 @@ load_profile "$PROFILE_NAME"
 
 print_header "DB 发布流程 (${DEPLOY_PROVIDER})"
 
+DATABASE_SOURCE_DIR="${SERVER_DATABASE_DIR:-$ROOT_DIR/kiki_server/database}"
+REMOTE_DATABASE_DIR="${REMOTE_DATABASE_DIR:-kiki_server/database}"
+MIGRATION_SOURCE_DIR="$DATABASE_SOURCE_DIR/migrations"
+
+if [[ ! -f "$DATABASE_SOURCE_DIR/init.sql" ]]; then
+  echo -e "${RED}❌ 未找到数据库初始化脚本: $DATABASE_SOURCE_DIR/init.sql${NC}"
+  exit 1
+fi
+
+if [[ ! -d "$MIGRATION_SOURCE_DIR" ]]; then
+  echo -e "${RED}❌ 未找到数据库迁移目录: $MIGRATION_SOURCE_DIR${NC}"
+  exit 1
+fi
+
 # 支持通过环境变量跳过数据库迁移（用于数据库已初始化的场景）
 if [[ "${SKIP_DB_MIGRATION:-}" == "true" ]]; then
   echo -e "${YELLOW}⚠️ SKIP_DB_MIGRATION=true，跳过数据库迁移${NC}"
@@ -59,15 +73,15 @@ remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -d
 
 core_users_exists=$(remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME} -tAc \"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='users'\"" | tr -d '[:space:]')
 if [[ "$core_users_exists" != "1" ]]; then
-  echo -e "${YELLOW}  - 检测到基础表缺失，执行初始化脚本 (scripts/deploy-release/db/init.sql)${NC}"
-  ssh "$SERVER" "cd $REMOTE_DIR && cat scripts/deploy-release/db/init.sql | docker compose -p $STACK_NAME -f $COMPOSE_FILE --env-file scripts/deploy-release/runtime/.env exec -T postgres psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME}"
+  echo -e "${YELLOW}  - 检测到基础表缺失，执行初始化脚本 (${REMOTE_DATABASE_DIR}/init.sql)${NC}"
+  ssh "$SERVER" "cd $REMOTE_DIR && cat ${REMOTE_DATABASE_DIR}/init.sql | docker compose -p $STACK_NAME -f $COMPOSE_FILE --env-file scripts/deploy-release/runtime/.env exec -T postgres psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME}"
   echo -e "${GREEN}  ✅ 数据库初始化完成${NC}"
 else
   echo -e "${GREEN}  ✅ 数据库已初始化，跳过 init.sql${NC}"
 fi
 
 echo -e "${YELLOW}4) 执行增量迁移...${NC}"
-for file in "$ROOT_DIR"/scripts/deploy-release/db/migrations/*.sql; do
+for file in "$MIGRATION_SOURCE_DIR"/*.sql; do
   [ -e "$file" ] || continue
   filename="$(basename "$file")"
   version="${filename%%_*}"
@@ -80,7 +94,7 @@ for file in "$ROOT_DIR"/scripts/deploy-release/db/migrations/*.sql; do
   fi
 
   echo -e "${YELLOW}  - 执行 ${filename}${NC}"
-  ssh "$SERVER" "cd $REMOTE_DIR && cat scripts/deploy-release/db/migrations/${filename} | docker compose -p $STACK_NAME -f $COMPOSE_FILE --env-file scripts/deploy-release/runtime/.env exec -T postgres psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME}"
+  ssh "$SERVER" "cd $REMOTE_DIR && cat ${REMOTE_DATABASE_DIR}/migrations/${filename} | docker compose -p $STACK_NAME -f $COMPOSE_FILE --env-file scripts/deploy-release/runtime/.env exec -T postgres psql -h 127.0.0.1 -v ON_ERROR_STOP=1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME}"
   remote_compose "exec -T postgres psql -h 127.0.0.1 -U ${DEPLOY_DATABASE_USER} -d ${DEPLOY_DATABASE_NAME} -c \"INSERT INTO schema_migrations(version) VALUES('${version}');\""
 done
 

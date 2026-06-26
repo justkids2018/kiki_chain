@@ -7,6 +7,7 @@ import '../../../domain/entities/interactive_region.dart';
 import '../../../data/repositories/interactive_image/i_interactive_image_repository.dart';
 import '../../../data/repositories/interactive_image/interactive_image_repository_impl.dart';
 import '../../../core/speech/audio_playback_component.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../data/services/learning/reward_service.dart';
 import '../../widgets/stroke_animation/stroke_speed_config.dart';
 import '../../controllers/auth_controller.dart';
@@ -194,6 +195,32 @@ class InteractiveImageController extends GetxController {
   String get jsonPath => _jsonFilePath;
   ImageItem? get currentImageItem => _currentImageItem;
   List<ImageItem> get imagesList => _imagesList;
+
+  void navigateToWritingPractice() {
+    final words = vocabularyRegions
+        .map((region) => {
+              'text': region.text,
+              'pinyin': region.textPinyin.isNotEmpty
+                  ? region.textPinyin
+                  : region.textPhonetic,
+            })
+        .where((word) => (word['text'] ?? '').trim().isNotEmpty)
+        .toList(growable: false);
+
+    if (words.isEmpty) {
+      Get.snackbar(
+        '暂无练写内容',
+        '当前卡片还没有可练习的汉字',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    Get.toNamed(
+      AppConstants.routeWritingPractice,
+      arguments: {'words': words},
+    );
+  }
 
   /// 过滤掉标题、副标题等非词卡区域，仅保留真实的学习词语区域
   List<InteractiveRegion> get vocabularyRegions {

@@ -90,7 +90,7 @@ Character rules:
 - [bào zhěn] / 抱枕 / Cushion (/ˈkʊʃən/)
 - [dì tǎn] / 地毯 / Carpet (/ˈkɑːrpɪt/)
 - [tái dēng] / 台灯 / Table Lamp (/ˈteɪbl læmp/)
-- [shū lì] / 书立 / Bookend (/ˈbʊkmɑːrk/)
+- [shū qiān] / 书签 / Bookmark (/ˈbʊkmɑːrk/)
 - [tiē zhǐ] / 贴纸 / Sticker (/ˈstɪkər/)
 - [hǎi bào] / 海报 / Poster (/ˈpoʊstər/)
 
@@ -100,7 +100,7 @@ Object placement map:
 3. 抱枕 (bào zhěn / Cushion) — round soft cushion / pouf on the carpet for sitting.
 4. 地毯 (dì tǎn / Carpet) — soft round rug under the cushion and book; clearly visible as floor area.
 5. 台灯 (tái dēng / Table Lamp) — small warm-white table lamp on a tiny side table.
-6. 书立 (shū lì / Bookend) — bookmark with a small tassel sticking out from one closed book.
+6. 书签 (shū qiān / Bookmark) — bookmark with a small tassel sticking out from one closed book.
 7. 贴纸 (tiē zhǐ / Sticker) — sheet of cute round/star reward stickers on the table or carpet edge.
 8. 海报 (hǎi bào / Poster) — small colorful toy-style poster about reading hung on the wall.
 
@@ -119,7 +119,7 @@ Critical placement rules:
 Easy-confusion protection:
 - 绘本 (one opened book on carpet) and 书架 (multiple books standing on shelf) must look clearly different in pose and position.
 - 抱枕 (round soft cushion) and 地毯 (flat rug under it) must look clearly different in shape and elevation.
-- 书立 must be a slim ribbon/tassel piece sticking out of a book, not confused with paper sheets or stickers.
+- 书签 must be a slim ribbon/tassel piece sticking out of a book, not confused with paper sheets or stickers.
 - 贴纸 (sheet of small round stickers) and 海报 (single larger framed wall poster) must look clearly different in scale and position.
 - 台灯 (small warm-white desk lamp) must be clearly different from any wall light source; only one lamp is labeled.
 
@@ -144,7 +144,7 @@ The 8 label cards must be:
 - [bào zhěn] / 抱枕 / Cushion
 - [dì tǎn] / 地毯 / Carpet
 - [tái dēng] / 台灯 / Table Lamp
-- [shū qiān] / 书立 / Bookmark
+- [shū qiān] / 书签 / Bookmark
 - [tiē zhǐ] / 贴纸 / Sticker
 - [hǎi bào] / 海报 / Poster
 
@@ -178,7 +178,7 @@ Arrow precision map:
 - 抱枕 arrow -> lands on the cushion body.
 - 地毯 arrow -> lands on the carpet area.
 - 台灯 arrow -> lands on the table lamp body.
-- 书立 arrow -> lands on the bookmark tassel.
+- 书签 arrow -> lands on the bookmark tassel.
 - 贴纸 arrow -> lands on the sticker sheet body.
 - 海报 arrow -> lands on the poster body.
 

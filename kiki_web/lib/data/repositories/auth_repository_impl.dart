@@ -80,6 +80,8 @@ class AuthRepositoryImpl implements IAuthRepository {
         avatar: null,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
+        isVip: data['is_vip'] as bool? ?? false,
+        vipExpireAt: _parseOptionalDate(data['vip_expire_at']),
       );
 
       await _localStorage.setString('user_id', user.id);
@@ -136,6 +138,8 @@ class AuthRepositoryImpl implements IAuthRepository {
         avatar: null,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
+        isVip: data['is_vip'] as bool? ?? false,
+        vipExpireAt: _parseOptionalDate(data['vip_expire_at']),
       );
 
       await _localStorage.setString('user_id', user.id);
@@ -168,6 +172,49 @@ class AuthRepositoryImpl implements IAuthRepository {
         statusCode: 500,
       );
     }
+  }
+
+  DateTime? _parseOptionalDate(dynamic value) {
+    if (value == null) return null;
+    return DateTime.tryParse(value.toString());
+  }
+
+  User? _cachedUser() {
+    final userInfo = _localStorage.getUserInfo();
+    return userInfo == null ? null : User.fromJson(userInfo);
+  }
+
+  User _userFromApiData(Map<String, dynamic> data, {User? fallback}) {
+    final createdAt = _parseOptionalDate(
+          data['createdAt'] ?? data['created_at'],
+        ) ??
+        fallback?.createdAt ??
+        DateTime.now();
+    final lastLoginAt = _parseOptionalDate(
+          data['lastLoginAt'] ?? data['last_login_at'],
+        ) ??
+        fallback?.lastLoginAt ??
+        DateTime.now();
+
+    return User(
+      id: data['id'] as String? ?? data['uid'] as String? ?? fallback?.id ?? '',
+      phone: data['phone'] as String? ?? fallback?.phone ?? '',
+      nickname: data['nickname'] as String? ??
+          data['name'] as String? ??
+          fallback?.nickname ??
+          '',
+      avatar: data['avatar'] as String? ?? fallback?.avatar,
+      createdAt: createdAt,
+      lastLoginAt: lastLoginAt,
+      totalStars: data['totalStars'] as int? ??
+          data['total_stars'] as int? ??
+          fallback?.totalStars ??
+          0,
+      isVip: data['isVip'] as bool? ?? data['is_vip'] as bool? ?? false,
+      vipExpireAt: _parseOptionalDate(
+        data['vipExpireAt'] ?? data['vip_expire_at'],
+      ),
+    );
   }
 
   @override
@@ -241,24 +288,32 @@ class AuthRepositoryImpl implements IAuthRepository {
       final userInfo = _localStorage.getUserInfo();
       if (userInfo != null) return User.fromJson(userInfo);
 
-      final token = await _localStorage.getAccessToken();
-      if (token != null) {
-        final response = await _requestManager
-            .get<Map<String, dynamic>>(ApiEndpoints.userProfile);
-
-        if (response['success'] == true) {
-          final data = response['data'] as Map<String, dynamic>?;
-          if (data != null && data.isNotEmpty) {
-            final user = User.fromJson(data);
-            await _localStorage.setUserInfo(user.toJson());
-            return user;
-          }
-        }
-      }
-
-      return null;
+      return await refreshCurrentUser();
     } catch (e) {
       AppLogger.error('Failed to get current user', e);
+      return null;
+    }
+  }
+
+  @override
+  Future<User?> refreshCurrentUser() async {
+    try {
+      final token = await _localStorage.getAccessToken();
+      if (token == null || token.isEmpty) return null;
+
+      final response = await _requestManager
+          .get<Map<String, dynamic>>(ApiEndpoints.userProfile);
+
+      if (response['success'] != true) return null;
+
+      final data = response['data'] as Map<String, dynamic>?;
+      if (data == null || data.isEmpty) return null;
+
+      final user = _userFromApiData(data, fallback: _cachedUser());
+      await _localStorage.setUserInfo(user.toJson());
+      return user;
+    } catch (e) {
+      AppLogger.error('Failed to refresh current user', e);
       return null;
     }
   }
@@ -280,7 +335,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       final data = response['data'] as Map<String, dynamic>?;
       if (data != null && data.isNotEmpty) {
-        final user = User.fromJson(data);
+        final user = _userFromApiData(data, fallback: _cachedUser());
         await _localStorage.setUserInfo(user.toJson());
         AppLogger.info('User info updated successfully');
         return user;

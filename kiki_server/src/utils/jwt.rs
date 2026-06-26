@@ -72,7 +72,7 @@ impl JwtUtils {
     pub fn create_default_config() -> JwtConfig {
         JwtConfig {
             secret: Self::get_jwt_secret(),
-            expiry_hours: 24, // 24小时过期
+            expiry_hours: 24 * 30, // 30天过期（约1个月，延长会话有效期，减少频繁重新登录）
         }
     }
 

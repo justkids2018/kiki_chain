@@ -8,6 +8,8 @@ DEFAULT_PROFILE="$UNIFIED_DIR/profiles/tencent.env"
 LOCAL_ARTIFACTS_DIR="$UNIFIED_DIR/deploy_files"
 LOCAL_LATEST_DIR="$LOCAL_ARTIFACTS_DIR/latest"
 LOCAL_RELEASES_DIR="$LOCAL_ARTIFACTS_DIR/releases"
+SERVER_DATABASE_DIR="$ROOT_DIR/kiki_server/database"
+REMOTE_DATABASE_DIR="kiki_server/database"
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -69,10 +71,12 @@ sync_deploy_assets() {
   rsync -az \
     --include 'scripts/' \
     --include 'scripts/deploy-release/***' \
+    --include 'kiki_server/' \
+    --include 'kiki_server/database/***' \
     --exclude '*' \
     "$ROOT_DIR/" "$SERVER:$REMOTE_DIR/"
 
-  echo -e "${GREEN}✅ 部署资产同步完成（仅部署目录）${NC}"
+  echo -e "${GREEN}✅ 部署资产同步完成（部署目录 + 数据库事实源）${NC}"
 }
 
 remote_compose() {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kikichain/generated/app_localizations.dart';
 import '../../design_ui/kiki_ui_kit.dart';
 import '../../theme/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import 'app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
 import '../pages/profile_feature/about_page.dart';
@@ -224,6 +225,8 @@ class ProfileTab extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          _buildVipStatus(authController),
                         ],
                       );
                     },
@@ -279,6 +282,74 @@ class ProfileTab extends StatelessWidget {
           // 退出登录按钮
           _buildLogoutButton(authController),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVipStatus(AuthController authController) {
+    final isVip = authController.isVipActive;
+
+    if (!isVip) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          height: 32,
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              await Get.toNamed(AppConstants.routeSubscription);
+              await authController.refreshCurrentUser();
+            },
+            icon: const Icon(Icons.workspace_premium_rounded, size: 15),
+            label: const Text('充值'),
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: const Color(0xFFFFC857),
+              foregroundColor: const Color(0xFF4B2800),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF2C7),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: const Color(0xFFFFC857),
+            width: 1,
+          ),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.workspace_premium_rounded,
+              size: 15,
+              color: Color(0xFF9A5A00),
+            ),
+            SizedBox(width: 5),
+            Text(
+              'VIP',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                color: Color(0xFF6F3F00),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

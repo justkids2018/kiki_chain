@@ -1,6 +1,6 @@
 # 数据库设置指南
 
-> **注意**: 主要文档已迁移到 `docs/database/README.md`  
+> **注意**: 数据库执行事实源已统一到 `kiki_server/database/`。
 > 本文档仅保留本地开发的快速参考。
 
 ---
@@ -13,6 +13,9 @@
 ```bash
 # 启动数据库
 docker compose -f docker-compose.local.yml up -d postgres
+
+# 补齐本地数据库结构并执行增量迁移
+../scripts/local_dev/migrate.sh
 
 # 查看状态
 docker ps | grep postgres
@@ -51,9 +54,9 @@ Password: postgres
 
 详细的数据库文档请查看：
 
-- **[数据库主文档](../docs/database/README.md)** - 表结构、查询示例、迁移管理
-- **[数据库索引](../docs/database/INDEX.md)** - 文档导航、快速任务
-- **[最新结构](../docs/database/schema_latest.sql)** - 完整 DDL
+- **[数据库体系](../docs/engineering/database-system.md)** - 数据库事实源、初始化、迁移规则
+- **[数据库事实源](./database/README.md)** - 当前可执行 SQL 目录说明
+- **[最新结构](./database/snapshots/schema_latest.sql)** - 完整 DDL 快照
 
 ---
 
@@ -126,4 +129,4 @@ docker volume rm kiki_server_hikiki_pgdata
 
 - [部署文档](../DEPLOY.md)
 - [服务器状态报告](../docs/SERVER_STATUS_REPORT_20260613.md)
-- [数据库完整文档](../docs/database/)
+- [数据库体系](../docs/engineering/database-system.md)

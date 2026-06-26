@@ -455,6 +455,31 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: controller.navigateToWritingPractice,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9F8EF),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: const Color(0xFF64C987),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.print_rounded,
+                        size: 20,
+                        color: Color(0xFF16A34A),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
                 // 3 颗星星，紧跟「互动学习」标题右侧
                 Obx(() => InlineStarBar(
                       starsEarned: controller.starsEarned.value,

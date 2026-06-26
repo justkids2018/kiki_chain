@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../domain/entities/scene_category.dart';
 import '../../generated/app_localizations.dart';
@@ -10,11 +9,15 @@ import '../../generated/app_localizations.dart';
 class CategoryCard extends StatelessWidget {
   final SceneCategory category;
   final VoidCallback? onTap;
+  final bool requiresVip;
+  final bool isLocked;
 
   const CategoryCard({
     Key? key,
     required this.category,
     this.onTap,
+    this.requiresVip = false,
+    this.isLocked = false,
   }) : super(key: key);
 
   @override
@@ -51,21 +54,27 @@ class CategoryCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16), // 圆角裁剪（从24改成16）
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // 背景图片
-              _buildCoverImage(),
+          child: RepaintBoundary(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // 背景图片
+                _buildCoverImage(),
 
-              // 渐变遮罩
-              _buildGradientOverlay(),
+                // 渐变遮罩
+                _buildGradientOverlay(),
 
-              // 内容区域
-              _buildContent(),
+                if (isLocked) _buildDimOverlay(),
 
-              // NEW 标签
-              if (category.isNew) _buildNewBadge(),
-            ],
+                // 内容区域
+                _buildContent(),
+
+                // NEW 标签
+                if (category.isNew) _buildNewBadge(),
+
+                if (isLocked) _buildUnlockRibbon(),
+              ],
+            ),
           ),
         ),
       ),
@@ -77,7 +86,7 @@ class CategoryCard extends StatelessWidget {
     // 如果封面图片为空或无效，直接显示占位符
     if (category.coverImage.isEmpty ||
         (!category.coverImage.startsWith('http://') &&
-         !category.coverImage.startsWith('https://'))) {
+            !category.coverImage.startsWith('https://'))) {
       return Container(
         color: _getCategoryColor(),
         child: Center(
@@ -90,34 +99,42 @@ class CategoryCard extends StatelessWidget {
     }
 
     return Positioned.fill(
-      child: Image.network(
-        category.coverImage,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            color: _getCategoryColor().withValues(alpha: 0.3),
-            child: Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                color: Colors.white,
-              ),
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          // 如果图片加载失败，显示占位符
-          return Container(
-            color: _getCategoryColor(),
-            child: Center(
-              child: Text(
-                category.icon,
-                style: const TextStyle(fontSize: 120),
-              ),
-            ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final dpr = MediaQuery.of(context).devicePixelRatio;
+          final cacheWidth = (constraints.maxWidth * dpr).round();
+          final cacheHeight = (constraints.maxHeight * dpr).round();
+          return Image.network(
+            category.coverImage,
+            fit: BoxFit.cover,
+            cacheWidth: cacheWidth > 0 ? cacheWidth : null,
+            cacheHeight: cacheHeight > 0 ? cacheHeight : null,
+            filterQuality: FilterQuality.low,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                color: _getCategoryColor().withValues(alpha: 0.3),
+                child: const Center(
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              // 如果图片加载失败，显示占位符
+              return Container(
+                color: _getCategoryColor(),
+                child: Center(
+                  child: Text(
+                    category.icon,
+                    style: const TextStyle(fontSize: 120),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -193,42 +210,36 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  /// 构建信息标签（毛玻璃效果）
+  /// 构建信息标签
   Widget _buildInfoChip({required IconData icon, required String text}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.grey.withValues(alpha: 0.3), // 灰色毛玻璃
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.32),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.18),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 12, // 符合最小尺寸要求
+            color: Colors.white,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 12, // 符合项目规范最小字号 12px
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 12, // 符合最小尺寸要求
-                color: Colors.white,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 12, // 符合项目规范最小字号 12px
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -257,6 +268,70 @@ class CategoryCard extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildDimOverlay() {
+    return Positioned.fill(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: const Color(0xFF2B2B2B).withValues(alpha: 0.38),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUnlockRibbon() {
+    return Positioned(
+      right: -32,
+      bottom: 28,
+      child: Transform.rotate(
+        angle: -0.72,
+        child: Container(
+          width: 128,
+          height: 30,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFD772), Color(0xFFFFB238)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.symmetric(
+              horizontal: BorderSide(
+                color: Colors.white.withValues(alpha: 0.58),
+                width: 1,
+              ),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.24),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.lock_rounded,
+                size: 13,
+                color: Color(0xFF4E2A00),
+              ),
+              SizedBox(width: 4),
+              Text(
+                '解锁',
+                style: TextStyle(
+                  color: Color(0xFF4E2A00),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

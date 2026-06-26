@@ -22,13 +22,12 @@ use super::dtos::*;
 // ===== 移动端处理器 =====
 
 /// GET /api/v1/mobile/scene/categories
-pub async fn get_categories_handler(
-    State(uc): State<Arc<GetCategoriesUseCase>>,
-) -> Response {
+pub async fn get_categories_handler(State(uc): State<Arc<GetCategoriesUseCase>>) -> Response {
     info!("📱 [场景] 获取分类列表");
     match uc.execute().await {
         Ok(categories) => {
-            let dtos: Vec<SceneCategoryDto> = categories.iter().map(SceneCategoryDto::from).collect();
+            let dtos: Vec<SceneCategoryDto> =
+                categories.iter().map(SceneCategoryDto::from).collect();
             (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
         }
         Err(e) => {
@@ -47,7 +46,11 @@ pub async fn get_scenes_by_category_handler(
     info!("📱 [场景] 获取分类{}下的场景", category_id);
     match uc.execute(&category_id).await {
         Ok(scenes) => {
-            let dtos: Vec<SceneDto> = scenes.iter().map(SceneDto::from).collect();
+            let dtos: Vec<SceneDto> = scenes
+                .iter()
+                .enumerate()
+                .map(|(index, scene)| SceneDto::from_scene_with_index(scene, Some(index), false))
+                .collect();
             (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
         }
         Err(e) => {
@@ -75,7 +78,8 @@ pub async fn get_scene_detail_handler(
         }
         Err(e) => {
             error!("❌ 获取场景详情失败: {}", e);
-            let r = ApiResponse::<serde_json::Value>::error(500, format!("获取场景详情失败: {}", e));
+            let r =
+                ApiResponse::<serde_json::Value>::error(500, format!("获取场景详情失败: {}", e));
             (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
         }
     }
@@ -92,7 +96,11 @@ pub async fn search_scenes_handler(
 
     info!("📱 [场景] 搜索: keyword={}", keyword);
 
-    let cmd = SearchScenesCommand { keyword, page, page_size };
+    let cmd = SearchScenesCommand {
+        keyword,
+        page,
+        page_size,
+    };
     match uc.execute(cmd).await {
         Ok(result) => {
             let dto = SearchScenesDto {
@@ -121,7 +129,11 @@ pub async fn get_recommendations_handler(
 
     match uc.execute(limit).await {
         Ok(scenes) => {
-            let dtos: Vec<SceneDto> = scenes.iter().map(SceneDto::from).collect();
+            let dtos: Vec<SceneDto> = scenes
+                .iter()
+                .enumerate()
+                .map(|(index, scene)| SceneDto::from_scene_with_index(scene, Some(index), false))
+                .collect();
             (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
         }
         Err(e) => {
@@ -135,13 +147,12 @@ pub async fn get_recommendations_handler(
 // ===== 管理端处理器 =====
 
 /// GET /api/v1/admin/scene/categories
-pub async fn admin_list_categories_handler(
-    State(uc): State<Arc<AdminSceneUseCase>>,
-) -> Response {
+pub async fn admin_list_categories_handler(State(uc): State<Arc<AdminSceneUseCase>>) -> Response {
     info!("🔧 [管理] 获取所有分类");
     match uc.list_categories().await {
         Ok(categories) => {
-            let dtos: Vec<SceneCategoryDto> = categories.iter().map(SceneCategoryDto::from).collect();
+            let dtos: Vec<SceneCategoryDto> =
+                categories.iter().map(SceneCategoryDto::from).collect();
             (StatusCode::OK, Json(ApiResponse::success(dtos, "获取成功"))).into_response()
         }
         Err(e) => {
@@ -157,7 +168,12 @@ pub async fn admin_create_category_handler(
     Json(req): Json<CreateCategoryRequest>,
 ) -> Response {
     info!("🔧 [管理] 创建分类: {}", req.name);
-    let id = req.id.unwrap_or_else(|| format!("cat_{}", Uuid::new_v4().to_string().replace('-', "")[..12].to_string()));
+    let id = req.id.unwrap_or_else(|| {
+        format!(
+            "cat_{}",
+            Uuid::new_v4().to_string().replace('-', "")[..12].to_string()
+        )
+    });
     let cmd = CreateCategoryCommand {
         id,
         name: req.name,
@@ -170,7 +186,11 @@ pub async fn admin_create_category_handler(
     match uc.create_category(cmd).await {
         Ok(category) => {
             let dto = SceneCategoryDto::from(&category);
-            (StatusCode::CREATED, Json(ApiResponse::success(dto, "创建成功"))).into_response()
+            (
+                StatusCode::CREATED,
+                Json(ApiResponse::success(dto, "创建成功")),
+            )
+                .into_response()
         }
         Err(e) => {
             error!("❌ 创建分类失败: {}", e);
@@ -217,9 +237,11 @@ pub async fn admin_delete_category_handler(
 ) -> Response {
     info!("🔧 [管理] 删除分类: {}", id);
     match uc.delete_category(&id).await {
-        Ok(()) => {
-            (StatusCode::OK, Json(ApiResponse::success(serde_json::json!({}), "删除成功"))).into_response()
-        }
+        Ok(()) => (
+            StatusCode::OK,
+            Json(ApiResponse::success(serde_json::json!({}), "删除成功")),
+        )
+            .into_response(),
         Err(e) => {
             let r = ApiResponse::<serde_json::Value>::error(500, format!("{}", e));
             (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
@@ -236,9 +258,15 @@ pub async fn admin_list_scenes_handler(
     let page_size = params.page_size.unwrap_or(20);
     let category_id = params.category_id.clone();
 
-    info!("🔧 [管理] 获取场景列表, page={}, category_id={:?}", page, category_id);
+    info!(
+        "🔧 [管理] 获取场景列表, page={}, category_id={:?}",
+        page, category_id
+    );
 
-    match uc.list_scenes_by_category(page, page_size, category_id.as_deref()).await {
+    match uc
+        .list_scenes_by_category(page, page_size, category_id.as_deref())
+        .await
+    {
         Ok((scenes, total)) => {
             let dto = SearchScenesDto {
                 total,
@@ -261,7 +289,12 @@ pub async fn admin_create_scene_handler(
     Json(req): Json<CreateSceneRequest>,
 ) -> Response {
     info!("🔧 [管理] 创建场景: {}", req.name);
-    let id = req.id.unwrap_or_else(|| format!("scene_{}", Uuid::new_v4().to_string().replace('-', "")[..12].to_string()));
+    let id = req.id.unwrap_or_else(|| {
+        format!(
+            "scene_{}",
+            Uuid::new_v4().to_string().replace('-', "")[..12].to_string()
+        )
+    });
     let cmd = CreateSceneCommand {
         id,
         category_id: req.category_id,
@@ -278,7 +311,11 @@ pub async fn admin_create_scene_handler(
     match uc.create_scene(cmd).await {
         Ok(scene) => {
             let dto = SceneDto::from(&scene);
-            (StatusCode::CREATED, Json(ApiResponse::success(dto, "创建成功"))).into_response()
+            (
+                StatusCode::CREATED,
+                Json(ApiResponse::success(dto, "创建成功")),
+            )
+                .into_response()
         }
         Err(e) => {
             error!("❌ 创建场景失败: {}", e);
@@ -328,9 +365,11 @@ pub async fn admin_delete_scene_handler(
 ) -> Response {
     info!("🔧 [管理] 删除场景: {}", id);
     match uc.delete_scene(&id).await {
-        Ok(()) => {
-            (StatusCode::OK, Json(ApiResponse::success(serde_json::json!({}), "删除成功"))).into_response()
-        }
+        Ok(()) => (
+            StatusCode::OK,
+            Json(ApiResponse::success(serde_json::json!({}), "删除成功")),
+        )
+            .into_response(),
         Err(e) => {
             let r = ApiResponse::<serde_json::Value>::error(500, format!("{}", e));
             (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()

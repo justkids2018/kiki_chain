@@ -14,6 +14,9 @@ class Scene {
   final int itemCount;
   final int order;
   final bool isNew;
+  final bool isFree;
+  final bool requiresVip;
+  final bool isLocked;
   final DateTime createdAt;
   final List<dynamic>? itemsData; // 内嵌的互动数据（新数据结构）
 
@@ -30,6 +33,9 @@ class Scene {
     required this.itemCount,
     required this.order,
     required this.isNew,
+    this.isFree = false,
+    this.requiresVip = false,
+    this.isLocked = false,
     required this.createdAt,
     this.itemsData,
   });
@@ -39,21 +45,32 @@ class Scene {
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
       nameEn: json['nameEn'] as String? ?? json['name_en'] as String? ?? '',
-      categoryId: json['categoryId'] as String? ?? json['category_id'] as String? ?? '',
-      coverImage: json['coverImage'] as String? ?? json['cover_image'] as String? ?? '',
-      interactiveImage: json['interactiveImage'] as String? ?? json['interactive_image'] as String? ?? '',
+      categoryId:
+          json['categoryId'] as String? ?? json['category_id'] as String? ?? '',
+      coverImage:
+          json['coverImage'] as String? ?? json['cover_image'] as String? ?? '',
+      interactiveImage: json['interactiveImage'] as String? ??
+          json['interactive_image'] as String? ??
+          '',
       dataFile: json['dataFile'] as String? ?? json['data_file'] as String?,
       description: json['description'] as String? ?? '',
       context: json['context'] as String? ?? '',
       itemCount: json['itemCount'] as int? ?? json['item_count'] as int? ?? 0,
       order: json['order'] as int? ?? 0,
       isNew: json['isNew'] as bool? ?? json['is_new'] as bool? ?? false,
+      isFree: json['isFree'] as bool? ?? json['is_free'] as bool? ?? false,
+      requiresVip: json['requiresVip'] as bool? ??
+          json['requires_vip'] as bool? ??
+          false,
+      isLocked:
+          json['isLocked'] as bool? ?? json['is_locked'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : (json['created_at'] != null
               ? DateTime.parse(json['created_at'] as String)
               : DateTime.now()),
-      itemsData: json['items_data'] as List<dynamic>? ?? json['itemsData'] as List<dynamic>?,
+      itemsData: json['items_data'] as List<dynamic>? ??
+          json['itemsData'] as List<dynamic>?,
     );
   }
 
@@ -71,6 +88,9 @@ class Scene {
       'itemCount': itemCount,
       'order': order,
       'isNew': isNew,
+      'isFree': isFree,
+      'requiresVip': requiresVip,
+      'isLocked': isLocked,
       'createdAt': createdAt.toIso8601String(),
       'items_data': itemsData,
     };
@@ -89,6 +109,9 @@ class Scene {
     int? itemCount,
     int? order,
     bool? isNew,
+    bool? isFree,
+    bool? requiresVip,
+    bool? isLocked,
     DateTime? createdAt,
     List<dynamic>? itemsData,
   }) {
@@ -105,6 +128,9 @@ class Scene {
       itemCount: itemCount ?? this.itemCount,
       order: order ?? this.order,
       isNew: isNew ?? this.isNew,
+      isFree: isFree ?? this.isFree,
+      requiresVip: requiresVip ?? this.requiresVip,
+      isLocked: isLocked ?? this.isLocked,
       createdAt: createdAt ?? this.createdAt,
       itemsData: itemsData ?? this.itemsData,
     );

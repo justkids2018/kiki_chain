@@ -4,7 +4,6 @@ import 'package:kikichain/generated/app_localizations.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/app_loading_widget.dart';
-import '../../../core/constants/app_constants.dart';
 import '../../../design_ui/kiki_ui_kit.dart';
 
 /// 互动图片首页 - 显示场景分类
@@ -157,6 +156,8 @@ class InteractiveImageHomePage extends StatelessWidget {
                 itemCount: controller.categories.length,
                 itemBuilder: (context, index) {
                   final category = controller.categories[index];
+                  final requiresVip = controller.categoryRequiresVip(index);
+                  final isLocked = controller.categoryIsLocked(index);
                   return Padding(
                     padding: EdgeInsets.only(
                       right: index < controller.categories.length - 1
@@ -168,12 +169,9 @@ class InteractiveImageHomePage extends StatelessWidget {
                       height: cardHeight,
                       child: CategoryCard(
                         category: category,
-                        onTap: () {
-                          Get.toNamed(
-                            AppConstants.routeSceneList,
-                            arguments: category,
-                          );
-                        },
+                        requiresVip: requiresVip,
+                        isLocked: isLocked,
+                        onTap: () => controller.openCategory(category, index),
                       ),
                     ),
                   );

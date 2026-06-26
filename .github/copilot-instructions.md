@@ -85,6 +85,7 @@ Fallback behavior:
 
 ## Documentation Discipline
 
+- Engineering system rules live under `docs/engineering/`; use `docs/engineering/README.md` as the entry for project structure, database, deployment, local development, CI gates, and Agent collaboration.
 - Keep feature artifacts under `doc/features/<feature>/`.
 - Keep reverse docs under `doc/feature-docs/<feature>/`.
 - Keep docs aligned with delivered behavior.

@@ -2,7 +2,9 @@
 // 暴露业务内核所需的外部依赖接口（Repository / Gateway）
 
 pub mod scene_repository;
+pub mod subscription;
 pub use scene_repository::SceneRepository;
+pub use subscription::SubscriptionRepository;
 
 use async_trait::async_trait;
 

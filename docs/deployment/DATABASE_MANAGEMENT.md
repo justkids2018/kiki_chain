@@ -1,5 +1,8 @@
 # 数据库管理指南
 
+> 当前数据库执行事实源已统一为 `kiki_server/database/`。
+> 本文保留数据库生命周期和运维说明；涉及新增 SQL 时，以 `kiki_server/database/migrations/` 为准。
+
 ## 📋 目录
 
 - [设计原则](#设计原则)
@@ -55,12 +58,12 @@
 │    - 字段: version (主键), applied_at                   │
 ├─────────────────────────────────────────────────────────┤
 │ 4. 执行初始化脚本                                        │
-│    - 文件: scripts/deploy-release/db/init.sql          │
+│    - 文件: kiki_server/database/init.sql               │
 │    - 创建基础表: users, cards, scenes, etc.             │
 │    - 插入初始数据（如果有）                              │
 ├─────────────────────────────────────────────────────────┤
 │ 5. 执行增量迁移                                          │
-│    - 目录: scripts/deploy-release/db/migrations/       │
+│    - 目录: kiki_server/database/migrations/            │
 │    - 按版本号顺序执行所有迁移文件                        │
 │    - 记录到 schema_migrations 表                        │
 └─────────────────────────────────────────────────────────┘
@@ -97,7 +100,7 @@
 ### 目录结构
 
 ```
-scripts/deploy-release/db/
+kiki_server/database/
 ├── init.sql                          # 初始化脚本（只执行一次）
 └── migrations/                       # 增量迁移目录
     ├── 001_add_user_profile.sql      # 迁移文件
@@ -279,7 +282,7 @@ ssh ubuntu@82.156.34.186
 cd ~/kiki_chain
 
 # 执行单个迁移文件
-cat scripts/deploy-release/db/migrations/004_add_new_feature.sql | \
+cat kiki_server/database/migrations/004_add_new_feature.sql | \
   docker compose exec -T postgres psql -U kiki_user -d kiki_db
 
 # 记录到迁移表

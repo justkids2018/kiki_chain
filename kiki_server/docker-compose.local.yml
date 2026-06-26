@@ -15,9 +15,7 @@ services:
       # 持久化数据
       - hikiki_pgdata:/var/lib/postgresql/data
       # 自动执行初始化脚本（完整建表 + 示例数据）
-      - ../docs/database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
-      # 场景表迁移脚本（补充运行）
-      - ./migrations/002_scene_tables.sql:/docker-entrypoint-initdb.d/02_scene_tables.sql:ro
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
     ports:
       - "5432:5432"
     networks:
@@ -65,4 +63,3 @@ networks:
 volumes:
   hikiki_pgdata:
     driver: local
-

@@ -55,6 +55,8 @@ impl PostgresSceneRepository {
             display_order: row.try_get("display_order").unwrap_or(0),
             is_new: row.try_get("is_new").unwrap_or(false),
             is_visible: row.try_get("is_visible").unwrap_or(true),
+            is_free: row.try_get("is_free").ok(),
+            requires_vip: row.try_get("requires_vip").ok(),
             items_data: row.try_get("items_data").ok(),
             created_at: Self::naive_to_utc(row.get("created_at")),
             updated_at: Self::naive_to_utc(
@@ -351,13 +353,12 @@ impl SceneRepository for PostgresSceneRepository {
     }
 
     async fn find_items_by_scene(&self, scene_id: &str) -> Result<Vec<SceneItem>> {
-        let rows = sqlx::query(
-            "SELECT * FROM scene_items WHERE scene_id = $1 ORDER BY item_index ASC",
-        )
-        .bind(scene_id)
-        .fetch_all(&self.pool)
-        .await
-        .map_err(|e| DomainError::Infrastructure(format!("查询场景物品失败: {}", e)))?;
+        let rows =
+            sqlx::query("SELECT * FROM scene_items WHERE scene_id = $1 ORDER BY item_index ASC")
+                .bind(scene_id)
+                .fetch_all(&self.pool)
+                .await
+                .map_err(|e| DomainError::Infrastructure(format!("查询场景物品失败: {}", e)))?;
 
         Ok(rows.iter().map(Self::map_row_to_item).collect())
     }

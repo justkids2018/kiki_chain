@@ -15,6 +15,18 @@ class ApiEndpoints {
   static const String userProfile = '/api/v1/mobile/user/profile';
   static const String userFeedback = '/api/v1/mobile/feedback';
 
+  // 移动端 - 订阅与支付渠道
+  static const String subscriptionChannelResolve =
+      '/api/v1/mobile/subscriptions/channel/resolve';
+  static const String subscriptionProducts =
+      '/api/v1/mobile/subscriptions/products';
+  static const String subscriptionEntitlement =
+      '/api/v1/mobile/subscriptions/entitlement';
+  static const String subscriptionOrders =
+      '/api/v1/mobile/subscriptions/orders';
+  static String subscriptionOrderConfirm(String orderId) =>
+      '/api/v1/mobile/subscriptions/orders/$orderId/confirm';
+
   // 移动端 - 场景
   static const String sceneCategories = '/api/v1/mobile/scene/categories';
   static const String sceneSearch = '/api/v1/mobile/scene/search';

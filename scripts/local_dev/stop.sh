@@ -12,6 +12,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+DOCKER_DESKTOP_BIN="/Applications/Docker.app/Contents/Resources/bin"
 
 log_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -23,6 +24,12 @@ log_success() {
 
 log_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+configure_docker_cli() {
+    if ! command -v docker &> /dev/null && [ -x "$DOCKER_DESKTOP_BIN/docker" ]; then
+        export PATH="$DOCKER_DESKTOP_BIN:$PATH"
+    fi
 }
 
 # 停止后端
@@ -81,6 +88,11 @@ stop_frontend() {
 stop_postgres() {
     log_info "停止 PostgreSQL..."
 
+    if ! command -v docker &> /dev/null; then
+        log_warning "Docker CLI 不可用，无法停止 PostgreSQL 容器"
+        return 1
+    fi
+
     if docker ps --format '{{.Names}}' | grep -q "hikiki_postgres_local"; then
         docker stop hikiki_postgres_local
         log_success "PostgreSQL 已停止"
@@ -93,6 +105,8 @@ main() {
     echo ""
     echo "🛑 停止 Hi Kiki 本地开发环境..."
     echo ""
+
+    configure_docker_cli
 
     stop_backend
     stop_frontend

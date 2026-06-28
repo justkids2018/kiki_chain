@@ -1,0 +1,154 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "足球",
+    "text_pinyin": "zú qiú",
+    "text_english": "Soccer Ball",
+    "text_phonetic": "/ˈsɑːkər bɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 290, "y": 705}, {"x": 420, "y": 705}, {"x": 290, "y": 800}, {"x": 420, "y": 800}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 476, "y": 731}, {"x": 607, "y": 731}, {"x": 476, "y": 859}, {"x": 607, "y": 859}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "球门",
+    "text_pinyin": "qiú mén",
+    "text_english": "Goal",
+    "text_phonetic": "/ɡoʊl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 709, "y": 95}, {"x": 837, "y": 95}, {"x": 709, "y": 190}, {"x": 837, "y": 190}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 650, "y": 222}, {"x": 1023, "y": 222}, {"x": 650, "y": 263}, {"x": 1023, "y": 263}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "球网",
+    "text_pinyin": "qiú wǎng",
+    "text_english": "Net",
+    "text_phonetic": "/nɛt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 851, "y": 289}, {"x": 975, "y": 289}, {"x": 851, "y": 381}, {"x": 975, "y": 381}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 916, "y": 386}, {"x": 1015, "y": 386}, {"x": 916, "y": 469}, {"x": 1015, "y": 469}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "球衣",
+    "text_pinyin": "qiú yī",
+    "text_english": "Jersey",
+    "text_phonetic": "/ˈdʒɜːrzi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 446, "y": 58}, {"x": 574, "y": 58}, {"x": 446, "y": 155}, {"x": 574, "y": 155}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 404, "y": 165}, {"x": 572, "y": 165}, {"x": 404, "y": 353}, {"x": 572, "y": 353}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "球鞋",
+    "text_pinyin": "qiú xié",
+    "text_english": "Soccer Shoes",
+    "text_phonetic": "/ˈsɑːkər ʃuːz/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 11, "y": 865}, {"x": 140, "y": 865}, {"x": 11, "y": 963}, {"x": 140, "y": 963}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 185, "y": 820}, {"x": 438, "y": 820}, {"x": 185, "y": 981}, {"x": 438, "y": 981}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "哨子",
+    "text_pinyin": "shào zi",
+    "text_english": "Whistle",
+    "text_phonetic": "/ˈwɪsəl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 850, "y": 754}, {"x": 976, "y": 754}, {"x": 850, "y": 850}, {"x": 976, "y": 850}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 682, "y": 837}, {"x": 818, "y": 837}, {"x": 682, "y": 946}, {"x": 818, "y": 946}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "角旗",
+    "text_pinyin": "jiǎo qí",
+    "text_english": "Corner Flag",
+    "text_phonetic": "/ˈkɔːrnər flæɡ/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 13, "y": 478}, {"x": 162, "y": 478}, {"x": 13, "y": 575}, {"x": 162, "y": 575}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 63, "y": 378}, {"x": 176, "y": 378}, {"x": 63, "y": 607}, {"x": 176, "y": 607}]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "记分牌",
+    "text_pinyin": "jì fēn pái",
+    "text_english": "Scoreboard",
+    "text_phonetic": "/ˈskɔːrbɔːrd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [{"x": 92, "y": 37}, {"x": 218, "y": 37}, {"x": 92, "y": 136}, {"x": 218, "y": 136}]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [{"x": 29, "y": 166}, {"x": 207, "y": 166}, {"x": 29, "y": 335}, {"x": 207, "y": 335}]
+      }
+    ]
+  }
+]

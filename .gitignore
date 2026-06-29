@@ -19,6 +19,12 @@ kiki_admin/.vite/
 # Environment secrets (keep templates)
 .env.local
 
+# Apple signing assets and App Store Connect private keys
+key/
+*.p12
+*.mobileprovision
+AuthKey_*.p8
+
 # Local TTS backup artifacts (do not commit large generated packages)
 docs/tts/model_data_backup/
 

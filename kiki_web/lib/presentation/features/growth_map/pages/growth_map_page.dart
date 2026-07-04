@@ -101,54 +101,36 @@ class _GrowthMapPageState extends State<GrowthMapPage> {
           .clamp(0, controller.scenes.length - 1);
       final scene = controller.scenes[index];
       return Padding(
-        padding: const EdgeInsets.fromLTRB(32, 28, 32, 148),
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 124),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final byWidth = constraints.maxWidth * 0.78;
-            final byHeight = constraints.maxHeight * 0.78;
+            final byWidth = constraints.maxWidth * 0.9;
+            final byHeight = constraints.maxHeight * 0.9;
             final cardSize = byWidth < byHeight ? byWidth : byHeight;
             return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    scene.name,
-                    key: const ValueKey('selected-scene-title'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: KikiUiColors.textPrimary,
-                      fontSize: 20,
-                      height: 1.15,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox.square(
-                    dimension: cardSize,
-                    child: Semantics(
-                      button: true,
-                      label: '开始学习 ${scene.name}',
-                      child: GestureDetector(
-                        key: const ValueKey('selected-scene-preview'),
-                        onTap: () async {
-                          await controller.navigateToSceneDetail(
-                            scene,
-                            selectedIndex: index,
-                          );
-                          _scrollToIndex(controller.restoredSceneIndex.value);
-                        },
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 220),
-                          child: _ScenePreviewCard(
-                            key: ValueKey(scene.id),
-                            scene: scene,
-                          ),
-                        ),
+              child: SizedBox.square(
+                dimension: cardSize,
+                child: Semantics(
+                  button: true,
+                  label: '开始学习 ${scene.name}',
+                  child: GestureDetector(
+                    key: const ValueKey('selected-scene-preview'),
+                    onTap: () async {
+                      await controller.navigateToSceneDetail(
+                        scene,
+                        selectedIndex: index,
+                      );
+                      _scrollToIndex(controller.restoredSceneIndex.value);
+                    },
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      child: _ScenePreviewCard(
+                        key: ValueKey(scene.id),
+                        scene: scene,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             );
           },

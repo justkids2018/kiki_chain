@@ -27,7 +27,8 @@ void main() {
     expect(controller.categoryIsLocked(1), isFalse);
   });
 
-  test('scene list no longer applies per-scene VIP lock state', () async {
+  test('scene list uses progression locks instead of per-scene VIP locks',
+      () async {
     final category = _category();
     final controller = SceneListController(
       category: category,
@@ -43,7 +44,7 @@ void main() {
     expect(controller.scenes[0].requiresVip, isFalse);
     expect(controller.scenes[0].isLocked, isFalse);
     expect(controller.scenes[1].requiresVip, isFalse);
-    expect(controller.scenes[1].isLocked, isFalse);
+    expect(controller.scenes[1].isLocked, isTrue);
   });
 }
 

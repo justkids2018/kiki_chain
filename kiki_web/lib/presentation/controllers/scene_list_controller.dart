@@ -12,6 +12,8 @@ import '../../core/services/app_services.dart';
 ///
 /// 管理场景列表页面的状态和业务逻辑
 class SceneListController extends GetxController {
+  static const int maxDailyNewScenes = 3;
+
   SceneListController({
     ISceneRepository? sceneRepository,
     required this.category,
@@ -26,6 +28,10 @@ class SceneListController extends GetxController {
   final RxBool isLoadingScenes = false.obs;
   final RxString errorMessage = ''.obs;
   final RxInt restoredSceneIndex = 0.obs;
+  final RxInt dailyNewScenesCount = 0.obs;
+
+  bool get hasReachedDailyLimit =>
+      dailyNewScenesCount.value >= maxDailyNewScenes;
 
   @override
   void onInit() {
@@ -35,11 +41,10 @@ class SceneListController extends GetxController {
 
   /// 加载场景列表
   Future<void> loadScenes() async {
+    final showInitialLoading = scenes.isEmpty;
     try {
-      isLoadingScenes.value = true;
+      if (showInitialLoading) isLoadingScenes.value = true;
       errorMessage.value = '';
-      // 进入新分类时先清空旧列表，避免短暂展示上一个分类的数据。
-      scenes.clear();
 
       AppLogger.info('📦 Loading scenes for category: ${category.id}');
 
@@ -50,15 +55,16 @@ class SceneListController extends GetxController {
           result.where((scene) => scene.categoryId == category.id).toList();
       scenes.value = visibleScenes;
 
+      await _restoreProgressionState();
       await _restoreLastSelectedSceneIndex();
 
       AppLogger.info('✅ Loaded ${scenes.length} scenes');
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to load scenes', e, stackTrace);
       errorMessage.value = e.toString();
-      scenes.clear();
+      if (showInitialLoading) scenes.clear();
     } finally {
-      isLoadingScenes.value = false;
+      if (showInitialLoading) isLoadingScenes.value = false;
     }
   }
 
@@ -89,7 +95,7 @@ class SceneListController extends GetxController {
     // 直接导航到互动学习页面
     // 注意：新的数据结构中，数据已经内嵌在 scene 对象中（通过 API 的 items_data 字段）
     // 需要传递原始的 JSON 数据（包含 items_data），而不是转换后的 Scene 对象
-    Get.toNamed(
+    final result = await Get.toNamed<dynamic>(
       AppConstants.routeInteractiveImage,
       arguments: {
         'jsonFile': scene.dataFile, // 保留兼容性，但可能为 null
@@ -99,6 +105,57 @@ class SceneListController extends GetxController {
         'sceneObject': scene, // 同时传递 Scene 对象用于类型安全的属性访问
       },
     );
+
+    final completed = result is Map && result['sceneCompleted'] == true;
+    if (completed) {
+      await markSceneCompleted(selectedIndex);
+    }
+  }
+
+  /// 完成当前场景后，解锁并自动选中下一个场景。
+  Future<void> markSceneCompleted(int completedIndex) async {
+    if (completedIndex < 0 || completedIndex >= scenes.length) return;
+
+    var completedThrough = completedIndex;
+    final completedToday = <String>{scenes[completedIndex].id};
+
+    try {
+      final storage = AppServices.instance.localStorage;
+      completedThrough = (storage.getInt(_completedThroughStorageKey) ?? -1)
+          .clamp(-1, scenes.length - 1);
+      if (completedIndex <= completedThrough) return;
+
+      completedToday
+        ..clear()
+        ..addAll(storage.getStringList(_dailyCompletedStorageKey) ?? const []);
+      if (!completedToday.add(scenes[completedIndex].id)) return;
+
+      completedThrough = completedIndex;
+      await storage.setInt(_completedThroughStorageKey, completedThrough);
+      await storage.setStringList(
+        _dailyCompletedStorageKey,
+        completedToday.toList(),
+      );
+    } catch (e) {
+      AppLogger.warning(
+        '⚠️ Failed to save scene progression for category ${category.id}',
+        e,
+      );
+    }
+
+    dailyNewScenesCount.value = completedToday.length;
+    final nextIndex = completedIndex + 1;
+    if (!hasReachedDailyLimit && nextIndex < scenes.length) {
+      scenes[nextIndex] = scenes[nextIndex].copyWith(isLocked: false);
+      restoredSceneIndex.value = nextIndex;
+      await _saveLastSelectedScene(nextIndex, scenes[nextIndex].id);
+    } else {
+      restoredSceneIndex.value = completedIndex;
+      await _saveLastSelectedScene(
+        completedIndex,
+        scenes[completedIndex].id,
+      );
+    }
   }
 
   void persistSelectedSceneIndex(int selectedIndex) {
@@ -121,40 +178,43 @@ class SceneListController extends GetxController {
       return;
     }
 
+    final highestUnlockedIndex =
+        scenes.lastIndexWhere((scene) => !scene.isLocked);
+    restoredSceneIndex.value =
+        highestUnlockedIndex < 0 ? 0 : highestUnlockedIndex;
+    AppLogger.info(
+      '🎯 Selected current available scene index: ${restoredSceneIndex.value} '
+      '(category: ${category.id})',
+    );
+  }
+
+  Future<void> _restoreProgressionState() async {
+    if (scenes.isEmpty) return;
     try {
       final storage = AppServices.instance.localStorage;
-      final savedIndex = storage.getInt(_sceneIndexStorageKey);
-      final savedSceneId = storage.getString(_sceneIdStorageKey);
+      final completedThrough =
+          (storage.getInt(_completedThroughStorageKey) ?? -1)
+              .clamp(-1, scenes.length - 1);
+      final completedToday =
+          storage.getStringList(_dailyCompletedStorageKey) ?? const [];
+      dailyNewScenesCount.value = completedToday.toSet().length;
 
-      var resolvedIndex = 0;
-
-      if (savedSceneId != null && savedSceneId.isNotEmpty) {
-        final indexById =
-            scenes.indexWhere((scene) => scene.id == savedSceneId);
-        if (indexById >= 0) {
-          resolvedIndex = indexById;
-        } else if (savedIndex != null &&
-            savedIndex >= 0 &&
-            savedIndex < scenes.length) {
-          resolvedIndex = savedIndex;
-        }
-      } else if (savedIndex != null &&
-          savedIndex >= 0 &&
-          savedIndex < scenes.length) {
-        resolvedIndex = savedIndex;
+      final availableThrough =
+          (completedThrough + (hasReachedDailyLimit ? 0 : 1))
+              .clamp(0, scenes.length - 1);
+      for (var index = 0; index < scenes.length; index++) {
+        scenes[index] = scenes[index].copyWith(
+          isLocked: index > availableThrough,
+        );
       }
-
-      restoredSceneIndex.value = resolvedIndex;
-      AppLogger.info(
-        '🎯 Restored last selected scene index: $resolvedIndex (category: ${category.id})',
-      );
-    } catch (e, stackTrace) {
+    } catch (e) {
       AppLogger.warning(
-        '⚠️ Failed to restore last selected scene index for category ${category.id}',
+        '⚠️ Failed to restore scene progression for category ${category.id}',
         e,
       );
-      AppLogger.debug(stackTrace.toString());
-      restoredSceneIndex.value = 0;
+      for (var index = 0; index < scenes.length; index++) {
+        scenes[index] = scenes[index].copyWith(isLocked: index > 0);
+      }
     }
   }
 
@@ -177,4 +237,15 @@ class SceneListController extends GetxController {
   String get _sceneIndexStorageKey => 'scene_list_last_index_${category.id}';
 
   String get _sceneIdStorageKey => 'scene_list_last_scene_id_${category.id}';
+
+  String get _completedThroughStorageKey =>
+      'scene_list_completed_through_${category.id}';
+
+  String get _dailyCompletedStorageKey {
+    final now = DateTime.now();
+    final date = '${now.year.toString().padLeft(4, '0')}-'
+        '${now.month.toString().padLeft(2, '0')}-'
+        '${now.day.toString().padLeft(2, '0')}';
+    return 'scene_list_daily_completed_$date';
+  }
 }

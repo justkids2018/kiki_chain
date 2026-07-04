@@ -54,6 +54,11 @@ class InteractiveImageController extends GetxController {
   /// 历史已获得的星星数（0~3）
   int _historicalStars = 0;
 
+  /// 本次学习是否让一个此前未完成的场景首次达到满星。
+  bool get didCompleteSceneThisSession =>
+      _historicalStars < RewardService.maxStars &&
+      _starsAwarded >= RewardService.maxStars;
+
   /// 飞翔动画事件流：Page 层监听后触发动画
   final starRewardEvent = Rxn<StarRewardEvent>();
 
@@ -96,7 +101,8 @@ class InteractiveImageController extends GetxController {
       final authController = Get.find<AuthController>();
       if (!authController.isLoggedIn) return false;
 
-      final authInterceptor = NetworkClient.instance.getInterceptor<AuthInterceptor>();
+      final authInterceptor =
+          NetworkClient.instance.getInterceptor<AuthInterceptor>();
       return authInterceptor?.hasToken ?? false;
     } catch (_) {}
     return false;
@@ -109,7 +115,8 @@ class InteractiveImageController extends GetxController {
   }) {
     _repository = repository ?? InteractiveImageRepositoryImpl();
     _audioPlayback = audioPlayback ?? AudioPlaybackComponent();
-    _rewardService = rewardService ?? RewardService(httpClient: NetworkClient.instance.httpClient);
+    _rewardService = rewardService ??
+        RewardService(httpClient: NetworkClient.instance.httpClient);
     _getParametersFromRoute();
   }
 
@@ -125,7 +132,8 @@ class InteractiveImageController extends GetxController {
           try {
             _imagePath = _scene.interactiveImage ?? '';
           } catch (e) {
-            AppLogger.warning('Failed to extract image path from scene object', e);
+            AppLogger.warning(
+                'Failed to extract image path from scene object', e);
             _imagePath = '';
           }
         }
@@ -236,6 +244,7 @@ class InteractiveImageController extends GetxController {
     super.onInit();
     _initialize();
   }
+
   Future<void> _initialize() async {
     try {
       errorMessage.value = null;
@@ -295,10 +304,12 @@ class InteractiveImageController extends GetxController {
     final oldSceneId = _getSceneId();
     _getParametersFromRoute();
     if (_jsonFilePath != oldJson || _getSceneId() != oldSceneId) {
-      AppLogger.info('Scene arguments changed, re-initializing: $oldSceneId -> ${_getSceneId()}');
+      AppLogger.info(
+          'Scene arguments changed, re-initializing: $oldSceneId -> ${_getSceneId()}');
       _initialize();
     }
   }
+
   Future<void> _loadRegions() async {
     try {
       List<InteractiveRegion> loadedRegions = [];
@@ -320,8 +331,7 @@ class InteractiveImageController extends GetxController {
         }
       }
       if (loadedRegions.isEmpty && _jsonFilePath.isNotEmpty) {
-        loadedRegions =
-            await _repository.loadRegions(jsonPath: _jsonFilePath);
+        loadedRegions = await _repository.loadRegions(jsonPath: _jsonFilePath);
       }
       if (loadedRegions.isNotEmpty) {
         regions.assignAll(loadedRegions);
@@ -409,6 +419,7 @@ class InteractiveImageController extends GetxController {
       AppLogger.error('恢复本地与服务器进度失败', e);
     }
   }
+
   // ─── 音频播放 ─────────────────────────────────────────────────
   bool _isSpeaking = false;
   final isSpeaking = false.obs;
@@ -443,8 +454,7 @@ class InteractiveImageController extends GetxController {
 
   Future<void> speakPinyin(InteractiveRegion region) async {
     activeRegion.value = region;
-    await _interruptAndSpeak(
-        () async => _audioPlayback.playPinyin(region));
+    await _interruptAndSpeak(() async => _audioPlayback.playPinyin(region));
   }
 
   Future<void> speakEnglishWord(InteractiveRegion region) async {
@@ -532,7 +542,7 @@ class InteractiveImageController extends GetxController {
       _starsAwarded = targetStars;
 
       // 依次发射每一个新获得的星星（支持连发动画）
-      for (int i = oldStarsAwarded; i < targetStars; i++) { 
+      for (int i = oldStarsAwarded; i < targetStars; i++) {
         AppLogger.info('🌟 触发会话星星奖励：第 ${i + 1} 颗星');
         starRewardEvent.value = StarRewardEvent(i);
       }
@@ -547,7 +557,8 @@ class InteractiveImageController extends GetxController {
     final sceneId = _getSceneId();
     if (sceneId.isEmpty) return;
 
-    final submitStars = _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
+    final submitStars =
+        _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
 
     _rewardService
         .saveLearnedRegionIds(_userId, sceneId, Set.from(_learnedRegionIds))
@@ -558,19 +569,22 @@ class InteractiveImageController extends GetxController {
           ? DateTime.now().difference(_sessionStartTime!).inSeconds
           : 0;
       AppLogger.info('📊 本次学习时长: $studyTime 秒');
-      _rewardService.submitProgressToServer(
+      _rewardService
+          .submitProgressToServer(
         userId: _userId,
         sceneId: sceneId,
         learnedRegionIds: Set.from(_learnedRegionIds),
         starsEarned: submitStars,
         isCompleted: submitStars >= 3,
         studyTimeSeconds: studyTime,
-      ).then((newTotalStars) {
+      )
+          .then((newTotalStars) {
         if (newTotalStars != null) {
           try {
             Get.find<AuthController>().updateUserStars(newTotalStars);
           } catch (e) {
-            AppLogger.warning('Failed to update user stars in AuthController', e);
+            AppLogger.warning(
+                'Failed to update user stars in AuthController', e);
           }
         }
       });
@@ -594,7 +608,8 @@ class InteractiveImageController extends GetxController {
           : 0;
       AppLogger.info('📊 本次学习时长: $studyTime 秒 (开始时间: $_sessionStartTime)');
 
-      final submitStars = _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
+      final submitStars =
+          _starsAwarded > _historicalStars ? _starsAwarded : _historicalStars;
 
       // 1. 保存本地
       await _rewardService.saveLearnedRegionIds(
@@ -615,9 +630,10 @@ class InteractiveImageController extends GetxController {
         );
         if (newTotalStars != null) {
           try {
-            await Get.find<AuthController>().updateUserStars(newTotalStars); 
+            await Get.find<AuthController>().updateUserStars(newTotalStars);
           } catch (e) {
-            AppLogger.warning('Failed to update user stars in AuthController on exit', e);
+            AppLogger.warning(
+                'Failed to update user stars in AuthController on exit', e);
           }
         }
       }
@@ -656,6 +672,8 @@ Interactive Image Diagnostics:
 
   /// 播放本地音效（使用独立的 SFX 通道）
   void playSfx(String assetPath) {
+    // 孩子已经点击下一个词条时，不再让延迟到达的奖励音盖住词条。
+    if (_isSpeaking) return;
     _audioPlayback.playAudioFile(assetPath).catchError((e) {
       AppLogger.error('Failed to play SFX $assetPath', e);
     });
@@ -681,10 +699,10 @@ Interactive Image Diagnostics:
 
   void onCharacterAnimationComplete(int index) {
     if (index != currentCharIndex.value) return;
-      if (_singleCharacterMode) {
-        currentCharIndex.value = -1;
-        return;
-      }
+    if (_singleCharacterMode) {
+      currentCharIndex.value = -1;
+      return;
+    }
     final total = totalCharCount.value;
     if (index >= total - 1) {
       currentCharIndex.value = -1;
@@ -718,7 +736,8 @@ Interactive Image Diagnostics:
 
   Future<void> _interruptAndSpeak(Future<void> Function() action) async {
     _strokeStartTimer?.cancel();
-    if (_isSpeaking) await _audioPlayback.stop();
+    // 词条发音优先：同时停止上一段词条或星星奖励音。
+    await _audioPlayback.stop();
     _isSpeaking = true;
     isSpeaking.value = true;
     try {

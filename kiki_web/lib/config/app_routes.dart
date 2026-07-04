@@ -8,7 +8,7 @@ import '../presentation/pages/splash_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_controller.dart';
 import '../presentation/features/writing_practice/pages/writing_practice_page.dart';
-import '../presentation/pages/scene_list_page.dart';
+import '../presentation/features/growth_map/pages/growth_map_page.dart';
 import '../presentation/features/subscription/pages/subscription_page.dart';
 import '../presentation/controllers/home_controller.dart';
 import '../core/constants/app_constants.dart';
@@ -69,7 +69,7 @@ class AppRoutes {
       name: AppConstants.routeSceneList,
       page: () {
         final category = Get.arguments;
-        return SceneListPage(category: category);
+        return GrowthMapPage(category: category);
       },
     ),
     GetPage(

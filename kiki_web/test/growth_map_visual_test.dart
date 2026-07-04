@@ -125,12 +125,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
 
     expect(find.byType(GrowthMapPage), findsOneWidget);
-    expect(
-      tester
-          .widget<Text>(find.byKey(const ValueKey('selected-scene-title')))
-          .data,
-      '早餐时间',
-    );
+    expect(find.byKey(const ValueKey('selected-scene-title')), findsNothing);
     final firstNode = find.byWidgetPredicate(
       (widget) => widget is GrowthTreeNode && widget.scene.id == 'scene_0',
     );
@@ -150,12 +145,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(
-      tester
-          .widget<Text>(find.byKey(const ValueKey('selected-scene-title')))
-          .data,
-      '准备上学',
-    );
+    expect(find.byKey(const ValueKey('selected-scene-title')), findsNothing);
     expect(tester.getCenter(secondNode).dy, closeTo(274, 2));
     expect(
         find.byKey(const ValueKey('selected-scene-preview')), findsOneWidget);

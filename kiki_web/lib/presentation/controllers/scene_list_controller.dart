@@ -6,7 +6,10 @@ import '../../domain/repositories/i_scene_repository.dart';
 import '../../core/di/service_locator.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/network/network_client.dart';
 import '../../core/services/app_services.dart';
+import '../../data/services/learning/reward_service.dart';
+import 'auth_controller.dart';
 
 /// 场景列表控制器
 ///
@@ -14,18 +17,35 @@ import '../../core/services/app_services.dart';
 class SceneListController extends GetxController {
   SceneListController({
     ISceneRepository? sceneRepository,
+    RewardService? rewardService,
     required this.category,
-  }) : _sceneRepository =
-            sceneRepository ?? ServiceLocator.instance.sceneRepository;
+  })  : _sceneRepository =
+            sceneRepository ?? ServiceLocator.instance.sceneRepository,
+        _rewardService = rewardService ?? _createRewardService();
+
+  static RewardService _createRewardService() {
+    try {
+      return RewardService(httpClient: NetworkClient.instance.httpClient);
+    } catch (_) {
+      return RewardService();
+    }
+  }
 
   final SceneCategory category;
   final ISceneRepository _sceneRepository;
+  final RewardService _rewardService;
 
   // 场景列表
   final RxList<Scene> scenes = <Scene>[].obs;
   final RxBool isLoadingScenes = false.obs;
   final RxString errorMessage = ''.obs;
   final RxInt restoredSceneIndex = 0.obs;
+  final RxMap<String, int> sceneStars = <String, int>{}.obs;
+  final RxSet<String> learnedSceneIds = <String>{}.obs;
+
+  bool isSceneLearned(String sceneId) => learnedSceneIds.contains(sceneId);
+
+  int starsForScene(String sceneId) => sceneStars[sceneId] ?? 0;
 
   @override
   void onInit() {
@@ -35,11 +55,10 @@ class SceneListController extends GetxController {
 
   /// 加载场景列表
   Future<void> loadScenes() async {
+    final showInitialLoading = scenes.isEmpty;
     try {
-      isLoadingScenes.value = true;
+      if (showInitialLoading) isLoadingScenes.value = true;
       errorMessage.value = '';
-      // 进入新分类时先清空旧列表，避免短暂展示上一个分类的数据。
-      scenes.clear();
 
       AppLogger.info('📦 Loading scenes for category: ${category.id}');
 
@@ -50,15 +69,17 @@ class SceneListController extends GetxController {
           result.where((scene) => scene.categoryId == category.id).toList();
       scenes.value = visibleScenes;
 
-      await _restoreLastSelectedSceneIndex();
+      _unlockAllScenes();
+      await _restoreLearningState();
+      _selectFirstUnlearnedScene();
 
       AppLogger.info('✅ Loaded ${scenes.length} scenes');
     } catch (e, stackTrace) {
       AppLogger.error('❌ Failed to load scenes', e, stackTrace);
       errorMessage.value = e.toString();
-      scenes.clear();
+      if (showInitialLoading) scenes.clear();
     } finally {
-      isLoadingScenes.value = false;
+      if (showInitialLoading) isLoadingScenes.value = false;
     }
   }
 
@@ -89,7 +110,7 @@ class SceneListController extends GetxController {
     // 直接导航到互动学习页面
     // 注意：新的数据结构中，数据已经内嵌在 scene 对象中（通过 API 的 items_data 字段）
     // 需要传递原始的 JSON 数据（包含 items_data），而不是转换后的 Scene 对象
-    Get.toNamed(
+    final result = await Get.toNamed<dynamic>(
       AppConstants.routeInteractiveImage,
       arguments: {
         'jsonFile': scene.dataFile, // 保留兼容性，但可能为 null
@@ -99,6 +120,31 @@ class SceneListController extends GetxController {
         'sceneObject': scene, // 同时传递 Scene 对象用于类型安全的属性访问
       },
     );
+
+    await _restoreLearningState();
+    final completed = result is Map && result['sceneCompleted'] == true;
+    if (completed) {
+      await markSceneCompleted(selectedIndex);
+    }
+  }
+
+  /// 完成场景后更新内存摘要，不限制任何其他节点。
+  Future<void> markSceneCompleted(int completedIndex) async {
+    if (completedIndex < 0 || completedIndex >= scenes.length) return;
+    final sceneId = scenes[completedIndex].id;
+    learnedSceneIds.add(sceneId);
+    sceneStars[sceneId] = RewardService.maxStars;
+    final nextIndex = completedIndex + 1;
+    if (nextIndex < scenes.length) {
+      restoredSceneIndex.value = nextIndex;
+      await _saveLastSelectedScene(nextIndex, scenes[nextIndex].id);
+    } else {
+      restoredSceneIndex.value = completedIndex;
+      await _saveLastSelectedScene(
+        completedIndex,
+        scenes[completedIndex].id,
+      );
+    }
   }
 
   void persistSelectedSceneIndex(int selectedIndex) {
@@ -115,47 +161,69 @@ class SceneListController extends GetxController {
     unawaited(_saveLastSelectedScene(safeIndex, scenes[safeIndex].id));
   }
 
-  Future<void> _restoreLastSelectedSceneIndex() async {
-    if (scenes.isEmpty) {
-      restoredSceneIndex.value = 0;
-      return;
-    }
+  void _selectFirstUnlearnedScene() {
+    if (scenes.isEmpty) return;
+    final firstUnlearned =
+        scenes.indexWhere((scene) => !learnedSceneIds.contains(scene.id));
+    restoredSceneIndex.value =
+        firstUnlearned < 0 ? scenes.length - 1 : firstUnlearned;
+    AppLogger.info(
+      '🎯 Selected first unexplored scene index: ${restoredSceneIndex.value} '
+      '(category: ${category.id})',
+    );
+  }
 
-    try {
-      final storage = AppServices.instance.localStorage;
-      final savedIndex = storage.getInt(_sceneIndexStorageKey);
-      final savedSceneId = storage.getString(_sceneIdStorageKey);
-
-      var resolvedIndex = 0;
-
-      if (savedSceneId != null && savedSceneId.isNotEmpty) {
-        final indexById =
-            scenes.indexWhere((scene) => scene.id == savedSceneId);
-        if (indexById >= 0) {
-          resolvedIndex = indexById;
-        } else if (savedIndex != null &&
-            savedIndex >= 0 &&
-            savedIndex < scenes.length) {
-          resolvedIndex = savedIndex;
-        }
-      } else if (savedIndex != null &&
-          savedIndex >= 0 &&
-          savedIndex < scenes.length) {
-        resolvedIndex = savedIndex;
+  void _unlockAllScenes() {
+    for (var index = 0; index < scenes.length; index++) {
+      if (scenes[index].isLocked) {
+        scenes[index] = scenes[index].copyWith(isLocked: false);
       }
-
-      restoredSceneIndex.value = resolvedIndex;
-      AppLogger.info(
-        '🎯 Restored last selected scene index: $resolvedIndex (category: ${category.id})',
-      );
-    } catch (e, stackTrace) {
-      AppLogger.warning(
-        '⚠️ Failed to restore last selected scene index for category ${category.id}',
-        e,
-      );
-      AppLogger.debug(stackTrace.toString());
-      restoredSceneIndex.value = 0;
     }
+  }
+
+  Future<void> _restoreLearningState() async {
+    if (scenes.isEmpty) return;
+    final userId = _currentUserId;
+    final sceneIds = scenes.map((scene) => scene.id).toList(growable: false);
+    final sceneIdSet = sceneIds.toSet();
+    final localCounts =
+        await _rewardService.loadLearnedRegionCounts(userId, sceneIds);
+    final mergedStars = <String, int>{};
+    final learnedIds = <String>{};
+
+    for (final scene in scenes) {
+      final learnedCount = localCounts[scene.id] ?? 0;
+      if (learnedCount > 0) learnedIds.add(scene.id);
+      mergedStars[scene.id] =
+          _rewardService.calculateStars(learnedCount, scene.itemCount);
+    }
+
+    if (userId.isNotEmpty) {
+      final serverProgress = await _rewardService.loadProgressSnapshot(userId);
+      for (final progress in serverProgress) {
+        if (!sceneIdSet.contains(progress.sceneId)) continue;
+        if (progress.learnedCount > 0 || progress.starsEarned > 0) {
+          learnedIds.add(progress.sceneId);
+        }
+        final localStars = mergedStars[progress.sceneId] ?? 0;
+        if (progress.starsEarned > localStars) {
+          mergedStars[progress.sceneId] = progress.starsEarned;
+        }
+      }
+    }
+
+    sceneStars.assignAll(mergedStars);
+    learnedSceneIds.assignAll(learnedIds);
+  }
+
+  String get _currentUserId {
+    try {
+      final authController = Get.find<AuthController>();
+      if (authController.isLoggedIn) {
+        return authController.currentUser?.id ?? '';
+      }
+    } catch (_) {}
+    return '';
   }
 
   Future<void> _saveLastSelectedScene(int selectedIndex, String sceneId) async {

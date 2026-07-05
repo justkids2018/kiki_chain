@@ -8,7 +8,9 @@ import '../../domain/entities/user.dart';
 import '../../core/services/app_services.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/network/request_manager.dart';
+import '../../core/network/network_client.dart';
 import '../../core/exceptions/app_exceptions.dart';
+import '../../data/services/learning/reward_service.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../../core/di/service_locator.dart';
 import '../../utils/crypto_utils.dart';
@@ -206,6 +208,10 @@ class AuthController extends GetxController {
 
       _currentUser.value = user;
       _isLoggedIn.value = true;
+
+      // 登录时强制恢复一次全局学习进度，支持换机和重装。
+      await RewardService(httpClient: NetworkClient.instance.httpClient)
+          .loadProgressSnapshot(user.id, forceRefresh: true);
 
       await EasyLoading.showSuccess(_l10n.loginSuccess);
       AppLogger.info('Login successful for user: ${user.nickname}');

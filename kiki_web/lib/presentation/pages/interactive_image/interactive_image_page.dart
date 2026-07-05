@@ -227,17 +227,15 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
           controller.starsEarned.value = starIndex + 1;
         }
 
-        // 叮当音效：落地时播放（满星用完成音效，普通星用叮声占位）
-        final isFinalStar = controller.starsEarned.value >= 3;
-        final dingFile = isFinalStar
-            ? 'assets/audio/star_3_complete.mp3'
-            : 'assets/audio/star_2.mp3';
-        controller.playSfx(dingFile);
+        // 每颗星只播放一次对应的短鼓励语，避免干扰下一个词条。
+        const rewardAudioFiles = [
+          'assets/audio/star_1.mp3',
+          'assets/audio/star_2.mp3',
+          'assets/audio/star_3_complete.mp3',
+        ];
+        controller.playSfx(rewardAudioFiles[starIndex]);
       },
     );
-
-    // 嗖声：飞翔开始时播放（用 star_1.mp3 占位，后续替换 star_whoosh.mp3）
-    controller.playSfx('assets/audio/star_1.mp3');
   }
 
   // ─── 辅助方法 ─────────────────────────────────────────────────
@@ -261,7 +259,9 @@ class _InteractiveImagePageState extends State<InteractiveImagePage> {
       final controller = Get.find<InteractiveImageController>();
       await controller.saveProgress();
       if (!context.mounted) return;
-      Navigator.of(context).pop();
+      Navigator.of(context).pop({
+        'sceneCompleted': controller.didCompleteSceneThisSession,
+      });
     } finally {
       _isHandlingBackNavigation = false;
     }

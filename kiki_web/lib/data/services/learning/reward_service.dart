@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/logging/app_logger.dart';
 import '../../../core/utils/api_response_handler.dart';
@@ -14,6 +16,7 @@ import '../../../core/network/http_client.dart';
 /// 降级策略：接口失败时不授予星星，保持已有进度不变。
 class RewardService {
   static const String _keyPrefix = 'reward_v2_';
+  static const String _snapshotPrefix = 'reward_snapshot_v1_';
   static const int maxStars = 3;
 
   final HttpClient? _httpClient;
@@ -37,6 +40,23 @@ class RewardService {
       return raw?.toSet() ?? {};
     } catch (e) {
       AppLogger.error('RewardService: 读取本地进度失败', e);
+      return {};
+    }
+  }
+
+  /// 一次读取多个场景的已学词数，避免地图按节点重复初始化存储。
+  Future<Map<String, int>> loadLearnedRegionCounts(
+    String userId,
+    Iterable<String> sceneIds,
+  ) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return {
+        for (final sceneId in sceneIds)
+          sceneId: prefs.getStringList(_buildKey(userId, sceneId))?.length ?? 0,
+      };
+    } catch (e) {
+      AppLogger.error('RewardService: 批量读取本地进度失败', e);
       return {};
     }
   }
@@ -113,6 +133,88 @@ class RewardService {
     }
   }
 
+  /// 读取全局进度快照。每个用户在 6、17、20 点三个时间窗口各最多请求一次。
+  Future<List<SceneProgress>> loadProgressSnapshot(
+    String userId, {
+    bool forceRefresh = false,
+  }) async {
+    if (userId.isEmpty) return const [];
+    final prefs = await SharedPreferences.getInstance();
+    final cacheKey = '$_snapshotPrefix${userId}_data';
+    final slotKey = '$_snapshotPrefix${userId}_slot';
+    final cached = _decodeProgressSnapshot(prefs.getString(cacheKey));
+    final currentSlot = _currentRefreshSlot();
+    if (!forceRefresh && prefs.getString(slotKey) == currentSlot) {
+      return cached;
+    }
+
+    final latest = await _fetchAllProgressFromServer(userId);
+    if (latest == null) {
+      // 失败也记录当前窗口，避免孩子切换主题时连续重试。
+      await prefs.setString(slotKey, currentSlot);
+      return cached;
+    }
+    await prefs.setString(
+      cacheKey,
+      jsonEncode(latest.map((progress) => progress.toJson()).toList()),
+    );
+    await prefs.setString(slotKey, currentSlot);
+    return latest;
+  }
+
+  Future<List<SceneProgress>?> _fetchAllProgressFromServer(
+      String userId) async {
+    final client = _httpClient;
+    if (client == null || userId.isEmpty) return null;
+
+    try {
+      final response = await client.get<Map<String, dynamic>>(
+        '/api/v1/learning/progress/user/$userId/all',
+      );
+      final data = ApiResponseHandler.handle<List<dynamic>>(response);
+      return data
+          .whereType<Map<String, dynamic>>()
+          .map(SceneProgress.fromJson)
+          .toList(growable: false);
+    } catch (e) {
+      AppLogger.warning('RewardService: 批量拉取服务器进度失败，使用本地摘要', e);
+      return null;
+    }
+  }
+
+  List<SceneProgress> _decodeProgressSnapshot(String? raw) {
+    if (raw == null || raw.isEmpty) return const [];
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return const [];
+      return decoded
+          .whereType<Map<String, dynamic>>()
+          .map(SceneProgress.fromJson)
+          .toList(growable: false);
+    } catch (e) {
+      AppLogger.warning('RewardService: 进度快照解析失败', e);
+      return const [];
+    }
+  }
+
+  String _currentRefreshSlot() {
+    final now = DateTime.now();
+    // 学习日从早上 6 点开始，凌晨沿用前一晚快照，不额外请求。
+    final learningDate =
+        now.hour < 6 ? now.subtract(const Duration(days: 1)) : now;
+    final date = '${learningDate.year.toString().padLeft(4, '0')}-'
+        '${learningDate.month.toString().padLeft(2, '0')}-'
+        '${learningDate.day.toString().padLeft(2, '0')}';
+    final period = now.hour < 6
+        ? 'after_20'
+        : now.hour < 17
+            ? '06_to_17'
+            : now.hour < 20
+                ? '17_to_20'
+                : 'after_20';
+    return '${date}_$period';
+  }
+
   /// 提交学习进度到服务器（退出页面或获得新星星时调用）
   ///
   /// 返回最新用户总星星数，失败时返回 null 并静默忽略。
@@ -151,7 +253,7 @@ class RewardService {
           'study_time': studyTimeSeconds,
         },
       );
-      
+
       AppLogger.info('RewardService: 进度提交成功: $response');
       final data = ApiResponseHandler.handle<Map<String, dynamic>>(response);
       return (data['user_total_stars'] as num?)?.toInt();

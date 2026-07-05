@@ -6,8 +6,15 @@ import 'package:kikichain/domain/repositories/i_auth_repository.dart';
 import 'package:kikichain/domain/repositories/i_scene_repository.dart';
 import 'package:kikichain/presentation/controllers/home_controller.dart';
 import 'package:kikichain/presentation/controllers/scene_list_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   test(
       'home category paywall keeps first category free and locks later categories for non VIP',
       () {
@@ -27,7 +34,8 @@ void main() {
     expect(controller.categoryIsLocked(1), isFalse);
   });
 
-  test('scene list no longer applies per-scene VIP lock state', () async {
+  test('scene list keeps every scene open without per-scene VIP locks',
+      () async {
     final category = _category();
     final controller = SceneListController(
       category: category,

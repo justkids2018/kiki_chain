@@ -101,6 +101,7 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
   }
 
   Widget _buildContent() {
+    final isCurrent = widget.state == GrowthNodeState.current;
     return Align(
       alignment: _isLeft ? Alignment.centerRight : Alignment.centerLeft,
       child: Semantics(
@@ -113,34 +114,40 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
           onTapCancel: () => setState(() => _isPressed = false),
           onTapUp: (_) => setState(() => _isPressed = false),
           onTap: widget.onTap,
-          child: AnimatedScale(
-            scale: _isPressed ? 0.96 : 1,
-            duration: const Duration(milliseconds: 120),
-            curve: Curves.easeOut,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 170),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment:
-                    _isLeft ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  _buildSceneCanopy(),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.scene.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: _isLeft ? TextAlign.right : TextAlign.left,
-                    style: TextStyle(
-                      color: KikiUiColors.textPrimary,
-                      fontSize: 16,
-                      height: 1.15,
-                      fontWeight: FontWeight.w700,
+          child: AnimatedOpacity(
+            opacity: isCurrent ? 1 : 0.84,
+            duration: const Duration(milliseconds: 180),
+            child: AnimatedScale(
+              scale: _isPressed ? 0.96 : 1,
+              duration: const Duration(milliseconds: 120),
+              curve: Curves.easeOut,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 170),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: _isLeft
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    _buildSceneCanopy(),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.scene.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: _isLeft ? TextAlign.right : TextAlign.left,
+                      style: TextStyle(
+                        color: KikiUiColors.textPrimary,
+                        fontSize: 16,
+                        height: 1.15,
+                        fontWeight:
+                            isCurrent ? FontWeight.w800 : FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  _buildStars(),
-                ],
+                    const SizedBox(height: 4),
+                    _buildStars(),
+                  ],
+                ),
               ),
             ),
           ),

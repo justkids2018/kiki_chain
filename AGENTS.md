@@ -5,9 +5,8 @@
 Project-level agent behavior must follow shared platform governance.
 Read these files first:
 
-1. `.ai/system-platform/README.md`
-2. `.ai/common-prompt/baseline/README.md`
-3. `.github/copilot-instructions.md`
+1. `.ai/common-prompt/baseline/README.md`
+2. `.github/copilot-instructions.md`
 
 If a referenced shared governance file is missing in the current checkout, report the gap
 and continue with the tracked project rules below.

@@ -122,6 +122,7 @@ jobs:
 
           PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' /dev/stdin <<< "$(security cms -D -i "${PROFILE_PATH}")")
           PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print Name' /dev/stdin <<< "$(security cms -D -i "${PROFILE_PATH}")")
+          PROFILE_TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print TeamIdentifier:0' /dev/stdin <<< "$(security cms -D -i "${PROFILE_PATH}")")
           APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c 'Print Entitlements:application-identifier' /dev/stdin <<< "$(security cms -D -i "${PROFILE_PATH}")")
 
           cp "${PROFILE_PATH}" "$HOME/Library/MobileDevice/Provisioning Profiles/${PROFILE_UUID}.mobileprovision"
@@ -137,6 +138,10 @@ jobs:
             <string>${IOS_EXPORT_METHOD}</string>
             <key>signingStyle</key>
             <string>manual</string>
+            <key>signingCertificate</key>
+            <string>Apple Distribution</string>
+            <key>teamID</key>
+            <string>${PROFILE_TEAM_ID}</string>
             <key>provisioningProfiles</key>
             <dict>
               <key>${BUNDLE_ID}</key>
@@ -155,18 +160,46 @@ jobs:
           {
             echo "PROFILE_UUID=${PROFILE_UUID}"
             echo "PROFILE_NAME=${PROFILE_NAME}"
+            echo "PROFILE_TEAM_ID=${PROFILE_TEAM_ID}"
             echo "BUNDLE_ID=${BUNDLE_ID}"
             echo "KEYCHAIN_PATH=${KEYCHAIN_PATH}"
           } >> "$GITHUB_ENV"
 
-      - name: Build iOS IPA (release)
+      - name: Build Flutter iOS app without signing
         working-directory: kiki_web
         run: |
           set -euo pipefail
-          flutter build ipa --release \
+          flutter build ios --release --no-codesign \
             --build-name "${{ steps.meta.outputs.base_version }}" \
-            --build-number "${{ steps.meta.outputs.build_num_dec }}" \
-            --export-options-plist "$RUNNER_TEMP/ExportOptions.plist"
+            --build-number "${{ steps.meta.outputs.build_num_dec }}"
+
+      - name: Archive and export IPA with manual signing
+        working-directory: kiki_web
+        run: |
+          set -euo pipefail
+
+          ARCHIVE_PATH="$PWD/build/ios/archive/Runner.xcarchive"
+          EXPORT_PATH="$PWD/build/ios/ipa"
+          rm -rf "${ARCHIVE_PATH}" "${EXPORT_PATH}"
+          mkdir -p "$(dirname "${ARCHIVE_PATH}")" "${EXPORT_PATH}"
+
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "${ARCHIVE_PATH}" \
+            DEVELOPMENT_TEAM="${PROFILE_TEAM_ID}" \
+            CODE_SIGN_STYLE=Manual \
+            'CODE_SIGN_IDENTITY=Apple Distribution' \
+            PROVISIONING_PROFILE_SPECIFIER="${PROFILE_NAME}" \
+            archive
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath "${ARCHIVE_PATH}" \
+            -exportPath "${EXPORT_PATH}" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
 
       - name: Locate IPA
         id: ipa

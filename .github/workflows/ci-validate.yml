@@ -25,6 +25,9 @@ jobs:
       - name: Validate database migrations
         run: ./scripts/check-db-migrations.sh
 
+      - name: Validate iOS release signing workflow
+        run: ./scripts/check-ios-signing-workflow.sh
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:

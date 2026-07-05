@@ -25,6 +25,7 @@ jobs:
       BASE_VERSION_DEFAULT: "1.0.0"
       IOS_EXPORT_METHOD: ${{ vars.IOS_EXPORT_METHOD || 'app-store' }}
       UPLOAD_TO_TESTFLIGHT: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.upload_to_testflight == 'true' }}
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     defaults:
@@ -64,6 +65,13 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+
+      - name: Select Xcode 26
+        run: |
+          set -euo pipefail
+          sudo xcode-select -s "${DEVELOPER_DIR}"
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

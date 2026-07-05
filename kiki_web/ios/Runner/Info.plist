@@ -52,5 +52,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Hi Kiki may use your location only when a selected feature needs location-based content while the app is in use or continuing a related activity.</string>
 </dict>
 </plist>

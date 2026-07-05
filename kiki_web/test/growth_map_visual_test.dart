@@ -9,11 +9,16 @@ import 'package:kikichain/generated/app_localizations.dart';
 import 'package:kikichain/presentation/controllers/scene_list_controller.dart';
 import 'package:kikichain/presentation/features/growth_map/pages/growth_map_page.dart';
 import 'package:kikichain/presentation/features/growth_map/widgets/growth_tree_node.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('completing a scene unlocks and selects the next scene', () async {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
+  test('all scenes stay open and completion selects the next scene', () async {
     final category = SceneCategory(
       id: 'progression',
       name: '成长测试',
@@ -50,13 +55,13 @@ void main() {
     );
 
     await controller.loadScenes();
-    expect(controller.scenes[1].isLocked, isTrue);
+    expect(controller.scenes.every((scene) => !scene.isLocked), isTrue);
 
     await controller.markSceneCompleted(0);
 
-    expect(controller.scenes[1].isLocked, isFalse);
+    expect(controller.isSceneLearned('progress_0'), isTrue);
+    expect(controller.starsForScene('progress_0'), 3);
     expect(controller.restoredSceneIndex.value, 1);
-    expect(controller.dailyNewScenesCount.value, 1);
   });
 
   testWidgets('growth map landscape selects a node and previews one card',
@@ -131,6 +136,8 @@ void main() {
     );
     expect(tester.getCenter(firstNode).dy, closeTo(274, 2));
     expect(
+        find.byKey(const ValueKey('unexplored-node-scene_0')), findsOneWidget);
+    expect(
         find.byKey(const ValueKey('selected-scene-preview')), findsOneWidget);
     expect(find.text('选择一个场景开始学习'), findsNothing);
     expect(
@@ -147,6 +154,9 @@ void main() {
 
     expect(find.byKey(const ValueKey('selected-scene-title')), findsNothing);
     expect(tester.getCenter(secondNode).dy, closeTo(274, 2));
+    expect(find.byKey(const ValueKey('learned-badge-scene_0')), findsOneWidget);
+    expect(
+        find.byKey(const ValueKey('unexplored-node-scene_1')), findsOneWidget);
     expect(
         find.byKey(const ValueKey('selected-scene-preview')), findsOneWidget);
 

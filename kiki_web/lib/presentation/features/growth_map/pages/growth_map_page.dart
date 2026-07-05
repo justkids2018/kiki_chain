@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/utils/app_toast.dart';
 import '../../../../design_ui/kiki_ui_kit.dart';
 import '../../../../domain/entities/scene.dart';
 import '../../../../domain/entities/scene_category.dart';
@@ -183,19 +182,20 @@ class _GrowthMapPageState extends State<GrowthMapPage> {
             itemBuilder: (context, index) {
               final scene = controller.scenes[index];
               final isCurrent = index == controller.restoredSceneIndex.value;
-              final state = scene.isLocked
-                  ? GrowthNodeState.locked
-                  : isCurrent
-                      ? GrowthNodeState.current
-                      : index < controller.restoredSceneIndex.value
-                          ? GrowthNodeState.completed
-                          : GrowthNodeState.available;
+              final isLearned = controller.isSceneLearned(scene.id);
+              final state = isCurrent
+                  ? GrowthNodeState.current
+                  : isLearned
+                      ? GrowthNodeState.completed
+                      : GrowthNodeState.available;
 
               return GrowthTreeNode(
                 key: ValueKey(scene.id),
                 scene: scene,
                 index: index,
                 state: state,
+                isLearned: isLearned,
+                starsEarned: controller.starsForScene(scene.id),
                 onTap: () => _selectScene(controller, scene, index),
               );
             },
@@ -258,14 +258,6 @@ class _GrowthMapPageState extends State<GrowthMapPage> {
     Scene scene,
     int index,
   ) async {
-    if (scene.isLocked) {
-      AppToast.showCenter(
-        controller.hasReachedDailyLimit
-            ? '今天已经学习 3 个新场景啦，很棒哦！可以复习前面的场景，明天再来解锁新内容吧。'
-            : '完成前面的学习后再来看看吧',
-      );
-      return;
-    }
     if (index == controller.restoredSceneIndex.value) {
       await controller.navigateToSceneDetail(scene, selectedIndex: index);
       _scrollToIndex(controller.restoredSceneIndex.value);

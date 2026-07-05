@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../design_ui/kiki_ui_kit.dart';
 import '../../../../domain/entities/scene.dart';
 
-enum GrowthNodeState { completed, current, available, locked }
+enum GrowthNodeState { completed, current, available }
 
 class GrowthTreeNode extends StatefulWidget {
   const GrowthTreeNode({
@@ -12,12 +12,16 @@ class GrowthTreeNode extends StatefulWidget {
     required this.scene,
     required this.index,
     required this.state,
+    required this.isLearned,
+    required this.starsEarned,
     required this.onTap,
   });
 
   final Scene scene;
   final int index;
   final GrowthNodeState state;
+  final bool isLearned;
+  final int starsEarned;
   final VoidCallback onTap;
 
   @override
@@ -101,19 +105,13 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
       alignment: _isLeft ? Alignment.centerRight : Alignment.centerLeft,
       child: Semantics(
         button: true,
-        enabled: widget.state != GrowthNodeState.locked,
+        enabled: true,
         label: widget.scene.name,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTapDown: widget.state == GrowthNodeState.locked
-              ? null
-              : (_) => setState(() => _isPressed = true),
-          onTapCancel: widget.state == GrowthNodeState.locked
-              ? null
-              : () => setState(() => _isPressed = false),
-          onTapUp: widget.state == GrowthNodeState.locked
-              ? null
-              : (_) => setState(() => _isPressed = false),
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTapUp: (_) => setState(() => _isPressed = false),
           onTap: widget.onTap,
           child: AnimatedScale(
             scale: _isPressed ? 0.96 : 1,
@@ -134,9 +132,7 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
                     overflow: TextOverflow.ellipsis,
                     textAlign: _isLeft ? TextAlign.right : TextAlign.left,
                     style: TextStyle(
-                      color: widget.state == GrowthNodeState.locked
-                          ? const Color(0xFF948B78)
-                          : KikiUiColors.textPrimary,
+                      color: KikiUiColors.textPrimary,
                       fontSize: 16,
                       height: 1.15,
                       fontWeight: FontWeight.w700,
@@ -154,13 +150,11 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
   }
 
   Widget _buildSceneCanopy() {
-    final isLocked = widget.state == GrowthNodeState.locked;
     final isCurrent = widget.state == GrowthNodeState.current;
     final borderColor = switch (widget.state) {
       GrowthNodeState.completed => const Color(0xFF8DBD61),
       GrowthNodeState.current => const Color(0xFF6DB43F),
       GrowthNodeState.available => const Color(0xFFB8D694),
-      GrowthNodeState.locked => const Color(0xFFC9C3B2),
     };
 
     Widget canopy = Container(
@@ -184,11 +178,27 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
           fit: StackFit.expand,
           children: [
             _buildCoverImage(),
-            if (isLocked)
-              Container(color: const Color(0xFF716B5E).withValues(alpha: 0.55)),
-            if (isLocked)
-              const Icon(Icons.lock_rounded, color: Colors.white, size: 28),
-            if (widget.scene.isNew && !isLocked)
+            if (widget.isLearned)
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  key: ValueKey('learned-badge-${widget.scene.id}'),
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF66AD3D),
+                    shape: BoxShape.circle,
+                    border:
+                        Border.all(color: const Color(0xFFFFF8E8), width: 3),
+                  ),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    size: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            if (widget.scene.isNew && !widget.isLearned)
               Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
@@ -242,31 +252,30 @@ class _GrowthTreeNodeState extends State<GrowthTreeNode>
       child: Row(
         mainAxisAlignment:
             _isLeft ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          Icon(
-            widget.state == GrowthNodeState.current
-                ? Icons.play_circle_fill_rounded
-                : Icons.eco_rounded,
-            size: 15,
-            color: widget.state == GrowthNodeState.locked
-                ? const Color(0xFFC7BFAE)
-                : const Color(0xFF78B94C),
-          ),
-          const SizedBox(width: 4),
-          Flexible(
-            child: Text(
-              widget.scene.nameEn,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: _isLeft ? TextAlign.right : TextAlign.left,
-              style: const TextStyle(
-                color: KikiUiColors.textSecondary,
-                fontSize: 12,
-                height: 1,
-              ),
-            ),
-          ),
-        ],
+        children: widget.isLearned
+            ? List.generate(
+                3,
+                (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
+                  child: Icon(
+                    index < widget.starsEarned
+                        ? Icons.star_rounded
+                        : Icons.star_outline_rounded,
+                    size: 17,
+                    color: index < widget.starsEarned
+                        ? const Color(0xFFFFB52E)
+                        : const Color(0xFFC7BFAE),
+                  ),
+                ),
+              )
+            : [
+                Icon(
+                  key: ValueKey('unexplored-node-${widget.scene.id}'),
+                  Icons.eco_outlined,
+                  size: 17,
+                  color: const Color(0xFF9DBA7D),
+                ),
+              ],
       ),
     );
   }

@@ -6,10 +6,6 @@ on:
     - cron: "30 0 * * 1,3,5"
   workflow_dispatch:
     inputs:
-      base_version:
-        description: "Base version (first 3 parts), e.g. 1.0.0 or 0.001.00"
-        required: false
-        type: string
       upload_to_testflight:
         description: "Upload the signed IPA to TestFlight"
         required: false
@@ -26,7 +22,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
 
     env:
-      BASE_VERSION_DEFAULT: ${{ vars.IOS_BASE_VERSION || '1.0.0' }}
+      BASE_VERSION_DEFAULT: "1.0.0"
       IOS_EXPORT_METHOD: ${{ vars.IOS_EXPORT_METHOD || 'app-store' }}
       UPLOAD_TO_TESTFLIGHT: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.upload_to_testflight == 'true' }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -45,19 +41,14 @@ jobs:
         id: meta
         run: |
           set -euo pipefail
-          INPUT_BASE_VERSION="${{ github.event.inputs.base_version || '' }}"
-          if [[ -n "${INPUT_BASE_VERSION}" ]]; then
-            BASE_VERSION="${INPUT_BASE_VERSION}"
-          else
-            BASE_VERSION="${BASE_VERSION_DEFAULT}"
-          fi
+          BASE_VERSION="${BASE_VERSION_DEFAULT}"
 
           BUILD_NUM_DEC="${{ github.run_number }}"
           BUILD_SEQ=$(printf "%03d" "${BUILD_NUM_DEC}")
-          FULL_VERSION="${BASE_VERSION}.${BUILD_SEQ}"
+          FULL_VERSION="${BASE_VERSION}"
           BRANCH_NAME="${GITHUB_REF_NAME}"
           BRANCH_SAFE=$(echo "${BRANCH_NAME}" | sed 's#[^A-Za-z0-9._/-]#-#g')
-          TAG_NAME="ios/${BRANCH_SAFE}/v${FULL_VERSION}"
+          TAG_NAME="ios/${BRANCH_SAFE}/v${FULL_VERSION}-${BUILD_SEQ}"
           ARTIFACT_PREFIX="ios-${BASE_VERSION}-${BUILD_SEQ}"
 
           echo "base_version=${BASE_VERSION}" >> "$GITHUB_OUTPUT"
@@ -173,7 +164,7 @@ jobs:
         run: |
           set -euo pipefail
           flutter build ipa --release \
-            --build-name "${{ steps.meta.outputs.full_version }}" \
+            --build-name "${{ steps.meta.outputs.base_version }}" \
             --build-number "${{ steps.meta.outputs.build_num_dec }}" \
             --export-options-plist "$RUNNER_TEMP/ExportOptions.plist"
 
@@ -241,7 +232,7 @@ jobs:
 
           - Base version: ${{ steps.meta.outputs.base_version }}
           - Build sequence: ${{ steps.meta.outputs.build_seq }}
-          - Full version (X.Y.Z.AUTO): ${{ steps.meta.outputs.full_version }}
+          - Marketing version (X.Y.Z): ${{ steps.meta.outputs.full_version }}
           - iOS CFBundleShortVersionString: ${{ steps.meta.outputs.full_version }}
           - iOS CFBundleVersion: ${{ steps.meta.outputs.build_num_dec }}
           - Bundle ID (from profile): ${BUNDLE_ID}

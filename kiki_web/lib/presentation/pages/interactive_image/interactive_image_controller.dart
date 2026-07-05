@@ -204,6 +204,47 @@ class InteractiveImageController extends GetxController {
   ImageItem? get currentImageItem => _currentImageItem;
   List<ImageItem> get imagesList => _imagesList;
 
+  String get _writingPracticeTitle {
+    String readFromMap(Map map) {
+      const keys = [
+        'name',
+        'nameCn',
+        'name_cn',
+        'title',
+        'displayName',
+        'display_name',
+      ];
+      for (final key in keys) {
+        final value = map[key]?.toString().trim();
+        if (value != null && value.isNotEmpty) return value;
+      }
+      return '';
+    }
+
+    if (_scene is Map) {
+      final title = readFromMap(_scene as Map);
+      if (title.isNotEmpty) return title;
+    } else if (_scene != null) {
+      try {
+        final title = _scene.name?.toString().trim() ?? '';
+        if (title.isNotEmpty) return title;
+      } catch (_) {}
+      try {
+        final title = _scene.nameCn?.toString().trim() ?? '';
+        if (title.isNotEmpty) return title;
+      } catch (_) {}
+      try {
+        final title = _scene.title?.toString().trim() ?? '';
+        if (title.isNotEmpty) return title;
+      } catch (_) {}
+    }
+
+    final imageTitle = _currentImageItem?.title.trim() ?? '';
+    if (imageTitle.isNotEmpty) return imageTitle;
+
+    return '';
+  }
+
   void navigateToWritingPractice() {
     final words = vocabularyRegions
         .map((region) => {
@@ -226,7 +267,10 @@ class InteractiveImageController extends GetxController {
 
     Get.toNamed(
       AppConstants.routeWritingPractice,
-      arguments: {'words': words},
+      arguments: {
+        'title': _writingPracticeTitle,
+        'words': words,
+      },
     );
   }
 

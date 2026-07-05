@@ -28,6 +28,7 @@ class WritingPracticePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final words = _parseWords(Get.arguments);
+    final title = _parseTitle(Get.arguments);
     final items = words
         .map((word) => WritingPracticePrintItem(
               text: word.text,
@@ -40,7 +41,10 @@ class WritingPracticePage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _WritingPracticeToolbar(items: items),
+            _WritingPracticeToolbar(
+              items: items,
+              title: title,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
@@ -58,6 +62,11 @@ class WritingPracticePage extends StatelessWidget {
     );
   }
 
+  String _parseTitle(dynamic arguments) {
+    if (arguments is! Map) return '';
+    return (arguments['title'] ?? '').toString().trim();
+  }
+
   List<WritingPracticeWord> _parseWords(dynamic arguments) {
     if (arguments is! Map) return const [];
     final rawWords = arguments['words'];
@@ -72,10 +81,56 @@ class WritingPracticePage extends StatelessWidget {
   }
 }
 
-class _WritingPracticeToolbar extends StatelessWidget {
-  const _WritingPracticeToolbar({required this.items});
+class _WritingPracticeToolbar extends StatefulWidget {
+  const _WritingPracticeToolbar({
+    required this.items,
+    required this.title,
+  });
 
   final List<WritingPracticePrintItem> items;
+  final String title;
+
+  @override
+  State<_WritingPracticeToolbar> createState() =>
+      _WritingPracticeToolbarState();
+}
+
+class _WritingPracticeToolbarState extends State<_WritingPracticeToolbar> {
+  bool _isPrinting = false;
+
+  String get displayTitle =>
+      widget.title.trim().isEmpty ? '每日一练' : '每日一练 - ${widget.title.trim()}';
+
+  Future<void> _handlePrint() async {
+    if (_isPrinting || widget.items.isEmpty) return;
+
+    setState(() => _isPrinting = true);
+    Get.snackbar(
+      '正在准备打印',
+      '正在生成练习纸，请稍候…',
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
+    );
+
+    try {
+      await printWritingPracticePage(
+        items: widget.items,
+        title: widget.title,
+      );
+    } catch (error, stackTrace) {
+      AppLogger.error(
+          'Failed to print writing practice page', error, stackTrace);
+      Get.snackbar(
+        '无法打印',
+        '请检查系统打印服务或网络字体加载后重试',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isPrinting = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +143,12 @@ class _WritingPracticeToolbar extends StatelessWidget {
             onPressed: () => Get.back(),
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              '每日一练',
+              displayTitle,
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -100,23 +157,16 @@ class _WritingPracticeToolbar extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: '打印',
-            onPressed: items.isEmpty
-                ? null
-                : () async {
-                    try {
-                      await printWritingPracticePage(items: items);
-                    } catch (error, stackTrace) {
-                      AppLogger.error('Failed to print writing practice page',
-                          error, stackTrace);
-                      Get.snackbar(
-                        '无法打印',
-                        '请检查系统打印服务或网络字体加载后重试',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    }
-                  },
-            icon: const Icon(Icons.print_rounded),
+            tooltip: _isPrinting ? '正在准备打印' : '打印',
+            onPressed:
+                widget.items.isEmpty || _isPrinting ? null : _handlePrint,
+            icon: _isPrinting
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2.4),
+                  )
+                : const Icon(Icons.print_rounded),
           ),
         ],
       ),

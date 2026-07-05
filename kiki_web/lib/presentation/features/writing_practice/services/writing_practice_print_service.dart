@@ -91,8 +91,12 @@ class WritingPracticePrintLayout {
 
 Future<void> printWritingPracticePage({
   required List<WritingPracticePrintItem> items,
+  String title = '',
 }) async {
-  final bytes = await _buildPracticePdf(items);
+  final bytes = await _buildPracticePdf(
+    items,
+    title: title,
+  );
   await Printing.layoutPdf(
     name: 'hanzi-writing-practice.pdf',
     format: PdfPageFormat.a4,
@@ -101,8 +105,9 @@ Future<void> printWritingPracticePage({
 }
 
 Future<Uint8List> _buildPracticePdf(
-  List<WritingPracticePrintItem> items,
-) async {
+  List<WritingPracticePrintItem> items, {
+  String title = '',
+}) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final cjkFont = pw.Font.ttf(
     await rootBundle.load('assets/fonts/AR-PL-KaitiM-GB.ttf'),
@@ -110,6 +115,8 @@ Future<Uint8List> _buildPracticePdf(
   final appIcon = pw.MemoryImage(
     (await rootBundle.load('assets/icon/app_icon.png')).buffer.asUint8List(),
   );
+  final practiceTitle =
+      title.trim().isEmpty ? '每日一练' : '每日一练 - ${title.trim()}';
 
   final rows = WritingPracticePrintLayout.buildRows(items);
   final pages = <List<List<WritingPracticePrintCell>>>[];
@@ -162,40 +169,40 @@ Future<Uint8List> _buildPracticePdf(
                       ),
                     ),
                     pw.Text(
-                      '每日一练',
+                      practiceTitle,
+                      maxLines: 1,
+                      overflow: pw.TextOverflow.clip,
                       style: pw.TextStyle(
                         font: cjkFont,
-                        fontSize: 24,
+                        fontSize: practiceTitle.length > 12 ? 20 : 24,
                         color: PdfColor.fromHex('#C62828'),
                       ),
                     ),
                   ],
                 ),
-                pw.SizedBox(height: 18),
+                pw.SizedBox(height: 8),
                 pw.Expanded(
-                  child: pw.Stack(
-                    children: [
-                      ..._buildHiKikiTags(
-                        cjkFont: cjkFont,
-                        appIcon: appIcon,
-                      ),
-                      pw.Center(
-                        child: pw.Column(
-                          mainAxisSize: pw.MainAxisSize.min,
-                          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
-                          children: pageRows
-                              .map((row) =>
-                                  _buildPrintPracticeRow(row, cjkFont))
-                              .toList(),
-                        ),
-                      ),
-                    ],
+                  child: pw.Align(
+                    alignment: pw.Alignment.topCenter,
+                    child: pw.Column(
+                      mainAxisSize: pw.MainAxisSize.min,
+                      crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+                      children: pageRows
+                          .map((row) => _buildPrintPracticeRow(row, cjkFont))
+                          .toList(),
+                    ),
                   ),
                 ),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildFooterLine('日期：', cjkFont),
+                    pw.Row(
+                      children: [
+                        _buildFooterLine('日期：', cjkFont),
+                        pw.SizedBox(width: 16),
+                        _buildHiKikiTag(cjkFont, appIcon),
+                      ],
+                    ),
                     pw.Text(
                       '评分：☆☆☆☆☆',
                       style: pw.TextStyle(
@@ -226,30 +233,6 @@ Future<Uint8List> _buildPracticePdf(
   }
 
   return pdf.save();
-}
-
-List<pw.Widget> _buildHiKikiTags({
-  required pw.Font cjkFont,
-  required pw.MemoryImage appIcon,
-}) {
-  return [
-    pw.Positioned(
-      left: 8,
-      top: 10,
-      child: pw.Transform.rotate(
-        angle: -0.06,
-        child: _buildHiKikiTag(cjkFont, appIcon),
-      ),
-    ),
-    pw.Positioned(
-      right: 8,
-      bottom: 10,
-      child: pw.Transform.rotate(
-        angle: 0.06,
-        child: _buildHiKikiTag(cjkFont, appIcon),
-      ),
-    ),
-  ];
 }
 
 pw.Widget _buildHiKikiTag(pw.Font cjkFont, pw.MemoryImage appIcon) {
@@ -334,12 +317,10 @@ pw.Widget _buildPrintCell(
   String? pinyin,
   pw.Font cjkFont,
   PdfColor color,
-  double size,
-  {
+  double size, {
   bool ghost = false,
   bool showPinyinHeader = false,
-}
-) {
+}) {
   final headerHeight = showPinyinHeader ? size * 0.34 : 0.0;
   return pw.Container(
     width: size,

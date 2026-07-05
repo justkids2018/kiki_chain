@@ -403,6 +403,25 @@
             background: var(--soft);
         }
 
+        .site-footer {
+            display: flex;
+            justify-content: center;
+            padding: 28px 16px 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .site-footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            color: var(--green-deep);
+        }
+
         .note-item {
             padding: 15px;
             border-right: 1px solid var(--line);
@@ -675,6 +694,10 @@
                 <span>先把一个问题做清楚，再在使用中持续完善。</span>
             </div>
         </section>
+
+        <footer class="site-footer">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">冀ICP备2021022256号-2</a>
+        </footer>
     </main>
     <script>
         document.querySelectorAll('[data-root-src]').forEach((image) => {

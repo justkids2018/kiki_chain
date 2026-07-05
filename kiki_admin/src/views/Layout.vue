@@ -99,7 +99,8 @@ const handleCommand = async (command: string) => {
 
 <style scoped>
 .layout-container {
-  height: 100vh;
+  height: 100%;
+  min-height: calc(100vh - 40px);
 }
 
 .el-aside {

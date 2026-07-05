@@ -79,17 +79,26 @@ jobs:
         run: |
           set -euo pipefail
 
-          while IFS= read -r swift_file; do
-            if grep -Fq 'path.isUltraConstrained' "${swift_file}"; then
-              perl -0pi -e 's/      if #available\(iOS 26\.0, \*\), path\.isUltraConstrained \{\n        types\.append\(\.satellite\)\n      \}\n//g' "${swift_file}"
-              echo "Patched ${swift_file}"
-            fi
-          done < <(find "$HOME/.pub-cache/hosted" -path '*/connectivity_plus-*/ios/connectivity_plus/Sources/connectivity_plus/PathMonitorConnectivityProvider.swift' -print)
+          find "$HOME/.pub-cache/hosted" \
+            \( -path '*/connectivity_plus-*/ios/connectivity_plus/Sources/connectivity_plus/PathMonitorConnectivityProvider.swift' \
+              -o -path '*/connectivity_plus-*/macos/connectivity_plus/Sources/connectivity_plus/PathMonitorConnectivityProvider.swift' \) \
+            -print0 |
+            while IFS= read -r -d '' swift_file; do
+              if grep -Fq 'path.isUltraConstrained' "${swift_file}"; then
+                perl -0pi -e 's/      if #available\((?:iOS|macOS) 26\.0, \*\), path\.isUltraConstrained \{\n        types\.append\(\.satellite\)\n      \}\n//g' "${swift_file}"
+                echo "Patched ${swift_file}"
+              fi
+            done
 
-          if grep -R --include='PathMonitorConnectivityProvider.swift' -Fq 'path.isUltraConstrained' "$HOME/.pub-cache/hosted"; then
-            echo "connectivity_plus iOS source still references path.isUltraConstrained"
-            exit 1
-          fi
+          while IFS= read -r -d '' swift_file; do
+            if grep -Fq 'path.isUltraConstrained' "${swift_file}"; then
+              echo "connectivity_plus native source still references path.isUltraConstrained: ${swift_file}"
+              exit 1
+            fi
+          done < <(find "$HOME/.pub-cache/hosted" \
+            \( -path '*/connectivity_plus-*/ios/connectivity_plus/Sources/connectivity_plus/PathMonitorConnectivityProvider.swift' \
+              -o -path '*/connectivity_plus-*/macos/connectivity_plus/Sources/connectivity_plus/PathMonitorConnectivityProvider.swift' \) \
+            -print0)
 
       - name: Prepare iOS signing assets
         env:

@@ -3,10 +3,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_background" />
 
-    <!-- Kiki welcome splash screen image -->
-    <item>
+    <!-- Keep the launch image visible and undistorted with a stable 3:1 frame. -->
+    <item
+        android:width="720dp"
+        android:height="240dp"
+        android:gravity="center">
         <bitmap
-            android:gravity="center"
+            android:gravity="fill"
             android:src="@drawable/kiki_welcome" />
     </item>
 </layer-list>

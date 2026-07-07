@@ -20,9 +20,9 @@ class _SplashPageState extends State<SplashPage>
   static const Duration _authInitializationTimeout = Duration(seconds: 4);
   static const String _welcomeImagePath = 'assets/images/kiki_welcome.png';
   static const Color _splashBackgroundColor = Color(0xFFEBCDB2);
-  static const double _logoShortSideFactor = 0.92;
+  static const double _logoAspectRatio = 3.0;
+  static const double _logoMaxWidth = 720.0;
   static const double _logoHorizontalPadding = 20.0;
-  static const double _logoMaxWidth = 680.0;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -89,22 +89,21 @@ class _SplashPageState extends State<SplashPage>
         color: _splashBackgroundColor,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final shortestSide = constraints.biggest.shortestSide;
             final availableWidth =
-                (constraints.maxWidth - _logoHorizontalPadding)
-                    .clamp(0.0, _logoMaxWidth);
-            final logoWidth = (shortestSide * _logoShortSideFactor)
-                .clamp(0.0, availableWidth)
-                .toDouble();
+                (constraints.maxWidth - (_logoHorizontalPadding * 2))
+                    .clamp(0.0, _logoMaxWidth)
+                    .toDouble();
+            final logoHeight = availableWidth / _logoAspectRatio;
 
             return Center(
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: SizedBox(
-                  width: logoWidth,
+                  width: availableWidth,
+                  height: logoHeight,
                   child: Image.asset(
                     _welcomeImagePath,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fill,
                     alignment: Alignment.center,
                   ),
                 ),

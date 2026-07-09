@@ -65,8 +65,11 @@ class _GrowthMapPageState extends State<GrowthMapPage> {
                     }
                     return Row(
                       children: [
-                        Expanded(child: _buildMapPane(controller)),
-                        Expanded(child: _buildScenePreview(controller)),
+                        Expanded(flex: 6, child: _buildMapPane(controller)),
+                        Expanded(
+                          flex: 4,
+                          child: _buildScenePreview(controller),
+                        ),
                       ],
                     );
                   },
@@ -103,8 +106,8 @@ class _GrowthMapPageState extends State<GrowthMapPage> {
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 124),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final byWidth = constraints.maxWidth * 0.9;
-            final byHeight = constraints.maxHeight * 0.9;
+            final byWidth = constraints.maxWidth * 0.84;
+            final byHeight = constraints.maxHeight * 0.84;
             final cardSize = byWidth < byHeight ? byWidth : byHeight;
             return Center(
               child: SizedBox.square(
@@ -301,8 +304,14 @@ class _ScenePreviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFFF8E8),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: const Color(0xFFE7D5AC), width: 2),
-        boxShadow: KikiUiShadows.floating,
+        border: Border.all(color: const Color(0xFFE7D5AC), width: 1.4),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6B4A1E).withValues(alpha: 0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(26),
@@ -380,10 +389,13 @@ class _MapIllustrationLayer extends StatelessWidget {
             left: -30,
             right: -30,
             bottom: -18,
-            child: Image.asset(
-              'assets/images/growth_map/meadow_wide.png',
-              height: 132,
-              fit: BoxFit.cover,
+            child: Opacity(
+              opacity: 0.88,
+              child: Image.asset(
+                'assets/images/growth_map/meadow_wide.png',
+                height: 132,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],
@@ -397,9 +409,14 @@ class _MapCharacterOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IgnorePointer(
-      child:
-          Align(alignment: Alignment.bottomCenter, child: _MapCharacterGroup()),
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Opacity(
+          opacity: 0.72,
+          child: const _MapCharacterGroup(),
+        ),
+      ),
     );
   }
 }

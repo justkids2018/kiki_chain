@@ -173,6 +173,9 @@ jobs:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
           DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
           DEPLOY_REMOTE_DIR: ${{ secrets.DEPLOY_REMOTE_DIR }}
+          DEPLOY_ADMIN_HOST_PORT: ${{ secrets.DEPLOY_ADMIN_HOST_PORT }}
+          DEPLOY_BACKEND_HOST_PORT: ${{ secrets.DEPLOY_BACKEND_HOST_PORT }}
+          DEPLOY_POSTGRES_HOST_PORT: ${{ secrets.DEPLOY_POSTGRES_HOST_PORT }}
         run: |
           set -euo pipefail
           ./scripts/deploy-release/step1-prepare.sh tencent
@@ -182,6 +185,9 @@ jobs:
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
           DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
           DEPLOY_REMOTE_DIR: ${{ secrets.DEPLOY_REMOTE_DIR }}
+          DEPLOY_ADMIN_HOST_PORT: ${{ secrets.DEPLOY_ADMIN_HOST_PORT }}
+          DEPLOY_BACKEND_HOST_PORT: ${{ secrets.DEPLOY_BACKEND_HOST_PORT }}
+          DEPLOY_POSTGRES_HOST_PORT: ${{ secrets.DEPLOY_POSTGRES_HOST_PORT }}
           SKIP_DB_MIGRATION: ${{ github.event.inputs.skip_db_migration == true && 'true' || 'false' }}
         run: |
           set -euo pipefail

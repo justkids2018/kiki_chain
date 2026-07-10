@@ -154,9 +154,9 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 
 ---
 
-## 移动端按分类获取场景列表
+## 移动端按主题获取学习卡片列表
 
-**接口描述**：获取移动端某个分类下的场景列表，并返回 VIP 付费墙字段。
+**接口描述**：获取移动端某个主题下的学习卡片列表，并返回 VIP 付费墙字段。接口路径保持历史兼容，路径中的 `category_id` 表示当前主题 ID。学习卡片可被多个主题复用，服务端按主题-学习卡片关联关系返回结果。
 
 **请求方式**：GET
 
@@ -168,7 +168,7 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 
 | 参数名 | 类型 | 必填 | 说明 | 示例 |
 |--------|------|------|------|------|
-| category_id | string | 是 | 分类 ID | `cat_001` |
+| category_id | string | 是 | 主题 ID（历史字段名保持 category_id） | `cat_001` |
 
 **响应参数补充**：
 
@@ -177,6 +177,8 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
 | data[].is_free | boolean | 是否免费卡。首页/列表展示顺序第 1 张为 true |
 | data[].requires_vip | boolean | 是否需要 VIP |
 | data[].is_locked | boolean | 是否锁定。公开接口默认按非 VIP 计算，登录用户客户端应结合权益重算 |
+| data[].category_id | string | 学习卡片主主题 ID，仅表示默认来源，不用于判断当前列表归属 |
+| data[].category_ids | array | 学习卡片所属主题 ID 列表 |
 
 **响应示例**：
 
@@ -187,6 +189,7 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
     {
       "id": "scene_001",
       "category_id": "cat_001",
+      "category_ids": ["cat_001", "cat_entry_100"],
       "name": "回家",
       "order": 1,
       "is_free": true,
@@ -196,6 +199,7 @@ GET /api/v1/scenes?categoryId=daily_life&page=1&pageSize=20
     {
       "id": "scene_002",
       "category_id": "cat_001",
+      "category_ids": ["cat_001"],
       "name": "除夕",
       "order": 2,
       "is_free": false,

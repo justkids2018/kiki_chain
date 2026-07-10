@@ -25,19 +25,19 @@ const routes: RouteRecordRaw[] = [
         path: 'categories',
         name: 'Categories',
         component: () => import('../views/Categories.vue'),
-        meta: { title: '场景分类' }
+        meta: { title: '主题管理' }
       },
       {
         path: 'scenes',
         name: 'Scenes',
         component: () => import('../views/Scenes.vue'),
-        meta: { title: '场景管理' }
+        meta: { title: '学习卡片管理' }
       },
       {
         path: 'scenes/:id/items',
         name: 'SceneItems',
         component: () => import('../views/SceneItems.vue'),
-        meta: { title: '场景物品' }
+        meta: { title: '学习卡片词条' }
       },
       {
         path: 'users',

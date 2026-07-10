@@ -29,7 +29,8 @@ pub struct UpdateCategoryCommand {
 
 pub struct CreateSceneCommand {
     pub id: String,
-    pub category_id: String,
+    pub category_id: Option<String>,
+    pub category_ids: Option<Vec<String>>,
     pub name: String,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,
@@ -43,6 +44,8 @@ pub struct CreateSceneCommand {
 
 pub struct UpdateSceneCommand {
     pub id: String,
+    pub category_id: Option<String>,
+    pub category_ids: Option<Vec<String>>,
     pub name: Option<String>,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,
@@ -130,6 +133,35 @@ impl AdminSceneUseCase {
 
     // ===== 场景管理 =====
 
+    fn normalize_category_ids(
+        category_id: Option<String>,
+        category_ids: Option<Vec<String>>,
+    ) -> Result<Vec<String>> {
+        let mut ids = Vec::new();
+
+        if let Some(id) = category_id {
+            let trimmed = id.trim();
+            if !trimmed.is_empty() {
+                ids.push(trimmed.to_string());
+            }
+        }
+
+        if let Some(extra_ids) = category_ids {
+            for id in extra_ids {
+                let trimmed = id.trim();
+                if !trimmed.is_empty() && !ids.iter().any(|item| item == trimmed) {
+                    ids.push(trimmed.to_string());
+                }
+            }
+        }
+
+        if ids.is_empty() {
+            return Err(DomainError::Validation("所属主题不能为空".to_string()));
+        }
+
+        Ok(ids)
+    }
+
     pub async fn list_scenes(&self, page: i64, page_size: i64) -> Result<(Vec<Scene>, i64)> {
         let page = page.max(1);
         let page_size = page_size.clamp(1, 100);
@@ -167,6 +199,8 @@ impl AdminSceneUseCase {
 
     pub async fn create_scene(&self, cmd: CreateSceneCommand) -> Result<Scene> {
         let now = Utc::now();
+        let category_ids = Self::normalize_category_ids(cmd.category_id, cmd.category_ids)?;
+        let primary_category_id = category_ids[0].clone();
 
         // 计算 item_count
         let item_count = if let Some(ref items_data) = cmd.items_data {
@@ -181,7 +215,8 @@ impl AdminSceneUseCase {
 
         let scene = Scene {
             id: cmd.id,
-            category_id: cmd.category_id,
+            category_id: primary_category_id.clone(),
+            category_ids: category_ids.clone(),
             name: cmd.name,
             name_en: cmd.name_en,
             cover_image: cmd.cover_image,
@@ -199,6 +234,14 @@ impl AdminSceneUseCase {
             updated_at: now,
         };
         self.repo.save_scene(&scene).await?;
+        self.repo
+            .save_scene_category_relations(
+                &scene.id,
+                &category_ids,
+                &primary_category_id,
+                scene.display_order,
+            )
+            .await?;
         Ok(scene)
     }
 
@@ -209,6 +252,15 @@ impl AdminSceneUseCase {
             .await?
             .ok_or_else(|| DomainError::NotFound(format!("场景不存在: {}", cmd.id)))?;
         let mut scene = detail.scene;
+        let next_category_ids = if cmd.category_id.is_some() || cmd.category_ids.is_some() {
+            let ids = Self::normalize_category_ids(cmd.category_id, cmd.category_ids)?;
+            let primary_category_id = ids[0].clone();
+            scene.category_id = primary_category_id;
+            scene.category_ids = ids.clone();
+            Some(ids)
+        } else {
+            None
+        };
 
         if let Some(name) = cmd.name {
             scene.name = name;
@@ -251,6 +303,16 @@ impl AdminSceneUseCase {
         scene.updated_at = Utc::now();
 
         self.repo.save_scene(&scene).await?;
+        if let Some(category_ids) = next_category_ids {
+            self.repo
+                .save_scene_category_relations(
+                    &scene.id,
+                    &category_ids,
+                    &scene.category_id,
+                    scene.display_order,
+                )
+                .await?;
+        }
         Ok(scene)
     }
 

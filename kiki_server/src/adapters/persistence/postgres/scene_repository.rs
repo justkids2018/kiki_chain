@@ -42,9 +42,17 @@ impl PostgresSceneRepository {
     }
 
     fn map_row_to_scene(row: &sqlx::postgres::PgRow) -> Scene {
+        let category_id: String = row.get("category_id");
+        let category_ids = row
+            .try_get::<Vec<String>, _>("category_ids")
+            .ok()
+            .filter(|ids| !ids.is_empty())
+            .unwrap_or_else(|| vec![category_id.clone()]);
+
         Scene {
             id: row.get("id"),
-            category_id: row.get("category_id"),
+            category_id,
+            category_ids,
             name: row.get("name"),
             name_en: row.try_get("name_en").ok(),
             cover_image: row.try_get("cover_image").ok(),
@@ -87,9 +95,10 @@ impl SceneRepository for PostgresSceneRepository {
         let rows = sqlx::query(
             r#"
             SELECT sc.*,
-                   COUNT(s.id) AS scene_count
+                   COUNT(DISTINCT s.id) AS scene_count
             FROM scene_categories sc
-            LEFT JOIN scenes s ON s.category_id = sc.id AND s.is_visible = TRUE
+            LEFT JOIN scene_category_relations scr ON scr.category_id = sc.id
+            LEFT JOIN scenes s ON s.id = scr.scene_id AND s.is_visible = TRUE
             WHERE sc.is_visible = TRUE
             GROUP BY sc.id
             ORDER BY sc.display_order ASC, sc.created_at ASC
@@ -105,9 +114,10 @@ impl SceneRepository for PostgresSceneRepository {
     async fn find_category_by_id(&self, id: &str) -> Result<Option<SceneCategory>> {
         let row = sqlx::query(
             r#"
-            SELECT sc.*, COUNT(s.id) AS scene_count
+            SELECT sc.*, COUNT(DISTINCT s.id) AS scene_count
             FROM scene_categories sc
-            LEFT JOIN scenes s ON s.category_id = sc.id AND s.is_visible = TRUE
+            LEFT JOIN scene_category_relations scr ON scr.category_id = sc.id
+            LEFT JOIN scenes s ON s.id = scr.scene_id AND s.is_visible = TRUE
             WHERE sc.id = $1
             GROUP BY sc.id
             "#,
@@ -123,9 +133,18 @@ impl SceneRepository for PostgresSceneRepository {
     async fn find_scenes_by_category(&self, category_id: &str) -> Result<Vec<Scene>> {
         let rows = sqlx::query(
             r#"
-            SELECT * FROM scenes
-            WHERE category_id = $1 AND is_visible = TRUE
-            ORDER BY display_order ASC, created_at ASC
+            SELECT s.*,
+                   COALESCE(
+                       ARRAY_AGG(scr_all.category_id ORDER BY scr_all.is_primary DESC, scr_all.display_order ASC)
+                       FILTER (WHERE scr_all.category_id IS NOT NULL),
+                       ARRAY[s.category_id]
+                   ) AS category_ids
+            FROM scene_category_relations scr
+            JOIN scenes s ON s.id = scr.scene_id
+            LEFT JOIN scene_category_relations scr_all ON scr_all.scene_id = s.id
+            WHERE scr.category_id = $1 AND s.is_visible = TRUE
+            GROUP BY s.id, scr.display_order
+            ORDER BY scr.display_order ASC, s.display_order ASC, s.created_at ASC
             "#,
         )
         .bind(category_id)
@@ -137,7 +156,20 @@ impl SceneRepository for PostgresSceneRepository {
     }
 
     async fn find_scene_detail(&self, scene_id: &str) -> Result<Option<SceneDetail>> {
-        let scene_row = sqlx::query("SELECT * FROM scenes WHERE id = $1")
+        let scene_row = sqlx::query(
+            r#"
+            SELECT s.*,
+                   COALESCE(
+                       ARRAY_AGG(scr.category_id ORDER BY scr.is_primary DESC, scr.display_order ASC)
+                       FILTER (WHERE scr.category_id IS NOT NULL),
+                       ARRAY[s.category_id]
+                   ) AS category_ids
+            FROM scenes s
+            LEFT JOIN scene_category_relations scr ON scr.scene_id = s.id
+            WHERE s.id = $1
+            GROUP BY s.id
+            "#,
+        )
             .bind(scene_id)
             .fetch_optional(&self.pool)
             .await
@@ -182,9 +214,17 @@ impl SceneRepository for PostgresSceneRepository {
 
         let rows = sqlx::query(
             r#"
-            SELECT * FROM scenes
-            WHERE is_visible = TRUE AND (name ILIKE $1 OR description ILIKE $1)
-            ORDER BY display_order ASC, created_at DESC
+            SELECT s.*,
+                   COALESCE(
+                       ARRAY_AGG(scr.category_id ORDER BY scr.is_primary DESC, scr.display_order ASC)
+                       FILTER (WHERE scr.category_id IS NOT NULL),
+                       ARRAY[s.category_id]
+                   ) AS category_ids
+            FROM scenes s
+            LEFT JOIN scene_category_relations scr ON scr.scene_id = s.id
+            WHERE s.is_visible = TRUE AND (s.name ILIKE $1 OR s.description ILIKE $1)
+            GROUP BY s.id
+            ORDER BY s.display_order ASC, s.created_at DESC
             LIMIT $2 OFFSET $3
             "#,
         )
@@ -201,9 +241,17 @@ impl SceneRepository for PostgresSceneRepository {
     async fn find_recommendations(&self, limit: i64) -> Result<Vec<Scene>> {
         let rows = sqlx::query(
             r#"
-            SELECT * FROM scenes
-            WHERE is_visible = TRUE
-            ORDER BY is_new DESC, created_at DESC
+            SELECT s.*,
+                   COALESCE(
+                       ARRAY_AGG(scr.category_id ORDER BY scr.is_primary DESC, scr.display_order ASC)
+                       FILTER (WHERE scr.category_id IS NOT NULL),
+                       ARRAY[s.category_id]
+                   ) AS category_ids
+            FROM scenes s
+            LEFT JOIN scene_category_relations scr ON scr.scene_id = s.id
+            WHERE s.is_visible = TRUE
+            GROUP BY s.id
+            ORDER BY s.is_new DESC, s.created_at DESC
             LIMIT $1
             "#,
         )
@@ -245,6 +293,52 @@ impl SceneRepository for PostgresSceneRepository {
         .execute(&self.pool)
         .await
         .map_err(|e| DomainError::Infrastructure(format!("保存分类失败: {}", e)))?;
+
+        Ok(())
+    }
+
+    async fn save_scene_category_relations(
+        &self,
+        scene_id: &str,
+        category_ids: &[String],
+        primary_category_id: &str,
+        display_order: i32,
+    ) -> Result<()> {
+        let mut tx =
+            self.pool.begin().await.map_err(|e| {
+                DomainError::Infrastructure(format!("开始保存场景主题关联失败: {}", e))
+            })?;
+
+        sqlx::query("DELETE FROM scene_category_relations WHERE scene_id = $1")
+            .bind(scene_id)
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| DomainError::Infrastructure(format!("清理场景主题关联失败: {}", e)))?;
+
+        for (index, category_id) in category_ids.iter().enumerate() {
+            sqlx::query(
+                r#"
+                INSERT INTO scene_category_relations
+                    (scene_id, category_id, display_order, is_primary, created_at, updated_at)
+                VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                ON CONFLICT (scene_id, category_id) DO UPDATE SET
+                    display_order = EXCLUDED.display_order,
+                    is_primary = EXCLUDED.is_primary,
+                    updated_at = CURRENT_TIMESTAMP
+                "#,
+            )
+            .bind(scene_id)
+            .bind(category_id)
+            .bind(display_order + index as i32)
+            .bind(category_id == primary_category_id)
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| DomainError::Infrastructure(format!("保存场景主题关联失败: {}", e)))?;
+        }
+
+        tx.commit()
+            .await
+            .map_err(|e| DomainError::Infrastructure(format!("提交场景主题关联失败: {}", e)))?;
 
         Ok(())
     }
@@ -372,7 +466,19 @@ impl SceneRepository for PostgresSceneRepository {
             .map_err(|e| DomainError::Infrastructure(format!("统计场景失败: {}", e)))?;
 
         let rows = sqlx::query(
-            "SELECT * FROM scenes ORDER BY display_order ASC, created_at DESC LIMIT $1 OFFSET $2",
+            r#"
+            SELECT s.*,
+                   COALESCE(
+                       ARRAY_AGG(scr.category_id ORDER BY scr.is_primary DESC, scr.display_order ASC)
+                       FILTER (WHERE scr.category_id IS NOT NULL),
+                       ARRAY[s.category_id]
+                   ) AS category_ids
+            FROM scenes s
+            LEFT JOIN scene_category_relations scr ON scr.scene_id = s.id
+            GROUP BY s.id
+            ORDER BY s.display_order ASC, s.created_at DESC
+            LIMIT $1 OFFSET $2
+            "#,
         )
         .bind(page_size)
         .bind(offset)

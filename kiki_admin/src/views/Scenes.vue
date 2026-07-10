@@ -4,10 +4,10 @@
       <template #header>
         <div class="card-header">
           <div class="header-left">
-            <span>场景管理</span>
+            <span>学习卡片管理</span>
             <el-select
               v-model="selectedCategory"
-              placeholder="筛选分类"
+              placeholder="筛选主题"
               clearable
               style="width: 200px; margin-left: 20px"
               @change="handleCategoryChange"
@@ -24,7 +24,7 @@
             <el-button @click="handleRefresh" :loading="loading">刷新</el-button>
             <el-button type="primary" @click="handleAdd">
               <el-icon><Plus /></el-icon>
-              新建场景
+              新建学习卡片
             </el-button>
           </div>
         </div>
@@ -58,6 +58,18 @@
         </el-table-column>
         <el-table-column prop="name" label="中文名" width="150" />
         <el-table-column prop="name_en" label="英文名" width="150" />
+        <el-table-column label="所属主题" width="220">
+          <template #default="{ row }">
+            <el-tag
+              v-for="cat in categoriesForScene(row)"
+              :key="cat.id"
+              size="small"
+              style="margin-right: 6px; margin-bottom: 4px"
+            >
+              {{ cat.name }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="description" label="描述" show-overflow-tooltip />
         <el-table-column prop="order" label="排序" width="80" align="center" />
         <el-table-column prop="is_new" label="新标签" width="100" align="center">
@@ -94,11 +106,16 @@
     <el-dialog
       v-model="dialogVisible"
       :title="dialogTitle"
-      width="700px"
+      width="760px"
     >
       <el-form :model="form" :rules="rules" ref="formRef" label-width="120px">
-        <el-form-item label="所属分类" prop="category_id">
-          <el-select v-model="form.category_id" placeholder="请选择分类">
+        <el-form-item label="所属主题" prop="category_ids">
+          <el-select
+            v-model="form.category_ids"
+            placeholder="请选择主题"
+            multiple
+            style="width: 100%"
+          >
             <el-option
               v-for="cat in categories"
               :key="cat.id"
@@ -152,7 +169,7 @@
         <el-form-item label="是否可见">
           <el-switch v-model="form.is_visible" />
         </el-form-item>
-        <el-form-item label="物品数据 JSON">
+        <el-form-item label="词条数据 JSON">
           <el-input
             v-model="itemsDataText"
             type="textarea"
@@ -206,7 +223,7 @@ const scenes = ref<Scene[]>([])
 const categories = ref<Category[]>([])
 const selectedCategory = ref('')
 const dialogVisible = ref(false)
-const dialogTitle = ref('新建场景')
+const dialogTitle = ref('新建学习卡片')
 const submitting = ref(false)
 const formRef = ref<FormInstance>()
 const currentId = ref('')
@@ -218,6 +235,7 @@ const total = ref(0)
 
 const form = reactive({
   category_id: '',
+  category_ids: [] as string[],
   name: '',
   name_en: '',
   cover_image: '',
@@ -237,9 +255,14 @@ const jsonDialogVisible = ref(false)
 const jsonViewText = ref('')
 
 const rules: FormRules = {
-  category_id: [{ required: true, message: '请选择分类', trigger: 'change' }],
+  category_ids: [{ required: true, message: '请选择主题', trigger: 'change' }],
   name: [{ required: true, message: '请输入中文名称', trigger: 'blur' }],
   name_en: [{ required: true, message: '请输入英文名称', trigger: 'blur' }]
+}
+
+const categoriesForScene = (scene: Scene) => {
+  const ids = scene.category_ids?.length ? scene.category_ids : [scene.category_id]
+  return categories.value.filter(cat => ids.includes(cat.id))
 }
 
 const fetchCategories = async () => {
@@ -295,10 +318,12 @@ const handleRefresh = () => {
 }
 
 const handleAdd = () => {
-  dialogTitle.value = '新建场景'
+  dialogTitle.value = '新建学习卡片'
   currentId.value = ''
+  const initialCategoryIds = selectedCategory.value ? [selectedCategory.value] : []
   Object.assign(form, {
     category_id: selectedCategory.value || '',
+    category_ids: initialCategoryIds,
     name: '',
     name_en: '',
     cover_image: '',
@@ -316,10 +341,12 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row: Scene) => {
-  dialogTitle.value = '编辑场景'
+  dialogTitle.value = '编辑学习卡片'
   currentId.value = row.id
+  const categoryIds = row.category_ids?.length ? row.category_ids : [row.category_id]
   Object.assign(form, {
     category_id: row.category_id,
+    category_ids: categoryIds,
     name: row.name,
     name_en: row.name_en,
     cover_image: row.cover_image,
@@ -362,6 +389,8 @@ const handleSubmit = async () => {
 
       const payload = {
         ...form,
+        category_id: form.category_ids[0] || form.category_id,
+        category_ids: form.category_ids,
         interactive_image: useCoverAsInteractive.value
           ? form.cover_image
           : (form.interactive_image || form.cover_image),
@@ -388,7 +417,7 @@ const handleSubmit = async () => {
 
 const handleDelete = async (row: Scene) => {
   try {
-    await ElMessageBox.confirm(`确定要删除场景"${row.name}"吗？`, '提示', {
+    await ElMessageBox.confirm(`确定要删除学习卡片"${row.name}"吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -406,7 +435,7 @@ const handleViewJson = (row: Scene) => {
   if (row.items_data) {
     jsonViewText.value = JSON.stringify(row.items_data, null, 2)
   } else {
-    jsonViewText.value = '// 该场景暂无物品数据'
+    jsonViewText.value = '// 该学习卡片暂无词条数据'
   }
   jsonDialogVisible.value = true
 }

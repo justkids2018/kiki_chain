@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column label="操作" width="170" align="center" fixed="right">
           <template #default="{ row }">
-            <el-dropdown @command="(val) => updateStatus(row, val)">
+            <el-dropdown @command="(val: FeedbackItem['status']) => updateStatus(row, val)">
               <el-button type="primary" size="small">
                 更新状态
               </el-button>

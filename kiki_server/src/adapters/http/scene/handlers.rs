@@ -1,10 +1,10 @@
 // 场景 HTTP 处理器
 
 use axum::{
+    Json,
     extract::{Path, Query, State},
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
 use std::sync::Arc;
 use tracing::{error, info};
@@ -298,6 +298,7 @@ pub async fn admin_create_scene_handler(
     let cmd = CreateSceneCommand {
         id,
         category_id: req.category_id,
+        category_ids: req.category_ids,
         name: req.name,
         name_en: req.name_en,
         cover_image: req.cover_image,
@@ -334,6 +335,8 @@ pub async fn admin_update_scene_handler(
     info!("🔧 [管理] 更新场景: {}", id);
     let cmd = UpdateSceneCommand {
         id,
+        category_id: req.category_id,
+        category_ids: req.category_ids,
         name: req.name,
         name_en: req.name_en,
         cover_image: req.cover_image,

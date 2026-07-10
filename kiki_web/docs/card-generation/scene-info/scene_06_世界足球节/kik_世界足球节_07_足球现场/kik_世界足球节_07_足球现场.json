@@ -1,0 +1,426 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "足球",
+    "text_pinyin": "zú qiú",
+    "text_english": "Soccer Ball",
+    "text_phonetic": "/ˈsɑːkər bɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 676,
+            "y": 493
+          },
+          {
+            "x": 792,
+            "y": 493
+          },
+          {
+            "x": 676,
+            "y": 581
+          },
+          {
+            "x": 792,
+            "y": 581
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 563,
+            "y": 482
+          },
+          {
+            "x": 665,
+            "y": 482
+          },
+          {
+            "x": 563,
+            "y": 562
+          },
+          {
+            "x": 665,
+            "y": 562
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "球门",
+    "text_pinyin": "qiú mén",
+    "text_english": "Goal",
+    "text_phonetic": "/ɡoʊl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 816,
+            "y": 115
+          },
+          {
+            "x": 931,
+            "y": 115
+          },
+          {
+            "x": 816,
+            "y": 211
+          },
+          {
+            "x": 931,
+            "y": 211
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 597,
+            "y": 187
+          },
+          {
+            "x": 980,
+            "y": 187
+          },
+          {
+            "x": 597,
+            "y": 416
+          },
+          {
+            "x": 980,
+            "y": 416
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "看台",
+    "text_pinyin": "kàn tái",
+    "text_english": "Stands",
+    "text_phonetic": "/stændz/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 61,
+            "y": 878
+          },
+          {
+            "x": 170,
+            "y": 878
+          },
+          {
+            "x": 61,
+            "y": 971
+          },
+          {
+            "x": 170,
+            "y": 971
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 770
+          },
+          {
+            "x": 282,
+            "y": 770
+          },
+          {
+            "x": 0,
+            "y": 1018
+          },
+          {
+            "x": 282,
+            "y": 1018
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "裁判",
+    "text_pinyin": "cái pàn",
+    "text_english": "Referee",
+    "text_phonetic": "/ˌrɛfəˈriː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 31,
+            "y": 279
+          },
+          {
+            "x": 139,
+            "y": 279
+          },
+          {
+            "x": 31,
+            "y": 371
+          },
+          {
+            "x": 139,
+            "y": 371
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 124,
+            "y": 235
+          },
+          {
+            "x": 285,
+            "y": 235
+          },
+          {
+            "x": 124,
+            "y": 514
+          },
+          {
+            "x": 285,
+            "y": 514
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "守门员",
+    "text_pinyin": "shǒu mén yuán",
+    "text_english": "Goalkeeper",
+    "text_phonetic": "/ˈɡoʊlkiːpər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 878,
+            "y": 337
+          },
+          {
+            "x": 1023,
+            "y": 337
+          },
+          {
+            "x": 878,
+            "y": 432
+          },
+          {
+            "x": 1023,
+            "y": 432
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 770,
+            "y": 274
+          },
+          {
+            "x": 932,
+            "y": 274
+          },
+          {
+            "x": 770,
+            "y": 485
+          },
+          {
+            "x": 932,
+            "y": 485
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "运动员",
+    "text_pinyin": "yùn dòng yuán",
+    "text_english": "Athlete",
+    "text_phonetic": "/ˈæθliːt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 286,
+            "y": 568
+          },
+          {
+            "x": 423,
+            "y": 568
+          },
+          {
+            "x": 286,
+            "y": 665
+          },
+          {
+            "x": 423,
+            "y": 665
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 318,
+            "y": 340
+          },
+          {
+            "x": 545,
+            "y": 340
+          },
+          {
+            "x": 318,
+            "y": 567
+          },
+          {
+            "x": 545,
+            "y": 567
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "横幅",
+    "text_pinyin": "héng fú",
+    "text_english": "Banner",
+    "text_phonetic": "/ˈbænər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 348,
+            "y": 22
+          },
+          {
+            "x": 456,
+            "y": 22
+          },
+          {
+            "x": 348,
+            "y": 115
+          },
+          {
+            "x": 456,
+            "y": 115
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 143,
+            "y": 55
+          },
+          {
+            "x": 811,
+            "y": 55
+          },
+          {
+            "x": 143,
+            "y": 231
+          },
+          {
+            "x": 811,
+            "y": 231
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "喇叭",
+    "text_pinyin": "lǎ ba",
+    "text_english": "Horn",
+    "text_phonetic": "/hɔːrn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 467,
+            "y": 635
+          },
+          {
+            "x": 571,
+            "y": 635
+          },
+          {
+            "x": 467,
+            "y": 730
+          },
+          {
+            "x": 571,
+            "y": 730
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 592,
+            "y": 610
+          },
+          {
+            "x": 670,
+            "y": 610
+          },
+          {
+            "x": 592,
+            "y": 747
+          },
+          {
+            "x": 670,
+            "y": 747
+          }
+        ]
+      }
+    ]
+  }
+]

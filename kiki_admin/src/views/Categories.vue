@@ -3,10 +3,10 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>场景分类列表</span>
+          <span>主题列表</span>
           <el-button type="primary" @click="handleAdd">
             <el-icon><Plus /></el-icon>
-            新建分类
+              新建主题
           </el-button>
         </div>
       </template>
@@ -35,7 +35,7 @@
         <el-table-column prop="name" label="名称" width="150" />
         <el-table-column prop="description" label="描述" />
         <el-table-column prop="order" label="排序" width="80" align="center" />
-        <el-table-column prop="scene_count" label="场景数" width="100" align="center" />
+        <el-table-column prop="scene_count" label="学习卡片数" width="110" align="center" />
         <el-table-column prop="is_new" label="新标签" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="row.is_new ? 'success' : 'info'" size="small">
@@ -60,7 +60,7 @@
     >
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="如：春节场景" />
+          <el-input v-model="form.name" placeholder="如：入学准备100字" />
         </el-form-item>
         <el-form-item label="图标" prop="icon">
           <el-input v-model="form.icon" placeholder="Emoji 图标，如：🎉" maxlength="2" />
@@ -130,7 +130,7 @@ const fetchCategories = async () => {
 }
 
 const handleAdd = () => {
-  dialogTitle.value = '新建分类'
+  dialogTitle.value = '新建主题'
   currentId.value = ''
   Object.assign(form, {
     name: '',
@@ -144,7 +144,7 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row: Category) => {
-  dialogTitle.value = '编辑分类'
+  dialogTitle.value = '编辑主题'
   currentId.value = row.id
   Object.assign(form, {
     name: row.name,
@@ -185,7 +185,7 @@ const handleSubmit = async () => {
 
 const handleDelete = async (row: Category) => {
   try {
-    await ElMessageBox.confirm(`确定要删除分类"${row.name}"吗？`, '提示', {
+    await ElMessageBox.confirm(`确定要删除主题"${row.name}"吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

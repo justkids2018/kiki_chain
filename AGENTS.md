@@ -2,14 +2,10 @@
 
 ## Source Of Truth
 
-Project-level agent behavior must follow shared platform governance.
-Read these files first:
+Project-level agent behavior must follow tracked project governance.
+Read this file first:
 
-1. `.ai/common-prompt/baseline/README.md`
-2. `.github/copilot-instructions.md`
-
-If a referenced shared governance file is missing in the current checkout, report the gap
-and continue with the tracked project rules below.
+1. `.github/copilot-instructions.md`
 
 ## Project-Specific Notes
 

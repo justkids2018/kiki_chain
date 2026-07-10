@@ -21,6 +21,7 @@ pub struct SceneCategoryDto {
 pub struct SceneDto {
     pub id: String,
     pub category_id: String,
+    pub category_ids: Vec<String>,
     pub name: String,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,
@@ -107,7 +108,8 @@ pub struct UpdateCategoryRequest {
 #[derive(Debug, Deserialize)]
 pub struct CreateSceneRequest {
     pub id: Option<String>,
-    pub category_id: String,
+    pub category_id: Option<String>,
+    pub category_ids: Option<Vec<String>>,
     pub name: String,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,
@@ -122,6 +124,8 @@ pub struct CreateSceneRequest {
 
 #[derive(Debug, Deserialize)]
 pub struct UpdateSceneRequest {
+    pub category_id: Option<String>,
+    pub category_ids: Option<Vec<String>>,
     pub name: Option<String>,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,
@@ -178,6 +182,7 @@ impl SceneDto {
         Self {
             id: s.id.clone(),
             category_id: s.category_id.clone(),
+            category_ids: s.category_ids.clone(),
             name: s.name.clone(),
             name_en: s.name_en.clone(),
             cover_image: s.cover_image.clone(),

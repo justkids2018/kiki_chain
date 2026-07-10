@@ -3,6 +3,7 @@ import request from './request'
 export interface Scene {
   id: string
   category_id: string
+  category_ids?: string[]
   name: string
   name_en: string
   cover_image: string
@@ -27,11 +28,11 @@ export const sceneAPI = {
     return request.get<any, { success: boolean; data: Scene }>(`/api/v1/admin/scene/scenes/${id}`)
   },
   
-  create(data: Partial<Scene>) {
+  create(data: Partial<Scene> & { category_ids?: string[] }) {
     return request.post('/api/v1/admin/scene/scenes', data)
   },
   
-  update(id: string, data: Partial<Scene>) {
+  update(id: string, data: Partial<Scene> & { category_ids?: string[] }) {
     return request.put(`/api/v1/admin/scene/scenes/${id}`, data)
   },
   

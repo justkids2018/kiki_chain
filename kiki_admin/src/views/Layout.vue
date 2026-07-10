@@ -15,11 +15,11 @@
         </el-menu-item>
         <el-menu-item index="/categories">
           <el-icon><Grid /></el-icon>
-          <span>场景分类</span>
+          <span>主题管理</span>
         </el-menu-item>
         <el-menu-item index="/scenes">
           <el-icon><Picture /></el-icon>
-          <span>场景管理</span>
+          <span>学习卡片</span>
         </el-menu-item>
         <el-menu-item index="/users">
           <el-icon><User /></el-icon>

@@ -76,7 +76,25 @@ CREATE INDEX IF NOT EXISTS idx_scenes_visible ON scenes(is_visible);
 CREATE INDEX IF NOT EXISTS idx_scenes_created_at ON scenes(created_at);
 
 -- ============================================
--- 5. 场景物品表
+-- 5. 场景-主题关联表
+-- ============================================
+CREATE TABLE IF NOT EXISTS scene_category_relations (
+  scene_id VARCHAR(32) NOT NULL,
+  category_id VARCHAR(32) NOT NULL,
+  display_order INT DEFAULT 0,
+  is_primary BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (scene_id, category_id),
+  FOREIGN KEY (scene_id) REFERENCES scenes(id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES scene_categories(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_scene_category_relations_category ON scene_category_relations(category_id, display_order);
+CREATE INDEX IF NOT EXISTS idx_scene_category_relations_scene ON scene_category_relations(scene_id);
+
+-- ============================================
+-- 6. 场景物品表
 -- ============================================
 CREATE TABLE IF NOT EXISTS scene_items (
   id VARCHAR(32) PRIMARY KEY,
@@ -95,7 +113,7 @@ CREATE INDEX IF NOT EXISTS idx_items_scene_id ON scene_items(scene_id);
 CREATE INDEX IF NOT EXISTS idx_items_index ON scene_items(item_index);
 
 -- ============================================
--- 6. 用户学习记录表
+-- 7. 用户学习记录表
 -- ============================================
 CREATE TABLE IF NOT EXISTS user_learning_records (
   id VARCHAR(32) PRIMARY KEY,
@@ -117,7 +135,7 @@ CREATE INDEX IF NOT EXISTS idx_learning_scene_id ON user_learning_records(scene_
 CREATE INDEX IF NOT EXISTS idx_learning_last_study ON user_learning_records(last_study_at);
 
 -- ============================================
--- 7. 用户收藏表
+-- 8. 用户收藏表
 -- ============================================
 CREATE TABLE IF NOT EXISTS user_favorites (
   id VARCHAR(32) PRIMARY KEY,
@@ -174,7 +192,17 @@ INSERT INTO scenes (id, category_id, name, cover_image, interactive_image, descr
 ('scene_103', 'cat_003', '书房一角', 'https://cdn.example.com/scenes/study_room_cover.jpg', 'https://cdn.example.com/scenes/study_room_main.jpg', '学习空间', 10, 3)
 ON CONFLICT (id) DO NOTHING;
 
--- 9.4 场景物品（除夕场景示例）
+-- 9.4 场景-主题关联
+INSERT INTO scene_category_relations (scene_id, category_id, display_order, is_primary)
+SELECT id, category_id, display_order, TRUE
+FROM scenes
+WHERE category_id IS NOT NULL
+ON CONFLICT (scene_id, category_id) DO UPDATE SET
+  display_order = EXCLUDED.display_order,
+  is_primary = TRUE,
+  updated_at = CURRENT_TIMESTAMP;
+
+-- 9.5 场景物品（除夕场景示例）
 INSERT INTO scene_items (id, scene_id, item_type, item_index, text, text_pinyin, text_english, coordinates) VALUES
 ('item_001', 'scene_002', 'chinese', 1, '年夜饭', 'nián yè fàn', 'New Year''s Eve Dinner',
   '[{"x": 100, "y": 200}, {"x": 200, "y": 200}, {"x": 200, "y": 300}, {"x": 100, "y": 300}]'::jsonb),
@@ -184,19 +212,19 @@ INSERT INTO scene_items (id, scene_id, item_type, item_index, text, text_pinyin,
   '[{"x": 150, "y": 350}, {"x": 250, "y": 350}, {"x": 250, "y": 450}, {"x": 150, "y": 450}]'::jsonb)
 ON CONFLICT (id) DO NOTHING;
 
--- 9.5 测试用户（密码: test123）
+-- 9.6 测试用户（密码: test123）
 INSERT INTO users (id, phone, password_hash, nickname) VALUES
 ('usr_test_001', '13800138000', '$2b$10$abcdefghijklmnopqrstuvwxyz', '测试用户1'),
 ('usr_test_002', '13900139000', '$2b$10$abcdefghijklmnopqrstuvwxyz', '测试用户2')
 ON CONFLICT (id) DO NOTHING;
 
--- 9.6 测试学习记录
+-- 9.7 测试学习记录
 INSERT INTO user_learning_records (id, user_id, scene_id, learned_items, learned_item_count, total_study_time, last_study_at) VALUES
 ('ulr_test_001', 'usr_test_001', 'scene_002', '["item_001", "item_002", "item_003"]'::jsonb, 3, 600, '2026-01-18 10:00:00'),
 ('ulr_test_002', 'usr_test_001', 'scene_101', '["item_101", "item_102"]'::jsonb, 2, 300, '2026-01-17 14:00:00')
 ON CONFLICT (user_id, scene_id) DO NOTHING;
 
--- 9.7 测试收藏
+-- 9.8 测试收藏
 INSERT INTO user_favorites (id, user_id, scene_id, favorited_at) VALUES
 ('ufv_test_001', 'usr_test_001', 'scene_002', '2026-01-16 10:00:00'),
 ('ufv_test_002', 'usr_test_001', 'scene_101', '2026-01-15 14:00:00')

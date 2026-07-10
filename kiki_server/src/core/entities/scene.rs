@@ -25,6 +25,7 @@ pub struct SceneCategory {
 pub struct Scene {
     pub id: String,
     pub category_id: String,
+    pub category_ids: Vec<String>,
     pub name: String,
     pub name_en: Option<String>,
     pub cover_image: Option<String>,

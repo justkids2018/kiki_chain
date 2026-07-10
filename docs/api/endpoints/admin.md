@@ -397,11 +397,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-## 场景管理
+## 主题与学习卡片管理
 
-### 获取场景分类列表
+### 获取主题列表
 
-**接口描述**：获取所有场景分类
+**接口描述**：获取所有主题。历史接口路径保留 `scene/categories`，产品语义为主题。
 
 **请求方式**：GET
 
@@ -431,9 +431,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-### 创建场景分类
+### 创建主题
 
-**接口描述**：创建新的场景分类
+**接口描述**：创建新的主题。历史接口路径保留 `scene/categories`。
 
 **请求方式**：POST
 
@@ -443,16 +443,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 | 参数名 | 类型 | 必填 | 说明 |
 |--------|------|------|------|
-| name | string | 是 | 分类名称 |
+| name | string | 是 | 主题名称 |
 | description | string | 否 | 分类描述 |
 | icon_url | string | 否 | 图标URL |
 | sort_order | int | 否 | 排序序号 |
 
 ---
 
-### 获取场景列表
+### 获取学习卡片列表
 
-**接口描述**：获取所有场景列表
+**接口描述**：获取所有学习卡片列表。传入 `categoryId` 时，按主题-学习卡片关联关系筛选，而不是只按学习卡片主主题筛选。
 
 **请求方式**：GET
 
@@ -460,13 +460,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-### 创建场景
+### 创建学习卡片
 
-**接口描述**：创建新场景
+**接口描述**：创建新学习卡片。兼容旧字段 `category_id`，新增 `category_ids` 支持一张学习卡片关联多个主题。
 
 **请求方式**：POST
 
 **接口路径**：`/api/v1/admin/scene/scenes`
+
+**请求参数补充**：
+
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| category_id | string | 否 | 主主题 ID；兼容旧客户端。只传该字段时，学习卡片只属于该主题 |
+| category_ids | array | 否 | 所属主题 ID 列表；与 `category_id` 同时传入时，服务端合并去重 |
+
+**主题字段合并规则**：
+
+1. 只传 `category_id`：按单主题保存。
+2. 只传 `category_ids`：按多主题保存，第一个主题作为主主题。
+3. 两者都传：合并去重，`category_id` 放在第一位。
+4. 合并后为空时，接口返回参数错误。
 
 ---
 

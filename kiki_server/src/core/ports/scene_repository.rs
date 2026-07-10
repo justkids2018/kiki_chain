@@ -1,8 +1,8 @@
 // 场景仓储接口定义
 
-use async_trait::async_trait;
 use crate::core::entities::{Scene, SceneCategory, SceneDetail, SceneItem};
 use crate::core::errors::Result;
+use async_trait::async_trait;
 
 #[async_trait]
 pub trait SceneRepository: Send + Sync {
@@ -38,6 +38,15 @@ pub trait SceneRepository: Send + Sync {
 
     /// 保存场景（新增或更新）
     async fn save_scene(&self, scene: &Scene) -> Result<()>;
+
+    /// 保存场景和主题的多对多关联
+    async fn save_scene_category_relations(
+        &self,
+        scene_id: &str,
+        category_ids: &[String],
+        primary_category_id: &str,
+        display_order: i32,
+    ) -> Result<()>;
 
     /// 删除场景
     async fn delete_scene(&self, id: &str) -> Result<()>;

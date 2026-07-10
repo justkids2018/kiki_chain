@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kik_世界足球节_07_足球现场 一键验证</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            padding: 24px;
+            background: #0b1020;
+            color: #e6ecff;
+        }
+
+        a {
+            color: #4cc9f0;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="status">正在准备跳转到验收页...</p>
+    <p><a id="manualLink" href="#">如果未自动跳转，点这里</a></p>
+    <script>
+        (function () {
+            const baseRoot = "scene-info";
+            const scene = "scene_06_世界足球节";
+            const card = "kik_世界足球节_07_足球现场";
+            const ext = "png";
+            const image = `${baseRoot}/${scene}/${card}/${card}.normalized.png`;
+            const json = `${baseRoot}/${scene}/${card}/${card}.json`;
+            const preview = "http://127.0.0.1:8765/hotspot-preview.html";
+
+            const params = new URLSearchParams({
+                baseRoot,
+                scene,
+                card,
+                ext,
+                image,
+                json,
+                autoload: "1",
+                mode: "oneclick"
+            });
+
+            const target = `${preview}?${params.toString()}`;
+            document.getElementById("status").textContent = `正在跳转到验收页：${card}（绝对路径模式）`;
+            document.getElementById("manualLink").href = target;
+            window.location.replace(target);
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,458 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "足球",
+    "text_pinyin": "zú qiú",
+    "text_english": "Soccer Ball",
+    "text_phonetic": "/ˈsɑːkər bɔːl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 676,
+            "y": 493
+          },
+          {
+            "x": 792,
+            "y": 493
+          },
+          {
+            "x": 676,
+            "y": 581
+          },
+          {
+            "x": 792,
+            "y": 581
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 563,
+            "y": 482
+          },
+          {
+            "x": 665,
+            "y": 482
+          },
+          {
+            "x": 563,
+            "y": 562
+          },
+          {
+            "x": 665,
+            "y": 562
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/足球-fefd5e-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%B6%B3%E7%90%83-fefd5e-cn.mp3",
+    "audio_en_key": "kiki/audio/soccer-ball-fefd5e-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/soccer-ball-fefd5e-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "球门",
+    "text_pinyin": "qiú mén",
+    "text_english": "Goal",
+    "text_phonetic": "/ɡoʊl/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 816,
+            "y": 115
+          },
+          {
+            "x": 931,
+            "y": 115
+          },
+          {
+            "x": 816,
+            "y": 211
+          },
+          {
+            "x": 931,
+            "y": 211
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 597,
+            "y": 187
+          },
+          {
+            "x": 980,
+            "y": 187
+          },
+          {
+            "x": 597,
+            "y": 416
+          },
+          {
+            "x": 980,
+            "y": 416
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/球门-5854a0-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E7%90%83%E9%97%A8-5854a0-cn.mp3",
+    "audio_en_key": "kiki/audio/goal-5854a0-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/goal-5854a0-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "看台",
+    "text_pinyin": "kàn tái",
+    "text_english": "Stands",
+    "text_phonetic": "/stændz/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 61,
+            "y": 878
+          },
+          {
+            "x": 170,
+            "y": 878
+          },
+          {
+            "x": 61,
+            "y": 971
+          },
+          {
+            "x": 170,
+            "y": 971
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 770
+          },
+          {
+            "x": 282,
+            "y": 770
+          },
+          {
+            "x": 0,
+            "y": 1018
+          },
+          {
+            "x": 282,
+            "y": 1018
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/看台-123af3-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E7%9C%8B%E5%8F%B0-123af3-cn.mp3",
+    "audio_en_key": "kiki/audio/stands-123af3-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/stands-123af3-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "裁判",
+    "text_pinyin": "cái pàn",
+    "text_english": "Referee",
+    "text_phonetic": "/ˌrɛfəˈriː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 31,
+            "y": 279
+          },
+          {
+            "x": 139,
+            "y": 279
+          },
+          {
+            "x": 31,
+            "y": 371
+          },
+          {
+            "x": 139,
+            "y": 371
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 124,
+            "y": 235
+          },
+          {
+            "x": 285,
+            "y": 235
+          },
+          {
+            "x": 124,
+            "y": 514
+          },
+          {
+            "x": 285,
+            "y": 514
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/裁判-08ba57-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%A3%81%E5%88%A4-08ba57-cn.mp3",
+    "audio_en_key": "kiki/audio/referee-08ba57-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/referee-08ba57-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "守门员",
+    "text_pinyin": "shǒu mén yuán",
+    "text_english": "Goalkeeper",
+    "text_phonetic": "/ˈɡoʊlkiːpər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 878,
+            "y": 337
+          },
+          {
+            "x": 1023,
+            "y": 337
+          },
+          {
+            "x": 878,
+            "y": 432
+          },
+          {
+            "x": 1023,
+            "y": 432
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 770,
+            "y": 274
+          },
+          {
+            "x": 932,
+            "y": 274
+          },
+          {
+            "x": 770,
+            "y": 485
+          },
+          {
+            "x": 932,
+            "y": 485
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/守门员-8cfdda-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%AE%88%E9%97%A8%E5%91%98-8cfdda-cn.mp3",
+    "audio_en_key": "kiki/audio/goalkeeper-8cfdda-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/goalkeeper-8cfdda-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "运动员",
+    "text_pinyin": "yùn dòng yuán",
+    "text_english": "Athlete",
+    "text_phonetic": "/ˈæθliːt/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 286,
+            "y": 568
+          },
+          {
+            "x": 423,
+            "y": 568
+          },
+          {
+            "x": 286,
+            "y": 665
+          },
+          {
+            "x": 423,
+            "y": 665
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 318,
+            "y": 340
+          },
+          {
+            "x": 545,
+            "y": 340
+          },
+          {
+            "x": 318,
+            "y": 567
+          },
+          {
+            "x": 545,
+            "y": 567
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/运动员-d449dd-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E8%BF%90%E5%8A%A8%E5%91%98-d449dd-cn.mp3",
+    "audio_en_key": "kiki/audio/athlete-d449dd-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/athlete-d449dd-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "横幅",
+    "text_pinyin": "héng fú",
+    "text_english": "Banner",
+    "text_phonetic": "/ˈbænər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 348,
+            "y": 22
+          },
+          {
+            "x": 456,
+            "y": 22
+          },
+          {
+            "x": 348,
+            "y": 115
+          },
+          {
+            "x": 456,
+            "y": 115
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 143,
+            "y": 55
+          },
+          {
+            "x": 811,
+            "y": 55
+          },
+          {
+            "x": 143,
+            "y": 231
+          },
+          {
+            "x": 811,
+            "y": 231
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/横幅-e8758f-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E6%A8%AA%E5%B9%85-e8758f-cn.mp3",
+    "audio_en_key": "kiki/audio/banner-e8758f-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/banner-e8758f-en.mp3"
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "喇叭",
+    "text_pinyin": "lǎ ba",
+    "text_english": "Horn",
+    "text_phonetic": "/hɔːrn/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 467,
+            "y": 635
+          },
+          {
+            "x": 571,
+            "y": 635
+          },
+          {
+            "x": 467,
+            "y": 730
+          },
+          {
+            "x": 571,
+            "y": 730
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 592,
+            "y": 610
+          },
+          {
+            "x": 670,
+            "y": 610
+          },
+          {
+            "x": 592,
+            "y": 747
+          },
+          {
+            "x": 670,
+            "y": 747
+          }
+        ]
+      }
+    ],
+    "audio_cn_key": "kiki/audio/喇叭-10ccdc-cn.mp3",
+    "audio_cn_url": "http://img.keepthinking.me/kiki/audio/%E5%96%87%E5%8F%AD-10ccdc-cn.mp3",
+    "audio_en_key": "kiki/audio/horn-10ccdc-en.mp3",
+    "audio_en_url": "http://img.keepthinking.me/kiki/audio/horn-10ccdc-en.mp3"
+  }
+]

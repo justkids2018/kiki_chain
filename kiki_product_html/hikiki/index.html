@@ -729,7 +729,7 @@
                     <a class="button button-secondary" href="#showcase">看看应用画面</a>
                 </div>
                 <div id="wechatNotice" class="notice">当前在微信内访问，部分机型可能限制下载。若下载未开始，请点击右上角并选择“在浏览器打开”。</div>
-                <p class="hero-note">当前 Android 可直接下载，iOS 下载通道会在配置后自动显示。</p>
+                <p id="heroNote" class="hero-note">Android 可直接下载；iOS 当前为公测版本，将通过 Apple TestFlight 安装。</p>
                 <div class="trust-row" aria-label="产品特点">
                     <span class="trust-chip">生活场景</span>
                     <span class="trust-chip">中文识字</span>
@@ -831,15 +831,19 @@
 
     <script>
         const ANDROID_APK_URL = 'https://img.keepthinking.me/download/hikiki/hikiki_app.apk';
-        const IOS_TESTFLIGHT_URL = '';
+        const IOS_TESTFLIGHT_URL = 'https://testflight.apple.com/join/jQgPWGvV';
 
         const ua = navigator.userAgent || '';
+        const platform = navigator.platform || '';
         const isAndroid = /Android/i.test(ua);
         const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        const isMac = /Macintosh|MacIntel|MacPPC|Mac68K/i.test(ua) || /Mac/i.test(platform);
+        const shouldUseTestFlight = isIOS || isMac;
         const isWeChat = /MicroMessenger/i.test(ua);
 
         const heroBtn = document.getElementById('heroBtn');
         const floatingBtn = document.getElementById('floatingBtn');
+        const heroNote = document.getElementById('heroNote');
         const wechatNotice = document.getElementById('wechatNotice');
 
         if (isWeChat) {
@@ -859,9 +863,9 @@
                 };
             }
 
-            if (isIOS) {
+            if (shouldUseTestFlight) {
                 return {
-                    text: IOS_TESTFLIGHT_URL ? '下载 iOS 版' : 'iOS 即将上线',
+                    text: IOS_TESTFLIGHT_URL ? '体验 iOS 公测版' : 'iOS 即将上线',
                     url: IOS_TESTFLIGHT_URL && IOS_TESTFLIGHT_URL.trim() ? IOS_TESTFLIGHT_URL : ''
                 };
             }
@@ -876,6 +880,14 @@
             const target = getDownloadTarget();
             syncButton(heroBtn, target.text, target.url);
             syncButton(floatingBtn, target.text, target.url);
+
+            if (isAndroid) {
+                heroNote.textContent = 'Android 可直接下载安装。';
+            } else if (shouldUseTestFlight) {
+                heroNote.textContent = 'iOS 当前为公测版本，将通过 Apple TestFlight 安装。无需邀请码；如果看到“兑换邀请码”，请回到本页面重新点击按钮。';
+            } else {
+                heroNote.textContent = 'Mac 或 iPhone/iPad 可体验 iOS 公测版，Android 可直接下载安装。';
+            }
         };
 
         const handleDownloadClick = (event) => {

@@ -1,0 +1,532 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "爸爸",
+    "text_pinyin": "bà ba",
+    "text_english": "Dad",
+    "text_phonetic": "/dæd/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 788,
+            "y": 224
+          },
+          {
+            "x": 907,
+            "y": 224
+          },
+          {
+            "x": 788,
+            "y": 309
+          },
+          {
+            "x": 907,
+            "y": 309
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 637,
+            "y": 233
+          },
+          {
+            "x": 773,
+            "y": 233
+          },
+          {
+            "x": 637,
+            "y": 510
+          },
+          {
+            "x": 773,
+            "y": 510
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "妈妈",
+    "text_pinyin": "mā ma",
+    "text_english": "Mom",
+    "text_phonetic": "/mɑːm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 894,
+            "y": 461
+          },
+          {
+            "x": 997,
+            "y": 461
+          },
+          {
+            "x": 894,
+            "y": 540
+          },
+          {
+            "x": 997,
+            "y": 540
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 779,
+            "y": 328
+          },
+          {
+            "x": 953,
+            "y": 328
+          },
+          {
+            "x": 779,
+            "y": 601
+          },
+          {
+            "x": 953,
+            "y": 601
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "爷爷",
+    "text_pinyin": "yé ye",
+    "text_english": "Grandpa",
+    "text_phonetic": "/ˈɡrænpɑː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 389,
+            "y": 148
+          },
+          {
+            "x": 505,
+            "y": 148
+          },
+          {
+            "x": 389,
+            "y": 237
+          },
+          {
+            "x": 505,
+            "y": 237
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 333,
+            "y": 266
+          },
+          {
+            "x": 463,
+            "y": 266
+          },
+          {
+            "x": 333,
+            "y": 483
+          },
+          {
+            "x": 463,
+            "y": 483
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "奶奶",
+    "text_pinyin": "nǎi nai",
+    "text_english": "Grandma",
+    "text_phonetic": "/ˈɡrænmɑː/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 535,
+            "y": 148
+          },
+          {
+            "x": 664,
+            "y": 148
+          },
+          {
+            "x": 535,
+            "y": 238
+          },
+          {
+            "x": 664,
+            "y": 238
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 491,
+            "y": 262
+          },
+          {
+            "x": 621,
+            "y": 262
+          },
+          {
+            "x": 491,
+            "y": 477
+          },
+          {
+            "x": 621,
+            "y": 477
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "哥哥",
+    "text_pinyin": "gē ge",
+    "text_english": "Older Brother",
+    "text_phonetic": "/ˈoʊldər ˈbrʌðər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 371
+          },
+          {
+            "x": 130,
+            "y": 371
+          },
+          {
+            "x": 0,
+            "y": 456
+          },
+          {
+            "x": 130,
+            "y": 456
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 183,
+            "y": 338
+          },
+          {
+            "x": 326,
+            "y": 338
+          },
+          {
+            "x": 183,
+            "y": 451
+          },
+          {
+            "x": 326,
+            "y": 451
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "姐姐",
+    "text_pinyin": "jiě jie",
+    "text_english": "Older Sister",
+    "text_phonetic": "/ˈoʊldər ˈsɪstər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 0,
+            "y": 568
+          },
+          {
+            "x": 119,
+            "y": 568
+          },
+          {
+            "x": 0,
+            "y": 654
+          },
+          {
+            "x": 119,
+            "y": 654
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 134,
+            "y": 454
+          },
+          {
+            "x": 268,
+            "y": 454
+          },
+          {
+            "x": 134,
+            "y": 670
+          },
+          {
+            "x": 268,
+            "y": 670
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "弟弟",
+    "text_pinyin": "dì di",
+    "text_english": "Younger Brother",
+    "text_phonetic": "/ˈjʌŋɡər ˈbrʌðər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 273,
+            "y": 884
+          },
+          {
+            "x": 430,
+            "y": 884
+          },
+          {
+            "x": 273,
+            "y": 971
+          },
+          {
+            "x": 430,
+            "y": 971
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 305,
+            "y": 574
+          },
+          {
+            "x": 505,
+            "y": 574
+          },
+          {
+            "x": 305,
+            "y": 843
+          },
+          {
+            "x": 505,
+            "y": 843
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "妹妹",
+    "text_pinyin": "mèi mei",
+    "text_english": "Younger Sister",
+    "text_phonetic": "/ˈjʌŋɡər ˈsɪstər/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 603,
+            "y": 886
+          },
+          {
+            "x": 756,
+            "y": 886
+          },
+          {
+            "x": 603,
+            "y": 972
+          },
+          {
+            "x": 756,
+            "y": 972
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 555,
+            "y": 600
+          },
+          {
+            "x": 753,
+            "y": 600
+          },
+          {
+            "x": 555,
+            "y": 844
+          },
+          {
+            "x": 753,
+            "y": 844
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_09",
+    "index": 9,
+    "text": "宝宝",
+    "text_pinyin": "bǎo bao",
+    "text_english": "Baby",
+    "text_phonetic": "/ˈbeɪbi/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 843,
+            "y": 827
+          },
+          {
+            "x": 969,
+            "y": 827
+          },
+          {
+            "x": 843,
+            "y": 916
+          },
+          {
+            "x": 969,
+            "y": 916
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 778,
+            "y": 605
+          },
+          {
+            "x": 951,
+            "y": 605
+          },
+          {
+            "x": 778,
+            "y": 798
+          },
+          {
+            "x": 951,
+            "y": 798
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_10",
+    "index": 10,
+    "text": "家",
+    "text_pinyin": "jiā",
+    "text_english": "Home",
+    "text_phonetic": "/hoʊm/",
+    "regions": [
+      {
+        "region_type": "card",
+        "coordinate": [
+          {
+            "x": 99,
+            "y": 87
+          },
+          {
+            "x": 218,
+            "y": 87
+          },
+          {
+            "x": 99,
+            "y": 176
+          },
+          {
+            "x": 218,
+            "y": 176
+          }
+        ]
+      },
+      {
+        "region_type": "object",
+        "coordinate": [
+          {
+            "x": 237,
+            "y": 28
+          },
+          {
+            "x": 398,
+            "y": 28
+          },
+          {
+            "x": 237,
+            "y": 190
+          },
+          {
+            "x": 398,
+            "y": 190
+          }
+        ]
+      }
+    ]
+  }
+]

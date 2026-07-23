@@ -1,0 +1,132 @@
+[
+  {
+    "type": "chinese",
+    "id": "chinese_01",
+    "index": 1,
+    "text": "小猫",
+    "text_pinyin": "xiǎo māo",
+    "text_english": "Cat",
+    "text_phonetic": "/kæt/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":398,"y":632},{"x":544,"y":632},{"x":398,"y":722},{"x":544,"y":722}] },
+      { "region_type": "object", "coordinate": [{"x":441,"y":452},{"x":577,"y":452},{"x":441,"y":625},{"x":577,"y":625}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_02",
+    "index": 2,
+    "text": "小狗",
+    "text_pinyin": "xiǎo gǒu",
+    "text_english": "Dog",
+    "text_phonetic": "/dɔːɡ/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":26,"y":346},{"x":138,"y":346},{"x":26,"y":436},{"x":138,"y":436}] },
+      { "region_type": "object", "coordinate": [{"x":82,"y":416},{"x":250,"y":416},{"x":82,"y":589},{"x":250,"y":589}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_03",
+    "index": 3,
+    "text": "小鸟",
+    "text_pinyin": "xiǎo niǎo",
+    "text_english": "Bird",
+    "text_phonetic": "/bɜːrd/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":17,"y":124},{"x":132,"y":124},{"x":17,"y":214},{"x":132,"y":214}] },
+      { "region_type": "object", "coordinate": [{"x":196,"y":66},{"x":342,"y":66},{"x":196,"y":188},{"x":342,"y":188}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_04",
+    "index": 4,
+    "text": "小鱼",
+    "text_pinyin": "xiǎo yú",
+    "text_english": "Fish",
+    "text_phonetic": "/fɪʃ/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":59,"y":755},{"x":161,"y":755},{"x":59,"y":845},{"x":161,"y":845}] },
+      { "region_type": "object", "coordinate": [{"x":193,"y":818},{"x":335,"y":818},{"x":193,"y":927},{"x":335,"y":927}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_05",
+    "index": 5,
+    "text": "小兔",
+    "text_pinyin": "xiǎo tù",
+    "text_english": "Rabbit",
+    "text_phonetic": "/ˈræbɪt/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":24,"y":638},{"x":141,"y":638},{"x":24,"y":730},{"x":141,"y":730}] },
+      { "region_type": "object", "coordinate": [{"x":139,"y":606},{"x":294,"y":606},{"x":139,"y":777},{"x":294,"y":777}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_06",
+    "index": 6,
+    "text": "小鸭",
+    "text_pinyin": "xiǎo yā",
+    "text_english": "Duck",
+    "text_phonetic": "/dʌk/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":571,"y":757},{"x":699,"y":757},{"x":571,"y":847},{"x":699,"y":847}] },
+      { "region_type": "object", "coordinate": [{"x":429,"y":783},{"x":593,"y":783},{"x":429,"y":934},{"x":593,"y":934}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_07",
+    "index": 7,
+    "text": "小牛",
+    "text_pinyin": "xiǎo niú",
+    "text_english": "Calf",
+    "text_phonetic": "/kæf/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":445,"y":25},{"x":557,"y":25},{"x":445,"y":114},{"x":557,"y":114}] },
+      { "region_type": "object", "coordinate": [{"x":507,"y":96},{"x":709,"y":96},{"x":507,"y":303},{"x":709,"y":303}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_08",
+    "index": 8,
+    "text": "小羊",
+    "text_pinyin": "xiǎo yáng",
+    "text_english": "Lamb",
+    "text_phonetic": "/læm/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":845,"y":119},{"x":958,"y":119},{"x":845,"y":209},{"x":958,"y":209}] },
+      { "region_type": "object", "coordinate": [{"x":718,"y":181},{"x":906,"y":181},{"x":718,"y":369},{"x":906,"y":369}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_09",
+    "index": 9,
+    "text": "小马",
+    "text_pinyin": "xiǎo mǎ",
+    "text_english": "Pony",
+    "text_phonetic": "/ˈpoʊni/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":892,"y":591},{"x":1023,"y":591},{"x":892,"y":679},{"x":1023,"y":679}] },
+      { "region_type": "object", "coordinate": [{"x":720,"y":369},{"x":995,"y":369},{"x":720,"y":610},{"x":995,"y":610}] }
+    ]
+  },
+  {
+    "type": "chinese",
+    "id": "chinese_10",
+    "index": 10,
+    "text": "虫",
+    "text_pinyin": "chóng",
+    "text_english": "Bug",
+    "text_phonetic": "/bʌɡ/",
+    "regions": [
+      { "region_type": "card", "coordinate": [{"x":886,"y":755},{"x":990,"y":755},{"x":886,"y":845},{"x":990,"y":845}] },
+      { "region_type": "object", "coordinate": [{"x":717,"y":812},{"x":866,"y":812},{"x":717,"y":951},{"x":866,"y":951}] }
+    ]
+  }
+]

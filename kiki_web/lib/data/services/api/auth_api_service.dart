@@ -50,7 +50,7 @@ class AuthApiService {
       'email': '',
       'phone': phone,
       'password': password,
-      'role_type': 0,
+      'role_type': 1,
     });
   }
 }

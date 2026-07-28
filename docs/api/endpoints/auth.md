@@ -59,33 +59,34 @@
 > 登录失败时 `data` 字段省略，HTTP 状态码与 `errorcode` 一致。
 
 ### 用户注册
-**端点**: `POST /api/auth/register`
-**描述**: 新用户注册，支持老师和学生角色
+**端点**: `POST /api/v1/auth/register`
+**描述**: 新用户注册。移动端普通用户请传 `role_type: 1`；管理员角色为 `2`。兼容旧客户端：`role_type` 省略或传 `0` 时按普通用户 `1` 处理。
 **认证**: 无需认证
 
 #### 请求参数
 ```json
 {
-  "username": "张三",
-  "email": "user@example.com",
+  "uid": "kiki_1726112233",
+  "name": "张三",
+  "email": "",
   "phone": "13800138000",
   "password": "password123",
-  "role_id": 2
+  "role_type": 1
 }
 ```
 
-#### 成功响应 (200)
+#### 成功响应 (201)
 ```json
 {
   "success": true,
   "data": {
-    "user_id": "teacher_1726112233",
-    "username": "张三",
-    "email": "user@example.com",
+    "uid": "kiki_1726112233",
+    "name": "张三",
+    "email": "",
     "phone": "13800138000",
-    "role_id": 2,
-    "message": "注册成功",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "role_type": 1,
+    "is_vip": false,
+    "message": "注册成功"
   },
   "message": "注册成功"
 }

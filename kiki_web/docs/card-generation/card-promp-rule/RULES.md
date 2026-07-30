@@ -29,6 +29,8 @@
   - 场景性嘉宾：**Jack**（7 岁邻居男孩，黄/橙 T 恤 + 棒球帽），按场景需要出场。
 - 单卡人物总数（不含猫）≤ 3 人，禁止多塞凑人。
 - 人物与小猫的固定/随机细则统一引用：`card-promp-rule/components/CHARACTER_CAST.md`。
+- **角色连续性门禁**：主卡片 MD 只写角色名或 `Use Mimi + Yuki + Kiki` 不合格。必须从 `CHARACTER_CAST.md` 展开注入当前出场角色的年龄、脸型、五官、发型、体态、身高关系、神态基线与有限表情选择；缺失时停止出图。
+- 当标准角色参考图可用时，每次生成必须携带当前出场角色参考图及身高关系图。参考图锁定身份外观，主 Prompt 只允许改变场景、动作、季节服装和受控表情。
 - 画布、视角、整体风格锁统一引用：`card-promp-rule/components/CANVAS_STYLE.md`。
 - 生成前质量门禁统一引用：`card-promp-rule/components/QUALITY_GATE.md`。
 

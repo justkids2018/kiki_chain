@@ -1,13 +1,18 @@
 <template>
-  <el-container class="layout-container">
-    <el-aside width="200px">
-      <div class="logo">Hi Kiki</div>
+  <el-container class="layout-container kiki-admin">
+    <el-aside :width="isCollapsed ? '72px' : '216px'">
+      <div class="brand" :class="{ compact: isCollapsed }">
+        <div class="brand-mark">K</div>
+        <div v-show="!isCollapsed" class="brand-copy">
+          <strong>Hi Kiki</strong>
+          <span>管理后台</span>
+        </div>
+      </div>
       <el-menu
         :default-active="activeMenu"
         router
-        background-color="#304156"
-        text-color="#bfcbd9"
-        active-text-color="#409EFF"
+        :collapse="isCollapsed"
+        :collapse-transition="false"
       >
         <el-menu-item index="/dashboard">
           <el-icon><DataAnalysis /></el-icon>
@@ -33,13 +38,28 @@
     </el-aside>
     
     <el-container>
-      <el-header>
+      <el-header height="64px">
         <div class="header-content">
-          <span class="title">{{ currentTitle }}</span>
+          <div class="header-leading">
+            <el-button
+              class="collapse-button"
+              circle
+              text
+              :aria-label="isCollapsed ? '展开侧边栏' : '收起侧边栏'"
+              @click="isCollapsed = !isCollapsed"
+            >
+              <el-icon><Expand v-if="isCollapsed" /><Fold v-else /></el-icon>
+            </el-button>
+            <div>
+              <span class="eyebrow">KIKI ADMIN</span>
+              <h1 class="title">{{ currentTitle }}</h1>
+            </div>
+          </div>
           <el-dropdown @command="handleCommand">
             <span class="user-info">
-              <el-icon><Avatar /></el-icon>
-              {{ userName }}
+              <span class="user-avatar">{{ userName.slice(0, 1).toUpperCase() }}</span>
+              <span>{{ userName }}</span>
+              <el-icon><ArrowDown /></el-icon>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -50,7 +70,7 @@
         </div>
       </el-header>
       
-      <el-main>
+      <el-main id="main-content">
         <router-view v-slot="{ Component, route: currentRoute }">
           <keep-alive>
             <component :is="Component" :key="currentRoute.fullPath" />
@@ -71,6 +91,7 @@ const router = useRouter()
 const route = useRoute()
 
 const userName = ref(JSON.parse(localStorage.getItem('admin_user') || '{}').name || 'Admin')
+const isCollapsed = ref(false)
 
 const activeMenu = computed(() => route.path)
 const currentTitle = computed(() => route.meta.title as string || '')
@@ -99,53 +120,74 @@ const handleCommand = async (command: string) => {
 
 <style scoped>
 .layout-container {
-  height: 100%;
+  background: var(--kiki-color-canvas);
   min-height: calc(100vh - 40px);
 }
 
 .el-aside {
-  background-color: #304156;
-  color: #fff;
+  overflow: hidden;
+  background: var(--kiki-color-sidebar);
+  border-right: 1px solid var(--kiki-color-border);
+  transition: width var(--kiki-motion-fast);
 }
 
-.logo {
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #2b3a4a;
+.brand {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--kiki-color-border);
 }
 
+.brand.compact { justify-content: center; padding: 0; }
+.brand-mark, .user-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: white;
+  background: var(--kiki-color-brand);
+}
+.brand-mark { width: 40px; height: 40px; font-weight: 800; }
+.brand-copy { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
+.brand-copy strong { font-size: 15px; }
+.brand-copy span, .eyebrow { color: var(--kiki-color-text-muted); font-size: 11px; }
+
+.el-menu {
+  padding: 12px 8px;
+  border-right: 0;
+  background: transparent;
+}
+:deep(.el-menu-item) { height: 48px; margin-bottom: 4px; border-radius: var(--kiki-radius-sm); }
+:deep(.el-menu-item.is-active) { color: var(--kiki-color-brand); background: var(--kiki-color-brand-soft); }
+:deep(.el-menu--collapse .el-menu-item) { justify-content: center; padding: 0; }
+:deep(.el-menu--collapse .el-menu-item .el-icon) { margin: 0; }
+
+.el-container { min-width: 0; }
 .el-header {
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background: var(--kiki-color-surface);
+  border-bottom: 1px solid var(--kiki-color-border);
+}
+
+.header-content, .header-leading, .user-info {
   display: flex;
   align-items: center;
 }
+.header-content { width: 100%; justify-content: space-between; }
+.header-leading { gap: 12px; }
+.collapse-button { width: 40px; }
+.eyebrow { display: block; letter-spacing: 0.12em; }
+.title { margin: 1px 0 0; font-size: 20px; line-height: 1.2; letter-spacing: -0.012em; }
+.user-info { gap: 8px; cursor: pointer; color: var(--kiki-color-text-secondary); }
+.user-avatar { width: 32px; height: 32px; font-size: 13px; font-weight: 700; }
+.el-main { overflow-x: hidden; padding: 24px; background: var(--kiki-color-canvas); }
 
-.header-content {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.user-info {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.el-main {
-  background-color: #f0f2f5;
-  padding: 20px;
+@media (max-width: 900px) {
+  .el-main { padding: 16px; }
+  .user-info > span:nth-child(2) { display: none; }
 }
 </style>

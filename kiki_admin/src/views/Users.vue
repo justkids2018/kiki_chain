@@ -1,27 +1,45 @@
 <template>
   <div class="users-container">
-    <el-card>
-      <template #header>
-        <div class="card-header">
-          <span>用户管理</span>
+    <section class="users-panel">
+      <header class="page-intro">
+        <div>
+          <span class="section-kicker">USER DIRECTORY</span>
+          <h2>用户管理</h2>
+          <p>查看用户资料、账号角色与会员状态，并维护基础信息。</p>
+        </div>
+        <el-button circle plain aria-label="刷新用户列表" :loading="loading" @click="fetchUsers">
+          <el-icon><Refresh /></el-icon>
+        </el-button>
+      </header>
+
+      <div class="filter-bar">
+        <div class="search-field">
           <el-input
             v-model="searchText"
-            placeholder="搜索手机号或昵称"
-            style="width: 300px"
+            placeholder="搜索用户 ID、手机号或昵称"
             clearable
-            @input="handleSearch"
           >
             <template #prefix>
               <el-icon><Search /></el-icon>
             </template>
           </el-input>
         </div>
-      </template>
+        <span class="result-count">共 {{ filteredUsers.length }} 位用户</span>
+        <el-button :disabled="!searchText" @click="searchText = ''">重置</el-button>
+      </div>
 
-      <el-table :data="filteredUsers" v-loading="loading" border>
-        <el-table-column prop="uid" label="用户 ID" width="150" />
-        <el-table-column prop="name" label="昵称" width="150" />
-        <el-table-column prop="phone" label="手机号" width="150" />
+      <div class="table-wrap">
+      <el-table :data="filteredUsers" v-loading="loading" row-key="uid">
+        <el-table-column prop="uid" label="用户 ID" min-width="190" show-overflow-tooltip />
+        <el-table-column prop="name" label="昵称" min-width="150" show-overflow-tooltip>
+          <template #default="{ row }">
+            <div class="user-cell">
+              <span class="name-avatar">{{ row.name.slice(0, 1).toUpperCase() }}</span>
+              <strong>{{ row.name }}</strong>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="phone" label="手机号" min-width="140" />
         <el-table-column prop="role_type" label="角色" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="row.role_type === 2 ? 'danger' : 'primary'" size="small">
@@ -41,14 +59,15 @@
             {{ formatDate(row.created_at) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center" fixed="right">
+        <el-table-column label="操作" width="176" align="right" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" @click="handleView(row)">详情</el-button>
-            <el-button type="warning" size="small" @click="handleEdit(row)">编辑</el-button>
+            <el-button plain size="small" @click="handleView(row)">查看</el-button>
+            <el-button type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+      </div>
+    </section>
 
     <!-- 用户详情对话框 -->
     <el-dialog
@@ -164,10 +183,6 @@ const fetchUsers = async () => {
   }
 }
 
-const handleSearch = () => {
-  // Computed property will handle filtering
-}
-
 const handleView = (row: User) => {
   currentUser.value = row
   dialogVisible.value = true
@@ -227,12 +242,41 @@ onMounted(() => {
 
 <style scoped>
 .users-container {
-  height: 100%;
+  min-width: 0;
 }
 
-.card-header {
+.users-panel {
+  overflow: hidden;
+  border-radius: var(--kiki-radius-lg);
+  background: var(--kiki-color-surface);
+  box-shadow: var(--kiki-shadow-panel);
+}
+
+.page-intro, .filter-bar, .user-cell {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+}
+
+.page-intro { justify-content: space-between; padding: 24px 24px 20px; }
+.section-kicker { color: var(--kiki-color-brand); font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.page-intro h2 { margin: 4px 0; color: var(--kiki-color-text); font-size: 22px; letter-spacing: -.012em; }
+.page-intro p { margin: 0; color: var(--kiki-color-text-muted); font-size: 13px; }
+.filter-bar { gap: 12px; padding: 16px 24px; background: var(--kiki-color-surface-muted); border-top: 1px solid var(--kiki-color-border); border-bottom: 1px solid var(--kiki-color-border); }
+.search-field { flex: 1; min-width: 240px; }
+.result-count { color: var(--kiki-color-text-muted); font-size: 12px; white-space: nowrap; }
+.table-wrap { overflow-x: auto; }
+.user-cell { gap: 10px; min-width: 0; }
+.user-cell strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.name-avatar { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 auto; border-radius: 50%; color: var(--kiki-color-brand); background: var(--kiki-color-brand-soft); font-size: 12px; font-weight: 700; }
+:deep(.el-table) { --el-table-border-color: var(--kiki-color-border); color: var(--kiki-color-text-secondary); font-size: 13px; }
+:deep(.el-table th.el-table__cell) { height: 46px; color: var(--kiki-color-text-secondary); background: var(--kiki-color-surface-muted); font-weight: 600; }
+:deep(.el-table td.el-table__cell) { height: 54px; border-bottom-color: var(--kiki-color-border); }
+:deep(.el-table .cell) { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 760px) {
+  .page-intro { padding: 20px; }
+  .filter-bar { align-items: stretch; flex-wrap: wrap; padding: 12px 20px; }
+  .search-field { flex-basis: 100%; }
+  .result-count { align-self: center; margin-right: auto; }
 }
 </style>

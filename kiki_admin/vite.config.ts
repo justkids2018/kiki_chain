@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { IMAGE_CDN_ORIGIN } from './src/config/image-cdn'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,17 +12,11 @@ export default defineConfig({
         target: 'http://127.0.0.1:8081',
         changeOrigin: true
       },
-      // 本地开发：/cdn/ → https://img.keepthinking.me/（解决 HTTPS 图片加载问题）
+      // 本地开发：所有当前与历史图片路径统一代理到当前 CDN。
       '/cdn': {
-        target: 'https://img.keepthinking.me',
+        target: IMAGE_CDN_ORIGIN,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/cdn/, '')
-      },
-      // 本地开发：/cdn-legacy/ → http://img.mtrain.xyz/（兼容旧域名资源）
-      '/cdn-legacy': {
-        target: 'http://img.mtrain.xyz',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/cdn-legacy/, '')
       }
     }
   }

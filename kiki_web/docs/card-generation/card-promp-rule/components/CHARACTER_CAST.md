@@ -45,6 +45,31 @@
 
 ## 各角色穿搭与动作规则
 
+## 跨卡角色连续性锁（所有主 Prompt 必须展开注入）
+
+角色名字本身不足以保证一致性。只要当前卡出现 Yuki、Kiki、Jack 或 Mimi，主卡片 MD 就必须把对应角色的年龄、脸型、五官、发型、体态、身高关系和神态基线写入 fenced prompt；禁止只写 `Use Mimi + Yuki + Kiki` 后依赖模型自行理解。
+
+### 不可变身份特征
+
+- **脸型与五官不可变**：同一角色跨卡保持相同脸部轮廓、眼睛形状与间距、眉形、鼻形、嘴形、肤色和发色。表情变化不得改变脸部骨相或把角色画成另一张脸。
+- **年龄与体态不可变**：Yuki 始终是 10 岁学龄姐姐；Jack 始终是 7 岁男孩；Kiki 始终是 4 岁幼儿。禁止三人同龄化、成人化或婴儿化。
+- **身高关系不可变**：同一画面站在可比较景深时，Yuki 约为 Kiki 身高的 1.35-1.45 倍；Jack 明显高于 Kiki、略矮于 Yuki。坐姿或透视不得让 Yuki 看起来与 Kiki 同龄同高。
+- **头身比例不可变**：Yuki 四肢较修长、头部占比更小；Kiki 头部占比更大、四肢更短、幼儿体态明显；Jack 介于二者之间。
+- **核心发型与发色不可变**：Yuki 纯黑色长发自然散落；Kiki 棕褐色双马尾；Jack 黑色短发配可见棒球帽。三人的发色必须明显区分并跨卡保持一致，不得因场景、光线或生成批次互换发色。
+- **Mimi 不可变**：白色短毛、圆脸、蓝绿色大眼、粉色鼻子、红色或金色铃铛项圈；不得变成长毛猫、其他颜色猫或不同脸型。
+
+### 固定神态语言与有限表情库
+
+- **Yuki**：温柔、沉静、有照顾妹妹的感觉。只使用温柔微笑、专注观察、鼓励妹妹、轻微惊喜、安静开心；禁止夸张大笑、成人妩媚、冷漠或搞怪脸。
+- **Kiki**：明亮、好奇、天真、有幼儿活力。只使用明亮微笑、好奇观察、开心惊喜、专注学习、轻微委屈；禁止成人表情、夸张鬼脸或与 Yuki 完全相同的成熟神态。
+- **Jack**：阳光、好奇、略带活泼。只使用开朗微笑、专注参与、开心惊喜、运动兴奋；禁止攻击性或成人化神态。
+- **Mimi**：好奇、开心、安静陪伴或轻微惊讶；禁止凶猛、写实捕猎或拟人表情。
+- 表情可按场景从上述集合中选择，但默认使用角色的自然微笑。**换表情不等于换脸**：眼睛轮廓、眼距、脸颊形状、鼻子和嘴部基础比例必须保持一致。
+
+### 参考图优先级
+
+当生成工具支持参考图时，必须同时传入当前出场角色的已批准标准参考图和姐妹身高关系图。参考图决定脸型、五官、发型、体态和身高；当前主 Prompt 只决定动作、服装、场景和本次表情。若无标准参考图，使用本文件完整身份合同，并以 `scene_05_中国节日` 及之前已确认卡片的角色视觉为连续性基线，不得采用最近一张漂移图片作为新基线。
+
 ### 🐱 Mimi（白色小猫，主角）
 
 - **固定**：白色短毛、可爱、清晰可见、大眼睛、粉色小鼻子。
@@ -55,7 +80,7 @@
 
 ### 👧 Yuki（姐姐，10 岁）
 
-- **固定**：长发散着（不扎辫）、整体可爱亲和、温柔大姐姐气质。
+- **固定**：柔和椭圆脸、深棕色大眼、自然细眉、小巧圆鼻、柔和嘴形；黑色长发自然散落（不扎辫）；整体可爱亲和、温柔大姐姐气质。
 - **默认**：优先夏季风格。
 - **随机**：可根据场景季节切换为夏/秋/冬穿搭，服装可在裙子、背带裤、短袖套装、秋冬外搭之间变化。
 - **冬季可选**：可佩戴白色毛绒耳暖（耳罩）等保暖配件。
@@ -64,7 +89,7 @@
 
 ### 👶 Kiki（妹妹，4 岁）
 
-- **固定**：2 个马尾辫、年龄感幼态、圆脸、优先裙装。
+- **固定**：饱满圆脸、深棕色圆眼、眼距略宽、短小圆鼻、明显柔软脸颊；棕褐色 2 个马尾辫、年龄感幼态、优先裙装。
 - **默认**：优先夏季风格。
 - **随机**：可根据场景季节切换为夏/秋/冬穿搭，可在连衣裙、背带裙、轻薄背带裤等范围变化。
 - **冬季可选**：可佩戴白色毛绒耳暖（耳罩）等保暖配件。
@@ -146,11 +171,28 @@
 5) 总人数（不含猫）= 2 人。
 ```
 
+### 必加尾段：英文身份连续性合同
+
+以下尾段必须添加到所有包含品牌角色的英文主 Prompt；再根据当前阵容删除未出场角色的行：
+
+```text
+Character identity continuity is a hard requirement. These must be the same approved recurring Hi Kiki characters, not newly designed generic children or a different cat.
+- Yuki: the same 10-year-old elder sister, soft oval face, deep-brown eyes, natural thin brows, small rounded nose, gentle mouth shape, long flowing pure-black hair, and a taller slender school-age body. Her emotional baseline is warm, calm, and caring.
+- Kiki: the same 4-year-old younger sister, full round face, slightly wide-set round deep-brown eyes, small round nose, soft cheeks, two warm chestnut-brown pigtails, a shorter toddler body, and a larger head-to-body ratio. Her emotional baseline is bright, curious, and innocent.
+- Jack: the same 7-year-old cheerful boy, round energetic face, bright dark eyes, short slightly tousled black hair, healthy skin tone, and a visible baseball cap. His height is between Yuki and Kiki.
+- Mimi: the same white short-haired cat, round face, blue-green eyes, pink nose, and bell collar.
+- Preserve the exact same face geometry, eye shape and spacing, skin tone, character-specific hair color, age, body proportions, and signature silhouette across every card. Yuki has pure-black hair, Kiki has warm chestnut-brown hair, and Jack has black hair. Lighting may add soft highlights but must never swap or homogenize these base hair colors. At comparable depth, Yuki is approximately 1.35-1.45 times Kiki's height. Expression may be selected from the approved expression library for the current scene, but expression changes must never redesign the face. Do not make Yuki and Kiki look the same age or height.
+```
+
 ## 质检清单（人物与宠物）
 
 - [ ] Mimi（白色小猫）出现且清晰可见（必须）。
 - [ ] 当前卡指定的人物组合全部到位，没有多人也没有少人。
 - [ ] Yuki 散发、Kiki 双马尾的核心识别正确，未被混淆。
+- [ ] Yuki 与 Kiki 的脸型、五官、肤色和发色符合统一身份合同，没有出现“同名不同脸”。
+- [ ] 可比较景深下 Yuki 约为 Kiki 身高的 1.35-1.45 倍；Kiki 幼儿头身比明显。
+- [ ] 表情来自有限表情库，角色神态基调一致，且表情变化没有改变脸型与五官结构。
+- [ ] Mimi 保持白色短毛、圆脸、蓝绿色大眼、粉鼻和铃铛项圈。
 - [ ] Jack 在画面内（如果该卡有 Jack），且**棒球帽可见**（戴或拿）。
 - [ ] 服装符合场景季节（默认夏季，秋冬切换需合理）。
 - [ ] 所有角色保持清晰可见，未喧宾夺主，不挡核心目标物体。

@@ -1,18 +1,11 @@
 import request from '../api/request'
 import * as qiniu from 'qiniu-js'
-
-/** CDN 原始域名 */
-const CDN_ORIGIN = 'https://img.keepthinking.me/'
-const CDN_HOST = 'img.keepthinking.me'
-const LEGACY_CDN_ORIGIN_HTTP = 'http://img.mtrain.xyz/'
-const LEGACY_CDN_ORIGIN_HTTPS = 'https://img.mtrain.xyz/'
-const LEGACY_CDN_HOST = 'img.mtrain.xyz'
+import { buildImageCDNUrl, isImageCDNHost } from '../config/image-cdn'
 
 /**
  * 将 CDN 绝对 URL 转换为相对代理路径。
- * 生产环境：nginx /cdn/ 代理到 https://img.keepthinking.me/（避免混合内容）
- * 兼容历史：nginx /cdn-legacy/ 代理到 http://img.mtrain.xyz/
- * 本地开发：Vite proxy /cdn/ 代理到同一地址
+ * 当前域名和历史域名统一保留对象路径，通过 /cdn/ 从当前域名加载。
+ * 生产环境由 nginx 代理，本地开发由 Vite 代理。
  * 移动端 / 数据库存储：保持原始 https:// URL 不变
  */
 export function toCDNUrl(url: string | null | undefined): string {
@@ -35,20 +28,13 @@ export function toCDNUrl(url: string | null | undefined): string {
   // 兼容不同协议、大小写、query/hash 等 URL 形式
   try {
     const parsed = new URL(raw)
-    if (parsed.hostname.toLowerCase() === CDN_HOST) {
+    if (isImageCDNHost(parsed.hostname)) {
       return `/cdn${parsed.pathname}${parsed.search}${parsed.hash}`
-    }
-    if (parsed.hostname.toLowerCase() === LEGACY_CDN_HOST) {
-      return `/cdn-legacy${parsed.pathname}${parsed.search}${parsed.hash}`
     }
   } catch {
     // 非法 URL 保持原值，避免吞掉真实问题
   }
 
-  // 兜底：保留原先精确前缀匹配行为
-  if (raw.startsWith(CDN_ORIGIN)) return '/cdn/' + raw.slice(CDN_ORIGIN.length)
-  if (raw.startsWith(LEGACY_CDN_ORIGIN_HTTP)) return '/cdn-legacy/' + raw.slice(LEGACY_CDN_ORIGIN_HTTP.length)
-  if (raw.startsWith(LEGACY_CDN_ORIGIN_HTTPS)) return '/cdn-legacy/' + raw.slice(LEGACY_CDN_ORIGIN_HTTPS.length)
   return raw
 }
 
@@ -254,7 +240,7 @@ export async function uploadToQiniu(
       complete(res) {
         console.log('七牛云上传成功:', res)
         // 返回完整的 CDN URL（使用 HTTPS）
-        const url = `https://img.keepthinking.me/${res.key}`
+        const url = buildImageCDNUrl(res.key)
         resolve(url)
       },
     })

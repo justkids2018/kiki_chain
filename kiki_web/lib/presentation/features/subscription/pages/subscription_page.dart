@@ -23,12 +23,13 @@ class SubscriptionPage extends StatelessWidget {
               child: Stack(
                 children: [
                   const Positioned.fill(child: _BotanicalBackdrop()),
+                  const Positioned.fill(child: _SubscriptionDecorations()),
                   const Positioned(left: 16, top: 12, child: GlassBackButton()),
                   Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 820),
+                      constraints: const BoxConstraints(maxWidth: 520),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(28, 58, 28, 28),
+                        padding: const EdgeInsets.fromLTRB(28, 48, 28, 24),
                         child: Obx(() {
                           final products = controller.products;
                           return LayoutBuilder(
@@ -37,39 +38,18 @@ class SubscriptionPage extends StatelessWidget {
                                   constraints.maxWidth >= 680;
                               if (!useLandscapeLayout) {
                                 return SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      _PlanSection(
-                                        controller: controller,
-                                        products: products,
-                                      ),
-                                      const SizedBox(height: 18),
-                                      _PaymentPanel(controller: controller),
-                                    ],
+                                  child: _SubscriptionShell(
+                                    controller: controller,
+                                    products: products,
                                   ),
                                 );
                               }
 
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 7,
-                                    child: _PlanSection(
-                                      controller: controller,
-                                      products: products,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 26),
-                                  Expanded(
-                                    flex: 5,
-                                    child: _PaymentPanel(
-                                      controller: controller,
-                                    ),
-                                  ),
-                                ],
+                              return SingleChildScrollView(
+                                child: _SubscriptionShell(
+                                  controller: controller,
+                                  products: products,
+                                ),
                               );
                             },
                           );
@@ -83,6 +63,110 @@ class SubscriptionPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _SubscriptionDecorations extends StatelessWidget {
+  const _SubscriptionDecorations();
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Stack(
+        children: [
+          const Positioned(
+            left: 116,
+            top: 74,
+            child: _SoftLeaf(size: 42, angle: -0.35),
+          ),
+          const Positioned(
+            right: 116,
+            top: 92,
+            child: _SoftLeaf(size: 34, angle: 0.3),
+          ),
+          const Positioned(
+            left: 72,
+            bottom: 132,
+            child: _SoftLeaf(size: 28, angle: 0.2),
+          ),
+          const Positioned(
+            right: 78,
+            bottom: 138,
+            child: _SoftLeaf(size: 24, angle: -0.25),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SoftLeaf extends StatelessWidget {
+  final double size;
+  final double angle;
+
+  const _SoftLeaf({required this.size, required this.angle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: angle,
+      child: Icon(
+        Icons.eco_rounded,
+        size: size,
+        color: const Color(0xFF79B95F).withOpacity(0.24),
+      ),
+    );
+  }
+}
+
+class _SubscriptionShell extends StatelessWidget {
+  final SubscriptionController controller;
+  final List<SubscriptionProduct> products;
+
+  const _SubscriptionShell({required this.controller, required this.products});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(22, 20, 22, 20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.94),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Color(0xFFE7DDCC)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 760) {
+                return Column(
+                  children: [
+                    _PlanSection(controller: controller, products: products),
+                    const SizedBox(height: 16),
+                    _PaymentPanel(controller: controller),
+                  ],
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 7,
+                    child: _PlanSection(
+                      controller: controller,
+                      products: products,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(child: _PaymentPanel(controller: controller)),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -102,45 +186,24 @@ class _PlanSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            const Expanded(
-              child: Text(
-                '选择 VIP 套餐',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFF1F2937),
-                  fontFamily: 'Fredoka',
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 14),
         LayoutBuilder(
           builder: (context, constraints) {
-            final cardWidth =
-                ((constraints.maxWidth - 16) / 2).clamp(170.0, 238.0);
-            return SizedBox(
-              height: 188,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return SizedBox(
-                    width: cardWidth,
+            return Column(
+              children: [
+                for (var index = 0; index < products.length; index++) ...[
+                  SizedBox(
+                    height: 66,
+                    width: double.infinity,
                     child: SubscriptionPlanTile(
-                      product: product,
+                      product: products[index],
                       isSelected: controller.selectedProduct.value?.productId ==
-                          product.productId,
-                      onTap: () => controller.selectProduct(product),
+                          products[index].productId,
+                      onTap: () => controller.selectProduct(products[index]),
                     ),
-                  );
-                },
-              ),
+                  ),
+                  if (index < products.length - 1) const SizedBox(height: 10),
+                ],
+              ],
             );
           },
         ),
@@ -157,60 +220,41 @@ class _PaymentPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.fromLTRB(16, 15, 16, 16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.82),
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFFF7F2E7),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: const Color(0xFFE9DEC9), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
-          ),
-        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _SubscriptionBrandHeader(),
-          const SizedBox(height: 16),
-          const Text(
-            '支付方式',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 14),
-          _PaymentMethodSelector(controller: controller),
-          const SizedBox(height: 20),
+          const _WechatPaymentLine(),
+          const SizedBox(height: 10),
           if (controller.freeSubscriptionNoticeText.isNotEmpty) ...[
             _FreeSubscriptionNotice(
-              text: controller.freeSubscriptionNoticeText,
-            ),
-            const SizedBox(height: 12),
+                text: controller.freeSubscriptionNoticeText),
+            const SizedBox(height: 10),
           ],
           SizedBox(
-            height: 58,
+            height: 52,
             child: ElevatedButton(
               onPressed: controller.isPaying.value
                   ? null
                   : controller.subscribeSelected,
               style: ElevatedButton.styleFrom(
                 elevation: 0,
-                backgroundColor: const Color(0xFFFFC857),
+                backgroundColor: const Color(0xFF4F7DF3),
                 disabledBackgroundColor: const Color(0xFFE5E7EB),
-                foregroundColor: const Color(0xFF4B2800),
+                foregroundColor: Colors.white,
                 textStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
                   fontFamily: 'Fredoka',
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
               child: controller.isPaying.value
@@ -252,6 +296,50 @@ class _PaymentPanel extends StatelessWidget {
   }
 }
 
+class _WechatPaymentLine extends StatelessWidget {
+  const _WechatPaymentLine();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 42,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFE7DDCC)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.chat_bubble_rounded,
+              size: 18, color: Color(0xFF22B573)),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Text(
+              '微信支付',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF2D3B31),
+              ),
+            ),
+          ),
+          Container(
+            width: 18,
+            height: 18,
+            decoration: const BoxDecoration(
+              color: Color(0xFF22B573),
+              shape: BoxShape.circle,
+            ),
+            child:
+                const Icon(Icons.check_rounded, size: 13, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _FreeSubscriptionNotice extends StatelessWidget {
   const _FreeSubscriptionNotice({required this.text});
 
@@ -262,8 +350,8 @@ class _FreeSubscriptionNotice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF8E7),
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFFEAF6DF),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: const Color(0xFFC8E6B8),
           width: 1,
@@ -272,8 +360,8 @@ class _FreeSubscriptionNotice extends StatelessWidget {
       child: Row(
         children: [
           const Icon(
-            Icons.eco_rounded,
-            size: 16,
+            Icons.calendar_month_rounded,
+            size: 17,
             color: Color(0xFF4E9F2E),
           ),
           const SizedBox(width: 8),
@@ -341,48 +429,6 @@ class _BackdropLeaf extends StatelessWidget {
         size: size,
         color: const Color(0xFF6DBF4A).withOpacity(0.055),
       ),
-    );
-  }
-}
-
-class _SubscriptionBrandHeader extends StatelessWidget {
-  const _SubscriptionBrandHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 38,
-          height: 38,
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8F8F6),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFFD8D2C8), width: 1),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Image.asset(
-              'assets/icon/app_icon.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        const Expanded(
-          child: Text(
-            'Hi Kiki VIP',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF1F2937),
-              height: 1.1,
-              fontFamily: 'Fredoka',
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -17,10 +17,8 @@ class SubscriptionPlanTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isYearly = product.period == SubscriptionPeriod.yearly;
-    final title = isYearly ? '年付' : '月包';
+    final title = isYearly ? '年付' : '月付';
     final priceParts = _splitDisplayPrice(product.displayPrice);
-    final priceFontSize = isYearly ? 38.0 : 30.0;
-    final unitFontSize = isYearly ? 16.0 : 14.0;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -35,138 +33,74 @@ class SubscriptionPlanTile extends StatelessWidget {
             AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+              padding: const EdgeInsets.fromLTRB(17, 14, 17, 15),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFFFFF4CF)
-                    : Colors.white.withOpacity(0.96),
-                borderRadius: BorderRadius.circular(8),
+                    ? const Color(0xFFFFF1C4)
+                    : const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(18),
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFFFFC857)
-                      : const Color(0xFFE5E7EB),
-                  width: isSelected ? 2 : 1,
+                      ? const Color(0xFFF0B63A)
+                      : const Color(0xFFE7DDCC),
+                  width: isSelected ? 2.2 : 1,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: isSelected
-                        ? const Color(0xFFFFC857).withOpacity(0.24)
-                        : Colors.black.withOpacity(0.05),
-                    blurRadius: isSelected ? 22 : 14,
-                    offset: const Offset(0, 8),
+                        ? const Color(0xFFF0B63A).withOpacity(0.22)
+                        : const Color(0xFF6C4A20).withOpacity(0.06),
+                    blurRadius: isSelected ? 18 : 10,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      width: 23,
-                      height: 23,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFFFFC857)
-                            : Colors.transparent,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isSelected
-                              ? const Color(0xFFFFC857)
-                              : const Color(0xFFD1D5DB),
-                          width: 2,
-                        ),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF2D3B31),
+                        fontFamily: 'Fredoka',
                       ),
-                      child: isSelected
-                          ? const Icon(
-                              Icons.check_rounded,
-                              size: 16,
-                              color: Color(0xFF4B2800),
-                            )
-                          : null,
                     ),
                   ),
-                  const Spacer(),
                   Text(
-                    title,
+                    priceParts.amount,
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFF1F2937),
-                      height: 1.05,
+                      color: Color(0xFF233126),
                       fontFamily: 'Fredoka',
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  FittedBox(
-                    alignment: Alignment.centerLeft,
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          priceParts.amount,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: priceFontSize,
-                            fontWeight: FontWeight.w900,
-                            color: const Color(0xFF111827),
-                            height: 0.95,
-                            fontFamily: 'Fredoka',
-                          ),
-                        ),
-                        if (priceParts.unit.isNotEmpty) ...[
-                          const SizedBox(width: 4),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 3),
-                            child: Text(
-                              priceParts.unit,
-                              style: TextStyle(
-                                fontSize: unitFontSize,
-                                fontWeight: FontWeight.w900,
-                                color: const Color(0xFF6B5B4B),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
+                  const SizedBox(width: 12),
+                  Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFF4F7DF3)
+                          : Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isSelected
+                            ? const Color(0xFF4F7DF3)
+                            : const Color(0xFFD8CEBD),
+                        width: 1.8,
+                      ),
                     ),
+                    child: isSelected
+                        ? const Icon(Icons.check_rounded,
+                            size: 15, color: Colors.white)
+                        : null,
                   ),
-                  const Spacer(),
                 ],
               ),
             ),
-            if (product.isRecommended)
-              Positioned(
-                top: -9,
-                right: 14,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF5F9F57),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF5F9F57).withOpacity(0.18),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: const Text(
-                    '推荐',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      height: 1,
-                    ),
-                  ),
-                ),
-              ),
           ],
         ),
       ),

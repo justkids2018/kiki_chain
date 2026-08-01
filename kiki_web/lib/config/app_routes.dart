@@ -2,9 +2,8 @@ import 'package:get/get.dart';
 import 'package:kikichain/presentation/pages/interactive_image_home/interactive_image_home_page.dart';
 import '../presentation/pages/home_page.dart';
 import '../presentation/pages/login_page.dart';
-import '../presentation/pages/register/controllers/register_page_controller.dart';
-import '../presentation/pages/register/pages/register_page.dart';
 import '../presentation/pages/splash_page.dart';
+import '../presentation/pages/legal/local_agreement_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_page.dart';
 import '../presentation/pages/interactive_image/interactive_image_controller.dart';
 import '../presentation/features/writing_practice/pages/writing_practice_page.dart';
@@ -38,12 +37,7 @@ class AppRoutes {
     // 注册页面
     GetPage(
       name: AppConstants.routeRegister,
-      page: () => const RegisterPage(),
-      binding: BindingsBuilder(() {
-        Get.lazyPut<RegisterPageController>(
-          () => RegisterPageController(),
-        );
-      }),
+      page: () => const LoginPage(initialMode: AuthPanelMode.register),
     ),
     // 互动图片页面
     GetPage(
@@ -75,6 +69,18 @@ class AppRoutes {
     GetPage(
       name: AppConstants.routeSubscription,
       page: () => const SubscriptionPage(),
+    ),
+    GetPage(
+      name: AppConstants.routeWebView,
+      page: () {
+        final arguments = Get.arguments;
+        final map = arguments is Map ? arguments : const {};
+        return LocalAgreementPage(
+          title: map['title']?.toString() ?? '协议',
+          assetPath: map['assetPath']?.toString() ??
+              'assets/legal/user_agreement.html',
+        );
+      },
     ),
   ];
 

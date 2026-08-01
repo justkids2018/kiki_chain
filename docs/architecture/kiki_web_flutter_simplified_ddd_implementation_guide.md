@@ -1,113 +1,113 @@
-# KK Web Flutter Simplified DDD Implementation Guide
+# KK Web Flutter 简化 DDD 实施指南
 
-## 1. Purpose
+## 1. 目的
 
-This guide operationalizes the project-owned architecture baseline for day-to-day implementation.
-Use this as the default implementation checklist for all future `kiki_web` feature work.
+本指南将项目自有的架构基线落实为日常开发规范。
+今后所有 `kiki_web` 功能开发均默认以本指南作为实施检查清单。
 
-Execution preference:
+实施原则：
 
-1. Prefer current kiki_web project patterns and conventions.
-2. Keep implementation changes small and reversible.
-3. Avoid sweeping directory or architectural reshuffles in routine feature work.
+1. 优先遵循当前 kiki_web 项目已有的模式与约定。
+2. 实现改动应尽量小，并且可回退。
+3. 日常功能开发中，避免大范围调整目录或架构。
 
-## 2. Standard Feature Delivery Template
+## 2. 标准功能交付模板
 
-For each new feature, create or align to:
+每个新功能都应创建或对齐以下内容：
 
-1. `presentation/pages` and `presentation/controllers` entries.
-2. domain entity and repository abstraction in `domain/`.
-3. repository implementation and data source flow in `data/`.
-4. route and dependency wiring in app routing/bindings.
+1. 在 `presentation/pages` 和 `presentation/controllers` 中添加对应内容。
+2. 在 `domain/` 中定义领域实体和仓储抽象。
+3. 在 `data/` 中实现仓储和数据源流程。
+4. 在应用路由和依赖绑定中完成路由及依赖装配。
 
-## 2.1 Feature Directory Convention (Mandatory For New Features)
+## 2.1 功能目录约定（新功能强制执行）
 
-For all new kiki_web feature pages, use a dedicated feature directory and co-locate related files.
+所有新增的 kiki_web 功能页面都必须使用独立的功能目录，并将相关文件放在一起。
 
-Recommended structure:
+推荐结构：
 
 1. `presentation/features/<feature_name>/pages/`
 2. `presentation/features/<feature_name>/controllers/`
 3. `presentation/features/<feature_name>/widgets/`
 
-Rules:
+规则：
 
-1. One feature page belongs to one feature directory.
-2. Feature-specific widgets must stay inside that feature directory.
-3. Feature-specific controller must stay inside that feature directory.
-4. Cross-feature reuse is allowed only through neutral shared layers (`presentation/widgets`, `core`, `services`, `utils`, or shared domain contracts).
-5. Existing legacy files under old paths do not require immediate relocation; apply this convention to new work and incremental refactors.
+1. 一个功能页面归属于一个功能目录。
+2. 功能专用组件必须放在对应的功能目录内。
+3. 功能专用控制器必须放在对应的功能目录内。
+4. 只有通过中立的共享层（`presentation/widgets`、`core`、`services`、`utils` 或共享领域契约）才能实现跨功能复用。
+5. 旧路径下的现有遗留文件无需立即迁移；新功能和渐进式重构应遵循本约定。
 
-## 3. Build Order (Recommended)
+## 3. 构建顺序（推荐）
 
-1. Define domain entity and repository contract.
-2. Implement data source and repository implementation.
-3. Add controller orchestration and state.
-4. Build UI page/widget and bind to controller.
-5. Wire routes and dependency injection.
-6. Add logging and failure handling.
+1. 定义领域实体和仓储契约。
+2. 实现数据源和仓储。
+3. 添加控制器编排与状态。
+4. 构建 UI 页面或组件，并与控制器绑定。
+5. 装配路由和依赖注入。
+6. 添加日志和失败处理。
 
-## 4. Route and Entry Rules
+## 4. 路由与入口规则
 
-1. Route should target pages only.
-2. Entry decision logic (e.g., splash auth gate) must stay in dedicated entry pages/controllers.
-3. Do not mix long-lived onboarding flow logic into business feature pages.
+1. 路由只能指向页面。
+2. 入口判断逻辑（例如启动页的身份验证门控）必须放在专用的入口页面或控制器中。
+3. 不要把长期存在的新手引导流程逻辑混入业务功能页面。
 
-## 5. DTO and Mapping Rules
+## 5. DTO 与映射规则
 
-1. Keep transport models (DTO) in data layer.
-2. Keep domain entities transport-agnostic.
-3. Use deterministic mapper functions for conversion.
+1. 传输模型（DTO）应放在数据层。
+2. 领域实体应与传输方式无关。
+3. 使用行为确定的映射函数进行转换。
 
-## 6. State Management Rules (GetX)
+## 6. 状态管理规则（GetX）
 
-1. `obs` state is view-facing only.
-2. Long-running tasks expose loading, success, and failure states.
-3. Controller methods should represent user intent (e.g., `login`, `register`, `loadScene`).
-4. Page widgets should use `StatelessWidget`/`StatefulWidget`, not `GetView`.
-5. Page controller access should be explicit (route binding + `Get.find<T>()`).
+1. `obs` 状态仅供视图使用。
+2. 长时间运行的任务应提供加载、成功和失败状态。
+3. 控制器方法应表达用户意图，例如 `login`、`register`、`loadScene`。
+4. 页面组件应使用 `StatelessWidget` 或 `StatefulWidget`，不要使用 `GetView`。
+5. 页面获取控制器的方式应当明确，即通过路由绑定和 `Get.find<T>()` 获取。
 
-## 7. Module Independence Checklist (Required)
+## 7. 模块独立性检查清单（必检）
 
-Before merge, verify:
+合并前请确认：
 
-1. No imports from another feature controller/page.
-2. No feature-specific constants placed in `core`.
-3. Shared logic extracted to neutral utility/service or shared domain contract.
-4. New files are grouped by same feature concern, not scattered randomly.
+1. 未导入其他功能的控制器或页面。
+2. 未将功能专用常量放入 `core`。
+3. 共享逻辑已提取到中立的工具、服务或共享领域契约中。
+4. 新文件按同一功能关注点归类，没有随意散落在不同位置。
 
-## 8. Error Handling Baseline
+## 8. 错误处理基线
 
-1. Catch and normalize infrastructure errors close to data layer.
-2. Expose user-readable failure to presentation layer.
-3. Ensure both happy path and error path have observable UI behavior.
+1. 在靠近数据层的位置捕获并归一化基础设施错误。
+2. 向表现层提供用户可理解的失败信息。
+3. 确保正常路径和错误路径都有可观察的 UI 行为。
 
-## 9. Logging Baseline
+## 9. 日志基线
 
-At minimum, log:
+至少记录：
 
-1. Feature action start.
-2. Feature action success.
-3. Failure with context and correlation hints.
+1. 功能操作开始。
+2. 功能操作成功。
+3. 失败信息，以及相关上下文和关联线索。
 
-## 10. Review Checklist for AI-Generated Code
+## 10. AI 生成代码审查清单
 
-Use this list when code is generated by agents:
+使用智能体生成代码时，请按以下清单检查：
 
-1. Is the chain still `UI -> Controller -> Domain -> Repository -> DataSource`?
-2. Any direct network call inside page/controller?
-3. Any cross-feature coupling introduced?
-4. Are routes and entry flow responsibilities still separated?
-5. Is this implementation independent enough to be regenerated in isolation?
+1. 调用链是否仍为 `UI -> Controller -> Domain -> Repository -> DataSource`？
+2. 页面或控制器中是否存在直接网络请求？
+3. 是否引入了跨功能耦合？
+4. 路由职责与入口流程职责是否仍然分离？
+5. 当前实现是否足够独立，可以单独重新生成？
 
-## 11. Mandatory Commands Before Merge
+## 11. 合并前必须执行的命令
 
 1. `flutter analyze`
-2. project-specific smoke checks for affected login/navigation core flow
+2. 针对受影响的登录、导航核心流程执行项目专用冒烟检查
 
-## 12. Governance
+## 12. 治理
 
-1. This guide is project-owned and must be evolved inside this repo.
-2. If external docs are referenced, record only adapted decisions here.
-3. Keep this guide and architecture doc synchronized when rules change.
-4. Treat kiki_web compatibility as default unless there is a documented reason to diverge.
+1. 本指南归项目所有，必须在本仓库内持续维护。
+2. 如需引用外部文档，本指南中只记录经过项目适配的决策。
+3. 规则发生变化时，应同步更新本指南和架构文档。
+4. 除非有文档明确说明偏离原因，否则默认保持与 kiki_web 兼容。

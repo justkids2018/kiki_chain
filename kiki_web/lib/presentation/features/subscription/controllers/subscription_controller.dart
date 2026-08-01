@@ -34,20 +34,19 @@ class SubscriptionController extends GetxController {
 
   late final ClientPaymentContext paymentContext;
 
-  static final DateTime _freeSubscriptionDeadline =
-      DateTime(2026, 8, 1);
+  static final DateTime _freeSubscriptionDeadline = DateTime(2026, 9, 2);
 
   bool get isFreeSubscriptionPeriod =>
       _now().isBefore(_freeSubscriptionDeadline);
 
   String get freeSubscriptionNoticeText {
     if (!isFreeSubscriptionPeriod) return '';
-    return '限时体验：2026年8月1日前免费开通 VIP';
+    return '限时优惠至 9 月 1 日';
   }
 
   String get primaryActionText {
     if (isFreeSubscriptionPeriod) {
-      return '免费订阅 ¥0';
+      return '0 元开通';
     }
     final product = selectedProduct.value;
     final price = _formatPayAmount(product?.displayPrice ?? '');
@@ -79,7 +78,7 @@ class SubscriptionController extends GetxController {
       period: SubscriptionPeriod.yearly,
       priceCents: 8800,
       currency: 'CNY',
-      displayPrice: '¥88/年',
+      displayPrice: '¥89.9/年',
       trialDays: 3,
       isRecommended: true,
     ),
@@ -167,7 +166,7 @@ class SubscriptionController extends GetxController {
       String? purchaseToken;
       if (isFreeSubscriptionPeriod) {
         EasyLoading.show(status: '正在开通免费订阅...');
-        purchaseToken = 'free_before_2026_08_01_${order.orderId}';
+        purchaseToken = 'free_before_2026_09_02_${order.orderId}';
       } else {
         EasyLoading.show(status: '正在拉起支付...');
         final paymentResult =

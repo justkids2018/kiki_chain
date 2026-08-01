@@ -132,6 +132,7 @@ flutter:
     - assets/icon/
     - assets/data/
     - assets/audio/
+    - assets/legal/
     - assets/data/toy/
     - assets/data/stroke_order/
     - config/

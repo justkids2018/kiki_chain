@@ -30,10 +30,10 @@ Scene:
 Build one joyful "First Step to Primary School" adventure as a premium miniature toy diorama. Show a continuous child-friendly journey from a playful kindergarten garden in the foreground to a bright, welcoming primary-school garden and open classroom doorway in the background. A small curved growth bridge or rising stepping-stone path connects the two spaces. The scene must communicate an exciting transition from kindergarten to primary school at first glance, while familiar everyday concepts appear naturally along the route. It must feel like the beginning of a happy adventure, not a study session, school-supply display, vocabulary wall, graduation ceremony, or collage of lessons.
 
 Central playful event:
-- The younger sister is happily taking one confident mid-air step across the colorful growth bridge from the kindergarten side toward primary school.
+- The younger sister is taking one small, safe, confident step between two neighboring colorful stepping stones from the kindergarten side toward primary school. Keep one foot firmly planted on the rear stone while the other reaches toward or lightly touches the next stone; her body must remain low, balanced, and visually connected to the path, with no airborne leap.
 - The older sister is already on the primary-school side, turning back with an encouraging open-hand gesture as if welcoming her forward, without any speech bubble or text.
 - The white kitten is playfully running ahead across the bridge, chasing one butterfly or a gently rolling ball.
-- The movement must be forward and upward, never a sad farewell: lifted feet, fluttering ribbons or leaves, curved paths, sunshine, and shared eye direction make the moment feel celebratory and irresistible.
+- The movement must be gently forward and upward, never a sad farewell: one grounded stepping action, fluttering ribbons or leaves, curved paths, sunshine, and shared eye direction make the moment feel celebratory and irresistible. The action must look safe, balanced, and believable for a 4-year-old.
 
 Theme anchors:
 - Kindergarten foreground cues: one rounded play block cluster, a small slide edge, sandbox toy, pinwheel, or soft play mat; use only two or three cues so this side stays clean.
@@ -46,8 +46,23 @@ Theme anchors:
 
 Mandatory character and pet rules:
 - Exactly two cute sister girls must appear.
-- Older sister: 10 years old, loose long hair, cute, confident, and joyfully inviting the younger sister forward.
-- Younger sister: 4 years old, two ponytails, preferably wearing a bright playful dress, energetic and visibly mid-hop on the adventure path.
+
+Yuki identity lock:
+- Yuki is the older sister, about 10 years old. She has a naturally slim but healthy older-child build, a softly oval youthful face, subtle cheek fullness, bright almond-shaped dark eyes, and glossy black hair in an airy low ponytail or half-up style with neat face-framing wisps.
+- Her expression is warm, calm, and encouraging. Use a small, centered, symmetrical closed-lip smile with softly and equally raised corners; no crooked mouth, smirk, pout, visible teeth, exaggerated lipstick, adult makeup, sleepy eyes, or generic princess face.
+- Her outfit is one coherent child outfit: a soft cream cardigan or top, a lavender A-line skirt or dress with a clear waist and single hem, proportional rounded sneakers, and a lavender backpack. No adult styling or confusing layers.
+
+Kiki identity lock:
+- Kiki is the younger sister, about 4 years old. She has a compact preschool build, a gently rounded but not overly wide face, natural cheek fullness, clear rounder dark eyes, straight full bangs, and a tidy short dark bob around the ears and jaw.
+- Preserve her quiet, innocent, slightly curious charm even during movement. Use a small natural joyful smile; no huge open mouth, inflated cheeks, plastic-doll eyes, bulky pigtails, or long high ponytails.
+- Her outfit is one coherent soft-pink long-sleeve A-line play dress with a clearly defined single hem, pale leggings, simple proportional pink shoes, and a small backpack. No puffer jacket, double skirt, floating fabric, ambiguous trouser-dress combination, or bulky clothing.
+
+Natural child anatomy and proportion lock:
+- Base both sisters on believable real-child anatomy, then apply only mild 3D toy softness. Do not use chibi, bobble-head, fashion-doll, or exaggerated cartoon anatomy.
+- Yuki should read at roughly six heads tall, with natural 10-year-old shoulders, torso, elbows, knees, hands, and feet. Kiki should read at roughly five heads tall, with a shorter preschool torso and naturally shorter, sturdier limbs. Yuki is approximately 1.3 times Kiki's standing height.
+- Keep heads only slightly stylized, shoulders softly rounded but structurally present, arms ending naturally near the upper thighs, knees at believable leg positions, and shoes proportional to each child's feet.
+- Maintain distinct age anatomy without making Yuki too thin or Kiki too squat. Avoid oversized heads, tiny heads, narrow shoulders, stretched torsos, extra-long or extra-short legs, skinny tube limbs, oversized shoes, warped joints, mismatched limb lengths, or hands with adult proportions.
+- Both sisters must feel like the same premium stylized-realism character family: recognizable real children translated into polished 3D animation, not realistic photography and not toy figurines with distorted anatomy.
 - Exactly one cute white kitten must appear.
 - Place the older sister, younger sister, and kitten in three different depth layers: foreground / midground / background.
 - Recommended depth arrangement: white kitten in the foreground running onto the bridge, younger sister in the midground crossing from kindergarten to primary school, older sister in the background at the welcoming school-garden destination.

@@ -2,7 +2,7 @@
 
 use axum::{
     extract::{Request, State},
-    http::{header, StatusCode},
+    http::{header, HeaderMap, StatusCode},
     response::{IntoResponse, Response},
     Json,
 };
@@ -62,20 +62,42 @@ pub async fn get_profile_handler(
 /// PUT /api/v1/mobile/user/profile
 pub async fn update_profile_handler(
     State(_repo): State<Arc<dyn UserRepository>>,
-    request: Request,
+    headers: HeaderMap,
+    Json(payload): Json<UpdateProfileRequest>,
 ) -> Response {
-    let claims = match extract_jwt_claims(&request) {
+    let claims = match extract_jwt_claims_from_headers(&headers) {
         Ok(c) => c,
         Err(resp) => return resp,
     };
 
     info!("📱 [用户] 更新用户信息: uid={}", claims.sub);
 
-    // TODO: 实现用户信息更新逻辑（需要 UserRepository 支持 update 方法）
-    (StatusCode::OK, Json(ApiResponse::success(
-        serde_json::json!({ "uid": claims.sub }),
-        "更新成功（暂未实现完整更新）"
-    ))).into_response()
+    match _repo
+        .update_profile(&claims.sub, payload.name.as_deref(), payload.email.as_deref())
+        .await
+    {
+        Ok(Some(user)) => {
+            let dto = UserProfileDto {
+                uid: user.uid().to_string(),
+                name: user.name().to_string(),
+                phone: user.phone().to_string(),
+                email: user.email().to_string(),
+                role_type: user.role_type(),
+                is_vip: user.is_vip(),
+                vip_expire_at: user.vip_expire_at().map(|t| t.to_rfc3339()),
+                created_at: user.created_at().to_rfc3339(),
+            };
+            (StatusCode::OK, Json(ApiResponse::success(dto, "更新成功"))).into_response()
+        }
+        Ok(None) => {
+            let r = ApiResponse::<serde_json::Value>::error(404, "用户不存在");
+            (StatusCode::NOT_FOUND, Json(r)).into_response()
+        }
+        Err(e) => {
+            let r = ApiResponse::<serde_json::Value>::error(500, format!("更新用户失败: {}", e));
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(r)).into_response()
+        }
+    }
 }
 
 // ===== 辅助函数 =====
@@ -83,8 +105,13 @@ pub async fn update_profile_handler(
 fn extract_jwt_claims(
     request: &Request,
 ) -> Result<crate::utils::jwt::Claims, Response> {
-    let auth_header = request
-        .headers()
+    extract_jwt_claims_from_headers(request.headers())
+}
+
+fn extract_jwt_claims_from_headers(
+    headers: &HeaderMap,
+) -> Result<crate::utils::jwt::Claims, Response> {
+    let auth_header = headers
         .get(header::AUTHORIZATION)
         .and_then(|h| h.to_str().ok());
 

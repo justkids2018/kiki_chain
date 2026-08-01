@@ -31,4 +31,14 @@ pub trait UserRepository: Send + Sync {
 
     /// 根据角色查找用户
     async fn find_users_by_role(&self, role_id: i32) -> Result<Vec<User>>;
+
+    /// 更新用户资料。默认实现用于尚未支持资料更新的测试仓储。
+    async fn update_profile(
+        &self,
+        _uid: &str,
+        _name: Option<&str>,
+        _email: Option<&str>,
+    ) -> Result<Option<User>> {
+        Ok(None)
+    }
 }

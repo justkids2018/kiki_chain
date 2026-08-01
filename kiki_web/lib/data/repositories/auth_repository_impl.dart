@@ -8,7 +8,6 @@ import '../../core/services/app_services.dart';
 import '../../core/exceptions/app_exceptions.dart';
 import '../../config/env_config.dart';
 import '../services/api/auth_api_service.dart';
-import 'package:intl/intl.dart';
 
 /// Auth 模块的数据层实现
 ///
@@ -110,13 +109,10 @@ class AuthRepositoryImpl implements IAuthRepository {
       final passwordToSend = password;
 
       final trimmedNickname = nickname?.trim() ?? '';
-      final defaultNickname =
-          '临时${DateFormat('yyyyMMdd').format(DateTime.now())}';
-
       final response = await _authApiService.register(
         phone,
         passwordToSend,
-        trimmedNickname.isEmpty ? defaultNickname : trimmedNickname,
+        trimmedNickname,
       );
 
       AppLogger.info('📡 注册响应: $response');

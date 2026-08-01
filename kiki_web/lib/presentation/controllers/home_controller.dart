@@ -30,6 +30,7 @@ class HomeController extends GetxController
 
   // 用户信息
   final Rxn<User> currentUser = Rxn<User>();
+  final RxBool hasVipEntitlement = false.obs;
 
   // 场景分类相关
   final RxList<SceneCategory> categories = <SceneCategory>[].obs;
@@ -99,6 +100,9 @@ class HomeController extends GetxController
       categoryRequiresVip(index) && !isVipActive;
 
   bool get isVipActive {
+    if (hasVipEntitlement.value) {
+      return true;
+    }
     if (currentUser.value?.isVipActive == true) {
       return true;
     }
@@ -149,6 +153,8 @@ class HomeController extends GetxController
   Future<void> refreshAfterSubscription(VipEntitlement entitlement) async {
     if (!entitlement.isVip) return;
 
+    hasVipEntitlement.value = true;
+
     try {
       final authController = Get.find<AuthController>();
       authController.applyVipEntitlement(
@@ -159,6 +165,8 @@ class HomeController extends GetxController
       currentUser.refresh();
       update();
       await _refreshCurrentUserFromServer();
+      currentUser.refresh();
+      update();
       if (currentUser.value?.isVipActive != true) {
         authController.applyVipEntitlement(
           isVip: entitlement.isVip,
@@ -168,6 +176,7 @@ class HomeController extends GetxController
         currentUser.refresh();
         update();
       }
+      await loadCategories();
     } catch (e, stackTrace) {
       AppLogger.warning(
         'HomeController: 刷新订阅权益后首页状态失败',
@@ -223,6 +232,9 @@ class HomeController extends GetxController
           ? await authController.refreshCurrentUser()
           : await _authRepository.getCurrentUser();
       currentUser.value = user;
+      if (user?.isVipActive == true) {
+        hasVipEntitlement.value = true;
+      }
       return user;
     } catch (e) {
       AppLogger.warning('HomeController: 刷新用户信息失败', e);

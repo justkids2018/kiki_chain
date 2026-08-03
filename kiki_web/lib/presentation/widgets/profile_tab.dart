@@ -4,8 +4,10 @@ import 'package:kikichain/generated/app_localizations.dart';
 import '../../design_ui/kiki_ui_kit.dart';
 import '../../theme/app_colors.dart';
 import '../../core/constants/app_constants.dart';
+import '../../domain/entities/subscription.dart';
 import 'app_gradient_button.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/home_controller.dart';
 import '../pages/profile_feature/about_page.dart';
 import '../pages/profile_feature/help_feedback_page.dart';
 import '../pages/profile_feature/my_info_page.dart';
@@ -209,10 +211,17 @@ class ProfileTab extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              const Icon(
-                                Icons.edit_outlined,
-                                size: 16,
-                                color: Color(0xFF9B8F84),
+                              IconButton(
+                                tooltip: '修改昵称',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: const Icon(
+                                  Icons.edit_outlined,
+                                  size: 16,
+                                  color: Color(0xFF9B8F84),
+                                ),
+                                onPressed: () =>
+                                    Get.to(() => const MyInfoPage()),
                               ),
                             ],
                           ),
@@ -232,6 +241,45 @@ class ProfileTab extends StatelessWidget {
                     },
                   ),
                 ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          // 学习数据卡片
+          Container(
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFCF7),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFE7DFD4)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.stars_rounded,
+                    size: 24, color: Color(0xFF7BB83F)),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Text(
+                    '我的星星',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF5B5047),
+                    ),
+                  ),
+                ),
+                if ((user?.totalStars ?? 0) > 0)
+                  Text(
+                    '${user!.totalStars}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF7BB83F),
+                      fontFamily: 'Fredoka',
+                    ),
+                  ),
               ],
             ),
           ),
@@ -296,8 +344,14 @@ class ProfileTab extends StatelessWidget {
           height: 32,
           child: ElevatedButton.icon(
             onPressed: () async {
-              await Get.toNamed(AppConstants.routeSubscription);
+              final result = await Get.toNamed(AppConstants.routeSubscription);
               await authController.refreshCurrentUser();
+              if (result is VipEntitlement &&
+                  result.isVip &&
+                  Get.isRegistered<HomeController>()) {
+                await Get.find<HomeController>()
+                    .refreshAfterSubscription(result);
+              }
             },
             icon: const Icon(Icons.workspace_premium_rounded, size: 15),
             label: const Text('充值'),

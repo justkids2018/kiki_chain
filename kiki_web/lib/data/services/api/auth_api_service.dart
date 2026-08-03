@@ -43,10 +43,11 @@ class AuthApiService {
     }
 
     final uid = 'kiki_${DateTime.now().millisecondsSinceEpoch}';
+    final displayName = nickname.trim().isEmpty ? uid : nickname.trim();
 
     return await _httpClient!.post(ApiEndpoints.authRegister, data: {
       'uid': uid,
-      'name': nickname,
+      'name': displayName,
       'email': '',
       'phone': phone,
       'password': password,

@@ -33,6 +33,13 @@ iOS 测试发布流程，包括：
 - Apple 证书、Profile 和 App Store Connect Secrets 配置
 - 本地 iOS 编译预检
 
+### [证书管理](./certificates/README.md)
+统一管理两套独立证书生命周期，包括：
+
+- [七牛 CDN `img.keepthinking.me` 证书](./certificates/qiniu-cdn-certificate.md)的生成、上传、绑定与验证
+- [服务器 Nginx/Certbot 证书](./certificates/server-certificate.md)的签发、自动续期与验证
+- 私钥和生产凭据的仓库安全边界
+
 ## 🚀 快速开始
 
 ### 自动部署（推荐）

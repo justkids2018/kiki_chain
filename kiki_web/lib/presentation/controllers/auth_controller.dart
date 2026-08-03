@@ -69,6 +69,22 @@ class AuthController extends GetxController {
   bool get isVipActive => _currentUser.value?.isVipActive ?? false;
   bool get isRefreshingCurrentUser => _isRefreshingCurrentUser.value;
 
+  void applyUserProfile(User user) {
+    _currentUser.value = user;
+    _currentUser.refresh();
+    _isLoggedIn.value = true;
+    _isLoggedIn.refresh();
+    AppServices.instance.localStorage.setUserInfo(user.toJson());
+  }
+
+  Future<User?> updateNickname(String nickname) async {
+    final updated = await _authRepository.updateUserInfo({'name': nickname});
+    if (updated != null) {
+      applyUserProfile(updated);
+    }
+    return updated;
+  }
+
   void applyVipEntitlement({
     required bool isVip,
     DateTime? vipExpireAt,
@@ -87,6 +103,7 @@ class AuthController extends GetxController {
       vipExpireAt: vipExpireAt,
     );
     _currentUser.value = updated;
+    _currentUser.refresh();
     AppServices.instance.localStorage.setUserInfo(updated.toJson());
   }
 
@@ -102,6 +119,8 @@ class AuthController extends GetxController {
       if (user != null) {
         _currentUser.value = user;
         _isLoggedIn.value = true;
+        _currentUser.refresh();
+        _isLoggedIn.refresh();
         AppLogger.info('Current user refreshed: ${user.nickname}');
       }
       return _currentUser.value;

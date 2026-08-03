@@ -102,6 +102,26 @@ impl UserRepository for PostgresUserRepository {
         Ok(())
     }
 
+    async fn update_profile(
+        &self,
+        uid: &str,
+        name: Option<&str>,
+        email: Option<&str>,
+    ) -> Result<Option<User>> {
+        if let Some(name) = name {
+            sqlx::query("UPDATE users SET nickname = $1 WHERE id = $2")
+                .bind(name.trim())
+                .bind(uid)
+                .execute(&self.pool)
+                .await
+                .map_err(|e| DomainError::Infrastructure(format!("更新用户失败: {}", e)))?;
+        }
+        if let Some(email) = email {
+            let _ = email;
+        }
+        self.find_by_uid(uid).await
+    }
+
     async fn find_by_id(&self, id: &UserId) -> Result<Option<User>> {
         let row = sqlx::query("SELECT * FROM \"users\" WHERE \"id\" = $1")
             .bind(id.to_string())

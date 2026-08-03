@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage>
   static const Duration _stayDuration = Duration(milliseconds: 520);
   static const Duration _authInitializationTimeout = Duration(seconds: 4);
   static const String _welcomeImagePath = 'assets/images/kiki_welcome.png';
-  static const Color _splashBackgroundColor = Color(0xFFEBCDB2);
+  static const Color _splashBackgroundColor = Color(0xFFF7EEDB);
   static const double _logoAspectRatio = 3.0;
   static const double _logoMaxWidth = 720.0;
   static const double _logoHorizontalPadding = 20.0;

@@ -30,3 +30,4 @@ docs/tts/model_data_backup/
 
 # Local HTTPS certificates (never commit private keys)
 product_family/hikiki/https/
+local-secrets/certificates/

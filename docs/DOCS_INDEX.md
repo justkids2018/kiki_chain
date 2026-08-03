@@ -13,6 +13,7 @@
 | 工程体系规则 | `docs/engineering/` | 目录归属、数据库、部署、CI、Agent 协作 |
 | 数据库事实源 | `kiki_server/database/` | 数据库初始化、迁移、schema 快照 |
 | 部署运维 | `docs/deployment/` | 部署流程、配置 |
+| TLS/SSL 证书 | `docs/deployment/certificates/` | 七牛 CDN 与服务器证书的独立文档和生成规则 |
 | API 文档规范 | `docs/api/README.md` | 如何编写 API 文档 |
 
 ## 📁 目录结构

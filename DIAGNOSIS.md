@@ -1,42 +1,55 @@
+# Mobile Release Actions Failure Diagnosis
+
 ## Failure Signature
 
-Android real-device run stalls during Flutter/Gradle debug build.
+- Android Release Build #64: `Gradle task assembleRelease failed with exit code 1`.
+- iOS Release Build #59: IPA export succeeded, then TestFlight upload failed with App Store validation code `90474`.
 
 ## Root Cause
 
-The app itself is not the primary failure point. The local Android build environment had multiple stacked issues: the default Java on shell is Java 8 while this Android Gradle setup needs Java 17, several Gradle/Flutter dependencies were missing and slow or failing from Maven/Google sources, Flutter SDK's embedded Gradle plugin had to rebuild its Kotlin/Groovy plugin classes, and Android build daemons intermittently stalled during resource or Kotlin/Java compile phases.
+The two workflows fail for different reasons. Android is a real package-build failure: the workflow follows Flutter's moving `stable` channel, which advanced from 3.44.9 to 3.47.2 while the repository still uses Gradle 8.11.1; Flutter 3.47.2 now requires Gradle 8.14.0 or newer. iOS successfully compiles, archives, signs, and exports the IPA, but App Store Connect rejects it because the iPad target supports multitasking while its `Info.plist` declares only landscape orientations.
 
 ## Evidence
 
-- `adb devices -l` detects the real Android device `R89DMZAQ6HM7NRVS`.
-- Android manifest already contains landscape orientation.
-- iOS `Info.plist` now restricts both iPhone and iPad to landscape orientations.
-- `flutter clean` and `flutter pub get` completed.
-- Gradle failed earlier resolving `org.jetbrains.kotlin:kotlin-gradle-plugin-idea-proto:2.0.20` from Maven with `Remote host terminated the handshake`.
-- `curl` to Maven Central for Kotlin 2.1.21 was extremely slow, while Aliyun mirror completed quickly.
-- `./gradlew :app:tasks` succeeded after dependency cache repair and mirror configuration.
-- `:app:assembleDebug` progressed to Android app compilation, but local Gradle/Flutter wrapper sessions repeatedly remained waiting after worker child processes exited.
+- Both latest runs use commit `2e3bb42d341fd3e80d995e4646d2ef2398b49689`, so no repository code change separates the successful and failed Android runs.
+- Android run #57 succeeded on 2026-08-10 with Flutter 3.44.9; its log warned that Gradle 8.11.1 would soon become unsupported.
+- Android run #64 failed on 2026-09-04 with Flutter 3.47.2 and the explicit message: `Your project's Gradle version (8.11.1) is lower than Flutter's minimum supported version of 8.14.0`.
+- At the time of failure, `.github/workflows/android-release.yml` selected `channel: stable` without pinning a Flutter version.
+- `kiki_web/android/gradle/wrapper/gradle-wrapper.properties` pins Gradle 8.11.1.
+- iOS run #59 completed `Build Flutter iOS app without signing`, `Archive and export IPA with manual signing`, and `Locate IPA` successfully.
+- TestFlight then returned validation code `90474`, requiring portrait, upside-down portrait, landscape-left, and landscape-right orientations for iPad multitasking.
+- `kiki_web/ios/Runner/Info.plist` declares only `UIInterfaceOrientationLandscapeLeft` and `UIInterfaceOrientationLandscapeRight` for iPad, while the Xcode project targets both iPhone and iPad (`TARGETED_DEVICE_FAMILY = "1,2"`).
+- Android signing preparation and iOS signing/export succeeded, ruling out missing signing secrets as the direct cause of these runs.
 
 ## Affected Scope
 
-- Local Android build environment.
-- `kiki_web/android` Gradle configuration.
-- Flutter SDK local cache and Gradle cache.
+- Android APK and AAB release generation.
+- iOS TestFlight delivery; local IPA generation itself is successful.
+- Scheduled workflows remain vulnerable to future Flutter `stable` changes because the SDK is not pinned.
 
 ## Patch Plan
 
-1. Keep Java 17 explicitly for Android builds.
-2. Prefer stable mirror repositories for Android/Gradle dependencies.
-3. Keep iOS and Android native orientation configs aligned to landscape.
-4. Replace one-line Android Kotlin `MainActivity` with Java to avoid unnecessary app-level Kotlin compilation.
-5. If local Gradle wrapper still hangs, restart the terminal/IDE or reboot the local build environment, then run a fresh `flutter clean`, `flutter pub get`, and `flutter run`.
+1. Pin the same tested Flutter SDK version in both mobile workflows so scheduled builds are reproducible.
+2. Upgrade the Android Gradle wrapper to at least 8.14.0 and validate the compatible Android Gradle Plugin/Kotlin versions; do not use the dependency-validation bypass as the permanent fix.
+3. Choose the intended iPad behavior:
+   - if landscape-only full-screen is required, opt the iPad app out of multitasking with the appropriate full-screen setting; or
+   - if iPad multitasking is required, add both portrait orientations and verify the UI at supported sizes.
+4. Make artifact upload steps run on build/upload failure where useful, so a successfully generated IPA is still available for inspection even when TestFlight rejects it.
 
 ## Regression Risk
 
-Low for app behavior; changes are limited to native orientation and local Android build plumbing.
+Medium. The Android toolchain versions must be upgraded as a compatible set, and the iOS orientation choice affects actual iPad windowing behavior rather than only CI configuration.
 
 ## Verification Plan
 
-1. Run `flutter analyze`.
-2. Run Android real-device debug build with Java 17 and Flutter mirror enabled.
-3. Confirm the app opens on the connected device in landscape.
+1. Run the Android release build locally or in a non-publishing CI job and confirm both APK and AAB are produced.
+2. Run the iOS archive/export flow and inspect the archived app's effective `Info.plist` orientation/full-screen keys.
+3. Upload a new iOS build to App Store Connect and confirm validation code `90474` is gone.
+4. Re-run both GitHub Actions and confirm artifact, tag, Qiniu upload, and TestFlight stages separately.
+
+## Investigated Runs
+
+- Android: https://github.com/justkids2018/kiki_chain/actions/runs/33829087575
+- iOS: https://github.com/justkids2018/kiki_chain/actions/runs/33838606910
+
+Last updated: 2026-09-05

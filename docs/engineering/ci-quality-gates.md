@@ -12,6 +12,7 @@
 - `.github/workflows/docker-release.yml`
 - `.github/workflows/android-release.yml`
 - `.github/workflows/ios-release.yml`
+- `.github/workflows/ios-native-release.yml` (原生 SwiftUI iOS，与 Flutter `ios-release.yml` 分开)
 - `.github/workflows/product-static-sites-release.yml`
 
 ## 必须逐步补齐的门禁

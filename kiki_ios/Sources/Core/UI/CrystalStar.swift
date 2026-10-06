@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Shared golden glass star used wherever the app shows a learning reward.
+/// Shared solid, dimensional gold star used wherever the app shows a learning reward.
 struct CrystalStar: View {
     var earned: Bool
     var size: CGFloat = 20
@@ -14,26 +14,18 @@ struct CrystalStar: View {
         ZStack {
             if earned {
                 symbol
-                    .foregroundStyle(.black.opacity(0.16))
-                    .blur(radius: size * 0.08)
-                    .offset(y: size * 0.09)
+                    .foregroundStyle(Color(red: 0.66, green: 0.30, blue: 0.015))
+                    .offset(y: size * 0.085)
                 symbol
                     .foregroundStyle(LinearGradient(
-                        colors: [Color(red: 1, green: 0.98, blue: 0.71),
-                                 Color(red: 1, green: 0.79, blue: 0.13),
-                                 Color(red: 0.82, green: 0.43, blue: 0.02)],
+                        colors: [Color(red: 1, green: 0.91, blue: 0.29),
+                                 Color(red: 1, green: 0.68, blue: 0.035),
+                                 Color(red: 0.86, green: 0.39, blue: 0.012)],
                         startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .shadow(color: Color(red: 1, green: 0.68, blue: 0.08).opacity(0.50), radius: size * 0.20)
-                symbol
-                    .foregroundStyle(LinearGradient(
-                        colors: [.white.opacity(0.88), .white.opacity(0.12), .clear],
-                        startPoint: .top, endPoint: .bottom))
-                    .scaleEffect(x: 0.76, y: 0.54, anchor: .top)
-                    .offset(y: -size * 0.07)
+                    .shadow(color: Color(red: 0.77, green: 0.39, blue: 0.015).opacity(0.36), radius: size * 0.13, x: 0, y: size * 0.07)
                 Image(systemName: "star")
                     .resizable().aspectRatio(contentMode: .fit)
-                    .foregroundStyle(.white.opacity(0.72))
-                    .shadow(color: .white.opacity(0.9), radius: size * 0.04)
+                    .foregroundStyle(Color(red: 1, green: 0.91, blue: 0.38))
             } else {
                 symbol.foregroundStyle(.white.opacity(0.36))
                 Image(systemName: "star")

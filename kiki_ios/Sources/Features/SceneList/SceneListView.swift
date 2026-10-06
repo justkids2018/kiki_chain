@@ -82,10 +82,19 @@ public struct SceneListView: View {
             SceneCardView(scene: scene).interactiveDismissDisabled()
         }
         .sheet(isPresented: $showSubscription) { SubscriptionView() }
-        .alert("解锁完整主题", isPresented: $showVipAlert) {
-            Button("立即开通") { showSubscription = true }
-            Button("稍后再说", role: .cancel) {}
-        } message: { Text("该卡片为会员专享，开通后即可学习。") }
+        .overlay {
+            if showVipAlert {
+                VipUnlockDialog(
+                    onDismiss: { showVipAlert = false },
+                    onSubscribe: {
+                        showVipAlert = false
+                        showSubscription = true
+                    }
+                )
+                .zIndex(10)
+            }
+        }
+        .animation(.spring(response: 0.34, dampingFraction: 0.84), value: showVipAlert)
     }
 
     @ViewBuilder private var background: some View {

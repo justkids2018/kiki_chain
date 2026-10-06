@@ -5,9 +5,9 @@
 | Flutter 功能 | SwiftUI 迁移 | 当前状态 / 限制 |
 |---|---|---|
 | Xcode iOS App 工程 | `KikiNative.xcodeproj`、共享 scheme `KikiNative` | 可构建并运行 iOS Simulator；最低 iOS 16 |
-| 首页主题、场景浏览 | `HomeView`、`SceneListView` | 在线主题与场景可加载；二级页改为中间高亮、两侧层叠的玻璃卡片，点击侧卡选中、点击中卡学习；内置三场景作为离线目录 |
+| 首页主题、场景浏览 | `HomeView`、`SceneListView` | 在线主题与场景可加载；首页星星积分沿用 Flutter 原始星星 SVG；二级页改为中间高亮、两侧层叠的玻璃卡片，点击侧卡选中、点击中卡学习；VIP 内容统一显示毛玻璃确认卡，选择开通后进入套餐购买页；内置三场景作为离线目录 |
 | 热区点读 | `SceneCardView`、`InteractiveRegion` | 在线原始场景图可显示；按原图坐标点击词条，展示英文四线三格、英语音标、中文拼音及田字格。汉字每行两个，更多汉字在学习面板内向下滚动；笔顺按字串行播放，当前字全部笔画完成后才开始下一个字，播放速度对应 Flutter 的 `animationSpeed = 2.0`；笔顺数据坐标已转换为正向，先读内置资源，缺字时从 Flutter 同源 CDN 下载并缓存。中文/英文音频优先使用既有素材，缺失时使用 TTS；发音评测与部分特效仍有差距 |
-| 三星奖励 | `LearningProgressStore`、`CrystalStar`、`CrystalStarBar` | 每次学习会话按可点词条数 30%/60%/100% 飞入 1/2/3 颗金色玻璃星；全 App 的获得星星和空星共用水晶样式；历史进度仍按词条数保存 |
+| 三星奖励 | `LearningProgressStore`、`CrystalStar`、`CrystalStarBar` | 每次学习会话按可点词条数 30%/60%/100% 飞入 1/2/3 颗饱满立体金星；全 App 获得星星共用实体金色样式，空星保持浅色轮廓；历史进度仍按词条数保存 |
 | 成长地图历史方案 | `GrowthMapView` | 文件保留供历史参考；当前首页主题入口使用 `SceneListView` |
 | 学习档案 | `LearningRecordView` | 用本地真实进度统计；周/月分组、服务端进度全量合并和贡献热力图待继续完善 |
 | 汉字练写 | `WritingPracticeView` | 已生成拼音田字格练习纸并支持系统分享/打印入口；PDF 分页导出与 Flutter 描红笔迹交互待完善 |

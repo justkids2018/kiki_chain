@@ -80,12 +80,19 @@ public struct HomeView: View {
             .sheet(isPresented: $showLearningRecord) { LearningRecordView() }
             .sheet(isPresented: $showProfile) { ProfileView() }
             .sheet(isPresented: $showSubscription) { SubscriptionView() }
-            .alert("解锁完整主题", isPresented: $showVipAlert) {
-                Button("立即开通") { showSubscription = true }
-                Button("稍后再说", role: .cancel) {}
-            } message: {
-                Text("该主题为 VIP 会员专享内容，开通后即可解锁全部分级卡片！")
+            .overlay {
+                if showVipAlert {
+                    VipUnlockDialog(
+                        onDismiss: { showVipAlert = false },
+                        onSubscribe: {
+                            showVipAlert = false
+                            showSubscription = true
+                        }
+                    )
+                    .zIndex(10)
+                }
             }
+            .animation(.spring(response: 0.34, dampingFraction: 0.84), value: showVipAlert)
             .task {
                 if viewModel.categories.isEmpty { await viewModel.fetchCategories() }
             }
@@ -102,7 +109,8 @@ public struct HomeView: View {
 
             HStack(spacing: 10) {
                 HStack(spacing: 5) {
-                    CrystalStar(earned: true, size: 25)
+                    KikiSVGImage(name: "hi_kiki_star_icon")
+                        .frame(width: 26, height: 26)
                     Text("\(authViewModel.currentUser?.totalStars ?? 0)")
                         .font(.custom("Fredoka-SemiBold", size: 11))
                         .foregroundStyle(Color(hex: 0xFFD48A00))

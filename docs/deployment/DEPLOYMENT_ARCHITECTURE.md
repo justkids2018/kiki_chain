@@ -413,12 +413,12 @@ docker image prune -a
 
 | Secret 名称 | 用途 |
 |------------|------|
-| `GHCR_USERNAME` | GitHub Container Registry 用户名 |
-| `GHCR_READ_TOKEN` | GHCR 读取令牌 (read:packages) |
 | `TENCENT_SSH_PRIVATE_KEY` | 服务器 SSH 私钥 |
 | `DEPLOY_SERVER_IP` | 服务器 IP 地址 |
 | `DEPLOY_SSH_USER` | SSH 用户名 |
 | `DEPLOY_REMOTE_DIR` | 远程部署目录 |
+
+服务器拉取 GHCR 镜像使用当前 GitHub Actions 运行的 `GITHUB_TOKEN` 登录。登录失败时工作流立即停止，避免先执行数据库发布后才发现镜像无法拉取；旧 `GHCR_USERNAME`、`GHCR_READ_TOKEN` 不再被此工作流使用。
 
 ### 服务器安全
 

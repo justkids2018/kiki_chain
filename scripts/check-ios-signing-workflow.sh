@@ -2,41 +2,36 @@
 
 set -euo pipefail
 
-workflow=".github/workflows/ios-release.yml"
-project="kiki_web/ios/Runner.xcodeproj/project.pbxproj"
+workflow=".github/workflows/ios-native-release.yml"
+project="kiki_ios/KikiNative.xcodeproj/project.pbxproj"
 
 required_patterns=(
-  'flutter build ios --release --no-codesign'
-  '<key>signingStyle</key>'
-  '<string>manual</string>'
-  '<key>signingCertificate</key>'
-  '<string>Apple Distribution</string>'
+  'kiki_ios/KikiNative.xcodeproj'
+  'secrets.IOS_CERTIFICATE_P12_BASE64'
+  'secrets.IOS_CERTIFICATE_PASSWORD'
+  'secrets.IOS_PROVISIONING_PROFILE_BASE64'
+  'EXPECTED_BUNDLE_ID="com.just.kiki"'
+  '<key>signingStyle</key><string>manual</string>'
+  'CODE_SIGN_STYLE=Manual'
+  'PROVISIONING_PROFILE_SPECIFIER='
   '-exportArchive'
 )
 
 for pattern in "${required_patterns[@]}"; do
   if ! grep -Fq -- "${pattern}" "${workflow}"; then
-    echo "Missing required manual iOS signing command: ${pattern}"
+    echo "Missing required native iOS signing setting: ${pattern}"
     exit 1
   fi
 done
 
-if grep -Fq -- 'flutter build ipa' "${workflow}"; then
-  echo "flutter build ipa re-enables automatic signing in CI; use explicit xcodebuild archive/export instead."
+if [[ -e .github/workflows/ios-release.yml ]]; then
+  echo "Legacy Flutter iOS release workflow must remain disabled."
   exit 1
 fi
 
-project_patterns=(
-  'CODE_SIGN_STYLE = Manual;'
-  'CODE_SIGN_IDENTITY = "Apple Distribution";'
-  'PROVISIONING_PROFILE_SPECIFIER = "Hi Kiki App Store";'
-)
+if [[ "$(grep -Fc 'PRODUCT_BUNDLE_IDENTIFIER = com.just.kiki;' "${project}")" -ne 2 ]]; then
+  echo "Native iOS Debug and Release bundle IDs must both be com.just.kiki."
+  exit 1
+fi
 
-for pattern in "${project_patterns[@]}"; do
-  if ! grep -Fq -- "${pattern}" "${project}"; then
-    echo "Missing required Runner release signing setting: ${pattern}"
-    exit 1
-  fi
-done
-
-echo "iOS release workflow manual-signing guard passed."
+echo "Native iOS release workflow manual-signing guard passed."

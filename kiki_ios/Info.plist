@@ -5,7 +5,7 @@
 	<key>CFBundleExecutable</key>
 	<string>KikiIOS</string>
 	<key>CFBundleIdentifier</key>
-	<string>me.keepthinking.kiki.KikiNative</string>
+	<string>com.just.kiki</string>
 	<key>CFBundleName</key>
 	<string>Hi Kiki</string>
 	<key>CFBundlePackageType</key>

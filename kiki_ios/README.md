@@ -61,4 +61,4 @@ xcodebuild -project kiki_ios/KikiNative.xcodeproj \
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-App bundle identifier 为 `me.keepthinking.kiki.KikiNative`，显示名称为 `Hi Kiki`。首次使用跟读功能时会请求麦克风权限。
+App bundle identifier 为 `com.just.kiki`，与原 Flutter iOS App 一致；签名团队为 `32YC6822Q7`，显示名称为 `Hi Kiki`。首次使用跟读功能时会请求麦克风权限。

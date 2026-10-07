@@ -61,8 +61,8 @@ jobs:
         env:
           IOS_CERTIFICATE_P12_BASE64: ${{ secrets.IOS_CERTIFICATE_P12_BASE64 }}
           IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-          IOS_NATIVE_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_NATIVE_PROVISIONING_PROFILE_BASE64 }}
-          IOS_NATIVE_KEYCHAIN_PASSWORD: ${{ secrets.IOS_NATIVE_KEYCHAIN_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
         run: |
           set -euo pipefail
 
@@ -70,12 +70,12 @@ jobs:
             if base64 --help >/dev/null 2>&1; then base64 --decode; else base64 -D; fi
           }
 
-          if [[ -z "${IOS_CERTIFICATE_P12_BASE64}" || -z "${IOS_CERTIFICATE_PASSWORD}" || -z "${IOS_NATIVE_PROVISIONING_PROFILE_BASE64}" ]]; then
-            echo "Missing signing data. Configure the existing IOS_CERTIFICATE_P12_BASE64 and IOS_CERTIFICATE_PASSWORD secrets plus IOS_NATIVE_PROVISIONING_PROFILE_BASE64 for this Bundle ID."
+          if [[ -z "${IOS_CERTIFICATE_P12_BASE64}" || -z "${IOS_CERTIFICATE_PASSWORD}" || -z "${IOS_PROVISIONING_PROFILE_BASE64}" ]]; then
+            echo "Missing signing data. Configure IOS_CERTIFICATE_P12_BASE64, IOS_CERTIFICATE_PASSWORD and IOS_PROVISIONING_PROFILE_BASE64 for com.just.kiki."
             exit 1
           fi
-          if [[ -z "${IOS_NATIVE_KEYCHAIN_PASSWORD}" ]]; then
-            IOS_NATIVE_KEYCHAIN_PASSWORD="$(openssl rand -base64 24)"
+          if [[ -z "${IOS_KEYCHAIN_PASSWORD}" ]]; then
+            IOS_KEYCHAIN_PASSWORD="$(openssl rand -base64 24)"
           fi
           case "${IOS_NATIVE_EXPORT_METHOD}" in
             app-store-connect|release-testing|enterprise) ;;
@@ -88,7 +88,7 @@ jobs:
           PROFILE_PLIST="$RUNNER_TEMP/kiki-native-profile.plist"
           KEYCHAIN_PATH="$RUNNER_TEMP/kiki-native-build.keychain-db"
           echo "${IOS_CERTIFICATE_P12_BASE64}" | decode_base64 > "${CERT_PATH}"
-          echo "${IOS_NATIVE_PROVISIONING_PROFILE_BASE64}" | decode_base64 > "${PROFILE_PATH}"
+          echo "${IOS_PROVISIONING_PROFILE_BASE64}" | decode_base64 > "${PROFILE_PATH}"
           security cms -D -i "${PROFILE_PATH}" > "${PROFILE_PLIST}"
 
           PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print UUID' "${PROFILE_PLIST}")
@@ -96,18 +96,18 @@ jobs:
           PROFILE_TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print TeamIdentifier:0' "${PROFILE_PLIST}")
           APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c 'Print Entitlements:application-identifier' "${PROFILE_PLIST}")
           BUNDLE_ID="${APP_IDENTIFIER#*.}"
-          EXPECTED_BUNDLE_ID="me.keepthinking.kiki.KikiNative"
+          EXPECTED_BUNDLE_ID="com.just.kiki"
           if [[ "${BUNDLE_ID}" != "${EXPECTED_BUNDLE_ID}" ]]; then
             echo "Provisioning profile bundle ID ${BUNDLE_ID} does not match ${EXPECTED_BUNDLE_ID}."
             exit 1
           fi
 
-          security create-keychain -p "${IOS_NATIVE_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
+          security create-keychain -p "${IOS_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
           security set-keychain-settings -lut 21600 "${KEYCHAIN_PATH}"
-          security unlock-keychain -p "${IOS_NATIVE_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
+          security unlock-keychain -p "${IOS_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
           security list-keychains -d user -s "${KEYCHAIN_PATH}" login.keychain-db
           security import "${CERT_PATH}" -P "${IOS_CERTIFICATE_PASSWORD}" -A -t cert -f pkcs12 -k "${KEYCHAIN_PATH}"
-          security set-key-partition-list -S apple-tool:,apple: -k "${IOS_NATIVE_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
+          security set-key-partition-list -S apple-tool:,apple: -k "${IOS_KEYCHAIN_PASSWORD}" "${KEYCHAIN_PATH}"
           SIGNING_IDENTITIES="$(security find-identity -v -p codesigning "${KEYCHAIN_PATH}")"
           if ! grep -Fq "${SIGNING_CERTIFICATE}" <<< "${SIGNING_IDENTITIES}"; then
             echo "The imported P12 does not contain an ${SIGNING_CERTIFICATE} signing identity."
@@ -159,7 +159,7 @@ jobs:
             -archivePath "${ARCHIVE_PATH}" \
             MARKETING_VERSION="${IOS_NATIVE_BASE_VERSION}" \
             CURRENT_PROJECT_VERSION="${{ steps.meta.outputs.build_number }}" \
-            PRODUCT_BUNDLE_IDENTIFIER=me.keepthinking.kiki.KikiNative \
+            PRODUCT_BUNDLE_IDENTIFIER=com.just.kiki \
             DEVELOPMENT_TEAM="${IOS_NATIVE_TEAM_ID}" \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="${IOS_NATIVE_SIGNING_CERTIFICATE}" \
@@ -184,7 +184,7 @@ jobs:
             echo "# Native iOS Build Summary"
             echo
             echo "- Project: kiki_ios/KikiNative.xcodeproj"
-            echo "- Bundle ID: me.keepthinking.kiki.KikiNative"
+            echo "- Bundle ID: com.just.kiki"
             echo "- Marketing version: ${IOS_NATIVE_BASE_VERSION}"
             echo "- Build number: ${{ steps.meta.outputs.build_number }}"
             echo "- Export method: ${IOS_NATIVE_EXPORT_METHOD}"

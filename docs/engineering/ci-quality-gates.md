@@ -11,8 +11,7 @@
 - `.github/workflows/ci-validate.yml`
 - `.github/workflows/docker-release.yml`
 - `.github/workflows/android-release.yml`
-- `.github/workflows/ios-release.yml`
-- `.github/workflows/ios-native-release.yml` (原生 SwiftUI iOS，与 Flutter `ios-release.yml` 分开)
+- `.github/workflows/ios-native-release.yml` (原生 SwiftUI iOS 唯一打包入口；沿用 `com.just.kiki` 签名资产)
 - `.github/workflows/product-static-sites-release.yml`
 
 ## 必须逐步补齐的门禁

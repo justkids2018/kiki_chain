@@ -246,11 +246,9 @@ jobs:
           printf '%s' "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" | "${DECODE_BASE64[@]}" > "${ASC_KEY_PATH}"
           chmod 600 "${ASC_KEY_PATH}"
 
-          xcrun altool --upload-app \
-            --type ios \
-            --file "${IPA_PATH}" \
-            --apiKey "${APP_STORE_CONNECT_API_KEY_ID}" \
-            --apiIssuer "${APP_STORE_CONNECT_API_ISSUER_ID}"
+          xcrun altool --upload-package "${IPA_PATH}" \
+            --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \
+            --api-issuer "${APP_STORE_CONNECT_API_ISSUER_ID}"
           echo "- App Store Connect upload: submitted for processing" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Clean signing assets

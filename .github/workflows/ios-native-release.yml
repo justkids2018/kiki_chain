@@ -17,6 +17,11 @@ on:
           - app-store-connect
           - release-testing
           - enterprise
+      upload_to_testflight:
+        description: "Upload App Store Connect IPA to TestFlight"
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -52,7 +57,9 @@ jobs:
         id: meta
         run: |
           set -euo pipefail
-          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          # Flutter iOS already uploaded version 1.0.0 with build number 68.
+          # Keep the same app's build numbers increasing after the native switch.
+          BUILD_NUMBER="$((1000 + GITHUB_RUN_NUMBER))"
           echo "build_number=${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "marketing_version=${IOS_NATIVE_BASE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "artifact_name=kiki-native-ios-${IOS_NATIVE_BASE_VERSION}-${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"
@@ -208,9 +215,48 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Upload IPA to App Store Connect
+        if: ${{ env.IOS_NATIVE_EXPORT_METHOD == 'app-store-connect' && (github.event_name != 'workflow_dispatch' || inputs.upload_to_testflight == true) }}
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64 }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${APP_STORE_CONNECT_API_KEY_ID}" || -z "${APP_STORE_CONNECT_API_ISSUER_ID}" || -z "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" ]]; then
+            echo "Missing App Store Connect API key secrets."
+            exit 1
+          fi
+
+          IPA_PATH=$(find kiki_ios/build/ios/ipa -maxdepth 1 -name '*.ipa' -print -quit)
+          if [[ -z "${IPA_PATH}" ]]; then
+            echo "No signed IPA found for App Store Connect upload."
+            exit 1
+          fi
+
+          if base64 --help >/dev/null 2>&1; then
+            DECODE_BASE64=(base64 --decode)
+          else
+            DECODE_BASE64=(base64 -D)
+          fi
+          ASC_KEY_DIR="$HOME/.appstoreconnect/private_keys"
+          ASC_KEY_PATH="${ASC_KEY_DIR}/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          mkdir -p "${ASC_KEY_DIR}"
+          printf '%s' "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" | "${DECODE_BASE64[@]}" > "${ASC_KEY_PATH}"
+          chmod 600 "${ASC_KEY_PATH}"
+
+          xcrun altool --upload-app \
+            --type ios \
+            --file "${IPA_PATH}" \
+            --apiKey "${APP_STORE_CONNECT_API_KEY_ID}" \
+            --apiIssuer "${APP_STORE_CONNECT_API_ISSUER_ID}"
+          echo "- App Store Connect upload: submitted for processing" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Clean signing assets
         if: always()
         run: |
           set -euo pipefail
           if [[ -n "${IOS_NATIVE_KEYCHAIN_PATH:-}" ]]; then security delete-keychain "${IOS_NATIVE_KEYCHAIN_PATH}" || true; fi
           if [[ -n "${IOS_NATIVE_PROFILE_PATH:-}" ]]; then rm -f "${IOS_NATIVE_PROFILE_PATH}" || true; fi
+          rm -f "$HOME/.appstoreconnect/private_keys/AuthKey_"*.p8 || true

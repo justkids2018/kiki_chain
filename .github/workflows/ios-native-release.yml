@@ -246,6 +246,14 @@ jobs:
           printf '%s' "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" | "${DECODE_BASE64[@]}" > "${ASC_KEY_PATH}"
           chmod 600 "${ASC_KEY_PATH}"
 
+          echo "Checking whether the API key can see com.just.kiki in App Store Connect..."
+          xcrun altool --list-apps \
+            --filter-bundle-id com.just.kiki \
+            --filter-platform ios \
+            --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \
+            --api-issuer "${APP_STORE_CONNECT_API_ISSUER_ID}" \
+            --output-format json
+
           xcrun altool --upload-package "${IPA_PATH}" \
             --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \
             --api-issuer "${APP_STORE_CONNECT_API_ISSUER_ID}"

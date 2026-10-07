@@ -145,27 +145,22 @@ jobs:
           ssh-keyscan -H "${SERVER_IP}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Remote login to GHCR (optional)
+      - name: Remote login to GHCR
         env:
-          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
           DEPLOY_SERVER_IP: ${{ secrets.DEPLOY_SERVER_IP }}
         run: |
           set -euo pipefail
-          # 清理可能的空格和换行符
           SERVER_IP=$(echo "${DEPLOY_SERVER_IP}" | tr -d '[:space:]')
           SSH_USER=$(echo "${DEPLOY_SSH_USER}" | tr -d '[:space:]')
-          if [[ -n "${GHCR_USERNAME}" && -n "${GHCR_READ_TOKEN}" ]]; then
-            echo "Attempting remote GHCR login..."
-            if ssh "${SSH_USER}@${SERVER_IP}" "echo '${GHCR_READ_TOKEN}' | docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin" 2>&1; then
-              echo "✅ Remote GHCR login successful."
-            else
-              echo "⚠️ Remote GHCR login failed. Images are public, continuing anyway..."
-            fi
-          else
-            echo "GHCR_USERNAME/GHCR_READ_TOKEN not set; skip remote GHCR login."
+          if [[ -z "${GHCR_TOKEN}" ]]; then
+            echo "Missing GITHUB_TOKEN for remote GHCR login."
+            exit 1
           fi
+          printf '%s' "${GHCR_TOKEN}" | ssh "${SSH_USER}@${SERVER_IP}" "docker login ghcr.io -u '${GHCR_USERNAME}' --password-stdin"
+          echo "✅ Remote GHCR login successful."
 
       - name: Generate deploy artifacts (step1)
         env:

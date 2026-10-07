@@ -28,4 +28,6 @@
 
 打开 **Actions → Native iOS Release Build → Run workflow**；`main` 上的原生工程修改会自动打包并上传至 App Store Connect。手动运行默认上传，也可关闭 `upload_to_testflight`；`release-testing` 和 `enterprise` 导出不上传。成功后从该次运行的 Artifacts 下载 `kiki-native-ios-<版本>-<构建号>-ipa`。Apple 处理完成后，构建会出现在 App Store Connect 的 TestFlight 中；选择该构建并提交审核/发布仍由人操作。
 
+上传使用 Xcode 的 `altool --upload-package`。旧 `--upload-app` 在 2026-10-07 的原生 IPA 上传中返回“Cannot determine the Apple ID from Bundle ID”，尽管 App Store Connect 中存在相同 Bundle ID 的应用；IPA 签名与旧成功上传的 Flutter IPA 相同。
+
 若签名失败，检查 Profile 有效期、Bundle ID、团队、证书及导出方式。切换后首次构建应核对 IPA 内嵌 Profile 和签名身份。

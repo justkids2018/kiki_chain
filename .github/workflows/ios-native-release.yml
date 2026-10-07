@@ -271,19 +271,18 @@ jobs:
               const body = await response.json();
               console.log(`App Store Connect API status: ${response.status}`);
               console.log(`Visible app IDs: ${(body.data || []).map(app => app.id).join(', ') || 'none'}`);
-              if (!response.ok) console.log(`Apple error codes: ${(body.errors || []).map(error => error.code).join(', ') || 'unknown'}`);
+              if (!response.ok) {
+                const codes = (body.errors || []).map(error => error.code);
+                console.log(`Apple error codes: ${codes.join(', ') || 'unknown'}`);
+                if (codes.includes('FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED')) {
+                  console.error('The Apple Developer Program License Agreement must be accepted by the Account Holder before TestFlight upload. Open App Store Connect → Business → Agreements.');
+                }
+              }
+              if (response.ok && !body.data?.length) console.error('The API key cannot see com.just.kiki. Check its App Store Connect team and role.');
               if (!response.ok || !body.data?.length) process.exitCode = 1;
             })
             .catch(error => { console.error(`App Store Connect request failed: ${error.message}`); process.exitCode = 1; });
           NODE
-
-          echo "Checking whether the API key can see com.just.kiki in App Store Connect..."
-          xcrun altool --list-apps \
-            --filter-bundle-id com.just.kiki \
-            --filter-platform ios \
-            --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \
-            --api-issuer "${APP_STORE_CONNECT_API_ISSUER_ID}" \
-            --output-format json
 
           xcrun altool --upload-package "${IPA_PATH}" \
             --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \

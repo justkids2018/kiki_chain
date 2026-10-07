@@ -246,6 +246,44 @@ jobs:
           printf '%s' "${APP_STORE_CONNECT_API_PRIVATE_KEY_BASE64}" | "${DECODE_BASE64[@]}" > "${ASC_KEY_PATH}"
           chmod 600 "${ASC_KEY_PATH}"
 
+          echo "Checking App Store Connect app access with the API key..."
+          node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const encode = value => Buffer.from(JSON.stringify(value)).toString('base64url');
+          const now = Math.floor(Date.now() / 1000);
+          const header = encode({ alg: 'ES256', kid: process.env.APP_STORE_CONNECT_API_KEY_ID, typ: 'JWT' });
+          const payload = encode({
+            iss: process.env.APP_STORE_CONNECT_API_ISSUER_ID,
+            iat: now,
+            exp: now + 600,
+            aud: 'appstoreconnect-v1'
+          });
+          const signingInput = `${header}.${payload}`;
+          const signature = crypto.sign('sha256', Buffer.from(signingInput), {
+            key: fs.readFileSync(process.env.HOME + '/.appstoreconnect/private_keys/AuthKey_' + process.env.APP_STORE_CONNECT_API_KEY_ID + '.p8'),
+            dsaEncoding: 'ieee-p1363'
+          }).toString('base64url');
+          const url = new URL('https://api.appstoreconnect.apple.com/v1/apps');
+          url.searchParams.set('filter[bundleId]', 'com.just.kiki');
+          fetch(url, { headers: { Authorization: `Bearer ${signingInput}.${signature}` } })
+            .then(async response => {
+              const body = await response.json();
+              console.log(`App Store Connect API status: ${response.status}`);
+              console.log(`Visible app IDs: ${(body.data || []).map(app => app.id).join(', ') || 'none'}`);
+              if (!response.ok) {
+                const codes = (body.errors || []).map(error => error.code);
+                console.log(`Apple error codes: ${codes.join(', ') || 'unknown'}`);
+                if (codes.includes('FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED')) {
+                  console.error('The Apple Developer Program License Agreement must be accepted by the Account Holder before TestFlight upload. Open App Store Connect → Business → Agreements.');
+                }
+              }
+              if (response.ok && !body.data?.length) console.error('The API key cannot see com.just.kiki. Check its App Store Connect team and role.');
+              if (!response.ok || !body.data?.length) process.exitCode = 1;
+            })
+            .catch(error => { console.error(`App Store Connect request failed: ${error.message}`); process.exitCode = 1; });
+          NODE
+
           xcrun altool --upload-package "${IPA_PATH}" \
             --api-key "${APP_STORE_CONNECT_API_KEY_ID}" \
             --api-issuer "${APP_STORE_CONNECT_API_ISSUER_ID}"

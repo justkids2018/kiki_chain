@@ -28,6 +28,6 @@
 
 打开 **Actions → Native iOS Release Build → Run workflow**；`main` 上的原生工程修改会自动打包并上传至 App Store Connect。手动运行默认上传，也可关闭 `upload_to_testflight`；`release-testing` 和 `enterprise` 导出不上传。成功后从该次运行的 Artifacts 下载 `kiki-native-ios-<版本>-<构建号>-ipa`。Apple 处理完成后，构建会出现在 App Store Connect 的 TestFlight 中；选择该构建并提交审核/发布仍由人操作。
 
-上传使用 Xcode 的 `altool --upload-package`。旧 `--upload-app` 在 2026-10-07 的原生 IPA 上传中返回“Cannot determine the Apple ID from Bundle ID”，尽管 App Store Connect 中存在相同 Bundle ID 的应用；IPA 签名与旧成功上传的 Flutter IPA 相同。
+上传前会用现有 API Key 查询 App Store Connect 中的 `com.just.kiki` 应用，上传使用 Xcode 的 `altool --upload-package`。2026-10-07 的诊断确认 IPA 已成功签名，包名与旧版 Flutter IPA 相同；Apple API 返回 `403 FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED`。App Store Connect 的 **商务 → 协议** 页面提示《Apple Developer Program 许可协议》已更新，需要**账户持有人**前往 Apple Developer 账户查看并接受。完成后重新运行原生 iOS workflow；不要通过更换包名、证书或重建 App 记录来处理此错误。签署协议属于账户持有人的法律操作，workflow 无法代办。
 
 若签名失败，检查 Profile 有效期、Bundle ID、团队、证书及导出方式。切换后首次构建应核对 IPA 内嵌 Profile 和签名身份。

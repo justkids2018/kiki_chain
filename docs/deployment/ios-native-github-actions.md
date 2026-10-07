@@ -31,3 +31,5 @@
 上传前会用现有 API Key 查询 App Store Connect 中的 `com.just.kiki` 应用，上传使用 Xcode 的 `altool --upload-package`。2026-10-07 的诊断确认 IPA 已成功签名，包名与旧版 Flutter IPA 相同；Apple API 返回 `403 FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED`。App Store Connect 的 **商务 → 协议** 页面提示《Apple Developer Program 许可协议》已更新，需要**账户持有人**前往 Apple Developer 账户查看并接受。完成后重新运行原生 iOS workflow；不要通过更换包名、证书或重建 App 记录来处理此错误。签署协议属于账户持有人的法律操作，workflow 无法代办。
 
 若签名失败，检查 Profile 有效期、Bundle ID、团队、证书及导出方式。切换后首次构建应核对 IPA 内嵌 Profile 和签名身份。
+
+2026-10-07 的首次上传在协议签署后进入 Apple 包校验，返回 90474：iPad 支持多任务时须在 Info.plist 声明四种界面方向。原生工程现已对 iPad 声明竖屏、倒置竖屏及两个横屏方向；iPhone 继续保持横屏方向。iPad 页面还应按实际设备方向进行视觉检查。

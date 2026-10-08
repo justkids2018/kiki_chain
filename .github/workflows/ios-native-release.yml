@@ -22,6 +22,10 @@ on:
         required: false
         type: boolean
         default: true
+      build_number:
+        description: "Optional build number for a manual release (leave empty for automatic numbering)"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -36,7 +40,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IOS_NATIVE_EXPORT_METHOD: ${{ inputs.export_method || vars.IOS_NATIVE_EXPORT_METHOD || 'app-store-connect' }}
-      IOS_NATIVE_BASE_VERSION: ${{ vars.IOS_NATIVE_BASE_VERSION || '1.0.0' }}
+      IOS_NATIVE_BASE_VERSION: ${{ vars.IOS_NATIVE_BASE_VERSION || '1.0.1' }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     defaults:
       run:
@@ -55,11 +59,20 @@ jobs:
 
       - name: Compute build metadata
         id: meta
+        env:
+          MANUAL_BUILD_NUMBER: ${{ inputs.build_number }}
         run: |
           set -euo pipefail
-          # Flutter iOS already uploaded version 1.0.0 with build number 68.
-          # Keep the same app's build numbers increasing after the native switch.
-          BUILD_NUMBER="$((1000 + GITHUB_RUN_NUMBER))"
+          # Native version 1.0.1 starts at build 1 on workflow run 10.
+          # Build numbers are scoped to the marketing version in App Store Connect.
+          BUILD_NUMBER="$((GITHUB_RUN_NUMBER - 9))"
+          if [[ -n "${MANUAL_BUILD_NUMBER}" ]]; then
+            BUILD_NUMBER="${MANUAL_BUILD_NUMBER}"
+          fi
+          if [[ ! "${BUILD_NUMBER}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "Build number must be a positive integer without a leading zero: ${BUILD_NUMBER}" >&2
+            exit 1
+          fi
           echo "build_number=${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "marketing_version=${IOS_NATIVE_BASE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "artifact_name=kiki-native-ios-${IOS_NATIVE_BASE_VERSION}-${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"

@@ -24,7 +24,7 @@
 
 ## 版本与运行
 
-可设置仓库变量 `IOS_NATIVE_BASE_VERSION`（默认 `1.0.0`）及 `IOS_NATIVE_EXPORT_METHOD`（默认 `app-store-connect`）。构建号为 `1000 + GitHub run number`，保证高于旧 Flutter App 已上传的 `1.0.0 (68)`。手动运行时可选择 `app-store-connect`、`release-testing` 或 `enterprise`；选择的方式须与 Profile 类型一致。沿用的 App Store Profile 应选择 `app-store-connect`。
+可设置仓库变量 `IOS_NATIVE_BASE_VERSION`（默认 `1.0.1`）及 `IOS_NATIVE_EXPORT_METHOD`（默认 `app-store-connect`）。原生 `1.0.1` 的构建号从 `1` 开始：工作流第 10 次运行为 `1.0.1 (1)`，之后按运行序号递增。此前上传的 `1.0.0 (68)` 和 `1.0.0 (1009)` 属于旧版本，不影响新版本从构建号 `1` 开始。手动运行可填写 `build_number` 指定正整数构建号，不填则自动计算；已上传的同版本构建号不可重复使用。手动运行时可选择 `app-store-connect`、`release-testing` 或 `enterprise`；选择的方式须与 Profile 类型一致。沿用的 App Store Profile 应选择 `app-store-connect`。
 
 打开 **Actions → Native iOS Release Build → Run workflow**；`main` 上的原生工程修改会自动打包并上传至 App Store Connect。手动运行默认上传，也可关闭 `upload_to_testflight`；`release-testing` 和 `enterprise` 导出不上传。成功后从该次运行的 Artifacts 下载 `kiki-native-ios-<版本>-<构建号>-ipa`。Apple 处理完成后，构建会出现在 App Store Connect 的 TestFlight 中；选择该构建并提交审核/发布仍由人操作。
 

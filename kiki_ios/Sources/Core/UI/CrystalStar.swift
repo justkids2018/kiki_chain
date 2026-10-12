@@ -36,7 +36,7 @@ struct CrystalStar: View {
         .frame(width: size, height: size)
         .scaleEffect(pulsing ? 1.24 : 1)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(earned ? "已获得星星" : "待获得星星")
+        .accessibilityLabel(earned ? String(localized: "已获得星星") : String(localized: "待获得星星"))
     }
 }
 
@@ -60,6 +60,6 @@ struct CrystalStarBar: View {
         .overlay(Capsule().stroke(.white.opacity(0.70), lineWidth: 1))
         .shadow(color: Color(red: 0.88, green: 0.61, blue: 0.12).opacity(0.15), radius: 8, y: 3)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("已获得 \(earned) 颗星，共 3 颗")
+        .accessibilityLabel(String(format: String(localized: "已获得 %d 颗星，共 3 颗"), earned))
     }
 }

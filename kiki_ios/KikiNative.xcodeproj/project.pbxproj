@@ -86,10 +86,11 @@
 				};
 			};
 			buildConfigurationList = D8ECFB00306B96380064C5DD /* Build configuration list for PBXProject "KikiNative" */;
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = D8ECFAFC306B96380064C5DD;

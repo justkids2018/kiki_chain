@@ -5,7 +5,6 @@ public struct SettingsView: View {
     @AppStorage("kiki_voice_speed") private var voiceSpeed: Double = 1.0
     @AppStorage("kiki_sound_effects") private var soundEffectsEnabled: Bool = true
     @AppStorage("kiki_speech_volume") private var speechVolume: Double = 1.0
-    @AppStorage("selected_language") private var selectedLanguage = "zh"
 
     @State private var showClearCacheAlert = false
     @State private var cacheCleared = false
@@ -44,10 +43,7 @@ public struct SettingsView: View {
                 }
 
                 Section("语言") {
-                    Picker("应用语言", selection: $selectedLanguage) {
-                        Text("简体中文").tag("zh")
-                        Text("English").tag("en")
-                    }
+                    LabeledContent("应用语言") { Text("跟随系统") }
                 }
 
                 Section("数据与缓存") {
@@ -75,8 +71,8 @@ public struct SettingsView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    NavigationLink("用户服务协议") { LegalDocumentView(title: "用户服务协议", resource: "user_agreement") }
-                    NavigationLink("儿童隐私保护政策") { LegalDocumentView(title: "儿童隐私保护政策", resource: "privacy_policy") }
+                    NavigationLink("用户服务协议") { LegalDocumentView(title: String(localized: "用户服务协议"), resource: "user_agreement") }
+                    NavigationLink("儿童隐私保护政策") { LegalDocumentView(title: String(localized: "儿童隐私保护政策"), resource: "privacy_policy") }
                 }
             }
             .navigationTitle("系统设置")

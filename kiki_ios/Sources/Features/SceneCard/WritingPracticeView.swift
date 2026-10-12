@@ -30,7 +30,7 @@ public struct WritingPracticeView: View {
                     .padding(16)
             }
             .background(Color(red: 0.97, green: 0.95, blue: 0.96))
-            .navigationTitle(title.isEmpty ? "每日一练" : "每日一练 - \(title)")
+            .navigationTitle(title.isEmpty ? String(localized: "每日一练") : String(format: String(localized: "每日一练 - %@"), title))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("关闭") { dismiss() } }

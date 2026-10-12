@@ -17,25 +17,25 @@ public enum NetworkError: LocalizedError, Equatable {
     public var errorDescription: String? {
         switch self {
         case .invalidURL(let url):
-            return "无效的请求地址: \(url)"
+            return String(format: String(localized: "无效的请求地址: %@"), url)
         case .requestFailed(let code, let message):
-            return "请求失败 (\(code)): \(message)"
+            return String(format: String(localized: "请求失败 (%d): %@"), code, message)
         case .decodingError(let detail):
-            return "数据解析失败: \(detail)"
+            return String(format: String(localized: "数据解析失败: %@"), detail)
         case .encodingError(let detail):
-            return "参数编码失败: \(detail)"
+            return String(format: String(localized: "参数编码失败: %@"), detail)
         case .unauthorized:
-            return "登录已过期，请重新登录"
+            return String(localized: "登录已过期，请重新登录")
         case .forbidden:
-            return "没有访问权限"
+            return String(localized: "没有访问权限")
         case .notFound:
-            return "请求的资源不存在"
+            return String(localized: "请求的资源不存在")
         case .serverError(let code):
-            return "服务器繁忙，请稍后再试 (\(code))"
+            return String(format: String(localized: "服务器繁忙，请稍后再试 (%d)"), code)
         case .noConnection:
-            return "网络未连接，请检查网络设置"
+            return String(localized: "网络未连接，请检查网络设置")
         case .timeout:
-            return "网络请求超时，请重试"
+            return String(localized: "网络请求超时，请重试")
         case .unknown(let message):
             return message
         }

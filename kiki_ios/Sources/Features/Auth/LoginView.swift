@@ -29,28 +29,27 @@ public struct LoginView: View {
                     .overlay {
                         GeometryReader { proxy in
                             ZStack(alignment: .bottomLeading) {
+                                KikiResources.image(named: "meadow_wide")?
+                                    .resizable()
+                                    .frame(width: proxy.size.width, height: compactHeight ? 112 : 150)
+                                    .offset(y: 24)
+
+                                croppedMascot("kiki_map", visibleHeight: compactHeight ? 128 : 170, originalHeight: 1536, transparentTop: 121, transparentBottom: 253)
+                                    .offset(x: compactHeight ? 44 : 98)
+                                croppedMascot("yuki_map", visibleHeight: compactHeight ? 134 : 178, originalHeight: 1536, transparentTop: 137, transparentBottom: 243)
+                                    .frame(width: proxy.size.width, alignment: .trailing)
+                                    .offset(x: compactHeight ? -22 : -78)
+                                croppedMascot("mimi_map", visibleHeight: compactHeight ? 62 : 82, originalHeight: 1312, transparentTop: 138, transparentBottom: 234)
+                                    .frame(width: proxy.size.width, alignment: .trailing)
+                                    .offset(x: compactHeight ? -144 : -238)
+
                                 Circle().fill(Color(hex: 0x75FFD678)).frame(width: 74, height: 74).offset(x: 86, y: -proxy.size.height + 110)
                                 CrystalStar(earned: true, size: 28)
                                     .rotationEffect(.degrees(9)).offset(x: proxy.size.width - 170, y: -proxy.size.height + 68)
                                 CrystalStar(earned: true, size: 15)
                                     .rotationEffect(.degrees(-14)).offset(x: 250, y: -proxy.size.height + 90)
-
-                                croppedMascot("kiki_map", visibleHeight: compactHeight ? 128 : 170, originalHeight: 1536, transparentTop: 121, transparentBottom: 253)
-                                    .offset(x: compactHeight ? 44 : 98, y: compactHeight ? 44 : 47)
-                                croppedMascot("yuki_map", visibleHeight: compactHeight ? 134 : 178, originalHeight: 1536, transparentTop: 137, transparentBottom: 243)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .offset(x: compactHeight ? -22 : -78, y: compactHeight ? 42 : 45)
-                                croppedMascot("mimi_map", visibleHeight: compactHeight ? 62 : 82, originalHeight: 1312, transparentTop: 138, transparentBottom: 234)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .offset(x: compactHeight ? -144 : -238, y: compactHeight ? 32 : 31)
-
-                                KikiResources.image(named: "meadow_wide")?
-                                    .resizable().scaledToFill()
-                                    .frame(width: proxy.size.width + 60, height: compactHeight ? 112 : 150)
-                                    .clipped()
-                                    .offset(x: -30, y: 24)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .bottomLeading)
                             .clipped()
                         }
                     }
@@ -139,7 +138,7 @@ public struct LoginView: View {
             Button(action: submit) {
                 HStack(spacing: 8) {
                     if authViewModel.isLoading { ProgressView().tint(.white) }
-                    Text(isRegister ? "注册" : "登录")
+                    Text(isRegister ? String(localized: "注册") : String(localized: "登录"))
                         .font(.system(size: 16, weight: .bold))
                         .foregroundStyle(.white)
                 }
@@ -161,8 +160,8 @@ public struct LoginView: View {
 
     private var modeTabs: some View {
         HStack(spacing: 0) {
-            modeButton("登录", selected: !isRegister) { withAnimation(.easeOut(duration: 0.16)) { isRegister = false; authViewModel.errorMessage = nil } }
-            modeButton("注册", selected: isRegister) { withAnimation(.easeOut(duration: 0.16)) { isRegister = true; authViewModel.errorMessage = nil } }
+            modeButton(String(localized: "登录"), selected: !isRegister) { withAnimation(.easeOut(duration: 0.16)) { isRegister = false; authViewModel.errorMessage = nil } }
+            modeButton(String(localized: "注册"), selected: isRegister) { withAnimation(.easeOut(duration: 0.16)) { isRegister = true; authViewModel.errorMessage = nil } }
         }
         .padding(4)
         .frame(height: 42)
@@ -185,15 +184,15 @@ public struct LoginView: View {
     }
 
     private var phoneField: some View {
-        authField(icon: "phone", placeholder: "请输入手机号", text: $phone, keyboard: .phonePad)
+        authField(icon: "phone", placeholder: String(localized: "请输入手机号"), text: $phone, keyboard: .phonePad)
     }
 
     private var passwordField: some View {
-        authField(icon: "lock", placeholder: "请输入密码", text: $password, secure: true)
+        authField(icon: "lock", placeholder: String(localized: "请输入密码"), text: $password, secure: true)
     }
 
     private var confirmPasswordField: some View {
-        authField(icon: "lock", placeholder: "请确认密码", text: $confirmPassword, secure: true)
+        authField(icon: "lock", placeholder: String(localized: "请确认密码"), text: $confirmPassword, secure: true)
     }
 
     private func authField(icon: String, placeholder: String, text: Binding<String>, secure: Bool = false, keyboard: UIKeyboardType = .default) -> some View {
@@ -254,10 +253,10 @@ public struct LoginView: View {
 
     private func submit() {
         guard canSubmit else {
-            if phone.range(of: "^1[3-9][0-9]{9}$", options: .regularExpression) == nil { authViewModel.errorMessage = "请输入有效的手机号。" }
-            else if !(6...20).contains(password.count) { authViewModel.errorMessage = "密码长度应为 6–20 位。" }
-            else if password.range(of: "[A-Za-z]", options: .regularExpression) == nil || password.range(of: "[0-9]", options: .regularExpression) == nil { authViewModel.errorMessage = "密码须同时包含字母和数字。" }
-            else if isRegister && password != confirmPassword { authViewModel.errorMessage = "两次输入的密码不一致。" }
+            if phone.range(of: "^1[3-9][0-9]{9}$", options: .regularExpression) == nil { authViewModel.errorMessage = String(localized: "请输入有效的手机号。") }
+            else if !(6...20).contains(password.count) { authViewModel.errorMessage = String(localized: "密码长度应为 6–20 位。") }
+            else if password.range(of: "[A-Za-z]", options: .regularExpression) == nil || password.range(of: "[0-9]", options: .regularExpression) == nil { authViewModel.errorMessage = String(localized: "密码须同时包含字母和数字。") }
+            else if isRegister && password != confirmPassword { authViewModel.errorMessage = String(localized: "两次输入的密码不一致。") }
             return
         }
         Task {
@@ -274,7 +273,7 @@ private struct AgreementDocument: Identifiable {
     enum Kind: Equatable { case user, privacy }
     let kind: Kind
     var id: Int { kind == .user ? 0 : 1 }
-    var title: String { kind == .user ? "用户协议" : "隐私政策" }
+    var title: String { kind == .user ? String(localized: "用户协议") : String(localized: "隐私政策") }
     var resource: String { kind == .user ? "user_agreement" : "privacy_policy" }
     static let user = AgreementDocument(kind: .user)
     static let privacy = AgreementDocument(kind: .privacy)

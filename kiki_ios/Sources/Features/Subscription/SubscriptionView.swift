@@ -43,9 +43,9 @@ public struct SubscriptionView: View {
 
                     // 会员权益清单
                     VStack(spacing: 14) {
-                        PrivilegeRow(icon: "sparkles.tv.fill", title: "100+ 场景随心畅学", desc: "涵盖生活认知、幼小衔接全部分级卡片")
-                        PrivilegeRow(icon: "waveform.circle.fill", title: "AI 语音伴学助手", desc: "智能引导互动，随时对话激发表达兴趣")
-                        PrivilegeRow(icon: "star.bubble.fill", title: "实时发音测评与反馈", desc: "原生录音智能评测，助力孩子标准发音")
+                        PrivilegeRow(icon: "sparkles.tv.fill", title: String(localized: "100+ 场景随心畅学"), desc: String(localized: "涵盖生活认知、幼小衔接全部分级卡片"))
+                        PrivilegeRow(icon: "waveform.circle.fill", title: String(localized: "AI 语音伴学助手"), desc: String(localized: "智能引导互动，随时对话激发表达兴趣"))
+                        PrivilegeRow(icon: "star.bubble.fill", title: String(localized: "实时发音测评与反馈"), desc: String(localized: "原生录音智能评测，助力孩子标准发音"))
                     }
                     .padding(20)
                     .background(
@@ -61,7 +61,7 @@ public struct SubscriptionView: View {
                         } else if viewModel.products.isEmpty {
                             VStack(spacing: 8) {
                                 Image(systemName: "exclamationmark.triangle").foregroundStyle(.orange)
-                                Text(viewModel.errorMessage ?? "当前没有可购买的套餐").font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                                Text(viewModel.errorMessage ?? String(localized: "当前没有可购买的套餐")).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
                                 Button("重新加载") { Task { await viewModel.fetchProducts() } }.buttonStyle(.bordered)
                             }.frame(maxWidth: .infinity).padding()
                         }
@@ -92,7 +92,7 @@ public struct SubscriptionView: View {
                                 if viewModel.isPurchasing {
                                     ProgressView().tint(.white)
                                 }
-                        Text("立即开通 (\(viewModel.selectedProduct?.displayPrice ?? "—"))")
+                        Text(String(format: String(localized: "立即开通 (%@)"), viewModel.selectedProduct?.displayPrice ?? "—"))
                                     .font(.headline)
                                     .foregroundColor(.white)
                             }
@@ -180,7 +180,7 @@ struct ProductOptionCard: View {
                         }
                     }
                     if product.trialDays > 0 {
-                        Text("包含 \(product.trialDays) 天免费试用")
+                        Text(String(format: String(localized: "包含 %d 天免费试用"), product.trialDays))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

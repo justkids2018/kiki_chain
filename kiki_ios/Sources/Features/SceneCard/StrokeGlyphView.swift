@@ -138,7 +138,7 @@ struct StrokeGlyphCell: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("播放「\(character)」的笔顺")
+        .accessibilityLabel(String(format: String(localized: "播放「%@」的笔顺"), character))
     }
 }
 

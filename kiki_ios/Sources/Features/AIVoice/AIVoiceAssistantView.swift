@@ -94,7 +94,7 @@ public struct AIVoiceAssistantView: View {
                         if recorder.isRecording {
                             _ = recorder.stopRecording()
                             Task {
-                                await viewModel.sendInput(text: "我读完了，你觉得怎么样？", sceneId: sceneId)
+                                await viewModel.sendInput(text: String(localized: "我读完了，你觉得怎么样？"), sceneId: sceneId)
                             }
                         } else {
                             Task {
@@ -105,7 +105,7 @@ public struct AIVoiceAssistantView: View {
                         HStack(spacing: 8) {
                             Image(systemName: recorder.isRecording ? "stop.circle.fill" : "mic.fill")
                                 .font(.title3)
-                            Text(recorder.isRecording ? "正在倾听中... (点击结束)" : "点击对 Kiki 说话")
+                            Text(recorder.isRecording ? String(localized: "正在倾听中... (点击结束)") : String(localized: "点击对 Kiki 说话"))
                                 .font(.subheadline.bold())
                         }
                         .foregroundColor(recorder.isRecording ? .red : .orange)

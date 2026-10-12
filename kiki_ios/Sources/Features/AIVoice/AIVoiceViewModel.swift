@@ -6,7 +6,7 @@ import SwiftUI
 /// AI 伴学助手 ViewModel
 @MainActor
 public final class AIVoiceViewModel: ObservableObject {
-    @Published public private(set) var greeting: String = "嗨！我是 Kiki，我们一起玩找一找游戏吧！"
+    @Published public private(set) var greeting: String = String(localized: "嗨！我是 Kiki，我们一起玩找一找游戏吧！")
     @Published public private(set) var isThinking: Bool = false
     @Published public private(set) var currentActionText: String?
     @Published public private(set) var messages: [(isKiki: Bool, text: String)] = []
@@ -62,9 +62,9 @@ public final class AIVoiceViewModel: ObservableObject {
             // 智能本地兜底应答，保证儿童互动不冷场
             self.isThinking = false
             let fallbackReplies = [
-                "太棒了！你读得真准，找到了新词条！",
-                "试着找找画面里闪闪发光的东西吧！",
-                "真聪明！继续点击下一个热区看看有什么秘密！"
+                String(localized: "太棒了！你读得真准，找到了新词条！"),
+                String(localized: "试着找找画面里闪闪发光的东西吧！"),
+                String(localized: "真聪明！继续点击下一个热区看看有什么秘密！")
             ]
             let reply = fallbackReplies.randomElement()!
             self.currentActionText = reply

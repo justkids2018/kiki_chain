@@ -109,7 +109,7 @@ struct CategoryCardView: View {
                         .lineLimit(2)
                 }
 
-                Text("\(category.sceneCount) 个场景 · \(category.totalItemCount) 个词条")
+                Text(String(format: String(localized: "%d 个场景 · %d 个词条"), category.sceneCount, category.totalItemCount))
                     .font(.caption)
                     .foregroundColor(.orange)
             }

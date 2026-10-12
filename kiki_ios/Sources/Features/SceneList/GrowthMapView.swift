@@ -158,7 +158,7 @@ public struct GrowthMapView: View {
                     .foregroundStyle(Color(hex: 0xFF3F2718))
 
                 HStack(spacing: 6) {
-                    Text("已学 \(progress.progress(for: scene.id)?.learnedRegions.count ?? 0) / \(scene.itemCount) 个词")
+                    Text(String(format: String(localized: "已学 %d / %d 个词"), progress.progress(for: scene.id)?.learnedRegions.count ?? 0, scene.itemCount))
                     HStack(spacing: 2) {
                         ForEach(0..<3, id: \.self) { star in
                             CrystalStar(earned: star < (progress.progress(for: scene.id)?.stars ?? 0), size: 16)
@@ -192,7 +192,7 @@ public struct GrowthMapView: View {
             Image(systemName: model.errorMessage == nil ? "leaf" : "cloud.offline")
                 .font(.system(size: 58))
                 .foregroundStyle(Color(hex: 0xFF91A678))
-            Text(model.errorMessage == nil ? "暂无场景" : "加载失败")
+            Text(model.errorMessage == nil ? String(localized: "暂无场景") : String(localized: "加载失败"))
                 .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(Color(hex: 0xFF3F2718))
             if model.errorMessage != nil {

@@ -50,7 +50,7 @@ public final class AuthViewModel: ObservableObject {
             self.isLoading = false
             return false
         } catch {
-            self.errorMessage = "登录失败: \(error.localizedDescription)"
+            self.errorMessage = String(format: String(localized: "登录失败: %@"), error.localizedDescription)
             self.isLoading = false
             return false
         }
@@ -94,7 +94,7 @@ public final class AuthViewModel: ObservableObject {
             isLoading = false
             return await login(phone: phone, password: password)
         } catch {
-            errorMessage = "注册失败: \(error.localizedDescription)"
+            errorMessage = String(format: String(localized: "注册失败: %@"), error.localizedDescription)
             isLoading = false
             return false
         }

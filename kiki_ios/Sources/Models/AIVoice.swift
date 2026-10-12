@@ -55,7 +55,7 @@ public struct AiVoiceRecommendation: Codable {
     public init(
         enabled: Bool = true,
         reason: String = "",
-        greetingText: String = "嗨！我是 Kiki，我们一起来探索这个好玩的场景吧！",
+        greetingText: String = String(localized: "嗨！我是 Kiki，我们一起来探索这个好玩的场景吧！"),
         greetingAudioUrl: String? = nil,
         mode: String = "interactive"
     ) {

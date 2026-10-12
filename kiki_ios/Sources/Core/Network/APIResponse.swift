@@ -16,7 +16,7 @@ public struct APIResponse<T: Decodable>: Decodable {
     }
 
     public var resolvedMessage: String {
-        return message ?? "操作成功"
+        return message ?? String(localized: "操作成功")
     }
 }
 

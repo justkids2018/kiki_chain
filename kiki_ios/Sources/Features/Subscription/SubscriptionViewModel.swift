@@ -36,12 +36,12 @@ public final class SubscriptionViewModel: ObservableObject {
             let storeProducts = try await Product.products(for: payload.products.map(\.productId))
             let availableIDs = Set(storeProducts.map(\.id))
             self.products = payload.products.filter { availableIDs.contains($0.productId) }
-            if self.products.isEmpty { self.errorMessage = "App Store Connect 尚未配置与服务端匹配的内购商品。" }
+            if self.products.isEmpty { self.errorMessage = String(localized: "App Store Connect 尚未配置与服务端匹配的内购商品。") }
             self.selectedProduct = self.products.first(where: { $0.isRecommended }) ?? self.products.first
             self.isLoading = false
         } catch {
             self.products = []
-            self.errorMessage = "暂时无法获取会员套餐，请检查网络后重试。"
+            self.errorMessage = String(localized: "暂时无法获取会员套餐，请检查网络后重试。")
             self.isLoading = false
         }
     }
@@ -60,7 +60,7 @@ public final class SubscriptionViewModel: ObservableObject {
         do {
             guard authViewModel.isLoggedIn else { throw NetworkError.unauthorized }
             guard let storeProduct = try await Product.products(for: [product.productId]).first else {
-                throw NetworkError.unknown("此套餐尚未在 App Store Connect 配置")
+                throw NetworkError.unknown(String(localized: "此套餐尚未在 App Store Connect 配置"))
             }
             let order: Order = try await apiClient.request(endpoint: .subscriptionOrders,
                 queryItems: nil,
@@ -68,9 +68,9 @@ public final class SubscriptionViewModel: ObservableObject {
             let verification: VerificationResult<StoreKit.Transaction>
             switch try await storeProduct.purchase() {
             case .success(let result): verification = result
-            case .userCancelled: throw NetworkError.unknown("已取消购买")
-            case .pending: throw NetworkError.unknown("购买正在等待批准")
-            @unknown default: throw NetworkError.unknown("App Store 返回了未知购买状态")
+            case .userCancelled: throw NetworkError.unknown(String(localized: "已取消购买"))
+            case .pending: throw NetworkError.unknown(String(localized: "购买正在等待批准"))
+            @unknown default: throw NetworkError.unknown(String(localized: "App Store 返回了未知购买状态"))
             }
             let transaction = try verification.payloadValue
             let sandbox = transaction.environment == StoreKit.AppStore.Environment.sandbox
@@ -78,12 +78,12 @@ public final class SubscriptionViewModel: ObservableObject {
                 body: ConfirmRequest(purchaseToken: verification.jwsRepresentation, sandbox: sandbox))
             await transaction.finish()
             let entitlement: Entitlement = try await apiClient.request(endpoint: .subscriptionEntitlement)
-            guard entitlement.isVip else { throw NetworkError.unknown("订单已确认，但服务端尚未激活 VIP 权益") }
+            guard entitlement.isVip else { throw NetworkError.unknown(String(localized: "订单已确认，但服务端尚未激活 VIP 权益")) }
             purchaseSuccess = true
             isPurchasing = false
             return true
         } catch {
-            errorMessage = "购买未完成：\(error.localizedDescription)"
+            errorMessage = String(format: String(localized: "购买未完成：%@"), error.localizedDescription)
             purchaseSuccess = false
             isPurchasing = false
             return false

@@ -4,6 +4,7 @@ import SwiftUI
 public struct HomeView: View {
     @StateObject private var viewModel = CategoryListViewModel()
     @ObservedObject private var authViewModel = AuthViewModel.shared
+    @ObservedObject private var progressStore = LearningProgressStore.shared
 
     @State private var navigationPath = NavigationPath()
     @State private var showLearningRecord = false
@@ -108,13 +109,15 @@ public struct HomeView: View {
             Spacer(minLength: 8)
 
             HStack(spacing: 10) {
-                HStack(spacing: 5) {
+                Button { showLearningRecord = true } label: { HStack(spacing: 5) {
                     KikiSVGImage(name: "hi_kiki_star_icon")
                         .frame(width: 26, height: 26)
-                    Text("\(authViewModel.currentUser?.totalStars ?? 0)")
+                    Text("\(progressStore.totalStars)")
                         .font(.custom("Fredoka-SemiBold", size: 11))
                         .foregroundStyle(Color(hex: 0xFFD48A00))
-                }
+                } }
+                .buttonStyle(.plain)
+                .accessibilityLabel("星星积分")
                 .padding(.horizontal, 10)
                 .padding(.vertical, 2)
                 .background(.white.opacity(0.92), in: Capsule())
@@ -200,7 +203,7 @@ private struct CategoryFeatureCard: View {
 
                 HStack(spacing: 4) {
                     Image(systemName: "square.grid.2x2.fill").font(.system(size: 12))
-                    Text("\(category.sceneCount) 个场景").font(.system(size: 12, weight: .medium))
+                    Text(String(format: String(localized: "%d 个场景"), category.sceneCount)).font(.system(size: 12, weight: .medium))
                 }
                 .foregroundStyle(.white)
                 .padding(.horizontal, 10)

@@ -47,9 +47,9 @@ public struct LearningRecordView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     HStack(spacing: 12) {
-                        StatCard(title: "掌握词汇", count: "\(learnedWords)", unit: "个", icon: "character.book.closed.fill", color: .orange)
-                        StatCard(title: "探索场景", count: "\(records.count)", unit: "个", icon: "map.fill", color: .blue)
-                        StatCard(title: "连续学习", count: "\(streak)", unit: "天", icon: "flame.fill", color: .red)
+                        StatCard(title: String(localized: "掌握词汇"), count: "\(learnedWords)", unit: String(localized: "个"), icon: "character.book.closed.fill", color: .orange)
+                        StatCard(title: String(localized: "探索场景"), count: "\(records.count)", unit: String(localized: "个"), icon: "map.fill", color: .blue)
+                        StatCard(title: String(localized: "连续学习"), count: "\(streak)", unit: String(localized: "天"), icon: "flame.fill", color: .red)
                     }.padding(.horizontal)
 
                     VStack(alignment: .leading, spacing: 12) {
@@ -69,7 +69,7 @@ public struct LearningRecordView: View {
                                         .font(.title2).foregroundStyle(record.isCompleted ? .green : .orange)
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(record.sceneName).font(.subheadline.bold())
-                                        Text("\(record.learnedRegions.count)/\(record.totalRegions) 个词 · \(record.lastLearnedAt.formatted(date: .abbreviated, time: .shortened))")
+                                        Text(String(format: String(localized: "%d/%d 个词 · %@"), record.learnedRegions.count, record.totalRegions, record.lastLearnedAt.formatted(date: .abbreviated, time: .shortened)))
                                             .font(.caption).foregroundStyle(.secondary)
                                     }
                                     Spacer()
@@ -87,7 +87,8 @@ public struct LearningRecordView: View {
                     Spacer(minLength: 8)
                 }.padding(.top)
             }
-            .navigationTitle("成长档案")
+            .toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) { GlassNavigationHeader("成长档案") }
             .background(Color(red: 0.98, green: 0.97, blue: 0.95).ignoresSafeArea())
             .refreshable { await loadServerRecords() }
             .task { await loadServerRecords() }

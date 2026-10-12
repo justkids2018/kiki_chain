@@ -13,10 +13,12 @@ public struct MyInfoView: View {
                 LabeledContent("邮箱", value: auth.currentUser?.email?.isEmpty == false ? auth.currentUser!.email! : "—")
                 LabeledContent("注册时间", value: auth.currentUser?.createdAt ?? "—")
                 LabeledContent("最近登录", value: auth.currentUser?.lastLoginAt ?? "—")
-                LabeledContent("昵称", value: auth.currentUser?.nickname.isEmpty == false ? auth.currentUser!.nickname : "未设置")
+                LabeledContent("昵称", value: auth.currentUser?.nickname.isEmpty == false ? auth.currentUser!.nickname : String(localized: "未设置"))
                     .contentShape(Rectangle()).onTapGesture { nickname = auth.currentUser?.nickname ?? ""; editing = true }
-                LabeledContent("VIP 状态", value: auth.currentUser?.isVipActive == true ? "已开通" : "未开通")
-            }.navigationTitle("我的资料").navigationBarTitleDisplayMode(.inline)
+                LabeledContent("VIP 状态", value: auth.currentUser?.isVipActive == true ? String(localized: "已开通") : String(localized: "未开通"))
+            }
+                .toolbar(.hidden, for: .navigationBar)
+                .safeAreaInset(edge: .top, spacing: 0) { GlassNavigationHeader("我的资料") }
                 .alert("修改昵称", isPresented: $editing) {
                     TextField("昵称", text: $nickname)
                     Button("取消", role: .cancel) {}
@@ -59,7 +61,7 @@ public struct FeedbackView: View {
             }
             .navigationTitle("帮助与反馈").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("关闭") { dismiss() } } }
-            .alert("反馈", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) { Button("好") { if message == "提交成功" { dismiss() } } } message: { Text(message ?? "") }
+            .alert("反馈", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) { Button("好") { if message == String(localized: "提交成功") { dismiss() } } } message: { Text(message ?? "") }
         }
     }
     private func submit() async {
@@ -69,8 +71,8 @@ public struct FeedbackView: View {
         submitting = true
         do {
             let _: EmptyData = try await APIClient.shared.request(endpoint: .feedback, body: Body(feedbackType: type, content: content.trimmingCharacters(in: .whitespacesAndNewlines), contact: contact, page: "profile/help_feedback"))
-            message = "提交成功"
-        } catch { message = "提交失败：\(error.localizedDescription)" }
+            message = String(localized: "提交成功")
+        } catch { message = String(format: String(localized: "提交失败：%@"), error.localizedDescription) }
         submitting = false
     }
 }
@@ -82,9 +84,9 @@ public struct AboutView: View {
             VStack(spacing: 14) {
                 Image("kiki_welcome", bundle: KikiResources.bundle).resizable().scaledToFit().frame(width: 100, height: 100).clipShape(RoundedRectangle(cornerRadius: 20))
                 Text("Hi Kiki").font(.title2.bold())
-                Text("版本 \(APIConfiguration.shared.appVersion)").foregroundStyle(.secondary)
+                Text(String(format: String(localized: "版本 %@"), APIConfiguration.shared.appVersion)).foregroundStyle(.secondary)
                 Text("通过场景探索与互动点读，陪伴孩子认识生活中的词语。").multilineTextAlignment(.center).padding(.horizontal)
-                Link("联系开发者：qishoudong@163.com", destination: URL(string: "mailto:qishoudong@163.com")!)
+                Link(LocalizedStringKey("联系开发者：qishoudong@163.com"), destination: URL(string: "mailto:qishoudong@163.com")!)
                 Spacer()
             }.padding(.top, 40).navigationTitle("关于我们").navigationBarTitleDisplayMode(.inline)
         }

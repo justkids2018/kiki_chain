@@ -3,6 +3,7 @@ import SwiftUI
 /// 个人中心视图
 public struct ProfileView: View {
     @ObservedObject var authViewModel = AuthViewModel.shared
+    @ObservedObject private var progressStore = LearningProgressStore.shared
     @State private var showLoginSheet = false
     @State private var showSubscriptionSheet = false
     @State private var showSettingsSheet = false
@@ -29,7 +30,7 @@ public struct ProfileView: View {
 
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack {
-                                    Text(user.nickname.isEmpty ? "小学者" : user.nickname)
+                                    Text(user.nickname.isEmpty ? String(localized: "小学者") : user.nickname)
                                         .font(.headline)
 
                                     if user.isVipActive {
@@ -82,7 +83,7 @@ public struct ProfileView: View {
                             Text("累计获得星星").foregroundColor(.orange)
                         }
                         Spacer()
-                        Text("\(authViewModel.currentUser?.totalStars ?? 0) 颗")
+                        Text(String(format: String(localized: "%d 颗"), progressStore.totalStars))
                             .font(.headline)
                             .foregroundColor(.orange)
                     }
@@ -103,7 +104,7 @@ public struct ProfileView: View {
                             Label("VIP 会员状态", systemImage: "crown.fill")
                                 .foregroundColor(.yellow)
                             Spacer()
-                            Text(authViewModel.currentUser?.isVipActive == true ? "尊享会员 (已激活)" : "立即开通 >")
+                            Text(authViewModel.currentUser?.isVipActive == true ? String(localized: "尊享会员 (已激活)") : String(localized: "立即开通 >"))
                                 .foregroundColor(authViewModel.currentUser?.isVipActive == true ? .secondary : .orange)
                                 .font(.subheadline.bold())
                         }
@@ -135,7 +136,8 @@ public struct ProfileView: View {
                     }
                 }
             }
-            .navigationTitle("个人中心")
+            .toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) { GlassNavigationHeader("个人中心") }
             .sheet(isPresented: $showLoginSheet) {
                 LoginView()
             }

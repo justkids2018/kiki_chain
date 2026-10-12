@@ -59,15 +59,7 @@ public struct SceneCardView: View {
             ZStack {
                 LinearGradient(colors: [Color(red: 0.94, green: 0.96, blue: 1), Color(red: 0.92, green: 0.97, blue: 0.94)], startPoint: .topLeading, endPoint: .bottomTrailing)
                 HStack(spacing: compact ? 10 : 20) {
-                    Button { dismissLearning() } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(Color(red: 0.36, green: 0.42, blue: 0.48))
-                            .frame(width: 40, height: 40)
-                            .background(.white.opacity(0.72), in: Circle())
-                            .overlay(Circle().stroke(.white.opacity(0.9), lineWidth: 1))
-                    }
-                    .buttonStyle(.plain)
+                    GlassBackButton(action: dismissLearning)
                     .frame(maxHeight: .infinity, alignment: .top)
                     .padding(.top, 2)
 
@@ -235,7 +227,7 @@ public struct SceneCardView: View {
                     Rectangle().fill(Color.gray.opacity(0.25)).frame(height: 1)
                 }.padding(.vertical, 1)
                 Button { audioPlayer.speak(item.text, language: "zh-CN") } label: {
-                    Label(item.textPinyin.isEmpty ? "播放中文发音" : item.textPinyin, systemImage: "speaker.wave.2.fill")
+                    Label(item.textPinyin.isEmpty ? String(localized: "播放中文发音") : item.textPinyin, systemImage: "speaker.wave.2.fill")
                         .font(.system(size: 10, weight: .semibold, design: .rounded))
                         .foregroundStyle(mint)
                         .padding(.horizontal, 10).padding(.vertical, 5)

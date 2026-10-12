@@ -24,6 +24,7 @@ public struct SceneLearningProgress: Codable, Identifiable {
 public final class LearningProgressStore: ObservableObject {
     public static let shared = LearningProgressStore()
     @Published public private(set) var records: [String: SceneLearningProgress] = [:]
+    public var totalStars: Int { records.values.reduce(0) { $0 + $1.stars } }
     private let storageKey = "kiki.learning.progress.v1"
     private let userDefaults = UserDefaults.standard
 

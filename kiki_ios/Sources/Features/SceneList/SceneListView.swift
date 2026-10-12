@@ -57,15 +57,7 @@ public struct SceneListView: View {
                     }
                 }
 
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0xFF3F2718))
-                        .frame(width: 40, height: 40)
-                        .background(.regularMaterial, in: Circle())
-                        .overlay(Circle().stroke(.white.opacity(0.75), lineWidth: 1))
-                }
-                .buttonStyle(.plain)
+                GlassBackButton()
                 .position(x: 34, y: 30)
                 .accessibilityLabel("返回首页")
             }
@@ -113,7 +105,7 @@ public struct SceneListView: View {
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: model.errorMessage == nil ? "square.stack" : "wifi.exclamationmark").font(.system(size: 44))
-            Text(model.errorMessage == nil ? "暂无场景" : "场景加载失败").font(.system(size: 18, weight: .bold))
+            Text(model.errorMessage == nil ? String(localized: "暂无场景") : String(localized: "场景加载失败")).font(.system(size: 18, weight: .bold))
             if model.errorMessage != nil {
                 Button("重试") { Task { await model.fetchScenes() } }
                     .buttonStyle(.borderedProminent).tint(Color(hex: 0xFF79BF3F))
@@ -141,7 +133,7 @@ public struct SceneListView: View {
                 }
                 .buttonStyle(.plain)
                 .zIndex(Double(10 - distance))
-                .accessibilityLabel(active ? "开始学习：\(scene.name)" : "选择场景：\(scene.name)")
+                .accessibilityLabel(String(format: active ? String(localized: "开始学习：%@") : String(localized: "选择场景：%@"), scene.name))
             }
         }
         .frame(width: width, height: cardSize)

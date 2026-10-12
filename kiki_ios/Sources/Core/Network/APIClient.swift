@@ -45,7 +45,14 @@ public final class APIClient {
             throw NetworkError.unknown("无效的 HTTP 响应")
         }
 
-        // 处理 HTTP 状态码
+        // 服务端的业务错误包含可读提示；先读取它，避免把账号冲突等错误误报为网络故障。
+        if !(200...299).contains(httpResponse.statusCode),
+           let errorResponse = try? decoder.decode(APIResponse<EmptyData>.self, from: data),
+           let message = errorResponse.message, !message.isEmpty {
+            throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, message: message)
+        }
+
+        // 没有可解析的服务端提示时，按 HTTP 状态码提供兜底错误。
         switch httpResponse.statusCode {
         case 200...299:
             break
